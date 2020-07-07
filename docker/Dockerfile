@@ -1,7 +1,13 @@
 FROM debian:10
 ENV DEBIAN_FRONTEND=noninteractive
 ENV XZ_OPT=-T0
-ENV ARCH=amd64
+
+ENV HOME=/builds/worker \
+    SHELL=/bin/bash \
+    USER=worker \
+    LOGNAME=worker \
+    HOSTNAME=taskcluster-worker
+ENV ARCH=i386
 
 ### Add worker user and setup its workspace.
 RUN mkdir /builds && \
@@ -28,9 +34,7 @@ RUN apt-get install -y \
       git \
       less \
       make \
-      mercurial \
       patch \
-      python \
       python3.5 \
       python3-distutils-extra \
       python3-minimal \
@@ -56,10 +60,6 @@ RUN apt-get install -y \
       libucl1 \
       p7zip-full \
       procps \
-      python-dev \
-      python-pip \
-      python-setuptools \
-      python-virtualenv \
       rsync \
       screen \
       tar \
@@ -87,10 +87,12 @@ RUN apt-get install -y \
       libpango1.0-dev:$ARCH \
       libpulse-dev:$ARCH \
       libx11-xcb-dev:$ARCH \
-      libxt-dev:$ARCH
+      libxt-dev:$ARCH \
+      # extras
+      wine64 wine upx-ucl nodejs wine32 \
+      python3-pip zstd
 # custom
-RUN apt-get install -y python3-pip zstd
-RUN pip install zstandard && pip3 install zstandard
+RUN pip3 install zstandard
 ADD fetch-content /builds/worker/bin/fetch-content
 RUN chown -R worker:worker /builds/worker/bin && chmod 755 /builds/worker/bin/*
 
@@ -126,15 +128,7 @@ RUN cd $MOZ_FETCHES_DIR && \
     tar -xf fxc2.tar.xz && \
     rm fxc2.tar.xz
 
-# wine + upx
-RUN apt-get install -y wine64 wine upx-ucl nodejs
-
-ENV HOME=/builds/worker \
-    SHELL=/bin/bash \
-    USER=worker \
-    LOGNAME=worker \
-    HOSTNAME=taskcluster-worker
-
+# nasm
 RUN /builds/worker/bin/fetch-content static-url \
     --sha256 e24ade3e928f7253aa8c14aa44726d1edf3f98643f87c9d72ec1df44b26be8f5 \
     --size 827620 \
@@ -147,10 +141,7 @@ RUN cd $MOZ_FETCHES_DIR && \
 RUN UPLOAD_DIR=/builds/worker/bin/ bash /builds/worker/bin/build-nasm.sh && \
     ln -s /builds/worker/fetches/nasm-2.14.02/nasm/nasm /usr/local/bin/nasm
 
-RUN ls -la /builds/worker/fetches/
-ADD build-windows.sh /builds/worker/bin
-RUN chmod +x /builds/worker/bin/build-windows.sh
+ADD setup-windows-env.sh /builds/worker/bin
+RUN chmod +x /builds/worker/bin/setup-windows-env.sh
 RUN chown -R worker:worker /builds/worker/fetches
-RUN dpkg --add-architecture i386 && apt-get update && apt-get install -y wine32
-RUN apt-get install -y x
 USER worker
