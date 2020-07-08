@@ -21,6 +21,15 @@
 <dl><p>
     <dt><h3 personal_toolbar_folder="true">@bookmarks_toolbarfolder@</h3></dt>
     <dd>@bookmarks_toolbarfolder_description@
+    <dl><p>
+    </dl><p>
+    <dt><H3 ID="rdf:#$ZvPhC3">@cliqz_heading@</H3>
+    <dl><p>
+        <dt><A HREF="https://cliqz.com/support" ID="rdf:#$42iCK1">@cliqz_contact@</A>
+        <dt><A HREF="https://cliqz.com/aboutus"  ID="rdf:#$52iCK1">@cliqz_about@</A>
+        <dt><A HREF="https://cliqz.com/products/tips"  ID="rdf:#$52iCK1">@cliqz_tips@</A>
+    </dl><p>
+#if 0
 #ifndef NIGHTLY_BUILD
         <dl>
             <p><dt><a href="https://www.mozilla.org/@AB_CD@/firefox/central/" icon="@firefox_icon@">@getting_started@</a></dt>
@@ -45,5 +54,6 @@
             <dt><a href="about:crashes" icon="@mozilla_icon@">@crashes@</a>
             <dt><a href="https://planet.mozilla.org/" icon="@mozilla_icon@">@planet@</a>
         </dl>
+#endif
 #endif
 </dl>

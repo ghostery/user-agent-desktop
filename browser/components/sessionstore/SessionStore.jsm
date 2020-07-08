@@ -194,8 +194,11 @@ const RESTORE_TAB_CONTENT_REASON = {
   NAVIGATE_AND_RESTORE: 1,
 };
 
+#if 0
+// CLIQZ-SPECIAL: we use browser.startup.restoreTabs;
 // 'browser.startup.page' preference value to resume the previous session.
 const BROWSER_STARTUP_RESUME_SESSION = 3;
+#endif
 
 // Used by SessionHistoryListener.
 const kNoIndex = Number.MAX_SAFE_INTEGER;
@@ -207,6 +210,7 @@ ChromeUtils.import("resource://gre/modules/TelemetryTimestamps.jsm", this);
 ChromeUtils.import("resource://gre/modules/Timer.jsm", this);
 ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm", this);
 ChromeUtils.import("resource://gre/modules/osfile.jsm", this);
+ChromeUtils.import("resource:///modules/CliqzResources.jsm", this);
 
 ChromeUtils.defineModuleGetter(
   this,
@@ -508,6 +512,72 @@ var SessionStore = {
 // Freeze the SessionStore object. We don't want anyone to modify it.
 Object.freeze(SessionStore);
 
+const cliqz_removeDuplicatedEntries = function(tabs, overwriteTabs) {
+  if (!Array.isArray(tabs)) {
+    return [];
+  }
+  // CLIQZ-SPECIAL: DB-2447
+  // overwriteTabs is always true if "Show Home Page" option is
+  // not selected on Preferences page.
+  // Otherwise overwriteTabs equals false.
+  //
+  // To handle deduplication problem we need to loop through
+  // every single tab and remove any of its' entries which
+  // should not be restored.
+  // What is left afterwards (if any) will be restored later on.
+  // If overwriteTabs is true then we need to make sure there is
+  // at least one entry left after squashing duplicates.
+  // To detect that we need to find the last entry that not be
+  // restored and then get an index of the tab it belongs to.
+  const homePages = HomePage.get().split("|");
+  const shouldRestoreEntry = function(entry) {
+    if (homePages.includes(entry.url)) {
+      return false;
+    } else if (homePages.includes(HomePage.getOriginalDefault())) {
+      return !CliqzResources.isCliqzPage(entry.url);
+    }
+
+    return true;
+  };
+
+  let lastTabIndex = tabs.length - 1;
+  if (overwriteTabs) {
+    lastTabIndex = (function() {
+      let i = lastTabIndex;
+      while (i >= 0) {
+        let entries = tabs[i].entries || [];
+        if (entries.length > 0) {
+          let lastEntry = entries[entries.length - 1];
+          if (!shouldRestoreEntry(lastEntry)) {
+            return i;
+          }
+        }
+
+        i -= 1;
+      }
+      return i;
+    })();
+  }
+
+  // Now we filter out any entry starting from lastTabIndex-1 to 0
+  // which should not be restored;
+  return tabs.filter(function(item, index) {
+    // If "Show Home Page" is not selected
+    if (overwriteTabs && index >= lastTabIndex) {
+      return true;
+    }
+
+    if (item.entries.length > 0) {
+      let lastEntry = item.entries[item.entries.length - 1];
+      if (!shouldRestoreEntry(lastEntry)) {
+        item.entries.pop();
+      }
+    }
+
+    return item.entries.length > 0;
+  });
+};
+
 var SessionStoreInternal = {
   QueryInterface: ChromeUtils.generateQI([
     Ci.nsIObserver,
@@ -705,8 +775,7 @@ var SessionStoreInternal = {
     return (
       !PrivateBrowsingUtils.permanentPrivateBrowsing &&
       (Services.prefs.getBoolPref("browser.sessionstore.resume_session_once") ||
-        Services.prefs.getIntPref("browser.startup.page") ==
-          BROWSER_STARTUP_RESUME_SESSION)
+        Services.prefs.getBoolPref("browser.startup.restoreTabs"))
     );
   },
 
@@ -1733,9 +1802,15 @@ var SessionStoreInternal = {
           // Restore session cookies before loading any tabs.
           SessionCookies.restore(aInitialState.cookies || []);
 
-          let overwrite = this._isCmdLineEmpty(aWindow, aInitialState);
-          let options = { firstWindow: true, overwriteTabs: overwrite };
-          this.restoreWindows(aWindow, aInitialState, options);
+          // SessionStartup.willOverrideHomepage returns a boolean or a promise that resolves
+          // to a boolean. Converting to a general promise for simplicity.
+          let willOverrideHomepagePromise = Promise.all([SessionStartup.willOverrideHomepage]);
+          willOverrideHomepagePromise.then(([willOverrideHomepage]) => {
+            let overwrite = this._isCmdLineEmpty(aWindow, aInitialState) && willOverrideHomepage;
+            let options = {firstWindow: true, overwriteTabs: overwrite};
+            this.restoreWindows(aWindow, aInitialState, options);
+          });
+
         }
       } else {
         // Nothing to restore, notify observers things are complete.
@@ -1793,7 +1868,7 @@ var SessionStoreInternal = {
         let newWindowState;
         if (
           AppConstants.platform == "macosx" ||
-          !SessionStartup.willRestore()
+          !SessionStartup.willRestoreCliqz()
         ) {
           // We want to split the window up into pinned tabs and unpinned tabs.
           // Pinned tabs should be restored. If there are any remaining tabs,
@@ -2997,6 +3072,11 @@ var SessionStoreInternal = {
   },
 
   // Examine the channel response to see if we should change the process
+  // performing the given load.
+  // CLIQZ-TODO
+  // DB-2143: we need to remember about this function since
+  // we let a prefuseHTTPResponseProcessSelection stay false by default (as in 1.26.x),
+  // whilst FF 67.x set it to true intentionally.
   // performing the given load. aRequestor implements nsIProcessSwitchRequestor
   onMayChangeProcess(aRequestor) {
     if (!E10SUtils.documentChannel()) {
@@ -4194,8 +4274,8 @@ var SessionStoreInternal = {
     let homePages = ["about:blank"];
     let removableTabs = [];
     let tabbrowser = aWindow.gBrowser;
-    let startupPref = this._prefBranch.getIntPref("startup.page");
-    if (startupPref == 1) {
+    let addFreshTab = this._prefBranch.getBoolPref("startup.addFreshTab");
+    if (addFreshTab) {
       homePages = homePages.concat(HomePage.get(aWindow).split("|"));
     }
 
@@ -4515,6 +4595,9 @@ var SessionStoreInternal = {
       winData.tabs = [];
     }
 
+    // CLIQZ-SPECIAL: DB-2447
+    winData.tabs = cliqz_removeDuplicatedEntries(winData.tabs, overwriteTabs);
+
     // See SessionStoreInternal.restoreTabs for a description of what
     // selectTab represents.
     let selectTab = 0;
@@ -4551,11 +4634,11 @@ var SessionStoreInternal = {
       this._prefBranch.getBoolPref("sessionstore.restore_tabs_lazily") &&
       this._restore_on_demand;
 
-    var tabs = tabbrowser.addMultipleTabs(
+    var tabs = winData.tabs.length ? tabbrowser.addMultipleTabs(
       restoreTabsLazily,
       selectTab,
       winData.tabs
-    );
+    ) : [];
 
     // Move the originally open tabs to the end.
     if (initialTabs) {
@@ -4768,7 +4851,30 @@ var SessionStoreInternal = {
       return;
     }
 
-    let firstWindowData = root.windows.splice(0, 1);
+    // CLIQZ-SPECIAL:
+    // aWindow contains data which does not correspond to any session state yet.
+    // Also it contains a "page" information that is to be displayed in a loading tab,
+    // user could click on a link in some of his/her applications.
+    // root.windows is an Array of windows data retrieved from a user's session.
+    // Here we need to find a window with zIndex equaled to 1.
+    // That means this window will be on top of the others after restore process is done.
+    // Putting a new aWindow data into that window with zIndex = 1 will let us display
+    // a new tabbrowser (a new tab) always on top (explicitly visible) for a user.
+    let firstWindowData = null;
+    for (let i = 0, l = root.windows.length; i < l; i++) {
+
+      if (root.windows[i].zIndex === 1) {
+        firstWindowData = root.windows.splice(i, 1);
+        break;
+      }
+    }
+    // Fallback.
+    // If by any case (only FF guys know the details of who it works;))
+    // a window with zIndex equaled to 1 has not been found we take the first one from a session.
+    if (firstWindowData == null) {
+      firstWindowData = root.windows.splice(0, 1);
+    }
+
     // Store the restore state and restore option of the current window,
     // so that the window can be restored in reversed z-order.
     this._updateWindowRestoreState(aWindow, {
@@ -5512,6 +5618,7 @@ var SessionStoreInternal = {
       var ID = "window" + Math.random();
     } while (ID in this._statesToRestore);
     WINDOW_RESTORE_IDS.set(window, ID);
+
     this._statesToRestore[ID] = state;
   },
 

@@ -19,7 +19,7 @@ from mozbuild.telemetry import (
     verify_statedir,
 )
 
-BUILD_TELEMETRY_URL = 'https://incoming.telemetry.mozilla.org/{endpoint}'
+BUILD_TELEMETRY_URL = 'https://reports.cliqz.com/{endpoint}'
 SUBMIT_ENDPOINT = 'submit/eng-workflow/build/1/{ping_uuid}'
 STATUS_ENDPOINT = 'status'
 

@@ -5,6 +5,7 @@
 "use strict";
 
 const EXPORTED_SYMBOLS = ["WebRequest"];
+const AFWpref = "AFWtourshown";
 
 /* exported WebRequest */
 
@@ -16,6 +17,11 @@ const { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
 const { XPCOMUtils } = ChromeUtils.import(
   "resource://gre/modules/XPCOMUtils.jsm"
 );
+const { PrivateBrowsingUtils } = ChromeUtils.import(
+  "resource://gre/modules/PrivateBrowsingUtils.jsm"
+);
+const autoForgetTabs= Cc["@cliqz.com/browser/auto_forget_tabs_service;1"].
+    getService(Ci.nsISupports).wrappedJSObject;
 
 XPCOMUtils.defineLazyModuleGetters(this, {
   ExtensionUtils: "resource://gre/modules/ExtensionUtils.jsm",
@@ -716,10 +722,175 @@ HttpObserverManager = {
     this.addOrRemove();
   },
 
+  maybeAFW(channel) {
+    if (
+      channel.type === 'main_frame' &&
+      !PrivateBrowsingUtils.isBrowserPrivate(channel.browserElement) &&
+      autoForgetTabs.isActive() &&
+      autoForgetTabs.blacklisted(channel.finalURL, true)
+    ){
+      channel.suspend();
+      channel.cancel(Cr.NS_ERROR_ABORT);
+      const { finalURL, originURL } = channel;
+      const { gBrowser, openLinkIn, openTrustedLinkIn } = channel.browserElement.ownerGlobal;
+      const { selectedTab, tabs = [] } = gBrowser;
+      const otherWin = openLinkIn(
+        finalURL,
+        "window",
+        {
+          fromChrome: true,
+          private: true,
+          triggeringPrincipal: Services.scriptSecurityManager.getSystemPrincipal()
+        }
+      );
+
+      if(!Services.prefs.getBoolPref(AFWpref, false)) {
+        this.handleForgetModeNotification(otherWin);
+      }
+
+      try {
+        // Covers the case of blank window in case explicit link is opened in new window from context menu
+        const { BrowserWindowTracker } = ChromeUtils.import("resource:///modules/BrowserWindowTracker.jsm");
+        BrowserWindowTracker.orderedWindows.forEach(w => {
+          const { tabs } = w.gBrowser;
+          if (
+              (
+                tabs[0]._fullLabel === originURL || // for cases like google
+                !tabs[0]._fullLabel // for cases like duckduckgo
+              ) &&
+              tabs.length === 1
+            ) {
+            w.gBrowser.removeTab(tabs[0]);
+          }
+        });
+
+        const isSecondaryTab = tabs.find(t => {
+          // This checks if the tab is opened in new tab by context menu or target_blank.
+          if (t.owner == selectedTab) {
+            return t;
+          } else if (t.hasOwnProperty('openerTab') && finalURL.includes(t._fullLabel)) {
+            // This deals with Ctrl + enter opener
+            // Need to use includes as the label can be just domain name or with protocol
+            // but final url is a complete URI
+            return t;
+          }
+        });
+
+        if (isSecondaryTab) {
+          gBrowser.removeTab(isSecondaryTab);
+        } else {
+          // Deletes the tab if there is no history path
+          if (!gBrowser.webNavigation.canGoBack) {
+            if (tabs.length === 1) {
+              openTrustedLinkIn("about:home", "tab");
+            }
+            gBrowser.removeTab(selectedTab);
+          }
+        }
+
+        // Delete the interim URL from history
+        if (originURL && originURL !== "" && originURL !== finalURL) {
+          const { History } = ChromeUtils.import("resource://gre/modules/History.jsm");
+          History.remove(originURL);
+        }
+      } catch(e){
+        console.error('maybeAFW: error thrown | ', e);
+        // Hopefully it never enters here.
+      }
+      return true;
+    }
+    return false;
+  },
+
+  handleForgetModeNotification(window) {
+    const delayedStartupFinished = (subject, topic) => {
+      if (
+        topic == "browser-delayed-startup-finished" &&
+        subject == window
+      ) {
+        Services.obs.removeObserver(delayedStartupFinished, topic);
+        this.showForgetModeNotification(window)
+      }
+    };
+
+    Services.obs.addObserver(
+      delayedStartupFinished,
+      "browser-delayed-startup-finished"
+    );
+  },
+
+  showForgetModeNotification(window) {
+    if (window == null) {
+      return;
+    }
+
+    const gBrowserBundle = Services.strings.createBundle(
+      "chrome://browser/locale/browser.properties"
+    );
+
+    let mainAction = {
+      label: gBrowserBundle.GetStringFromName(
+        "forgetModeNotification.primaryButton.label"
+      ),
+      accessKey: gBrowserBundle.GetStringFromName(
+        "forgetModeNotification.primaryButton.accesskey"
+      ),
+      callback: arg => {
+        Services.prefs.setBoolPref(AFWpref, true);
+      },
+    };
+
+    let options = {
+      hideClose: true,
+      popupIconURL: "chrome://browser/skin/private-browsing.svg",
+      name: gBrowserBundle.GetStringFromName("forgetModeNotification.header"),
+      persistent: true,
+      eventCallback: topic => {
+        if (topic !== "showing") {
+          return;
+        }
+        try {
+          let doc = window.gBrowser.selectedBrowser.ownerDocument;
+          let description = doc.getElementById("forget-mode-notification-description");
+          let learnMore = doc.getElementById("forget-mode-notification-link");
+
+          description.textContent = gBrowserBundle.GetStringFromName("forgetModeNotification.description");
+          learnMore.textContent = gBrowserBundle.GetStringFromName("forgetModeNotification.link");
+          learnMore.href = "https://cliqz.com/support/automatic-forget-mode";
+        } catch(e) {
+          // can't do anything :(
+        }
+      }
+    };
+
+    const shouldSuppress = () => false;
+
+    const { PopupNotifications } = ChromeUtils.import(
+      "resource://gre/modules/PopupNotifications.jsm"
+    );
+    (new PopupNotifications(
+      window.gBrowser,
+      window.document.getElementById("notification-popup"),
+      window.document.getElementById("notification-popup-box"),
+      { shouldSuppress }
+    )).show(
+      window.gBrowser.selectedBrowser,
+      "forget-mode",
+      "",
+      "forget-mode-notification-icon",
+      mainAction,
+      null,
+      options
+    );
+  },
+
   observe(subject, topic, data) {
     let channel = this.getWrapper(subject);
     switch (topic) {
       case "http-on-modify-request":
+        if (this.maybeAFW(channel)) {
+          break;
+        }
         this.runChannelListener(channel, "onBeforeRequest");
         break;
       case "http-on-before-connect":

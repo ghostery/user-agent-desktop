@@ -34,6 +34,7 @@ var SidebarUI = {
           triggerButtonId: "appMenuViewHistorySidebar",
         },
       ],
+#ifdef MOZ_SERVICES_SYNC
       [
         "viewTabsSidebar",
         {
@@ -46,6 +47,7 @@ var SidebarUI = {
           triggerButtonId: "PanelUI-remotetabs-view-sidebar",
         },
       ],
+#endif
     ]));
   },
 
@@ -374,7 +376,7 @@ var SidebarUI = {
    * True if the sidebar is currently open.
    */
   get isOpen() {
-    return !this._box.hidden;
+    return this._box != null && !this._box.hidden;
   },
 
   /**

@@ -29,6 +29,7 @@
 <?xml-stylesheet href="chrome://browser/skin/searchbar.css" type="text/css"?>
 <?xml-stylesheet href="chrome://browser/skin/places/tree-icons.css" type="text/css"?>
 <?xml-stylesheet href="chrome://browser/skin/places/editBookmark.css" type="text/css"?>
+<?xml-stylesheet href="chrome://browser/skin/cliqz/theme.css" type="text/css"?>
 
 # All DTD information is stored in a separate file so that it can be shared by
 # hiddenWindowMac.xhtml.
@@ -68,6 +69,7 @@
         retargetdocumentfocus="urlbar-input"
         scrolling="false"
         persist="screenX screenY width height sizemode"
+        cliqzBrowser="true"
         data-l10n-sync="true">
 <head>
   <link rel="localization" href="branding/brand.ftl"/>
@@ -98,7 +100,9 @@
     Services.scriptloader.loadSubScript("chrome://browser/content/browser-data-submission-info-bar.js", this);
   }
   if (!AppConstants.MOZILLA_OFFICIAL) {
+#ifdef 0
     Services.scriptloader.loadSubScript("chrome://browser/content/browser-development-helpers.js", this);
+#endif
   }
   Services.scriptloader.loadSubScript("chrome://browser/content/browser-media.js", this);
   Services.scriptloader.loadSubScript("chrome://browser/content/browser-pageActions.js", this);
@@ -139,6 +143,11 @@
                 oncommand="gBrowser.reloadTab(TabContextMenu.contextTab);"/>
       <menuitem id="context_reloadSelectedTabs" data-lazy-l10n-id="reload-tabs" hidden="true"
                 oncommand="gBrowser.reloadMultiSelectedTabs();"/>
+      <menuitem
+          id="context_togglePrivatePinUnpin"
+          oncommand="TabContextMenu.togglePrivatePinUnpin();"
+          />
+      <menuseparator/>
       <menuitem id="context_toggleMuteTab" oncommand="TabContextMenu.contextTab.toggleMuteAudio();"/>
       <menuitem id="context_toggleMuteSelectedTabs" hidden="true"
                 oncommand="gBrowser.toggleMuteAudioOnMultiSelectedTabs(TabContextMenu.contextTab);"/>
@@ -170,6 +179,7 @@
         <menupopup oncommand="TabContextMenu.reopenInContainer(event);"
                    onpopupshowing="TabContextMenu.createReopenInContainerMenu(event);"/>
       </menu>
+#ifdef 0
       <menu id="context_moveTabOptions">
         <menupopup id="moveTabOptionsMenu">
           <menuitem id="context_moveToStart"
@@ -190,6 +200,7 @@
         <menupopup id="context_sendTabToDevicePopupMenu"
                    onpopupshowing="gSync.populateSendTabToDevicesMenu(event.target, TabContextMenu.contextTab.linkedBrowser.currentURI.spec, TabContextMenu.contextTab.linkedBrowser.contentTitle, TabContextMenu.contextTab.multiselected);"/>
       </menu>
+#endif
       <menuseparator/>
       <menuitem id="context_closeTabsToTheEnd" data-lazy-l10n-id="close-tabs-to-the-end"
                 oncommand="gBrowser.removeTabsToTheEndFrom(TabContextMenu.contextTab, {animate: true});"/>
@@ -380,11 +391,13 @@
                      class="subviewbutton subviewbutton-iconic"
                      key="key_gotoHistory"
                      oncommand="SidebarUI.show('viewHistorySidebar');"/>
+#ifdef MOZ_SERVICES_SYNC
       <toolbarbutton id="sidebar-switcher-tabs"
                      type="checkbox"
                      data-l10n-id="sidebar-menu-synced-tabs"
                      class="subviewbutton subviewbutton-iconic sync-ui-item"
                      oncommand="SidebarUI.show('viewTabsSidebar');"/>
+#endif
       <toolbarseparator/>
       <!-- Extension toolbarbuttons go here. -->
       <toolbarseparator id="sidebar-extensions-separator"/>
@@ -539,7 +552,9 @@
            noautofocus="true"
            pinTab-title="&pinTab.label;"
            unpinTab-title="&unpinTab.label;"
+#ifdef 0
            pocket-title="&saveToPocketCmd.label;"
+#endif
            copyURL-title="&pageAction.copyLink.label;"
            emailLink-title="&emailPageCmd.label;"
            sendToDevice-notReadyTitle="&sendToDevice.syncNotReady.label;"
@@ -864,6 +879,7 @@
                    class="chromeclass-toolbar-additional"/>
               <!-- Use onclick instead of normal popup= syntax since the popup
                    code fires onmousedown, and hence eats our favicon drag events. -->
+#if 0
               <box id="tracking-protection-icon-container" align="center"
                    role="button"
                    onclick="gProtectionsHandler.handleProtectionsButtonEvent(event);"
@@ -881,6 +897,7 @@
                   <description id="tracking-protection-icon-tooltip-label" class="tooltip-label"/>
                 </tooltip>
               </box>
+#endif
               <box id="identity-box" role="button"
                    align="center"
                    data-l10n-id="urlbar-identity-button"
@@ -973,6 +990,8 @@
                          data-l10n-id="urlbar-web-authn-anchor"/>
                   <image id="storage-access-notification-icon" class="notification-anchor-icon storage-access-icon" role="button"
                          data-l10n-id="urlbar-storage-access-anchor"/>
+                  <image id="forget-mode-notification-icon" class="notification-anchor-icon afw-icon" role="button"
+                         data-l10n-id="urlbar-storage-access-anchor"/>
                 </box>
                 <image id="remote-control-icon"
                        tooltiptext="&urlbar.remoteControlNotificationAnchor.tooltip;"/>
@@ -1037,6 +1056,7 @@
                        tooltiptext="&pageActionButton.tooltip;"
                        onmousedown="BrowserPageActions.mainButtonClicked(event);"
                        onkeypress="BrowserPageActions.mainButtonClicked(event);"/>
+#ifdef 0
                 <hbox id="pocket-button-box"
                       hidden="true"
                       class="urlbar-icon-wrapper urlbar-page-action"
@@ -1051,6 +1071,7 @@
                            role="presentation"/>
                   </hbox>
                 </hbox>
+#endif
                 <hbox id="star-button-box"
                       hidden="true"
                       class="urlbar-icon-wrapper urlbar-page-action"
@@ -1111,7 +1132,7 @@
                        cui-areatype="toolbar"
                        tooltiptext="&libraryButton.tooltip;"
                        label="&places.library.title;"/>
-
+#if 0
         <toolbarbutton id="fxa-toolbar-menu-button" class="toolbarbutton-1 chromeclass-toolbar-additional subviewbutton-nav"
                        badged="true"
                        onmousedown="gSync.toggleAccountPanel('PanelUI-fxa', this, event)"
@@ -1126,6 +1147,7 @@
                         <image id="fxa-avatar-image"/>
                        </vbox>
         </toolbarbutton>
+#endif
       </hbox>
 
       <toolbarbutton id="nav-bar-overflow-button"

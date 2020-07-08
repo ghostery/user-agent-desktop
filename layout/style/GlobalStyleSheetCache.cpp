@@ -456,6 +456,8 @@ GlobalStyleSheetCache* GlobalStyleSheetCache::Singleton() {
 }
 
 void GlobalStyleSheetCache::InitFromProfile() {
+  // CLIQZ-SPECIAL: Do not allow userchrome
+  return;
   if (!Preferences::GetBool(PREF_LEGACY_STYLESHEET_CUSTOMIZATION)) {
     return;
   }

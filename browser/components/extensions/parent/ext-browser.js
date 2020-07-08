@@ -788,6 +788,10 @@ tabTracker = new TabTracker();
 Object.assign(global, { tabTracker, windowTracker });
 
 class Tab extends TabBase {
+  get incognito() {
+    return isPrivateTab(this.nativeTab);
+  }
+
   get _favIconUrl() {
     return this.window.gBrowser.getIcon(this.nativeTab);
   }
@@ -1201,7 +1205,7 @@ class TabManager extends TabManagerBase {
   canAccessTab(nativeTab) {
     return (
       this.extension.privateBrowsingAllowed ||
-      !PrivateBrowsingUtils.isBrowserPrivate(nativeTab.linkedBrowser)
+      !isPrivateTab(nativeTab)
     );
   }
 

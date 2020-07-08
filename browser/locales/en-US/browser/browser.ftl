@@ -141,7 +141,7 @@ search-one-offs-context-set-as-default =
     .label = Set as Default Search Engine
     .accesskey = D
 search-one-offs-context-set-as-default-private =
-    .label = Set as Default Search Engine for Private Windows
+    .label = Set as Default Search Engine for Forget Windows
     .accesskey = P
 
 ## Bookmark Panel

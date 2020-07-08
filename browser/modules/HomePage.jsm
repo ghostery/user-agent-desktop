@@ -14,12 +14,15 @@ XPCOMUtils.defineLazyModuleGetters(this, {
   ExtensionParent: "resource://gre/modules/ExtensionParent.jsm",
   ExtensionPreferencesManager:
     "resource://gre/modules/ExtensionPreferencesManager.jsm",
+/* CLIQZ-SPECIAL: we do not allow homepage change so no use of ignore list
   IgnoreLists: "resource://gre/modules/IgnoreLists.jsm",
+*/
   PrivateBrowsingUtils: "resource://gre/modules/PrivateBrowsingUtils.jsm",
   Services: "resource://gre/modules/Services.jsm",
 });
 
 const kPrefName = "browser.startup.homepage";
+const freshTabPrefName = "browser.startup.addFreshTab";
 const kDefaultHomePage = "about:home";
 const kExtensionControllerPref =
   "browser.startup.homepage_override.extensionControlled";
@@ -75,6 +78,7 @@ let HomePage = {
    * initialised.
    */
   async delayedStartup() {
+    /* CLIQZ-SPECIAL: we do not allow homepage change so no use of ignore list
     if (this._initializationPromise) {
       await this._initializationPromise;
       return;
@@ -92,6 +96,7 @@ let HomePage = {
     const current = await this._initializationPromise;
 
     await this._handleIgnoreListUpdated({ data: { current } });
+    */
   },
 
   /**
@@ -131,6 +136,20 @@ let HomePage = {
     }
 
     return homePages;
+  },
+
+  getAsString(isDefault) {
+    const res = isDefault === true ? this.getDefault() : this.get();
+
+    if (typeof res === 'string') {
+      return res;
+    }
+
+    return res.value;
+  },
+
+  canBeDisplayed() {
+    return Services.prefs.getBoolPref(freshTabPrefName) === true;
   },
 
   /**
@@ -181,6 +200,7 @@ let HomePage = {
    *   `|` separated list of URLs.
    */
   async set(value) {
+/* CLIQZ-SPECIAL: we do not allow homepage change so no use of ignore list
     await this.delayedStartup();
 
     if (await this.shouldIgnore(value)) {
@@ -195,6 +215,7 @@ let HomePage = {
       );
       return false;
     }
+*/
     Services.prefs.setStringPref(kPrefName, value);
     return true;
   },

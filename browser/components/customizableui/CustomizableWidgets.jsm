@@ -610,6 +610,7 @@ const CustomizableWidgets = [
   },
 ];
 
+#ifdef MOZ_SERVICES_SYNC
 if (Services.prefs.getBoolPref("identity.fxaccounts.enabled")) {
   CustomizableWidgets.push({
     id: "sync-button",
@@ -874,6 +875,7 @@ if (Services.prefs.getBoolPref("identity.fxaccounts.enabled")) {
     },
   });
 }
+#endif
 
 let preferencesButton = {
   id: "preferences-button",

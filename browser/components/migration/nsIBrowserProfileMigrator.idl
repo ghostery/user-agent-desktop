@@ -23,6 +23,7 @@ interface nsIBrowserProfileMigrator : nsISupports
   const unsigned short BOOKMARKS   = 0x0020;
   const unsigned short OTHERDATA   = 0x0040;
   const unsigned short SESSION     = 0x0080;
+  const unsigned short ADDONS      = 0x0100;
 
   /**
    * Copy user profile information to the current active profile.
@@ -42,6 +43,14 @@ interface nsIBrowserProfileMigrator : nsISupports
    * @note    a return value of 0 represents no items rather than ALL.
    */
   jsval getMigrateData(in jsval aProfile, in boolean aDoingStartup);
+
+  /**
+   * CLIQZ
+   * returns available addons from given profile
+   * @param   aProfile the profile that we are looking for available data
+   *          to import
+   */
+  jsval getAddons(in jsval aProfile);
 
   /**
    * Get the last time data from this browser was modified

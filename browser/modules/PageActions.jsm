@@ -1210,7 +1210,7 @@ var gBuiltInActions = [
       browserPageActions(buttonNode).emailLink.onCommand(event, buttonNode);
     },
   },
-
+#ifdef 0
   // add search engine
   {
     id: "addSearchEngine",
@@ -1233,9 +1233,10 @@ var gBuiltInActions = [
       );
     },
   },
+#endif
 ];
 
-// send to device
+#ifdef MOZ_SERVICES_SYNC
 if (Services.prefs.getBoolPref("identity.fxaccounts.enabled")) {
   gBuiltInActions.push({
     id: "sendToDevice",
@@ -1263,6 +1264,7 @@ if (Services.prefs.getBoolPref("identity.fxaccounts.enabled")) {
     },
   });
 }
+#endif
 
 if (SiteSpecificBrowserService.isEnabled) {
   gBuiltInActions.push({

@@ -15,6 +15,11 @@ ChromeUtils.defineModuleGetter(
   "SessionStore",
   "resource:///modules/sessionstore/SessionStore.jsm"
 );
+ChromeUtils.defineModuleGetter(
+  this,
+  "HomePage",
+  "resource:///modules/HomePage.jsm"
+);
 
 var gStateObject;
 var gTreeData;
@@ -37,8 +42,11 @@ window.onload = function() {
   // the in-product link.
   let anchor = document.getElementById("linkMoreTroubleshooting");
   if (anchor) {
+    /*
     let baseURL = Services.urlFormatter.formatURLPref("app.support.baseURL");
     anchor.setAttribute("href", baseURL + "troubleshooting");
+    */
+    anchor.setAttribute("href", "https://cliqz.com/support");
   }
 
   // wire up click handlers for the radio buttons if they exist.
@@ -90,6 +98,10 @@ function isTreeViewVisible() {
 }
 
 async function initTreeView() {
+  // CLIQZ-SPECIAL: We dont have this is aboutImportedtab, so just return.
+  if (!gStateObject) {
+    return;
+  }
   // If we aren't visible we initialize as we are made visible (and it's OK
   // to initialize multiple times)
   if (!isTreeViewVisible()) {
@@ -219,14 +231,18 @@ function restoreSession() {
 }
 
 function startNewSession() {
-  if (Services.prefs.getIntPref("browser.startup.page") == 0) {
-    getBrowserWindow().gBrowser.loadURI("about:blank", {
-      triggeringPrincipal: Services.scriptSecurityManager.createNullPrincipal(
-        {}
-      ),
-    });
-  } else {
+  let addNTP = HomePage.canBeDisplayed();
+  if (addNTP) {
     getBrowserWindow().BrowserHome();
+  } else {
+    getBrowserWindow().gBrowser.loadURI(
+      "about:blank",
+      {
+        triggeringPrincipal:
+          Services.scriptSecurityManager.createNullPrincipal(
+            {}
+          ),
+      });
   }
 }
 

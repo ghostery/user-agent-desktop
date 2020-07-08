@@ -24,7 +24,7 @@ var gUpdateHistory = {
       for (var i = 0; i < uc; ++i) {
         var update = um.getUpdateAt(i);
 
-        if (!update || !update.name) {
+        if (!update || !update.name || !update.displayVersion) {
           continue;
         }
 

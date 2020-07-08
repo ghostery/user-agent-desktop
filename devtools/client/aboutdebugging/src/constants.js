@@ -115,7 +115,8 @@ const PREFERENCES = {
   // Preference that drives the display of the "Processes" debug target category.
   PROCESS_DEBUGGING_ENABLED: "devtools.aboutdebugging.process-debugging",
   // Preference that drives the display of hidden & system addons in about:debugging.
-  SHOW_HIDDEN_ADDONS: "devtools.aboutdebugging.showHiddenAddons",
+  // CLIQZ-SPECIAL: SHOW_HIDDEN_ADDONS: "devtools.aboutdebugging.showHiddenAddons",
+  SHOW_HIDDEN_ADDONS: "extensions.cliqz.listed",
   // Preference to store the last path used for loading a temporary extension.
   TEMPORARY_EXTENSION_PATH: "devtools.aboutdebugging.tmpExtDirPath",
   // Preference that disables installing extensions when set to false.

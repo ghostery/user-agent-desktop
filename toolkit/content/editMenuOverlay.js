@@ -4,6 +4,15 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+if (typeof goUpdateCommand != "function") {
+  var goUpdateCommand = (function() {
+    const o = {};
+    Services.scriptloader.loadSubScript("chrome://global/content/globalOverlay.js", o);
+
+    return o.goUpdateCommand;
+  })();
+}
+
 // update menu items that rely on focus or on the current selection
 function goUpdateGlobalEditMenuItems(force) {
   // Don't bother updating the edit commands if they aren't visible in any way

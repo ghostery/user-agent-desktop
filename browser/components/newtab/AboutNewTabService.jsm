@@ -113,6 +113,33 @@ class BaseAboutNewTabService {
     // "resource://activity-stream/prerendered/activity-stream.html"
     // "resource://activity-stream/prerendered/activity-stream-debug.html"
     // "resource://activity-stream/prerendered/activity-stream-noscripts.html"
+
+    let uuids = null;
+    try {
+      uuids = JSON.parse(Services.prefs.getStringPref("extensions.webextensions.uuids", ""));
+    } catch (e) {
+      // Error while parsing JSON or reading the pref;
+      // We should notify about that in the console;
+      // As a fallback we can return "about:blank";
+      console.error("BaseAboutNewTabService#defaultURL: " + e);
+      return "about:blank";
+    }
+
+    // CLIQZ-SPECIAL: DB-2458, Why we need this.
+    // mozilla-release/browser/components/extensions/parent/ext-chrome-settings-overrides.js
+    // This file reads the manifest.json file from our Extension and then retrieves
+    // chrome_settings_overrides.homapage to save that value in
+    // browser.startup.homepage (see code of resource://gre/modules/ExtensionPreferencesManager.jsm).
+    // Meanwhile the value is not yet passed to AboutNewTabService so newTabURL is still about:newtab;
+    // Then AboutRedirector.cpp matches about:newtab url against AboutNewTabService.GetDefaultURL;
+    // A bit after mozilla-release/browser/components/extensions/parent/ext-url-overrides.js
+    // gets parsed as well having retrieved chrome_url_overrides.newtab value which is then passed to
+    // set newTabURL setter of AboutNewTabService;
+    // Also AboutNewTabService is invoked in both PROCESS_TYPE_DEFAULT (=0, main) and other processes.
+    // The latter option does not return our freshtab value since it has been set within the parent
+    // process; using preferences as a fallback allows to retrieve our Extension id;
+    return "moz-extension://" + uuids["cliqz@cliqz.com"] + "/modules/freshtab/home.html";
+#if 0
     return [
       "resource://activity-stream/prerendered/",
       "activity-stream",
@@ -123,6 +150,7 @@ class BaseAboutNewTabService {
       this.privilegedAboutProcessEnabled ? "-noscripts" : "",
       ".html",
     ].join("");
+#endif
   }
 
   /*

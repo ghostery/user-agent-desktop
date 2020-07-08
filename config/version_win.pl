@@ -113,7 +113,7 @@ if (!defined($module))
 
 my $bufferstr="    ";
 
-my $MILESTONE_FILE = "$topsrcdir/config/milestone.txt";
+my $MILESTONE_FILE = "$topsrcdir/browser/config/version_display.txt";
 my $BUILDID_FILE = "$depth/buildid.h";
 
 #Read module.ver file
@@ -235,8 +235,8 @@ for ($j = 1; $j < 4; $j++)
 my $winappversion = "$appver[0],$appver[1],$appver[2],$appver[3]";
 
 my $copyright = "License: MPL 2";
-my $company = "Mozilla Foundation";
-my $trademarks = "Mozilla";
+my $company = "Cliqz GmbH";
+my $trademarks = "";
 my $productname = $displayname;
 
 

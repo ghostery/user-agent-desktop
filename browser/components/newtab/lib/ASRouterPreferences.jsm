@@ -44,9 +44,11 @@ const DEFAULT_STATE = {
 
 const USER_PREFERENCES = {
   snippets: "browser.newtabpage.activity-stream.feeds.snippets",
+#if 0
   cfrAddons: "browser.newtabpage.activity-stream.asrouter.userprefs.cfr.addons",
   cfrFeatures:
     "browser.newtabpage.activity-stream.asrouter.userprefs.cfr.features",
+#endif
 };
 
 // Preferences that influence targeting attributes. When these change we need

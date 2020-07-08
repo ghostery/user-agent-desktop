@@ -60,6 +60,8 @@ policy-DisableFormHistory = Don’t remember search and form history.
 
 policy-DisableMasterPasswordCreation = If true, a master password can’t be created.
 
+policy-DisableMyOffrz = Disable MyOffrz.
+
 policy-DisablePasswordReveal = Do not allow passwords to be revealed in saved logins.
 
 policy-DisablePocket = Disable the feature to save webpages to Pocket.
@@ -102,14 +104,14 @@ policy-ExtensionSettings = Manage all aspects of extension installation.
 
 policy-ExtensionUpdate = Enable or disable automatic extension updates.
 
-policy-FirefoxHome = Configure Firefox Home.
+policy-FirefoxHome = Configure Cliqz Home.
 
 policy-FlashPlugin = Allow or deny usage of the Flash plugin.
 
 policy-HardwareAcceleration = If false, turn off hardware acceleration.
 
 # “lock” means that the user won’t be able to change this setting
-policy-Homepage = Set and optionally lock the homepage.
+policy-Startup = Set and optionally lock the homepage.
 
 policy-InstallAddonsPermission = Allow certain websites to install add-ons.
 

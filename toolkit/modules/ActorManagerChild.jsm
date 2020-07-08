@@ -294,6 +294,7 @@ var ActorManagerChild = {
 
   init() {
     let singletons = sharedData.get("ChildSingletonActors");
+
     for (let [filter, data] of singletons.entries()) {
       let options = {
         matches: new MatchPatternSet(filter.matches, {

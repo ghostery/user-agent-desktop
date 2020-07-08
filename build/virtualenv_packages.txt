@@ -86,6 +86,7 @@ mozilla.pth:testing/marionette/puppeteer/firefox
 mozilla.pth:testing/raptor
 mozilla.pth:testing/talos
 packages.txt:testing/mozbase/packages.txt
+boto.pth:python/boto
 mozilla.pth:tools
 mozilla.pth:testing/web-platform
 mozilla.pth:testing/web-platform/tests/tools/third_party/html5lib

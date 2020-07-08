@@ -455,6 +455,7 @@ var Policies = {
       }
     },
   },
+#if 0
 
   DisableFirefoxAccounts: {
     onBeforeAddons(manager, param) {
@@ -488,6 +489,7 @@ var Policies = {
       }
     },
   },
+#endif
 
   DisableForgetButton: {
     onProfileAfterChange(manager, param) {
@@ -513,6 +515,15 @@ var Policies = {
     },
   },
 
+  DisableMyOffrz: {
+    onBeforeAddons(manager, param) {
+      if (param) {
+        setAndLockPref("extensions.cliqz.enterprise.disabledModules", "offers");
+      }
+    },
+  },
+#if 0
+
   DisablePasswordReveal: {
     onBeforeUIStartup(manager, param) {
       if (param) {
@@ -528,6 +539,7 @@ var Policies = {
       }
     },
   },
+#endif
 
   DisablePrivateBrowsing: {
     onBeforeAddons(manager, param) {
@@ -535,6 +547,7 @@ var Policies = {
         manager.disallowFeature("privatebrowsing");
         blockAboutPage(manager, "about:privatebrowsing", true);
         setAndLockPref("browser.privatebrowsing.autostart", false);
+        setAndLockPref("browser.privatebrowsing.apt", false);
       }
     },
   },
@@ -720,6 +733,7 @@ var Policies = {
       setAndLockPref("browser.download.useDownloadDir", true);
     },
   },
+#if 0
 
   EnableTrackingProtection: {
     onBeforeUIStartup(manager, param) {
@@ -757,6 +771,7 @@ var Policies = {
       }
     },
   },
+#endif
 
   Extensions: {
     onBeforeUIStartup(manager, param) {
@@ -926,6 +941,7 @@ var Policies = {
       }
     },
   },
+#if 0
 
   FirefoxHome: {
     onBeforeAddons(manager, param) {
@@ -967,6 +983,7 @@ var Policies = {
       }
     },
   },
+#endif
 
   FlashPlugin: {
     onBeforeUIStartup(manager, param) {
@@ -997,49 +1014,49 @@ var Policies = {
     },
   },
 
-  Homepage: {
+  Startup: {
     onBeforeUIStartup(manager, param) {
       // |homepages| will be a string containing a pipe-separated ('|') list of
-      // URLs because that is what the "Home page" section of about:preferences
+      // URLs because that is what the "Custom URLs..." section of about:preferences
       // (and therefore what the pref |browser.startup.homepage|) accepts.
-      if (param.URL) {
-        let homepages = param.URL.href;
-        if (param.Additional && param.Additional.length) {
-          homepages += "|" + param.Additional.map(url => url.href).join("|");
-        }
-        setDefaultPref("browser.startup.homepage", homepages, param.Locked);
-        if (param.Locked) {
-          setAndLockPref(
-            "pref.browser.homepage.disable_button.current_page",
-            true
-          );
-          setAndLockPref(
-            "pref.browser.homepage.disable_button.bookmark_page",
-            true
-          );
-          setAndLockPref(
-            "pref.browser.homepage.disable_button.restore_default",
-            true
-          );
-        } else {
-          // Clear out old run once modification that is no longer used.
-          clearRunOnceModification("setHomepage");
+      // Cliqz. This part totally re-worked in Cliqz browser because we have
+      // different Startup options, so we can not follow FF's settings at all.
+      let homepages = "about:home";
+      if (param.Homepage) {
+        switch (param.Homepage) {
+          case "default":
+            homepages = "about:home";
+            break;
+          case "urls":
+            if (param.URLs && param.URLs.length > 0) {
+              homepages = param.URLs.map(url => url.href).join("|");
+            }
+            break;
+          case "blank":
+            homepages = "about:blank";
+            break;
         }
       }
-      if (param.StartPage) {
-        let prefValue;
-        switch (param.StartPage) {
-          case "none":
-            prefValue = 0;
-            break;
-          case "homepage":
-            prefValue = 1;
-            break;
-          case "previous-session":
-            prefValue = 3;
-            break;
-        }
-        setDefaultPref("browser.startup.page", prefValue, param.Locked);
+
+      setDefaultPref("browser.startup.restoreTabs", param.RestoreLastSession, param.Locked);
+      setDefaultPref("browser.startup.addFreshTab", param.ShowHomepage, param.Locked);
+      setDefaultPref("browser.startup.homepage", homepages, param.Locked);
+      if (param.Locked) {
+        setAndLockPref(
+          "pref.browser.homepage.disable_button.current_page",
+          true
+        );
+        setAndLockPref(
+          "pref.browser.homepage.disable_button.bookmark_page",
+          true
+        );
+        setAndLockPref(
+          "pref.browser.homepage.disable_button.restore_default",
+          true
+        );
+      } else {
+        // Clear out old run once modification that is no longer used.
+        clearRunOnceModification("setHomepage");
       }
     },
   },
@@ -1111,12 +1128,14 @@ var Policies = {
       setAndLockPref("network.dns.disablePrefetchFromHTTPS", !param);
     },
   },
+#if 0
 
   NewTabPage: {
     onBeforeAddons(manager, param) {
       setAndLockPref("browser.newtabpage.enabled", param);
     },
   },
+#endif
 
   NoDefaultBookmarks: {
     onProfileAfterChange(manager, param) {
@@ -1275,6 +1294,7 @@ var Policies = {
       }
     },
   },
+#if 0
 
   RequestedLocales: {
     onBeforeAddons(manager, param) {
@@ -1287,6 +1307,7 @@ var Policies = {
       }
     },
   },
+#endif
 
   SanitizeOnShutdown: {
     onBeforeUIStartup(manager, param) {
@@ -1402,6 +1423,7 @@ var Policies = {
       }
     },
   },
+#if 0
 
   SearchBar: {
     onAllWindowsRestored(manager, param) {
@@ -1553,6 +1575,7 @@ var Policies = {
       setAndLockPref("browser.search.suggest.enabled", param);
     },
   },
+#endif
 
   SecurityDevices: {
     onProfileAfterChange(manager, param) {

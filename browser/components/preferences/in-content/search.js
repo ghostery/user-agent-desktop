@@ -21,7 +21,9 @@ Preferences.addAll([
   { id: "browser.urlbar.suggest.searches", type: "bool" },
   { id: "browser.search.suggest.enabled.private", type: "bool" },
   { id: "browser.search.hiddenOneOffs", type: "unichar" },
+/* Cliqz. Not used
   { id: "browser.search.widget.inNavBar", type: "bool" },
+*/
   { id: "browser.urlbar.matchBuckets", type: "string" },
   { id: "browser.search.separatePrivateDefault", type: "bool" },
   { id: "browser.search.separatePrivateDefault.ui.enabled", type: "bool" },
@@ -677,9 +679,19 @@ EngineStore.prototype = {
   },
 
   removeEngine(aEngine) {
+/*
+    CLIQZ-SPECIAL: DB-2324, search engine view should not make a decision
+    upon whether to remove engine or not.
+    If a user has only 1 search engine in the list and then tries to add
+    another one (via AMO, for example) which is the same
+    then those engines are duplicated.
+    This happens because SearchService decides to remove the former engine
+    which is not the case for search.js view.
+
     if (this._engines.length == 1) {
       throw new Error("Cannot remove last engine!");
     }
+*/
 
     let engineName = aEngine.name;
     let index = this._engines.findIndex(element => element.name == engineName);
@@ -711,7 +723,7 @@ EngineStore.prototype = {
 
         // The search service removes the alias when an engine is hidden,
         // so clear any alias we may have cached before unhiding the engine.
-        e.alias = "";
+        // e.alias = "";
 
         this._engines.splice(i, 0, e);
         let engine = e.originalEngine;

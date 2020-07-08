@@ -2181,6 +2181,10 @@ var AddonManagerInternal = {
     install.install();
   },
 
+  isAMOOrigin(installingPrincipal) {
+    return !!(installingPrincipal && installingPrincipal.origin === "https://addons.mozilla.org");
+  },
+
   /**
    * Starts installation of an AddonInstall notifying the registered
    * web install listener of a blocked or started install.
@@ -2269,7 +2273,9 @@ var AddonManagerInternal = {
           aInstall
         );
         return;
+      // CLIQZ-SPECIAL: Mark AMO as safe site
       } else if (
+        !this.isAMOOrigin(aInstallingPrincipal) &&
         aInstallingPrincipal.isNullPrincipal ||
         (aBrowser &&
           (!aBrowser.contentPrincipal ||
@@ -2325,10 +2331,12 @@ var AddonManagerInternal = {
         );
       };
 
-      let installAllowed = this.isInstallAllowed(
-        aMimetype,
-        aInstallingPrincipal
-      );
+      // CLIQZ-SPECIAL: Mark AMO as safe site
+      let installAllowed = this.isAMOOrigin(aInstallingPrincipal) ||
+        this.isInstallAllowed(
+          aMimetype,
+          aInstallingPrincipal
+        );
       let installPerm = Services.perms.testPermissionFromPrincipal(
         aInstallingPrincipal,
         "install"
@@ -3767,6 +3775,10 @@ var AddonManager = {
     ["ERROR_UNEXPECTED_ADDON_TYPE", -6],
     // The addon did not have the expected ID
     ["ERROR_INCORRECT_ID", -7],
+    // CLIQZ: Addon is already integrated as system addon
+    ["ERROR_SIGNEDSTATE_CLIQZ", -8],
+    // CLIQZ: Addon uses unsupported APIs
+    ["ERROR_UNSUPPORTED_API_CLIQZ", -9]
   ]),
   // The update check timed out
   ERROR_TIMEOUT: -1,
@@ -3930,6 +3942,8 @@ var AddonManager = {
   // to be unusable in builds that require signing should have negative values.
   // Add-on signing is not required, e.g. because the pref is disabled.
   SIGNEDSTATE_NOT_REQUIRED: undefined,
+  // CLIQZ: Cliqz Add-on is signed with a "Mozilla Extensions" certificate
+  SIGNEDSTATE_CLIQZ: -3,
   // Add-on is signed but signature verification has failed.
   SIGNEDSTATE_BROKEN: -2,
   // Add-on may be signed but by an certificate that doesn't chain to our
@@ -3959,6 +3973,33 @@ var AddonManager = {
   /** Boolean indicating whether AddonManager startup has completed. */
   get isReady() {
     return gStartupComplete && !gShutdownInProgress;
+  },
+
+  isReadyAsync() {
+    const context = this;
+
+    // Addons may still be being loaded, so wait for them to be fully set up.
+    const p = new Promise((resolve, reject) => {
+      if (context.isReady) {
+        resolve();
+        return;
+      }
+
+      let listener = {
+        onStartup() {
+          context.removeManagerListener(listener);
+          resolve();
+        },
+        onShutdown() {
+          context.removeManagerListener(listener);
+          reject();
+        }
+      };
+
+      context.addManagerListener(listener);
+    });
+
+    context.isReadyAsync = () => p;
   },
 
   /** @constructor */
@@ -4760,6 +4801,10 @@ AMTelemetry = {
 };
 
 AddonManager.init();
+// CLIQZ-SPECIAL: we need to call this method here because isReadyAsync is reassigned a new value
+// once beed called.
+// But later on AddonManager becomes frozen which makes it impossible to reassign isReadyAsync.
+AddonManager.isReadyAsync();
 
 // Setup the AMTelemetry once the AddonManager has been started.
 AddonManager.addManagerListener(AMTelemetry);

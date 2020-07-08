@@ -43,6 +43,8 @@
 // third_party/sqlite3/src/Makefile.in.
 #define PREF_TS_PAGESIZE_DEFAULT 32768
 
+mozilla::LazyLogModule gStorageServiceLog("mozStorageService");
+
 namespace mozilla {
 namespace storage {
 

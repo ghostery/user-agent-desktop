@@ -25,7 +25,7 @@ dictionary LoadURIOptions {
    * upgrade-insecure-requests, then the new top-level load will
    * be upgraded to HTTPS.
    */
-  ContentSecurityPolicy? csp = null;
+   ContentSecurityPolicy? csp = null;
 
   /**
    * Flags modifying load behaviour.  This parameter is a bitwise
@@ -53,7 +53,7 @@ dictionary LoadURIOptions {
    * header stream is formatted as:
    *     ( HEADER "\r\n" )*
    */
-   InputStream? headers = null;
+  InputStream? headers = null;
 
   /**
    * Set to indicate a base URI to be associated with the load. Note

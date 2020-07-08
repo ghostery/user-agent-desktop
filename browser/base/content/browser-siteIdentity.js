@@ -57,7 +57,7 @@ var gIdentityHandler = {
    * RegExp used to decide if an about url should be shown as being part of
    * the browser UI.
    */
-  _secureInternalUIWhitelist: /^(?:accounts|addons|cache|certificate|config|crashes|downloads|license|logins|preferences|protections|rights|sessionrestore|support|welcomeback)(?:[?#]|$)/i,
+  _secureInternalUIWhitelist: /^(?:accounts|addons|cache|certificate|cliqz|config|crashes|downloads|license|preferences|rights|sessionrestore|support|welcomeback)(?:[?#]|$)/i,
 
   /**
    * Whether the established HTTPS connection is considered "broken".
@@ -353,6 +353,21 @@ var gIdentityHandler = {
       false
     );
     return this._showExtendedValidation;
+  },
+
+  /**
+   * CLIQZ-SPECIAL: Identify if scope is of cliqz extension
+   */
+  get _isSystemAddon() {
+    return (
+      this._pageExtensionPolicy &&
+      this._pageExtensionPolicy.extension &&
+      this._pageExtensionPolicy.extension.addonData &&
+      (
+        this._pageExtensionPolicy.extension.addonData.signedState  == 3 ||
+        this._pageExtensionPolicy.extension.addonData.builtIn
+      )
+    ) || false;
   },
 
   /**
@@ -691,7 +706,10 @@ var gIdentityHandler = {
     let icon_country_label = "";
     let icon_labels_dir = "ltr";
 
-    if (this._isSecureInternalUI) {
+    // CLIQZ-SPECIAL: Show search glass in identity box when cliqz pages are open
+    if (this._isSystemAddon) {
+      this._identityBox.setAttribute('pageproxystate', 'invalid');
+    } else if (this._isSecureInternalUI) {
       // This is a secure internal Firefox page.
       this._identityBox.className = "chromeUI";
       let brandBundle = document.getElementById("bundle_brand");
@@ -870,7 +888,8 @@ var gIdentityHandler = {
       }
     }
 
-    if (hasGrantedPermissions) {
+    // CLIQZ-SPECIAL: dont need permissions for internal cliqz extension pages
+    if (hasGrantedPermissions && !this._isSystemAddon) {
       this._identityBox.classList.add("grantedPermissions");
     }
 
@@ -903,12 +922,13 @@ var gIdentityHandler = {
     this._refreshIdentityIcons();
 
     this._refreshPermissionIcons();
-
+#if 0
     // Hide the shield icon if it is a chrome page.
     gProtectionsHandler._trackingProtectionIconContainer.classList.toggle(
       "chromeUI",
       this._isSecureInternalUI
     );
+#endif
   },
 
   /**
@@ -1168,9 +1188,11 @@ var gIdentityHandler = {
     this._identityBox.setAttribute("open", "true");
 
     // Check the panel state of the protections panel. Hide it if needed.
+#if 0
     if (gProtectionsHandler._protectionsPopup.state != "closed") {
       PanelMultiView.hidePopup(gProtectionsHandler._protectionsPopup);
     }
+#endif
 
     // Now open the popup, anchored off the primary chrome element
     PanelMultiView.openPopup(this._identityPopup, this._identityIcon, {

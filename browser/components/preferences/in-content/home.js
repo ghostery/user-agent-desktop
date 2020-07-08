@@ -265,6 +265,7 @@ var gHomePane = {
   },
 
   async _handleHomePageOverrides() {
+#if 0
     if (HomePage.locked) {
       // An extension can't control these settings if they're locked.
       hideControllingExtension(HOMEPAGE_OVERRIDE_KEY);
@@ -275,6 +276,7 @@ var gHomePane = {
       this._renderCustomSettings({ isControlled });
       this._renderHomepageMode(isControlled);
     }
+#endif
   },
 
   syncFromHomePref() {
@@ -339,6 +341,7 @@ var gHomePane = {
     const tabCount = tabs.length;
     document.l10n.setAttributes(useCurrent, "use-current-pages", { tabCount });
 
+#if 0
     // If the homepage is controlled by an extension then you can't use this.
     if (
       await getControllingExtensionInfo(
@@ -348,6 +351,7 @@ var gHomePane = {
     ) {
       return;
     }
+#endif
 
     // In this case, the button's disabled state is set by preferences.xml.
     let prefName = "pref.browser.homepage.disable_button.current_page";

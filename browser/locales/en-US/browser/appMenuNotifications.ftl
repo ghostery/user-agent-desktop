@@ -31,11 +31,11 @@ appmenu-update-restart =
     .buttonaccesskey = R
     .secondarybuttonlabel = Not Now
     .secondarybuttonaccesskey = N
-appmenu-update-restart-message = After a quick restart, { -brand-shorter-name } will restore all your open tabs and windows that are not in Private Browsing mode.
+appmenu-update-restart-message = After a quick restart, { -brand-shorter-name } will restore all your open tabs and windows that are not in Forget Browsing mode.
 appmenu-addon-private-browsing-installed =
     .buttonlabel = Okay, Got It
     .buttonaccesskey = O
 appmenu-addon-post-install-message = Manage your add-ons by clicking <image data-l10n-name='addon-install-icon'></image> in the <image data-l10n-name='addon-menu-icon'></image> menu.
 appmenu-addon-post-install-incognito-checkbox =
-    .label = Allow this extension to run in Private Windows
+    .label = Allow this extension to run in Forget Windows
     .accesskey = A

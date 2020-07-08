@@ -351,7 +351,11 @@ def parse_manifest(root, path, fileobj=None):
     if root:
         path = os.path.normpath(os.path.abspath(os.path.join(root, path)))
     if not fileobj:
-        fileobj = open(path)
+        try:
+            fileobj = open(path)
+        except Exception as e:
+            print("File " + path + " can not be open.")
+            return
     linenum = 0
     for line in fileobj:
         line = six.ensure_text(line)

@@ -5,12 +5,15 @@
 %endif
 
 .description-wrapper {
+%if 0
+  /* Cliqz. Remove image from this page */
   background-image: url("chrome://browser/skin/illustrations/error-session-restore.svg");
   background-repeat: no-repeat;
   background-size: 38%;
   padding-inline-start: 38%;
   background-position: left center;
   min-height: 300px;
+%endif
 }
 
 .title {

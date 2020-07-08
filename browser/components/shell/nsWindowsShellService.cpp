@@ -26,6 +26,7 @@
 #include "nsXULAppAPI.h"
 #include "mozilla/WindowsVersion.h"
 #include "mozilla/dom/Element.h"
+#include "nsWindowsHelpers.h"
 
 #include "windows.h"
 #include "shellapi.h"
@@ -151,7 +152,7 @@ static bool IsPathDefaultForClass(
     return false;
   }
 
-  LPCWSTR progID = isProtocol ? L"FirefoxURL" : L"FirefoxHTML";
+  LPCWSTR progID = isProtocol ? L"CliqzURL" : L"CliqzHTML";
   bool isDefault = !wcsnicmp(registeredApp, progID, wcslen(progID));
 
   nsAutoString regAppName(registeredApp);
@@ -374,14 +375,16 @@ nsresult nsWindowsShellService::InvokeHTTPOpenAsVerb() {
 
   nsString urlStr;
   nsresult rv = formatter->FormatURLPref(
-      NS_LITERAL_STRING("app.support.baseURL"), urlStr);
+      NS_LITERAL_STRING("app.support.default_in_win10.URL"), urlStr);
   if (NS_FAILED(rv)) {
     return rv;
   }
   if (!StringBeginsWith(urlStr, NS_LITERAL_STRING("https://"))) {
     return NS_ERROR_FAILURE;
   }
+#if 0  // predefined in branding pref for Cliqz browser
   urlStr.AppendLiteral("win10-default-browser");
+#endif
 
   SHELLEXECUTEINFOW seinfo = {sizeof(SHELLEXECUTEINFOW)};
   seinfo.lpVerb = L"openas";

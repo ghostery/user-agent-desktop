@@ -799,7 +799,7 @@ var gXPInstallObserver = {
             args = [install.name];
           } else {
             error += "Incompatible";
-            args = [brandShortName, Services.appinfo.version, install.name];
+            args = [brandShortName, Services.prefs.getCharPref("distribution.version"), install.name];
           }
 
           if (
@@ -822,9 +822,12 @@ var gXPInstallObserver = {
 
           // Add Learn More link when refusing to install an unsigned add-on
           if (install.error == AddonManager.ERROR_SIGNEDSTATE_REQUIRED) {
-            options.learnMoreURL =
-              Services.urlFormatter.formatURLPref("app.support.baseURL") +
-              "unsigned-addons";
+            // CLIQZ-AFTER-MERGE:
+            // it takes a proper support url in case a user tried to install
+            // unsinged addon.
+            options.learnMoreURL = "https://cliqz.com/support";
+          } else if (install.error == AddonManager.ERROR_UNSUPPORTED_API_CLIQZ) {
+            options.learnMoreURL = "https://cliqz.com/support/blocked-add-ons-apis";
           }
 
           messageString = gNavigatorBundle.getFormattedString(error, args);

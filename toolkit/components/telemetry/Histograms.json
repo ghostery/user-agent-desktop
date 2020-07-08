@@ -7139,6 +7139,32 @@
     "keyed": true,
     "description": "How long it took to import logins (passwords) from another browser, keyed by the name of the browser. The time for users to unlock Keychain on macOS is included in this time."
   },
+  "FX_MIGRATION_ADDONS_IMPORT_MS": {
+    "record_in_processes": ["main", "content"],
+    "products": ["firefox"],
+    "bug_numbers": [1289436],
+    "alert_emails": ["gijs@mozilla.com"],
+    "expires_in_version": "65",
+    "kind": "exponential",
+    "n_buckets": 70,
+    "high": 100000,
+    "releaseChannelCollection": "opt-out",
+    "keyed": true,
+    "description": "How long it took to import addons from another browser, keyed by the name of the browser."
+  },
+  "FX_MIGRATION_COOKIES_IMPORT_MS": {
+    "record_in_processes": ["main", "content"],
+    "products": ["firefox"],
+    "bug_numbers": [1289436],
+    "alert_emails": ["gijs@mozilla.com"],
+    "expires_in_version": "65",
+    "kind": "exponential",
+    "n_buckets": 70,
+    "high": 100000,
+    "releaseChannelCollection": "opt-out",
+    "keyed": true,
+    "description": "How long it took to import cookies from another browser, keyed by the name of the browser."
+  },
   "FX_MIGRATION_BOOKMARKS_JANK_MS": {
     "record_in_processes": ["main"],
     "products": ["firefox"],
@@ -7177,6 +7203,32 @@
     "releaseChannelCollection": "opt-out",
     "keyed": true,
     "description": "Accumulated timer delay (variance between when the timer was expected to fire and when it actually fired) in milliseconds as an indicator for decreased main-thread responsiveness while importing logins / passwords from another browser, keyed by the name of the browser (see gAvailableMigratorKeys in MigrationUtils.jsm). The import is happening on a background thread and should ideally not affect the UI noticeably. The time with the blocking Keychain dialog on macOS can skew this data."
+  },
+  "FX_MIGRATION_ADDONS_JANK_MS": {
+    "record_in_processes": ["main", "content"],
+    "products": ["firefox"],
+    "bug_numbers": [1338522],
+    "alert_emails": ["dao@mozilla.com"],
+    "expires_in_version": "65",
+    "kind": "exponential",
+    "n_buckets": 20,
+    "high": 60000,
+    "releaseChannelCollection": "opt-out",
+    "keyed": true,
+    "description": "Accumulated timer delay (variance between when the timer was expected to fire and when it actually fired) in milliseconds as an indicator for decreased main-thread responsiveness while importing addons from another browser, keyed by the name of the browser (see gAvailableMigratorKeys in MigrationUtils.jsm). The import is happening on a background thread and should ideally not affect the UI noticeably."
+  },
+  "FX_MIGRATION_COOKIES_JANK_MS": {
+    "record_in_processes": ["main", "content"],
+    "products": ["firefox"],
+    "bug_numbers": [1338522],
+    "alert_emails": ["dao@mozilla.com"],
+    "expires_in_version": "65",
+    "kind": "exponential",
+    "n_buckets": 20,
+    "high": 60000,
+    "releaseChannelCollection": "opt-out",
+    "keyed": true,
+    "description": "Accumulated timer delay (variance between when the timer was expected to fire and when it actually fired) in milliseconds as an indicator for decreased main-thread responsiveness while importing cookies from another browser, keyed by the name of the browser (see gAvailableMigratorKeys in MigrationUtils.jsm). The import is happening on a background thread and should ideally not affect the UI noticeably."
   },
   "FX_MIGRATION_BOOKMARKS_QUANTITY": {
     "record_in_processes": ["main"],
@@ -14552,6 +14604,17 @@
     "n_buckets": 10,
     "bug_numbers": [1482259, 1570634],
     "description": "In order to know how many silent audio track in the web comparing to other normal media, we record the silence proportion of audio track of media element. The range of value is from 0% - 100%.",
+    "releaseChannelCollection": "opt-out"
+  },
+  "REPORT_DECEPTIVE_SITE": {
+    "record_in_processes": ["main", "content"],
+    "products": ["firefox"],
+    "alert_emails": [],
+    "expires_in_version": "never",
+    "bug_numbers": [],
+    "kind": "enumerated",
+    "n_values": 3,
+    "description": "Record how many times the report deceptive website button is clicked (0 = Phish, 1 = PhishMistake, 2 = MalwareMistake)",
     "releaseChannelCollection": "opt-out"
   },
   "WEB_AUDIO_BECOMES_AUDIBLE_TIME": {

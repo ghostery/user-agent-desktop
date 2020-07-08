@@ -1298,6 +1298,16 @@ var UITour = {
       let tooltipIcon = document.getElementById("UITourTooltipIcon");
       let tooltipButtons = document.getElementById("UITourTooltipButtons");
 
+      // CLIQZ-SPECIAL: DB-2385
+      if (aAnchorEl.getAttribute("data-extensionid") == "cliqz@cliqz.com"
+        || aAnchorEl.getAttribute("actionid") == "cliqz_cliqz_com") {
+        tooltip.style.setProperty("--arrowpanel-background", "#00aef0");
+        tooltip.style.setProperty("--arrowpanel-color", "#fff");
+      } else {
+        tooltip.style.removeProperty("--arrowpanel-background");
+        tooltip.style.removeProperty("--arrowpanel-color");
+      }
+
       if (tooltip.state == "showing" || tooltip.state == "open") {
         tooltip.hidePopup();
       }

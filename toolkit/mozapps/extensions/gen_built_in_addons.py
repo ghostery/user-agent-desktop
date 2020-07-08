@@ -85,7 +85,7 @@ def main(output, *args):
         for p in registry.match('%s/*' % args.featuresdir):
             features.add(mozpath.basename(get_child(args.featuresdir, p)))
 
-        listing["system"] = sorted(features)
+        listing["system"] = [os.path.splitext(it)[0] for it in sorted(features)]
 
     json.dump(listing, output, sort_keys=True)
 

@@ -342,11 +342,15 @@ XPCOMUtils.defineLazyGlobalGetters(this, ["fetch"]);
 
 XPCOMUtils.defineLazyModuleGetters(this, {
   AboutPagesUtils: "resource://gre/modules/AboutPagesUtils.jsm",
+/* CLIQZ-SPECIAL: We do not use this in search result
   BrowserUtils: "resource://gre/modules/BrowserUtils.jsm",
   ExtensionSearchHandler: "resource://gre/modules/ExtensionSearchHandler.jsm",
+*/
   ObjectUtils: "resource://gre/modules/ObjectUtils.jsm",
+/* CLIQZ-SPECIAL: We do not use this in search result
   PlacesRemoteTabsAutocompleteProvider:
     "resource://gre/modules/PlacesRemoteTabsAutocompleteProvider.jsm",
+*/
   PlacesSearchAutocompleteProvider:
     "resource://gre/modules/PlacesSearchAutocompleteProvider.jsm",
   PlacesUtils: "resource://gre/modules/PlacesUtils.jsm",
@@ -727,6 +731,10 @@ function Search(
     this._disablePrivateActions = params.has("disable-private-actions");
     this._inPrivateWindow = params.has("private-window");
     this._prohibitAutoFill = params.has("prohibit-autofill");
+    // CLIQZ-SPECIAL: open page imporvements via extensions
+    this._disableAdaptive = params.has("disable-adaptive");
+    this._enableAtSearch = params.has("enable-at-search");
+
     // Extract the max-results param.
     let maxResults = searchParam.match(REGEXP_MAX_RESULTS);
     this._maxResults = maxResults
@@ -1038,11 +1046,14 @@ Search.prototype = {
     // are not enabled).
 
     // Check for Preloaded Sites Expiry before Autofill
+
+    /* CLIQZ-SPECIAL: we dont need preloaded sites
     await this._checkPreloadedSitesExpiry();
+    */
 
     // If the query is simply "@", then the results should be a list of all the
     // search engines with "@" aliases, without a hueristic result.
-    if (this._trimmedOriginalSearchString == "@") {
+    if (this._enableAtSearch && this._trimmedOriginalSearchString == "@") {
       let added = await this._addSearchEngineTokenAliasMatches();
       if (added) {
         this._autocompleteSearch.finishSearch(true);
@@ -1053,12 +1064,16 @@ Search.prototype = {
     // Add the first heuristic result, if any.  Set _addingHeuristicFirstMatch
     // to true so that when the result is added, "heuristic" can be included in
     // its style.
+
+    let hasHeuristic = false;
+    /* CLIQZ-SPECIAL: we dont support heuristic search
     this._addingHeuristicFirstMatch = true;
     let hasHeuristic = await this._matchFirstHeuristicResult(conn);
     this._addingHeuristicFirstMatch = false;
     if (!this.pending) {
       return;
     }
+    */
 
     // We sleep a little between adding the heuristicFirstMatch and matching
     // any other searches so we aren't kicking off potentially expensive
@@ -1096,6 +1111,8 @@ Search.prototype = {
     // Only add extension suggestions if the first token is a registered keyword
     // and the search string has characters after the first token.
     let extensionsCompletePromise = Promise.resolve();
+
+    /* CLIQZ-SPECIAL: we dont support extension search
     if (
       this._heuristicToken &&
       ExtensionSearchHandler.isKeywordRegistered(this._heuristicToken) &&
@@ -1108,10 +1125,13 @@ Search.prototype = {
     } else if (ExtensionSearchHandler.hasActiveInputSession()) {
       ExtensionSearchHandler.handleInputCancelled();
     }
+    */
 
     // Start adding search suggestions, unless they aren't required or the
     // window is private.
     let searchSuggestionsCompletePromise = Promise.resolve();
+
+    /* CLIQZ-SPECIAL: we dont support search engine search in toolbar
     if (
       this._enableActions &&
       this.hasBehavior("search") &&
@@ -1170,17 +1190,21 @@ Search.prototype = {
       this._autocompleteSearch.finishSearch(true);
       return;
     }
+    */
 
-    // Run the adaptive query first.
-    await conn.executeCached(
-      this._adaptiveQuery[0],
-      this._adaptiveQuery[1],
-      this._onResultRow.bind(this)
-    );
-    if (!this.pending) {
-      return;
+    if (!this._disableAdaptive) {
+      // Run the adaptive query first.
+      await conn.executeCached(
+        this._adaptiveQuery[0],
+        this._adaptiveQuery[1],
+        this._onResultRow.bind(this)
+      );
+      if (!this.pending) {
+        return;
+      }
     }
 
+    /* CLIQZ-SPECIAL: we dont support remote tabs
     // Then fetch remote tabs.
     if (this._enableActions && this.hasBehavior("openpage")) {
       await this._matchRemoteTabs();
@@ -1188,15 +1212,18 @@ Search.prototype = {
         return;
       }
     }
+    */
 
     // Get the final query, based on the tokens found in the search string and
     // the keyword substitution, if any.
     let queries = [];
     // "openpage" behavior is supported by the default query.
     // _switchToTabQuery instead returns only pages not supported by history.
+
     if (this.hasBehavior("openpage")) {
       queries.push(this._switchToTabQuery);
     }
+
     queries.push(this._searchQuery);
 
     // Finally run all the remaining queries.
@@ -1215,6 +1242,7 @@ Search.prototype = {
       this._addFilteredQueryMatch(this._extraAdaptiveRows.shift());
     }
 
+    /* CLIQZ-SPECIAL: we dont support remote tab search
     // If we have some unused remote tab matches, add them now.
     while (
       this._extraRemoteTabRows.length &&
@@ -1222,6 +1250,7 @@ Search.prototype = {
     ) {
       this._addMatch(this._extraRemoteTabRows.shift());
     }
+    */
 
     this._matchAboutPages();
 
@@ -1244,7 +1273,9 @@ Search.prototype = {
       }
     }
 
+    /* CLIQZ-SPECIAL: we dont support preload sites
     this._matchPreloadedSites();
+    */
 
     // Ensure to fill any remaining space.
     await searchSuggestionsCompletePromise;

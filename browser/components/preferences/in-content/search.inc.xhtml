@@ -10,7 +10,7 @@
           data-category="paneSearch">
       <html:h1 data-l10n-id="pane-search-title"/>
     </hbox>
-
+#if 0
     <groupbox id="searchbarGroup" data-category="paneSearch" hidden="true">
       <label control="searchBarVisibleGroup"><html:h2 data-l10n-id="search-bar-header"/></label>
       <radiogroup id="searchBarVisibleGroup" preference="browser.search.widget.inNavBar">
@@ -20,7 +20,7 @@
         <image class="searchBarImage searchBarShownImage" role="presentation"/>
       </radiogroup>
     </groupbox>
-
+#endif
     <!-- Default Search Engine -->
     <groupbox id="defaultEngineGroup" data-category="paneSearch" hidden="true">
       <label><html:h2 data-l10n-id="search-engine-default-header" /></label>
@@ -62,7 +62,7 @@
       <checkbox id="suggestionsInSearchFieldsCheckbox"
                 data-l10n-id="search-suggestions-option"
                 preference="browser.search.suggest.enabled"/>
-      <vbox class="indent">
+      <vbox class="indent" hidden="true">
         <checkbox id="urlBarSuggestion" data-l10n-id="search-show-suggestions-url-bar-option" />
         <checkbox id="showSearchSuggestionsFirstCheckbox"
                   data-l10n-id="search-show-suggestions-above-history-option"/>
@@ -105,8 +105,9 @@
                 disabled="true"
                 />
       </hbox>
-      <hbox id="addEnginesBox" pack="start">
+      <vbox id="addEnginesBox" pack="start">
         <label id="addEngines" data-l10n-id="search-find-more-link" is="text-link"></label>
-      </hbox>
+        <label data-l10n-id="search-find-more-desc"/>
+      </vbox>
     </groupbox>
     </html:template>

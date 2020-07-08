@@ -15,3 +15,8 @@ body {
   padding-bottom: 0 !important;
   border-bottom: none;
 }
+
+#connectPrefs {
+  margin-right: 0; /*override margin from normal preferences.css */
+  margin-left: 0;
+}

@@ -241,7 +241,7 @@ def main():
             elif p in omnijars:
                 raise Exception('No jar log data for %s' % p)
 
-    copier.copy(args.destination)
+    copier.copy(args.destination, remove_unaccounted=False)
     generate_precomplete(os.path.normpath(os.path.join(args.destination,
                                                        respath)))
 

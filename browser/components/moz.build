@@ -38,15 +38,15 @@ DIRS += [
     'downloads',
     'enterprisepolicies',
     'extensions',
-    'fxmonitor',
+#    'fxmonitor',
     'migration',
     'newtab',
     'originattributes',
     'places',
-    'pocket',
+#   'pocket',
     'preferences',
     'privatebrowsing',
-    'protections',
+#   'protections',
     'protocolhandler',
     'resistfingerprinting',
     'search',
@@ -82,15 +82,27 @@ XPCOM_MANIFESTS += [
 ]
 
 EXTRA_COMPONENTS += [
-    'BrowserComponents.manifest',
+    'AutoForgetTabsService.js',
+    'BrowserComponents.manifest'
+]
+
+EXTRA_JS_MODULES += [
+    'AutoForgetTabs-utils.jsm',
+]
+
+EXTRA_COMPONENTS += [
     'tests/startupRecorder.js',
     'tests/testComponents.manifest',
 ]
 
 EXTRA_JS_MODULES += [
+    'CliqzResources.jsm',
+    'distribution.js',
+]
+
+EXTRA_PP_JS_MODULES += [
     'BrowserContentHandler.jsm',
     'BrowserGlue.jsm',
-    'distribution.js',
 ]
 
 BROWSER_CHROME_MANIFESTS += [

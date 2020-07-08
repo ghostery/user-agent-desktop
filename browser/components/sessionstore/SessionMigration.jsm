@@ -40,14 +40,28 @@ var SessionMigrationInternal = {
    * The complete state is then wrapped into the "about:welcomeback" page as
    * form field info to be restored when restoring the state.
    */
-  convertState(aStateObj) {
+  convertState(aStateObj, aRestorePageURL) {
     let state = {
       selectedWindow: aStateObj.selectedWindow,
       _closedWindows: [],
     };
     state.windows = aStateObj.windows.map(function(oldWin) {
       var win = { extData: {} };
-      win.tabs = oldWin.tabs.map(function(oldTab) {
+      // CLIQZ-SPECIAL: filter out all moz-extension URL before map,
+      // we do not want any extension URLs to restore
+      // win.tabs = oldWin.tabs.map(function(oldTab) {
+      win.tabs = oldWin.tabs
+      .filter(t => {
+        let isWebExtURL = false;
+        if (t.entries.length > 0) {
+          const lastEntry = t.entries[t.entries.length - 1];
+          if (lastEntry.url && lastEntry.url.startsWith("moz-extension")) {
+            isWebExtURL = true;
+          }
+        }
+        return !isWebExtURL;
+      })
+      .map(function(oldTab) {
         var tab = {};
         // Keep only titles, urls and triggeringPrincipals for history entries
         tab.entries = oldTab.entries.map(function(entry) {
@@ -66,7 +80,7 @@ var SessionMigrationInternal = {
       win._closedTabs = [];
       return win;
     });
-    let url = "about:welcomeback";
+    let url = aRestorePageURL;
     let formdata = { id: { sessionData: state }, url };
     let entry = {
       url,
@@ -101,10 +115,11 @@ var SessionMigration = {
   /**
    * Migrate a limited set of session data from one path to another.
    */
-  migrate(aFromPath, aToPath) {
+  migrate(aFromPath, aToPath, aRestorePageURL) {
     return (async function() {
       let inState = await SessionMigrationInternal.readState(aFromPath);
-      let outState = SessionMigrationInternal.convertState(inState);
+      let outState =
+          SessionMigrationInternal.convertState(inState, aRestorePageURL);
       // Unfortunately, we can't use SessionStore's own SessionFile to
       // write out the data because it has a dependency on the profile dir
       // being known. When the migration runs, there is no guarantee that

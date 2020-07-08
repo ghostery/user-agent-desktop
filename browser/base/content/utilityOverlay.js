@@ -33,6 +33,8 @@ XPCOMUtils.defineLazyGetter(this, "ReferrerInfo", () =>
 Object.defineProperty(this, "BROWSER_NEW_TAB_URL", {
   enumerable: true,
   get() {
+    // CLIQZ-SPECIAL - we allow cliqz tab to load in private mode
+#if 0
     if (PrivateBrowsingUtils.isWindowPrivate(window)) {
       if (
         !PrivateBrowsingUtils.permanentPrivateBrowsing &&
@@ -60,7 +62,9 @@ Object.defineProperty(this, "BROWSER_NEW_TAB_URL", {
         return "about:privatebrowsing";
       }
     }
-    return AboutNewTab.newTabURL;
+#endif
+    // CLIQZ-SPECIAL: DB-2504: fix for reloading all freshtabs after history gets cleared;
+    return "about:newtab";
   },
 });
 
@@ -73,6 +77,9 @@ var gBidiUI = false;
  */
 function isBlankPageURL(aURL) {
   return (
+    // CLIQZ-SPECIAL: covering corner case when
+    // uri is undefined from sessionstore.
+    !aURL ||
     aURL == "about:blank" ||
     aURL == "about:home" ||
     aURL == "about:welcome" ||
@@ -537,7 +544,7 @@ function openLinkIn(url, where, params) {
       features,
       sa
     );
-    return;
+    return win;
   }
 
   // We're now committed to loading the link in an existing browser window.
@@ -1068,9 +1075,11 @@ function openTourPage() {
 }
 
 function buildHelpMenu() {
+#if 0
   document.getElementById(
     "feedbackPage"
   ).disabled = !Services.policies.isAllowed("feedbackCommands");
+#endif
 
   document.getElementById(
     "helpSafeMode"

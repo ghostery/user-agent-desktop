@@ -19,3 +19,11 @@
     image-rendering: -moz-crisp-edges;
   }
 }
+
+.password-managers {
+  margin-top: 10px;
+}
+
+.privacy-managers {
+  margin-top: 30px;
+}

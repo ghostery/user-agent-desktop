@@ -512,7 +512,8 @@ Did you run with --create-virtualenv? Is mozinstall in virtualenv_modules?""")
         if not installer_path:
             installer_path = self.installer_path
         cmd.extend([installer_path,
-                    '--destination', target_dir])
+                    '--destination', target_dir,
+                    '--app', 'cliqz'])
         # TODO we'll need some error checking here
         return self.get_output_from_command(cmd, halt_on_failure=True,
                                             fatal_exit_code=3)

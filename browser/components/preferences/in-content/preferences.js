@@ -6,6 +6,7 @@
 /* import-globals-from subdialogs.js */
 /* import-globals-from main.js */
 /* import-globals-from home.js */
+/* import-globals-from cliqz.home.js */
 /* import-globals-from search.js */
 /* import-globals-from containers.js */
 /* import-globals-from privacy.js */
@@ -18,6 +19,7 @@
 "use strict";
 
 var { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
+var { CliqzResources } = ChromeUtils.import("resource:///modules/CliqzResources.jsm");
 
 ChromeUtils.defineModuleGetter(
   this,
@@ -80,10 +82,14 @@ function init_all() {
 
   gSubDialog.init();
   register_module("paneGeneral", gMainPane);
+#if 0
   register_module("paneHome", gHomePane);
+#endif
   register_module("paneSearch", gSearchPane);
   register_module("panePrivacy", gPrivacyPane);
   register_module("paneContainers", gContainersPane);
+  register_module("paneHome", gHomePane);
+#if MOZ_SERVICES_SYNC
   if (Services.prefs.getBoolPref("identity.fxaccounts.enabled")) {
     document.getElementById("category-sync").hidden = false;
     register_module("paneSync", gSyncPane);
@@ -91,6 +97,14 @@ function init_all() {
     // Remove the pane from the DOM so it doesn't get incorrectly included in search results.
     document.getElementById("template-paneSync").remove();
   }
+#endif
+
+  // CLIQZ-SPECIAL: show labs button
+  if (typeof gExperimentsPane !== 'undefined' && Services.prefs.getBoolPref("extensions.cliqz.labs.enabled", false)) {
+    register_module("paneExperiments", gExperimentsPane);
+    document.getElementById('category-experiments').hidden = false;
+  }
+
   register_module("paneSearchResults", gSearchResultsPane);
   gSearchResultsPane.init();
   gMainPane.preInit();
@@ -149,6 +163,7 @@ function telemetryBucketForCategory(category) {
     case "privacy":
     case "search":
     case "sync":
+    case "connect":
     case "searchresults":
       return category;
     default:
@@ -193,6 +208,16 @@ async function gotoPref(aCategory) {
   // will re-enter gotoPref.
   if (gLastCategory.category == category && !subcategory) {
     return;
+  }
+
+  // CLIQZ-SPECIAL:
+  // I have put it here after the previous IF-CLAUSE because otherwise
+  // connect page gets rendered twice on every demand.
+  if (category === "paneConnect" && gConnectPane && gConnectPane.loadFrame) {
+    gConnectPane.loadFrame();
+  }
+  if (category === "paneExperiments" && gExperimentsPane && gExperimentsPane.loadFrame) {
+    gExperimentsPane.loadFrame();
   }
 
   let item;
@@ -300,7 +325,7 @@ async function spotlight(subcategory, category) {
     }
   }
   if (subcategory) {
-    scrollAndHighlight(subcategory, category);
+    scrollAndHighlight(subcategory);
   }
 }
 

@@ -7,7 +7,7 @@
 # Page Title strings
 
 # Page title (ie tab title) for the Setup page
-about-debugging-page-title-setup-page = Debugging - Setup
+about-debugging-page-title-setup-page = Debugging with Cliqz Developer Tools
 
 # Page title (ie tab title) for the Runtime page
 # { $selectedRuntimeId } is the id of the current runtime, such as "this-firefox", "localhost:6080", ...

@@ -5,7 +5,7 @@
 %global __jar_repack %{nil}
 
 #Use a consistent string to refer to the package by
-%define pr_name "%{moz_app_displayname} %{moz_app_version}"
+%define pr_name "%{moz_app_displayname} %{moz_app_version_display}"
 
 Name:           %{moz_app_name}
 Version:        %{moz_numeric_app_version}
@@ -13,25 +13,27 @@ Release:        %{?moz_rpm_release:%{moz_rpm_release}}%{?buildid:.%{buildid}}
 Summary:        %{pr_name}
 Group:          Applications/Internet
 License:        MPL 2
-Vendor:         Mozilla
+Vendor:         Cliqz GmbH
 URL:            http://www.mozilla.org/projects/firefox/
 Source0:        %{name}.desktop
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 #AutoProv:       no
 
-BuildRequires:  desktop-file-utils
+# Cliqz: on ubuntu dependency has to be installed with apt-get
+#BuildRequires:  desktop-file-utils
 
 
 %description
-%{pr_name}.  This package was built from 
-%{moz_source_repo}/rev/%{moz_source_stamp}
+%{pr_name}.
+#This package was built from
+#%{moz_source_repo}/rev/%{moz_source_stamp}
 
 #We only want a subpackage for the SDK if the required
 #files were generated.  Like the tests subpackage, we
 #probably only need to conditionaly define the %files
 #section.
-%if %{?createtests:1}
+%if 0%{?createtests:1}
 %package tests
 Summary:    %{pr_name} tests
 Group:      Developement/Libraries
@@ -52,9 +54,10 @@ echo No-op build
 rm -rf $RPM_BUILD_ROOT
 make install DESTDIR=$RPM_BUILD_ROOT
 desktop-file-validate %{SOURCE0}
-desktop-file-install --vendor mozilla \
+desktop-file-install \
     --dir $RPM_BUILD_ROOT%{_datadir}/applications \
     %{SOURCE0}
+
 #In order to make branding work in a generic way, We find
 #all the icons that are likely to be used for desktop files
 #and install them appropriately
@@ -67,7 +70,7 @@ for i in $(cat icons.list) ; do
 done
 rm icons.list #cleanup
 
-%if %{?createtests:1}
+%if 0%{?createtests:1}
 #wastefully creates a zip file, but ensures that we stage all test suites
 make package-tests
 testdir=$RPM_BUILD_ROOT/%{_datadir}/%{_testsinstalldir}/tests
@@ -106,7 +109,7 @@ fi
 %doc
 
 
-%if %{?createtests:1}
+%if 0%{?createtests:1}
 %files tests
 %{_datadir}/%{_testsinstalldir}/tests/
 %endif

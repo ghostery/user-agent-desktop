@@ -10,6 +10,7 @@
 # ShellLink      http://nsis.sourceforge.net/ShellLink_plug-in
 # UAC            http://nsis.sourceforge.net/UAC_plug-in
 # ServicesHelper Mozilla specific plugin that is located in /other-licenses/nsis
+# CliqzHelper    Simple library which help with extracting branding information
 
 ; Set verbosity to 3 (e.g. no script) to lessen the noise in the build logs
 !verbose 3
@@ -293,10 +294,10 @@ Section "-InstallStartCleanup"
   ${EndIf}
 
   ; setup the application model id registration value
-  ${InitHashAppModelId} "$INSTDIR" "Software\Mozilla\${AppName}\TaskBarIDs"
+  ${InitHashAppModelId} "$INSTDIR" "Software\${AppName}\TaskBarIDs"
 
   ; Remove the updates directory
-  ${CleanUpdateDirectories} "Mozilla\Firefox" "Mozilla\updates"
+  ${CleanUpdateDirectories} "CLIQZ" "CLIQZ\updates"
 
   ${RemoveDeprecatedFiles}
   ${RemovePrecompleteEntries} "false"
@@ -304,6 +305,7 @@ Section "-InstallStartCleanup"
   ${If} ${FileExists} "$INSTDIR\defaults\pref\channel-prefs.js"
     Delete "$INSTDIR\defaults\pref\channel-prefs.js"
   ${EndIf}
+  ; Cliqz Browser: we don't replace already existing distribution.js file in pref
   ${If} ${FileExists} "$INSTDIR\defaults\pref"
     RmDir "$INSTDIR\defaults\pref"
   ${EndIf}
@@ -336,6 +338,13 @@ Section "-Application" APP_IDX
   ${CopyFilesFromDir} "$EXEDIR\core" "$INSTDIR" \
                       "$(ERROR_CREATE_DIRECTORY_PREFIX)" \
                       "$(ERROR_CREATE_DIRECTORY_SUFFIX)"
+
+  ; Try to get brand information from installer or it parent processes. Just
+  ; in case, because this will be done by stub installer. But in some rare cases
+  ; user can launch full installer bypassing stub installer.
+  CliqzHelper::saveTaggedParams "Software\CLIQZ" 259200
+  Call CliqzSaveBrandingInfo
+  Call FixCliqzAsFirefoxRegistry
 
   ; Register DLLs
   ; XXXrstrong - AccessibleMarshal.dll can be used by multiple applications but
@@ -385,7 +394,7 @@ Section "-Application" APP_IDX
     StrCpy $AddDesktopSC "1"
   ${EndIf}
 
-  ${CreateUpdateDir} "Mozilla"
+  ${CreateUpdateDir} "CLIQZ"
   ${If} ${Errors}
     Pop $0
     ${LogMsg} "** ERROR Failed to create update directory: $0"
@@ -393,25 +402,25 @@ Section "-Application" APP_IDX
 
   ${LogHeader} "Adding Registry Entries"
   SetShellVarContext current  ; Set SHCTX to HKCU
-  ${RegCleanMain} "Software\Mozilla"
+  ${RegCleanMain} "Software\CLIQZ"
   ${RegCleanUninstall}
   ${UpdateProtocolHandlers}
 
   ClearErrors
-  WriteRegStr HKLM "Software\Mozilla" "${BrandShortName}InstallerTest" "Write Test"
+  WriteRegStr HKLM "Software\CLIQZ" "${BrandShortName}InstallerTest" "Write Test"
   ${If} ${Errors}
     StrCpy $TmpVal "HKCU" ; used primarily for logging
   ${Else}
     SetShellVarContext all  ; Set SHCTX to HKLM
-    DeleteRegValue HKLM "Software\Mozilla" "${BrandShortName}InstallerTest"
+    DeleteRegValue HKLM "Software\CLIQZ" "${BrandShortName}InstallerTest"
     StrCpy $TmpVal "HKLM" ; used primarily for logging
-    ${RegCleanMain} "Software\Mozilla"
+    ${RegCleanMain} "Software\CLIQZ"
     ${RegCleanUninstall}
     ${UpdateProtocolHandlers}
 
-    ReadRegStr $0 HKLM "Software\mozilla.org\Mozilla" "CurrentVersion"
+    ReadRegStr $0 HKLM "Software\cliqz.com\CLIQZ" "CurrentVersion"
     ${If} "$0" != "${GREVersion}"
-      WriteRegStr HKLM "Software\mozilla.org\Mozilla" "CurrentVersion" "${GREVersion}"
+      WriteRegStr HKLM "Software\cliqz.com\CLIQZ" "CurrentVersion" "${GREVersion}"
     ${EndIf}
   ${EndIf}
 
@@ -434,17 +443,17 @@ Section "-Application" APP_IDX
   ; it doesn't cause problems always add them.
   ${SetUninstallKeys}
 
-  ; On install always add the FirefoxHTML and FirefoxURL keys.
-  ; An empty string is used for the 5th param because FirefoxHTML is not a
+  ; On install always add the CliqzHTML and CliqzURL keys.
+  ; An empty string is used for the 5th param because CliqzHTML is not a
   ; protocol handler.
   ${GetLongPath} "$INSTDIR\${FileMainEXE}" $8
   StrCpy $2 "$\"$8$\" -osint -url $\"%1$\""
 
-  ; In Win8, the delegate execute handler picks up the value in FirefoxURL and
-  ; FirefoxHTML to launch the desktop browser when it needs to.
-  ${AddDisabledDDEHandlerValues} "FirefoxHTML-$AppUserModelID" "$2" "$8,1" \
+  ; In Win8, the delegate execute handler picks up the value in CliqzURL and
+  ; CliqzHTML to launch the desktop browser when it needs to.
+  ${AddDisabledDDEHandlerValues} "CliqzHTML-$AppUserModelID" "$2" "$8,1" \
                                  "${AppRegName} Document" ""
-  ${AddDisabledDDEHandlerValues} "FirefoxURL-$AppUserModelID" "$2" "$8,1" \
+  ${AddDisabledDDEHandlerValues} "CliqzURL-$AppUserModelID" "$2" "$8,1" \
                                  "${AppRegName} URL" "true"
 
   ; For pre win8, the following keys should only be set if we can write to HKLM.
@@ -537,9 +546,9 @@ Section "-Application" APP_IDX
   ; Always add the application's shortcuts to the shortcuts log ini file. The
   ; DeleteShortcuts macro will do the right thing on uninstall if the
   ; shortcuts don't exist.
-  ${LogStartMenuShortcut} "${BrandShortName}.lnk"
-  ${LogQuickLaunchShortcut} "${BrandShortName}.lnk"
-  ${LogDesktopShortcut} "${BrandShortName}.lnk"
+  ${LogStartMenuShortcut} "${BrandShortcutName}.lnk"
+  ${LogQuickLaunchShortcut} "${BrandShortcutName}.lnk"
+  ${LogDesktopShortcut} "${BrandShortcutName}.lnk"
 
   ; Best effort to update the Win7 taskbar and start menu shortcut app model
   ; id's. The possible contexts are current user / system and the user that
@@ -575,28 +584,28 @@ Section "-Application" APP_IDX
     ; behind not doing that is to interpret "false" as "don't do anything
     ; involving start menu shortcuts at all." We could also try to do this for
     ; both shell contexts, but that won't typically accomplish anything.
-    ${If} ${FileExists} "$SMPROGRAMS\${BrandFullName}.lnk"
-      ShellLink::GetShortCutTarget "$SMPROGRAMS\${BrandFullName}.lnk"
+    ${If} ${FileExists} "$SMPROGRAMS\${BrandShortName}.lnk"
+      ShellLink::GetShortCutTarget "$SMPROGRAMS\${BrandShortName}.lnk"
       Pop $0
       ${GetLongPath} "$0" $0
       ${If} $0 == "$INSTDIR\${FileMainEXE}"
-      ${AndIfNot} ${FileExists} "$SMPROGRAMS\${BrandShortName}.lnk"
-        Rename "$SMPROGRAMS\${BrandFullName}.lnk" \
-               "$SMPROGRAMS\${BrandShortName}.lnk"
-        ${LogMsg} "Renamed existing shortcut to $SMPROGRAMS\${BrandShortName}.lnk"
+      ${AndIfNot} ${FileExists} "$SMPROGRAMS\${BrandShortcutName}.lnk"
+        Rename "$SMPROGRAMS\${BrandShortName}.lnk" \
+               "$SMPROGRAMS\${BrandShortcutName}.lnk"
+        ${LogMsg} "Renamed existing shortcut to $SMPROGRAMS\${BrandShortcutName}.lnk"
       ${EndIf}
     ${Else}
-      CreateShortCut "$SMPROGRAMS\${BrandShortName}.lnk" "$INSTDIR\${FileMainEXE}"
-      ${If} ${FileExists} "$SMPROGRAMS\${BrandShortName}.lnk"
-        ShellLink::SetShortCutWorkingDirectory "$SMPROGRAMS\${BrandShortName}.lnk" \
+      CreateShortCut "$SMPROGRAMS\${BrandShortcutName}.lnk" "$INSTDIR\${FileMainEXE}"
+      ${If} ${FileExists} "$SMPROGRAMS\${BrandShortcutName}.lnk"
+        ShellLink::SetShortCutWorkingDirectory "$SMPROGRAMS\${BrandShortcutName}.lnk" \
                                                "$INSTDIR"
         ${If} "$AppUserModelID" != ""
-          ApplicationID::Set "$SMPROGRAMS\${BrandShortName}.lnk" \
+          ApplicationID::Set "$SMPROGRAMS\${BrandShortcutName}.lnk" \
                              "$AppUserModelID" "true"
         ${EndIf}
-        ${LogMsg} "Added Shortcut: $SMPROGRAMS\${BrandShortName}.lnk"
+        ${LogMsg} "Added Shortcut: $SMPROGRAMS\${BrandShortcutName}.lnk"
       ${Else}
-        ${LogMsg} "** ERROR Adding Shortcut: $SMPROGRAMS\${BrandShortName}.lnk"
+        ${LogMsg} "** ERROR Adding Shortcut: $SMPROGRAMS\${BrandShortcutName}.lnk"
       ${EndIf}
     ${EndIf}
   ${EndIf}
@@ -617,27 +626,27 @@ Section "-Application" APP_IDX
   ${EndIf}
 
   ${If} $AddDesktopSC == 1
-    ${If} ${FileExists} "$DESKTOP\${BrandFullName}.lnk"
-      ShellLink::GetShortCutTarget "$DESKTOP\${BrandFullName}.lnk"
+    ${If} ${FileExists} "$DESKTOP\${BrandShortName}.lnk"
+      ShellLink::GetShortCutTarget "$DESKTOP\${BrandShortName}.lnk"
       Pop $0
       ${GetLongPath} "$0" $0
       ${If} $0 == "$INSTDIR\${FileMainEXE}"
-      ${AndIfNot} ${FileExists} "$DESKTOP\${BrandShortName}.lnk"
-        Rename "$DESKTOP\${BrandFullName}.lnk" "$DESKTOP\${BrandShortName}.lnk"
-        ${LogMsg} "Renamed existing shortcut to $DESKTOP\${BrandShortName}.lnk"
+      ${AndIfNot} ${FileExists} "$DESKTOP\${BrandShortcutName}.lnk"
+        Rename "$DESKTOP\${BrandShortName}.lnk" "$DESKTOP\${BrandShortcutName}.lnk"
+        ${LogMsg} "Renamed existing shortcut to $DESKTOP\${BrandShortcutName}.lnk"
       ${EndIf}
     ${Else}
-      CreateShortCut "$DESKTOP\${BrandShortName}.lnk" "$INSTDIR\${FileMainEXE}"
-      ${If} ${FileExists} "$DESKTOP\${BrandShortName}.lnk"
-        ShellLink::SetShortCutWorkingDirectory "$DESKTOP\${BrandShortName}.lnk" \
+      CreateShortCut "$DESKTOP\${BrandShortcutName}.lnk" "$INSTDIR\${FileMainEXE}"
+      ${If} ${FileExists} "$DESKTOP\${BrandShortcutName}.lnk"
+        ShellLink::SetShortCutWorkingDirectory "$DESKTOP\${BrandShortcutName}.lnk" \
                                                "$INSTDIR"
         ${If} "$AppUserModelID" != ""
-          ApplicationID::Set "$DESKTOP\${BrandShortName}.lnk" \
+          ApplicationID::Set "$DESKTOP\${BrandShortcutName}.lnk" \
                              "$AppUserModelID" "true"
         ${EndIf}
-        ${LogMsg} "Added Shortcut: $DESKTOP\${BrandShortName}.lnk"
+        ${LogMsg} "Added Shortcut: $DESKTOP\${BrandShortcutName}.lnk"
       ${Else}
-        ${LogMsg} "** ERROR Adding Shortcut: $DESKTOP\${BrandShortName}.lnk"
+        ${LogMsg} "** ERROR Adding Shortcut: $DESKTOP\${BrandShortcutName}.lnk"
       ${EndIf}
     ${EndIf}
   ${EndIf}
@@ -651,12 +660,12 @@ Section "-Application" APP_IDX
       ${GetOptions} "$0" "/UAC:" $0
       ${If} ${Errors}
         Call AddQuickLaunchShortcut
-        ${LogMsg} "Added Shortcut: $QUICKLAUNCH\${BrandShortName}.lnk"
+        ${LogMsg} "Added Shortcut: $QUICKLAUNCH\${BrandShortcutName}.lnk"
       ${Else}
         ; It is not possible to add a log entry from the unelevated process so
         ; add the log entry without the path since there is no simple way to
         ; know the correct full path.
-        ${LogMsg} "Added Quick Launch Shortcut: ${BrandShortName}.lnk"
+        ${LogMsg} "Added Quick Launch Shortcut: ${BrandShortcutName}.lnk"
         GetFunctionAddress $0 AddQuickLaunchShortcut
         UAC::ExecCodeSegment $0
       ${EndIf}
@@ -706,19 +715,19 @@ Section "-Application" APP_IDX
   ${EndIf}
 !endif
 
-!ifdef MOZ_DEFAULT_BROWSER_AGENT
-  ${If} $RegisterDefaultAgent != "0"
-    Exec '"$INSTDIR\default-browser-agent.exe" register-task $AppUserModelID'
-    ${If} $RegisterDefaultAgent == ""
-      ; If the variable was unset, force it to a good value.
-      StrCpy $RegisterDefaultAgent 1
-    ${EndIf}
-  ${EndIf}
-  ; Remember whether we were told to skip registering the agent, so that updates
-  ; won't try to create a registration when they don't find an existing one.
-  WriteRegDWORD HKCU "Software\Mozilla\${AppName}\Installer\$AppUserModelID" \
-                     "DidRegisterDefaultBrowserAgent" $RegisterDefaultAgent
-!endif
+;!ifdef MOZ_DEFAULT_BROWSER_AGENT
+;  ${If} $RegisterDefaultAgent != "0"
+;    Exec '"$INSTDIR\default-browser-agent.exe" register-task $AppUserModelID'
+;    ${If} $RegisterDefaultAgent == ""
+;      ; If the variable was unset, force it to a good value.
+;      StrCpy $RegisterDefaultAgent 1
+;    ${EndIf}
+;  ${EndIf}
+;  ; Remember whether we were told to skip registering the agent, so that updates
+;  ; won't try to create a registration when they don't find an existing one.
+;  WriteRegDWORD HKCU "Software\Mozilla\${AppName}\Installer\$AppUserModelID" \
+;                     "DidRegisterDefaultBrowserAgent" $RegisterDefaultAgent
+;!endif
 SectionEnd
 
 ; Cleanup operations to perform at the end of the installation.
@@ -752,7 +761,7 @@ Section "-InstallEndCleanup"
       ; If we have something other than empty string now, write the value.
       ${If} "$0" != ""
         ClearErrors
-        WriteRegStr HKCU "Software\Mozilla\Firefox" "OldDefaultBrowserCommand" "$0"
+        WriteRegStr HKCU "Software\CLIQZ" "OldDefaultBrowserCommand" "$0"
       ${EndIf}
 
       ${LogHeader} "Setting as the default browser"
@@ -769,7 +778,7 @@ Section "-InstallEndCleanup"
       StrCpy $SetAsDefault false
       ${LogHeader} "Writing default-browser opt-out"
       ClearErrors
-      WriteRegStr HKCU "Software\Mozilla\Firefox" "DefaultBrowserOptOut" "True"
+      WriteRegStr HKCU "Software\CLIQZ" "DefaultBrowserOptOut" "True"
       ${If} ${Errors}
         ${LogMsg} "Error writing default-browser opt-out"
       ${EndIf}
@@ -826,13 +835,23 @@ Section "-InstallEndCleanup"
     ${EndIf}
   ${EndIf}
 
+  ; Cliqz: autolaunch in silent mode if /run switch exist
+  ${If} ${Silent}
+    ${GetParameters} $0
+    ${GetOptions} "$0" "/run" $0
+    ${Unless} ${Errors}
+      Call LaunchApp
+    ${EndUnless}
+  ${EndIf}
+
   StrCpy $InstallResult "success"
 
   ; When we're using the GUI, .onGUIEnd sends the ping, but of course that isn't
   ; invoked when we're running silently.
-  ${If} ${Silent}
-    Call SendPing
-  ${EndIf}
+  ; DB-2019. Not used for now
+  ;${If} ${Silent}
+  ;  Call SendPing
+  ;${EndIf}
 SectionEnd
 
 ################################################################################
@@ -906,9 +925,9 @@ FunctionEnd
 # Helper Functions
 
 Function AddQuickLaunchShortcut
-  CreateShortCut "$QUICKLAUNCH\${BrandShortName}.lnk" "$INSTDIR\${FileMainEXE}"
-  ${If} ${FileExists} "$QUICKLAUNCH\${BrandShortName}.lnk"
-    ShellLink::SetShortCutWorkingDirectory "$QUICKLAUNCH\${BrandShortName}.lnk" \
+  CreateShortCut "$QUICKLAUNCH\${BrandShortcutName}.lnk" "$INSTDIR\${FileMainEXE}"
+  ${If} ${FileExists} "$QUICKLAUNCH\${BrandShortcutName}.lnk"
+    ShellLink::SetShortCutWorkingDirectory "$QUICKLAUNCH\${BrandShortcutName}.lnk" \
                                            "$INSTDIR"
   ${EndIf}
 FunctionEnd
@@ -1057,12 +1076,12 @@ Function SendPing
   ${EndIf}
 
   ClearErrors
-  WriteRegStr HKLM "Software\Mozilla" "${BrandShortName}InstallerTest" \
+  WriteRegStr HKLM "Software\CLIQZ" "${BrandShortName}InstallerTest" \
                    "Write Test"
   ${If} ${Errors}
     nsJSON::Set /tree ping "Data" "admin_user" /value false
   ${Else}
-    DeleteRegValue HKLM "Software\Mozilla" "${BrandShortName}InstallerTest"
+    DeleteRegValue HKLM "Software\CLIQZ" "${BrandShortName}InstallerTest"
     nsJSON::Set /tree ping "Data" "admin_user" /value true
   ${EndIf}
 
@@ -1300,7 +1319,7 @@ FunctionEnd
 !ifdef MOZ_MAINTENANCE_SERVICE
 Function preComponents
   ; If the service already exists, don't show this page
-  ServicesHelper::IsInstalled "MozillaMaintenance"
+  ServicesHelper::IsInstalled "CLIQZMaintenance"
   Pop $R9
   ${If} $R9 == 1
     ; The service already exists so don't show this page.
@@ -1317,13 +1336,13 @@ Function preComponents
 
   ; Only show the maintenance service page if we have write access to HKLM
   ClearErrors
-  WriteRegStr HKLM "Software\Mozilla" \
+  WriteRegStr HKLM "Software\CLIQZ" \
               "${BrandShortName}InstallerTest" "Write Test"
   ${If} ${Errors}
     ClearErrors
     Abort
   ${Else}
-    DeleteRegValue HKLM "Software\Mozilla" "${BrandShortName}InstallerTest"
+    DeleteRegValue HKLM "Software\CLIQZ" "${BrandShortName}InstallerTest"
   ${EndIf}
 
   StrCpy $PageName "Components"
@@ -1502,14 +1521,14 @@ Function preSummary
 
   ; Check if it is possible to write to HKLM
   ClearErrors
-  WriteRegStr HKLM "Software\Mozilla" "${BrandShortName}InstallerTest" "Write Test"
+  WriteRegStr HKLM "Software\CLIQZ" "${BrandShortName}InstallerTest" "Write Test"
   ${Unless} ${Errors}
-    DeleteRegValue HKLM "Software\Mozilla" "${BrandShortName}InstallerTest"
-    ; Check if Firefox is the http handler for this user.
+    DeleteRegValue HKLM "Software\CLIQZ" "${BrandShortName}InstallerTest"
+    ; Check if Cliqz is the http handler for this user.
     SetShellVarContext current ; Set SHCTX to the current user
     ${IsHandlerForInstallDir} "http" $R9
-    ; If Firefox isn't the http handler for this user show the option to set
-    ; Firefox as the default browser.
+    ; If Cliqz isn't the http handler for this user show the option to set
+    ; Cliqz as the default browser.
     ${If} "$R9" != "true"
     ${AndIf} ${AtMostWin2008R2}
       WriteINIStr "$PLUGINSDIR\summary.ini" "Settings" NumFields "4"
@@ -1673,19 +1692,20 @@ Function .onInit
   SetRegView 64
 !endif
 
-  SetShellVarContext all
-  ${GetFirstInstallPath} "Software\Mozilla\${BrandFullNameInternal}" $0
-  ${If} "$0" == "false"
-    SetShellVarContext current
-    ${GetFirstInstallPath} "Software\Mozilla\${BrandFullNameInternal}" $0
-    ${If} "$0" == "false"
-      StrCpy $HadOldInstall false
-    ${Else}
-      StrCpy $HadOldInstall true
-    ${EndIf}
-  ${Else}
-    StrCpy $HadOldInstall true
-  ${EndIf}
+  ; DB-2019. Not used for now
+  ;SetShellVarContext all
+  ;${GetFirstInstallPath} "Software\Mozilla\${BrandFullNameInternal}" $0
+  ;${If} "$0" == "false"
+  ;  SetShellVarContext current
+  ;  ${GetFirstInstallPath} "Software\Mozilla\${BrandFullNameInternal}" $0
+  ;  ${If} "$0" == "false"
+  ;    StrCpy $HadOldInstall false
+  ;  ${Else}
+  ;    StrCpy $HadOldInstall true
+  ;  ${EndIf}
+  ;${Else}
+  ;  StrCpy $HadOldInstall true
+  ;${EndIf}
 
   ${InstallOnInitCommon} "$(WARN_MIN_SUPPORTED_OSVER_CPU_MSG)"
 
@@ -1876,5 +1896,6 @@ FunctionEnd
 
 Function .onGUIEnd
   ${OnEndCommon}
-  Call SendPing
+  ; DB-2019. Don't use for now
+  ;Call SendPing
 FunctionEnd

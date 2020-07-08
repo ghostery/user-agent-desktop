@@ -39,11 +39,13 @@ ChromeUtils.defineModuleGetter(
   "perfService",
   "resource://activity-stream/common/PerfService.jsm"
 );
+#if 0
 ChromeUtils.defineModuleGetter(
   this,
   "pktApi",
   "chrome://pocket/content/pktApi.jsm"
 );
+#endif
 
 const STORIES_UPDATE_TIME = 30 * 60 * 1000; // 30 minutes
 const TOPICS_UPDATE_TIME = 3 * 60 * 60 * 1000; // 3 hours
@@ -167,17 +169,21 @@ this.TopStoriesFeed = class TopStoriesFeed {
   }
 
   getPocketState(target) {
+#if 0
     const action = { type: at.POCKET_LOGGED_IN, data: pktApi.isUserLoggedIn() };
     this.store.dispatch(ac.OnlyToOneContent(action, target));
+#endif
   }
 
   dispatchPocketCta(data, shouldBroadcast) {
+#if 0
     const action = { type: at.POCKET_CTA, data: JSON.parse(data) };
     this.store.dispatch(
       shouldBroadcast
         ? ac.BroadcastToContent(action)
         : ac.AlsoToPreloaded(action)
     );
+#endif
   }
 
   /**

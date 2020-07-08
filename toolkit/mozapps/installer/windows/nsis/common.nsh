@@ -5833,7 +5833,7 @@ end:
 !ifmacrodef InitHashAppModelId
       ; setup the application model id registration value
       !ifdef AppName
-      ${InitHashAppModelId} "$INSTDIR" "Software\Mozilla\${AppName}\TaskBarIDs"
+      ${InitHashAppModelId} "$INSTDIR" "Software\${AppName}\TaskBarIDs"
       !endif
 !endif
 
@@ -6071,20 +6071,20 @@ end:
       ${If} ${IsNativeAMD64}
       ${OrIf} ${IsNativeARM64}
         SetRegView 64
-        ${GetSingleInstallPath} "Software\Mozilla\${BrandFullNameInternal}" $R9
+        ${GetSingleInstallPath} "Software\${BrandFullNameInternal}" $R9
         SetRegView lastused
       ${EndIf}
 
       StrCmp "$R9" "false" +1 finish_get_install_dir
 
       SetRegView 32
-      ${GetSingleInstallPath} "Software\Mozilla\${BrandFullNameInternal}" $R9
+      ${GetSingleInstallPath} "Software\${BrandFullNameInternal}" $R9
       SetRegView lastused
 
       StrCmp "$R9" "false" +1 finish_get_install_dir
 
       SetShellVarContext current  ; Set SHCTX to HKCU
-      ${GetSingleInstallPath} "Software\Mozilla\${BrandFullNameInternal}" $R9
+      ${GetSingleInstallPath} "Software\${BrandFullNameInternal}" $R9
 
       finish_get_install_dir:
       StrCmp "$R9" "false" +2 +1
@@ -8062,6 +8062,41 @@ end:
 !endif
 
 /**
+ * Modified version of the __NSD_SetStretchedImage macro from nsDialogs.nsh that
+ * supports transparency. See nsDialogs documentation for additional info.
+ */
+!macro __SetStretchedTransparentImage CONTROL IMAGE HANDLE
+  Push $0
+  Push $1
+  Push $2
+  Push $R0
+  StrCpy $R0 ${CONTROL} ; in case ${CONTROL} is $0
+  StrCpy $1 ""
+  StrCpy $2 ""
+  System::Call '*(i, i, i, i) i.s'
+  Pop $0
+  ${If} $0 <> 0
+    System::Call 'user32::GetClientRect(i R0, i r0)'
+    System::Call '*$0(i, i, i .s, i .s)'
+    System::Free $0
+    Pop $1
+    Pop $2
+  ${EndIf}
+  System::Call 'user32::LoadImageW(i 0, t s, i ${IMAGE_BITMAP}, i r1, i r2, \
+                                   i ${MOZ_LOADTRANSPARENT}) i .s' "${IMAGE}"
+  Pop $0
+  SendMessage $R0 ${STM_SETIMAGE} ${IMAGE_BITMAP} $0
+  SetCtlColors $R0 "" transparent
+  ${NSD_AddExStyle} $R0 ${WS_EX_TRANSPARENT}|${WS_EX_TOPMOST}
+  Pop $R0
+  Pop $2
+  Pop $1
+  Exch $0
+  Pop ${HANDLE}
+!macroend
+!define SetStretchedTransparentImage "!insertmacro __SetStretchedTransparentImage"
+
+/**
  * Draws an image file (BMP, GIF, or JPG) onto a bitmap control, with scaling.
  * Adapted from https://stackoverflow.com/a/13405711/1508094
  *
@@ -8405,6 +8440,46 @@ end:
   Pop $2
   Pop $1
   Exch $0 ; pixels from the beginning of the dialog to the end of the control
+!macroend
+
+/**
+ * Gets the number of dialog units from the top of a dialog to the bottom of a
+ * control
+ *
+ * _DIALOG the handle of the dialog
+ * _CONTROL the handle of the control
+ * _RES_DU return value - dialog units from the top of the dialog to the bottom
+ *         of the control
+ */
+!macro GetDlgItemBottomDUCall _DIALOG _CONTROL _RES_DU
+  Push "${_DIALOG}"
+  Push "${_CONTROL}"
+  ${CallArtificialFunction} GetDlgItemBottomDU_
+  Pop ${_RES_DU}
+!macroend
+
+!define GetDlgItemBottomDU "!insertmacro GetDlgItemBottomDUCall"
+!define un.GetDlgItemBottomDU "!insertmacro GetDlgItemBottomDUCall"
+
+!macro GetDlgItemBottomDU_
+  Exch $0 ; handle of the control
+  Exch $1 ; handle of the dialog
+  Push $2
+  Push $3
+
+  ; #32770 is the dialog class
+  FindWindow $2 "#32770" "" $HWNDPARENT
+  System::Call '*(i, i, i, i) i .r3'
+  System::Call 'user32::GetWindowRect(i r0, i r3)'
+  System::Call 'user32::MapWindowPoints(i 0, i r2, i r3, i 2)'
+  System::Call 'user32::MapDialogRect(i r1, i r3)'
+  System::Call '*$3(i, i, i, i .r0)'
+  System::Free $3
+
+  Pop $3
+  Pop $2
+  Pop $1
+  Exch $0 ; pixels from the top of the dialog to the bottom of the control
 !macroend
 
 /**

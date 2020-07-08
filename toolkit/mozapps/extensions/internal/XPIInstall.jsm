@@ -257,15 +257,37 @@ class Package {
       };
     }
 
-    let root = Ci.nsIX509CertDB.AddonsPublicRoot;
-    if (
-      !AppConstants.MOZ_REQUIRE_SIGNING &&
-      Services.prefs.getBoolPref(PREF_XPI_SIGNATURES_DEV_ROOT, false)
-    ) {
-      root = Ci.nsIX509CertDB.AddonsStageRoot;
+    /*
+     * CLIQZ - allow both Firefox and Cliqz certificate for installing addons
+     * Prevent pre integrated addons from installing - Cliqz/Ghostery/HttpsEverywhere
+     */
+
+    const rootCliqz = Ci.nsIX509CertDB.CliqzAddonsRoot;
+    let rootFirefox = Ci.nsIX509CertDB.AddonsPublicRoot;
+
+    if (!AppConstants.MOZ_REQUIRE_SIGNING &&
+        Services.prefs.getBoolPref(PREF_XPI_SIGNATURES_DEV_ROOT, false)) {
+      rootFirefox = Ci.nsIX509CertDB.AddonsStageRoot;
     }
 
-    return this.verifySignedStateForRoot(addon, root);
+    const CliqzSigned = await this.verifySignedStateForRoot(addon, rootCliqz);
+    const {signedState: isCliqzSigned} = CliqzSigned;
+
+    if (isCliqzSigned > 0)
+      return CliqzSigned;
+
+    const PREF_CLIQZ_ADDONS = 'browser.cliqz.integrated';
+    if (Services.prefs.getPrefType(PREF_CLIQZ_ADDONS) == Services.prefs.PREF_STRING) {
+      const integratedAddons = Services.prefs.getCharPref(PREF_CLIQZ_ADDONS) || '';
+      if (integratedAddons.includes(addon.id)) {
+        return {
+          signedState: AddonManager.SIGNEDSTATE_CLIQZ,
+          cert: null
+        };
+      }
+    }
+
+    return this.verifySignedStateForRoot(addon, rootFirefox)
   }
 
   flushCache() {}
@@ -519,6 +541,17 @@ async function loadManifestFromWebManifest(aPackage) {
     addon.optionsBrowserStyle = manifest.options_ui.browser_style;
   }
 
+  // CLIQZ-SPECIAL: Do not install theme and locale addons
+  if (['locale', 'theme'].includes(addon.type)) {
+    addon.doNotInstall = true;
+  }
+
+  // CLIQZ: Check if extension has newtab/home page changes, so as to show message in permissions popup
+  if ((manifest.chrome_url_overrides && manifest.chrome_url_overrides.newtab) ||
+      (manifest.chrome_settings_overrides && manifest.chrome_settings_overrides.homepage)) {
+    addon.changesNewTab = true;
+  }
+
   // WebExtensions don't use iconURLs
   addon.iconURL = null;
   addon.icons = manifest.icons || {};
@@ -694,6 +727,7 @@ var loadManifest = async function(aPackage, aLocation, aOldAddon) {
     }
   }
 
+  /* CLIQZ-SPECIAL: remove recommended status
   if (
     addon.type === "extension" &&
     !aLocation.isBuiltin &&
@@ -703,6 +737,16 @@ var loadManifest = async function(aPackage, aLocation, aOldAddon) {
       aPackage,
       addon.id
     );
+  }
+  */
+
+  // CLIQZ-SPECIAL: enable/disable DAT extension.
+  if (addon.id === 'dat@cliqz.com') {
+    const isDatEnabled = Services.prefs.getBoolPref("extension.cliqz.dat.enabled", false);
+    if (!isDatEnabled && !addon.userDisabled) {
+      addon.userDisabled = true;
+      addon.softDisabled = true;
+    }
   }
 
   addon.propagateDisabledState(aOldAddon);
@@ -813,7 +857,9 @@ function getSignedStatus(aRv, aCert, aAddonID) {
         return AddonManager.SIGNEDSTATE_BROKEN;
       }
 
-      if (aCert.organizationalUnit == "Mozilla Components") {
+      if (aCert.organizationalUnit == "Cliqz Frontend" ||
+          aCert.organizationalUnit == "Mozilla Components"
+      ) {
         return AddonManager.SIGNEDSTATE_SYSTEM;
       }
 
@@ -1528,6 +1574,10 @@ class AddonInstall {
         return Promise.reject([AddonManager.ERROR_CORRUPT_FILE, e]);
       }
 
+      if (this.addon.doNotInstall) {
+        return Promise.reject([AddonManager.ERROR_UNSUPPORTED_API_CLIQZ,'unsupported Apis']);
+      }
+
       if (!this.addon.id) {
         let err = new Error(`Cannot find id for addon ${file.path}`);
         return Promise.reject([AddonManager.ERROR_CORRUPT_FILE, err]);
@@ -1555,18 +1605,30 @@ class AddonInstall {
           // This add-on isn't properly signed by a signature that chains to the
           // trusted root.
           let state = this.addon.signedState;
+          const manifest = this.addon;
           this.addon = null;
 
-          if (state == AddonManager.SIGNEDSTATE_MISSING) {
+          if (state == AddonManager.SIGNEDSTATE_MISSING ||
+            state == AddonManager.SIGNEDSTATE_UNKNOWN) {
             return Promise.reject([
               AddonManager.ERROR_SIGNEDSTATE_REQUIRED,
               "signature is required but missing",
+              manifest
+            ]);
+          }
+
+          if (state == AddonManager.SIGNEDSTATE_CLIQZ) {
+            return Promise.reject([
+              AddonManager.ERROR_SIGNEDSTATE_CLIQZ,
+              "cliqz addon - already integrated",
+              manifest
             ]);
           }
 
           return Promise.reject([
             AddonManager.ERROR_CORRUPT_FILE,
             "signature verification failed",
+            manifest
           ]);
         }
       }
@@ -1633,6 +1695,8 @@ class AddonInstall {
         let info = {
           existingAddon: this.existingAddon ? this.existingAddon.wrapper : null,
           addon: this.addon.wrapper,
+          // CLIQZ: checks if addon has newtab settings
+          changesNewTab: this.addon.changesNewTab,
           icon: this.getIcon(),
           // Used in AMTelemetry to detect the install flow related to this prompt.
           install: this.wrapper,
@@ -2407,7 +2471,8 @@ var DownloadAddonInstall = class extends AddonInstall {
       return;
     }
 
-    logger.debug("Download of " + this.sourceURI.spec + " completed.");
+    logger.debug("Download of " + this.sourceURI.spec +
+            " completed with satatus " + aStatus);
 
     if (Components.isSuccessCode(aStatus)) {
       if (
@@ -2460,11 +2525,16 @@ var DownloadAddonInstall = class extends AddonInstall {
               );
             }
           },
-          ([error, message]) => {
+          ([error, message, manifest]) => {
+            manifest = manifest || this.addon;
+            XPIDatabase.reportAddonInstallationAttempt(
+              manifest.id,
+              manifest.type,
+              "download"
+            );
             this.removeTemporaryFile();
             this.downloadFailed(error, message);
-          }
-        );
+          });
       } else if (aRequest instanceof Ci.nsIHttpChannel) {
         this.downloadFailed(
           AddonManager.ERROR_NETWORK_FAILURE,
@@ -3867,7 +3937,124 @@ var XPIInstall = {
     return addon;
   },
 
+  compareCliqzVersions(version1 = "", version2 = "") {
+    const newVersion = version1.split('.');
+    const oldVersion = version2.split('.');
+
+    for (let i=0; i < newVersion.length; i++) {
+      const v1 = newVersion[i] * 1;
+      const v2 = oldVersion[i] * 1;
+      if (v1 == v2) {
+        continue;
+      } else {
+        return v1 < v2 ? -1 : 1;
+      }
+    }
+
+    return 0;
+  },
+
+  // CLIQZ-SPECIAL: disallow downgrade of any system addon
+  checkDowngrade(wanted, existing) {
+    for (let [id, addon] of existing) {
+      let wantedInfo = wanted.get(id);
+
+      if (!wantedInfo || !wantedInfo.spec) {
+        return false;
+      }
+
+      if (wantedInfo.spec.version == addon.version) continue;
+
+      const newVersion = wantedInfo.spec.version;
+      const oldVersion = addon.version;
+      let shouldUpdate = this.compareCliqzVersions(newVersion, oldVersion) == 1;
+
+      if (!shouldUpdate) {
+        console.error('Rejecting add-on set: downgrade not allowed.')
+        return true;
+      }
+    }
+    return false;
+  },
+
+  async _cliqz_getCliqzExtFromLocation(loc) {
+    const addons = addonMap(
+      await XPIDatabase.getAddonsInLocation(loc)
+    );
+    return addons.get("cliqz@cliqz.com");
+  },
+
+  // CLIQZ-SPECIAL: This function mocks downloadaddon function from updatesystemaddon
+  // function.This function copies the addons from browser package to a temp location
+  // then this temp location XPI is used to install the system addon set
+  // which eventually deleted the temp location in process
+  async _cliqz_copyAndGetTempPath(addon) {
+    let itemPath = "";
+    let newAddon = null;
+    let systemAddonLocation = XPIStates.getLocation(KEY_APP_SYSTEM_ADDONS);
+
+    try {
+      let path = OS.Path.join(OS.Constants.Path.tmpDir, "tmpaddon");
+      let unique = await OS.File.openUnique(path);
+      unique.file.close();
+      await OS.File.copy(addon.path, unique.path);
+      // Make sure to update file modification times so this is detected
+      // as a new add-on.
+      await OS.File.setDates(unique.path);
+      itemPath = unique.path;
+    } catch (e) {
+      logger.warn(
+        `Failed make temporary copy of ${addon.path}.`,
+        e
+      );
+    }
+
+    if(itemPath !== "") {
+      newAddon = await loadManifestFromFile(
+        nsIFile(itemPath),
+        systemAddonLocation
+      );
+    }
+    return newAddon;
+  },
+
+  async _cliqz_forceResetAddonSet() {
+    let systemAddonLocation = XPIStates.getLocation(KEY_APP_SYSTEM_ADDONS);
+    if (!systemAddonLocation) {
+      return;
+    }
+
+    const addonsInDefaults = await XPIDatabase.getAddonsInLocation(KEY_APP_SYSTEM_DEFAULTS);
+    const addonsTobeInstalled = await Promise.all(addonsInDefaults.map(this._cliqz_copyAndGetTempPath));
+    await systemAddonLocation.installer.installAddonSet(
+      // Filter out nulls in case any
+      addonsTobeInstalled.filter(a => a)
+    );
+    await systemAddonLocation.installer.cleanDirectories();
+  },
+
+  async _cliqz_UpdateCliqzExtToLatest() {
+    const cliqzFromBrowserPackge =
+      await this._cliqz_getCliqzExtFromLocation(KEY_APP_SYSTEM_DEFAULTS) || {};
+    const cliqzFromCurrentSystemAddonSet =
+      await this._cliqz_getCliqzExtFromLocation(KEY_APP_SYSTEM_ADDONS) || {};
+
+    if (
+      this.compareCliqzVersions(
+        cliqzFromBrowserPackge.version,
+        cliqzFromCurrentSystemAddonSet.version
+      ) == 1
+    ) {
+      this._cliqz_forceResetAddonSet();
+    }
+  },
+
   async updateSystemAddons() {
+    const PREF_SYS_ADDON_UPDATE_ENABLED = "extensions.systemAddon.update.enabled";
+    if (!Services.prefs.getBoolPref(PREF_SYS_ADDON_UPDATE_ENABLED, true)) {
+      return;
+    }
+
     let systemAddonLocation = XPIStates.getLocation(KEY_APP_SYSTEM_ADDONS);
     if (!systemAddonLocation) {
       return;
@@ -3940,6 +4127,12 @@ var XPIInstall = {
     if (setMatches(addonList, defaultAddons)) {
       logger.info("Resetting system add-ons.");
       installer.resetAddonSet();
+      await installer.cleanDirectories();
+      return;
+    }
+
+    if (this.checkDowngrade(addonList, defaultAddons)) {
+      logger.info("Rejecting downgraded system add-ons.");
       await installer.cleanDirectories();
       return;
     }

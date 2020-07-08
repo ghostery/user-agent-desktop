@@ -3,7 +3,9 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 .title {
-  background-image: url("chrome://browser/skin/welcome-back.svg");
+  background-image: url("chrome://branding/content/silhouette-40.svg");
+  background-position-x: 0.5em;
+  background-position-y: 0.01em;
 }
 
 .radioRestoreContainer:not(:last-child) {

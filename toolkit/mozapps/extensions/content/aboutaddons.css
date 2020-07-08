@@ -208,7 +208,8 @@ addon-card:not([expanded]) > .addon.card[active="false"]:hover {
   box-shadow: var(--card-shadow);
 }
 
-addon-card:not([expanded]) > .addon.card:hover {
+addon-card:not([expanded]) > .addon.card:hover,
+#recommendations .addon.card:hover{
   box-shadow: var(--card-shadow-hover);
   cursor: pointer;
 }
@@ -351,7 +352,7 @@ addon-card:not([expanded]) .addon-description {
 
 /* Recommended add-ons on list views */
 .recommended-heading {
-  margin-bottom: 24px;
+  margin-bottom: 15px;
   margin-top: 48px;
 }
 
@@ -641,6 +642,34 @@ button.tab-button:-moz-focusring {
 .tab-group[last-input-type="mouse"] > button.tab-button:-moz-focusring {
   outline: none;
   box-shadow: none;
+}
+
+#recommendations {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-column-gap: 15px;
+}
+
+.addon.recommended {
+  display: grid;
+  grid-template-columns: 1fr auto;
+}
+
+#recommendations .addon-description {
+  font-size: 11px;
+}
+
+.recommended-addon-install {
+  background: #0078CA !important;
+  color: #fff !important;
+  cursor: pointer;
+}
+
+.addon-permissions {
+  color: #A5645F;
+  font-size: 11px;
+  font-weight: 500;
+  margin-block-end: 2px;
 }
 
 panel-list {

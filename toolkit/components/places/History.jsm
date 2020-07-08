@@ -1274,6 +1274,25 @@ var removeVisitsByFilter = async function(db, filter, onResult = null) {
     }
   );
 
+  // CLIQZ-SPECIAL:
+  // 1.5 Also remove visits to cliqz-search related to the visits we are going to delete
+  await db.executeCached(
+    `SELECT fv.id, fv.place_id
+      FROM moz_historyvisits v
+      JOIN moz_historyvisits fv ON fv.id = v.from_visit
+      JOIN moz_places h ON h.id = fv.place_id
+      WHERE v.id IN (${ sqlBindPlaceholders(visitsToRemove) }) AND h.url LIKE :cliqzSearch`,
+    {
+      cliqzSearch: "https://cliqz.com/search?q=%"
+    },
+    row => {
+      let id = row.getResultByName("id");
+      let place_id = row.getResultByName("place_id");
+      visitsToRemove.push(id);
+      pagesToInspect.add(place_id);
+    }
+  )
+
   if (!visitsToRemove.length) {
     // Nothing to do
     return false;
@@ -1383,7 +1402,13 @@ var removeByFilter = async function(db, filter, onResult = null) {
   let pages = [];
   let hasPagesToRemove = false;
 
-  await db.executeCached(query, params, row => {
+  await db.executeCached(
+    query,
+    params,
+    onTableRow
+  );
+
+  function onTableRow(row) {
     let hasForeign = row.getResultByName("foreign_count") != 0;
     if (!hasForeign) {
       hasPagesToRemove = true;
@@ -1408,12 +1433,28 @@ var removeByFilter = async function(db, filter, onResult = null) {
         url: new URL(url),
       });
     }
-  });
+  }
 
   if (pages.length === 0) {
     // Nothing to do
     return false;
   }
+
+  // CLIQZ-SPECIAL
+  // 3.5 Also remove cliqz-search pages related to the pages we are going to delete
+  await db.executeCached(
+    `SELECT DISTINCT(h.id), h.url, h.url_hash, h.rev_host, h.guid, h.title, h.frecency, h.foreign_count
+      FROM moz_places p
+      JOIN moz_historyvisits v ON v.place_id = p.id
+      JOIN moz_historyvisits fv ON v.from_visit = fv.id
+      JOIN moz_places h ON fv.place_id = h.id
+        WHERE p.id IN (${ sqlBindPlaceholders(pages.map(p => p.id)) })
+        AND h.url LIKE :cliqzSearch`,
+    {
+      cliqzSearch: "https://cliqz.com/search?q=%"
+    },
+    onTableRow
+  );
 
   await db.executeTransaction(async function() {
     // 4. Actually remove visits
@@ -1467,6 +1508,22 @@ var remove = async function(db, { guids, urls }, onResult = null) {
       });
     }
   }
+  // CLIQZ-SPECIAL:
+  // Also remove cliqz-search pages related to the pages we are going to delete
+  await db.execute(
+    `SELECT DISTINCT(h.id), h.url, h.url_hash, h.rev_host, h.guid, h.title, h.frecency, h.foreign_count
+      FROM moz_places p
+      JOIN moz_historyvisits v ON v.place_id = p.id
+      JOIN moz_historyvisits fv ON v.from_visit = fv.id
+      JOIN moz_places h ON fv.place_id = h.id
+        WHERE p.id IN (${ sqlBindPlaceholders(pages.map(p => p.id)) })
+        AND h.url LIKE :cliqzSearch`,
+    {
+      cliqzSearch: "https://cliqz.com/search?q=%"
+    },
+    onRow
+  );
+
   for (let chunk of PlacesUtils.chunkArray(guids, db.variableLimit)) {
     let query = `SELECT id, url, url_hash, guid, foreign_count, title, frecency
        FROM moz_places

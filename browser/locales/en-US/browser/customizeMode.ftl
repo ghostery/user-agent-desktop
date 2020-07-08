@@ -43,5 +43,7 @@ customize-mode-undo-cmd =
     .label = Undo
 customize-mode-lwthemes-my-themes =
     .value = My Themes
+customize-mode-cliqz-blue-theme =
+    .label = Blue Tab Bar
 customize-mode-touchbar-cmd =
     .label = Customize Touch Bar…

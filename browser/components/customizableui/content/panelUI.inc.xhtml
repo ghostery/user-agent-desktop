@@ -219,6 +219,7 @@
                        oncommand="PanelUI._onBannerItemSelected(event)"
                        wrap="true"
                        hidden="true"/>
+#if 0
         <toolbaritem id="appMenu-fxa-status"
                      class="sync-ui-item"
                      defaultlabel="&fxa.menu.signin.label;"
@@ -244,6 +245,7 @@
           </toolbarbutton>
         </toolbaritem>
         <toolbarseparator id="appMenu-tp-separator"/>
+#endif
         <toolbarbutton id="appMenu-new-window-button"
                        class="subviewbutton subviewbutton-iconic"
                        label="&newNavigatorCmd.label;"
@@ -472,6 +474,7 @@
     <panelview id="appMenu-library-recentlyClosedTabs"/>
     <panelview id="appMenu-library-recentlyClosedWindows"/>
 
+#ifdef MOZ_SERVICES_SYNC
     <panelview id="PanelUI-remotetabs" flex="1" class="PanelUI-subView"
                descriptionheightworkaround="true">
       <vbox class="panel-subview-body">
@@ -597,6 +600,7 @@
         </hbox>
       </vbox>
     </panelview>
+#endif  // MOZ_SERVICES_SYNC
 
     <panelview id="PanelUI-bookmarks" flex="1" class="PanelUI-subView">
       <vbox class="panel-subview-body">
@@ -779,10 +783,12 @@
                        label="&bookmarksSubview.label;"
                        closemenu="none"
                        oncommand="BookmarkingUI.showSubView(this);"/>
+#if 0
         <toolbarbutton id="appMenu-library-pocket-button"
                        class="subviewbutton subviewbutton-iconic"
                        label="&pocketMenuitem.label;"
                        oncommand="Pocket.openList(event)"/>
+#endif
         <toolbarbutton id="appMenu-library-history-button"
                        class="subviewbutton subviewbutton-iconic subviewbutton-nav"
                        label="&historyMenu.label;"
@@ -793,11 +799,13 @@
                        label="&libraryDownloads.label;"
                        closemenu="none"
                        oncommand="DownloadsSubview.show(this);"/>
+#ifdef MOZ_SERVICES_SYNC
         <toolbarbutton id="appMenu-library-remotetabs-button"
                        class="subviewbutton subviewbutton-iconic subviewbutton-nav sync-ui-item"
                        label="&appMenuRemoteTabs.label;"
                        closemenu="none"
                        oncommand="PanelUI.showSubView('PanelUI-remotetabs', this)"/>
+#endif
         <toolbarseparator hidden="true"/>
         <label value="&appMenuRecentHighlights.label;"
                hidden="true"
@@ -813,6 +821,7 @@
       </vbox>
     </panelview>
 
+#ifdef MOZ_SERVICES_SYNC
     <panelview id="PanelUI-fxa" title="&fxa.menu.account.label;" class="PanelUI-subView" descriptionheightworkaround="true">
       <vbox id="PanelUI-fxa-menu" class="panel-subview-body">
         <toolbarbutton id="fxa-manage-account-button" flex="1"
@@ -928,6 +937,7 @@
                        oncommand="gSync.openConnectAnotherDeviceFromFxaMenu(this);"/>
       </vbox>
     </panelview>
+#endif
 
     <panelview id="PanelUI-bookmarkingTools" class="PanelUI-subView">
       <vbox class="panel-subview-body">

@@ -480,6 +480,10 @@ class UrlbarController {
    *   The selected result.
    */
   recordSelectedResult(event, result) {
+    if (!event) {
+      // CLIQZ-SPECIAL: extension do not send event
+      return;
+    }
     let resultIndex = result ? result.rowIndex : -1;
     let selectedResult = -1;
     if (resultIndex >= 0) {
@@ -616,6 +620,7 @@ class UrlbarController {
    * @param {object} params Parameters to pass with the notification.
    */
   notify(name, ...params) {
+    /* CLIQZ-SPECIAL: we dont need this
     for (let listener of this._listeners) {
       // Can't use "in" because some tests proxify these.
       if (typeof listener[name] != "undefined") {
@@ -626,6 +631,7 @@ class UrlbarController {
         }
       }
     }
+    */
   }
 }
 
@@ -746,7 +752,7 @@ class TelemetryEvent {
   }
 
   _internalRecord(event, details) {
-    if (!this._category || !this._startEventInfo) {
+    if (!this._category || !this._startEventInfo || !event) {
       if (this._discarded && this._category) {
         this._controller.manager.notifyEngagementChange(
           this._isPrivate,

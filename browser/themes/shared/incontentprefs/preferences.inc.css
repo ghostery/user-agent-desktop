@@ -65,6 +65,11 @@
 
 groupbox[data-category] {
   margin: 0 0 32px;
+  max-width: 664px;
+}
+
+vbox[data-category], hbox[data-category] {
+  max-width: 664px;
 }
 
 html|h1 {
@@ -104,6 +109,10 @@ description,
 label {
   line-height: 1.8em;
   margin: 0;
+}
+
+description > b {
+  font-weight: bold;
 }
 
 .tip-caption {
@@ -211,6 +220,10 @@ button > hbox > label {
   list-style-image: url("chrome://browser/skin/preferences/in-content/sync.svg");
 }
 
+#category-experiments > .category-icon {
+  list-style-image: url("chrome://browser/skin/preferences/in-content/experiments.svg");
+}
+
 /* header */
 .header {
   display: flex;
@@ -220,6 +233,11 @@ button > hbox > label {
 
 .header[hidden=true] {
   display: none;
+}
+
+#header-connect {
+  border-bottom: none;
+  padding-bottom: 0;
 }
 
 /* All panes */
@@ -238,6 +256,16 @@ button > hbox > label {
 
 #isDefaultLabel {
   font-weight: 600;
+}
+
+#startupPageBox {
+  padding-top: 32px;
+}
+
+#browserHomePage {
+  margin-inline-start: 0;
+  margin-inline-end: 0;
+  margin-bottom: 4px;
 }
 
 .info-panel,
@@ -511,6 +539,23 @@ button > hbox > label {
 
 .text-link {
   margin-bottom: 0;
+}
+
+.mozilla-support-label-drm {
+  margin-top: 0;
+  margin-bottom: 0;
+  color: #999;
+}
+
+.mozilla-support-label-notification {
+  padding-left: 4px;
+  color: #999;
+}
+
+.mozilla-support-label-telemetry {
+  margin-top: 8px;
+  padding-left: 4px;
+  color: #999;
 }
 
 .text-link[disabled="true"] {
@@ -824,19 +869,25 @@ image.update-throbber {
 }
 
 .face-sad {
+  display: none;
+  /* CLIQZ-SPECIAL: hide all images
   list-style-image: url("chrome://browser/skin/preferences/in-content/face-sad.svg");
   width: 20px;
   height: 20px;
   margin-block: 5px;
   margin-inline-end: 8px;
+  */
 }
 
 .face-smile {
+  display: none;
+  /* CLIQZ-SPECIAL: hide all images
   list-style-image: url("chrome://browser/skin/preferences/in-content/face-smile.svg");
   width: 20px;
   height: 20px;
   margin-block: 5px;
   margin-inline-end: 8px;
+  */
 }
 
 #policies-container,
@@ -969,6 +1020,7 @@ menulist[indicator=true] > menupopup menuitem[indicator=true]:not([image]) > .me
   margin-top: 64px;
 }
 
+%if 0
 .no-results-image {
   list-style-image: url("chrome://browser/skin/preferences/in-content/no-search-results.svg");
   width: 380px;
@@ -985,6 +1037,7 @@ menulist[indicator=true] > menupopup menuitem[indicator=true]:not([image]) > .me
 #no-results-message[query*=🔥🦊] > .no-results-container {
   visibility: hidden;
 }
+%endif
 
 /* Proxy port input */
 
@@ -992,6 +1045,8 @@ menulist[indicator=true] > menupopup menuitem[indicator=true]:not([image]) > .me
   width: calc(5ch + 18px); /* 5 chars + (8px padding + 1px border) on both sides */
   margin-inline-start: 4px;
 }
+
+%include ./cliqz.home.inc.css
 
 #defaultBrowserLanguage {
   margin-inline-start: 0;
@@ -1051,6 +1106,10 @@ menulist[indicator=true] > menupopup menuitem[indicator=true]:not([image]) > .me
 
 #updateSettingCrossUserWarning:-moz-locale-dir(rtl) {
   background-position-x: right 2px;
+}
+
+.formatBoxSize {
+  -moz-box-align: start;
 }
 
 richlistitem .text-link {

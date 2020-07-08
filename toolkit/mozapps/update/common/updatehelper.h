@@ -20,9 +20,9 @@ void RemoveSecureOutputFiles(LPCWSTR patchDirPath);
 
 #define PATCH_DIR_PATH L"\\updates\\0"
 
-#define SVC_NAME L"MozillaMaintenance"
+#define SVC_NAME L"CliqzMaintenance"
 
-#define BASE_SERVICE_REG_KEY L"SOFTWARE\\Mozilla\\MaintenanceService"
+#define BASE_SERVICE_REG_KEY L"SOFTWARE\\CLIQZ\\MaintenanceService"
 
 // The test only fallback key, as its name implies, is only present on machines
 // that will use automated tests.  Since automated tests always run from a

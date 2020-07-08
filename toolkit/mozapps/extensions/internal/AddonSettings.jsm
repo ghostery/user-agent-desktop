@@ -85,6 +85,7 @@ if (Cu.isInAutomation) {
  *
  * Official releases ignore this preference.
  */
+#if 0
 if (
   !AppConstants.MOZ_REQUIRE_SIGNING ||
   AppConstants.NIGHTLY_BUILD ||
@@ -100,13 +101,37 @@ if (
 } else {
   makeConstant("EXPERIMENTS_ENABLED", false);
 }
+#endif
 
+// CLIQZ-SPECIAL: We always have MOZ_REQUIRE_SIGNING defined
+// so there will be no unsigned addon installation allowed
+// Unsigned addons can only be installed as temporary addon.
+// We need to allow experiments in temporary addons
+// so that our extension test pipelines work.
+if (AppConstants.MOZ_REQUIRE_SIGNING) {
+  XPCOMUtils.defineLazyPreferenceGetter(
+    AddonSettings,
+    "EXPERIMENTS_ENABLED",
+    PREF_ALLOW_EXPERIMENTS,
+    false
+  );
+} else {
+  makeConstant("EXPERIMENTS_ENABLED", false);
+}
+
+#if 0
 if (AppConstants.MOZ_DEV_EDITION) {
   makeConstant("DEFAULT_THEME_ID", "firefox-compact-dark@mozilla.org");
 } else {
   makeConstant("DEFAULT_THEME_ID", "default-theme@mozilla.org");
 }
+#endif
+// CLIQZ-SPECIAL:
+// We would like to have a compact light theme as a default one in Cliqz Browser.
+makeConstant("DEFAULT_THEME_ID", "firefox-compact-light@mozilla.org");
 
+// CLIQZ-AFTER-MERGE: check after merge how SCOPES_SIDELOAD setting could impact
+// on our extension (XPIInstall.jsm, XPIDatabase.jsm)
 // SCOPES_SIDELOAD is a bitflag for what scopes we will load new extensions from when we scan the directories.
 // If a build allows sideloading, or we're in automation, we'll also allow use of the preference.
 if (AppConstants.MOZ_ALLOW_ADDON_SIDELOAD || Cu.isInAutomation) {

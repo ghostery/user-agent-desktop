@@ -12,6 +12,13 @@ const { MigrationUtils } = ChromeUtils.import(
   "resource:///modules/MigrationUtils.jsm"
 );
 
+// For yet undiscovered reason `Cu.reportError()` doesn't work in this file.
+// Same as `dump()` :-/
+function logError(e) {
+  Services.console.logStringMessage("Error during migration: " + e + "\n" +
+      e.stack);
+}
+
 var MigrationWizard = {
   /* exported MigrationWizard */
   _source: "", // Source Profile Migrator ContractID suffix
@@ -20,6 +27,7 @@ var MigrationWizard = {
   _wiz: null,
   _migrator: null,
   _autoMigrate: null,
+  _addons: new Set(),
 
   init() {
     let os = Services.obs;
@@ -63,11 +71,20 @@ var MigrationWizard = {
     document.addEventListener("wizardcancel", function() {
       MigrationWizard.onWizardCancel();
     });
+    document.getElementById("selectAddons")
+      .addEventListener("pageshow", function() {
+        MigrationWizard.onImportAddonsPageShow();
+      });
 
     document
       .getElementById("selectProfile")
       .addEventListener("pageshow", function() {
         MigrationWizard.onSelectProfilePageShow();
+      });
+    document
+      .getElementById("selectAddons")
+      .addEventListener("pagerewound", function() {
+        MigrationWizard.onImportAddonsPageRewound();
       });
     document
       .getElementById("importItems")
@@ -92,6 +109,11 @@ var MigrationWizard = {
       .getElementById("importItems")
       .addEventListener("pagerewound", function() {
         MigrationWizard.onImportItemsPageRewound();
+      });
+    document
+      .getElementById("selectAddons")
+      .addEventListener("pageadvanced", function(e) {
+        MigrationWizard.onImportAddonsPageAdvanced(e);
       });
 
     document
@@ -153,6 +175,10 @@ var MigrationWizard = {
       document.getElementById(
         "closeSourceBrowser"
       ).style.visibility = visibility;
+      // CLIQZ-SPECIAL: Make warning a bit more prominent
+      document.getElementById(
+        "closeSourceBrowser"
+      ).style.fontSize = "12px";
     };
     this._wiz.canRewind = false;
 
@@ -213,7 +239,7 @@ var MigrationWizard = {
     }
   },
 
-  onImportSourcePageAdvanced(event) {
+  maybeTakeUserSelectedMigrator(event) {
     var newSource = document.getElementById("importSourceGroup").selectedItem
       .id;
 
@@ -226,6 +252,7 @@ var MigrationWizard = {
         .add(MigrationUtils.getSourceIdForTelemetry("nothing"));
       this._wiz.cancel();
       event.preventDefault();
+      return false;
     }
 
     if (!this._migrator || newSource != this._source) {
@@ -236,6 +263,14 @@ var MigrationWizard = {
       this._selectedProfile = null;
     }
     this._source = newSource;
+
+    return true;
+  },
+
+  onImportSourcePageAdvanced(event) {
+    // Only change explicitly set migrator if manual selection is allowed.
+    if (!this._skipImportSourcePage && !this.maybeTakeUserSelectedMigrator(event))
+      return false;
 
     // check for more than one source profile
     var sourceProfiles = this.spinResolve(this._migrator.getSourceProfiles());
@@ -312,6 +347,7 @@ var MigrationWizard = {
   // 3 - ImportItems
   onImportItemsPageShow() {
     var dataSources = document.getElementById("dataSources");
+    let hasAddon = false;
     while (dataSources.hasChildNodes()) {
       dataSources.firstChild.remove();
     }
@@ -321,6 +357,10 @@ var MigrationWizard = {
     );
     for (var i = 0; i < 16; ++i) {
       var itemID = (items >> i) & 0x1 ? Math.pow(2, i) : 0;
+      // CLIQZ - If no addons found set next button to final step 4
+      if (itemID == Ci.nsIBrowserProfileMigrator.ADDONS) {
+        hasAddon = true;
+      }
       if (itemID > 0) {
         var checkbox = document.createXULElement("checkbox");
         checkbox.id = itemID;
@@ -334,6 +374,10 @@ var MigrationWizard = {
         }
       }
     }
+    if (!hasAddon)
+      this._wiz.currentPage.next = "migrating";
+    else
+      this._wiz.currentPage.next = "selectAddons";
   },
 
   onImportItemsPageRewound() {
@@ -342,14 +386,21 @@ var MigrationWizard = {
   },
 
   onImportItemsPageAdvanced() {
+    let isAddonSelected = false;
     var dataSources = document.getElementById("dataSources");
     this._itemsFlags = 0;
     for (var i = 0; i < dataSources.childNodes.length; ++i) {
       var checkbox = dataSources.childNodes[i];
       if (checkbox.localName == "checkbox" && checkbox.checked) {
         this._itemsFlags |= parseInt(checkbox.id);
+        // CLIQZ: If addon is not selected, directly advance to step 4
+        if (checkbox.id == Ci.nsIBrowserProfileMigrator.ADDONS) {
+          isAddonSelected = true;
+        }
       }
     }
+    if (!isAddonSelected)
+      this._wiz.currentPage.next = "migrating";
   },
 
   onImportItemCommand() {
@@ -365,6 +416,50 @@ var MigrationWizard = {
     }
 
     this._wiz.canAdvance = oneChecked;
+  },
+
+  // 3.5 - Import Addons
+  onImportAddonsPageShow() {
+    const availableAddons = document.getElementById("availableAddons");
+    while (availableAddons.hasChildNodes())
+      availableAddons.firstChild.remove();
+
+    const addons = this.spinResolve(this._migrator.getAddons(this._selectedProfile)) || [];
+
+    if (addons.length > 0) {
+      addons.forEach(addon => {
+        const checkbox = document.createXULElement("checkbox");
+        checkbox.id = addon.id;
+        checkbox.setAttribute("label", addon.name);
+        availableAddons.appendChild(checkbox);
+        if (this._addons.has(checkbox.id))
+          checkbox.checked = true;
+      })
+    } else {
+      // CLIQZ-TODO: this needs to be cross checked, its used in case where there is only 1 profile and no addons.
+      // The migration page should be shown instead of blank addons page.
+      this._wiz.currentPage.next = "migrating";
+    }
+  },
+
+  onImportAddonsPageRewound() {
+    this._wiz.canAdvance = true;
+    this.onImportAddonsPageAdvanced();
+  },
+
+  onImportAddonsPageAdvanced() {
+    const dataSources = document.getElementById("availableAddons");
+    this._addons = new Set();
+    for (let i = 0; i < dataSources.childNodes.length; ++i) {
+      const checkbox = dataSources.childNodes[i];
+      if (checkbox.localName == "checkbox" && checkbox.checked)
+        this._addons.add(checkbox.id);
+    }
+  },
+
+  onImportAddonsCommand() {
+    // can always go next
+    this._wiz.canAdvance = true;
   },
 
   // 4 - Migrating
@@ -385,7 +480,12 @@ var MigrationWizard = {
   },
 
   async onMigratingMigrate() {
-    await this._migrator.migrate(
+   if (this._addons.size > 0) {
+     Services.prefs.setStringPref(
+       "browser.migrate.addons", JSON.stringify(Array.from(this._addons))
+     );
+   }
+   await this._migrator.migrate(
       this._itemsFlags,
       this._autoMigrate,
       this._selectedProfile
@@ -427,9 +527,7 @@ var MigrationWizard = {
           );
           items.appendChild(label);
         } catch (e) {
-          // if the block above throws, we've enumerated all the import data types we
-          // currently support and are now just wasting time, break.
-          break;
+          logError(e);
         }
       }
     }
@@ -438,6 +536,7 @@ var MigrationWizard = {
   observe(aSubject, aTopic, aData) {
     var label;
     switch (aTopic) {
+
       case "Migration:Started":
         break;
       case "Migration:ItemBeforeMigrate":
@@ -458,7 +557,7 @@ var MigrationWizard = {
           try {
             this.reportDataRecencyTelemetry();
           } catch (ex) {
-            Cu.reportError(ex);
+            logError(ex);
           }
         }
         if (this._autoMigrate) {
@@ -497,6 +596,8 @@ var MigrationWizard = {
             break;
           case Ci.nsIBrowserProfileMigrator.OTHERDATA:
             type = "misc. data";
+          case Ci.nsIBrowserProfileMigrator.ADDONS:
+            type = "addons";
             break;
         }
         Services.console.logStringMessage(

@@ -19,7 +19,7 @@
 
 # LOCALIZATION NOTE (firefox_heading):
 # Firefox links folder name
-#define firefox_heading Mozilla Firefox
+#define firefox_heading Firefox
 
 # LOCALIZATION NOTE (firefox_help):
 # link title for https://www.mozilla.org/en-US/firefox/help/
@@ -64,5 +64,11 @@
 # LOCALIZATION NOTE (planet):
 # Nightly builds only, link title for https://planet.mozilla.org/
 #define planet Planet Mozilla
+
+# Cliqz links folder
+#define cliqz_heading Cliqz
+#define cliqz_contact Contact and Support
+#define cliqz_about About us
+#define cliqz_tips Tips and Tricks
 
 #unfilter emptyLines

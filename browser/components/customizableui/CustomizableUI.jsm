@@ -15,7 +15,9 @@ const { AppConstants } = ChromeUtils.import(
 
 XPCOMUtils.defineLazyModuleGetters(this, {
   AddonManager: "resource://gre/modules/AddonManager.jsm",
+#if 0
   AddonManagerPrivate: "resource://gre/modules/AddonManager.jsm",
+#endif
   SearchWidgetTracker: "resource:///modules/SearchWidgetTracker.jsm",
   CustomizableWidgets: "resource:///modules/CustomizableWidgets.jsm",
   PanelMultiView: "resource:///modules/PanelMultiView.jsm",
@@ -36,7 +38,8 @@ XPCOMUtils.defineLazyServiceGetter(
   "nsIEventListenerService"
 );
 
-const kDefaultThemeID = "default-theme@mozilla.org";
+// Cliqz: Set compact light theme as default theme
+const kDefaultThemeID = "firefox-compact-light@mozilla.org";
 
 const kSpecialWidgetPfx = "customizableui-special-";
 
@@ -193,7 +196,13 @@ var CustomizableUIInternal = {
   initialize() {
     log.debug("Initializing");
 
-    AddonManagerPrivate.databaseReady.then(async () => {
+    // CLIQZ-SPECIAL:
+    // DB-2188: AddonManagerPrivate.databaseReady might sometimes return
+    // a promise which is in a pending state.
+    // That means it will never get resolved or rejected at all.
+    // AddonManager.isReadyAsync can guarantee the promise it returns
+    // will end up with either resolved or rejected.
+    AddonManager.isReadyAsync().then(async () => {
       AddonManager.addAddonListener(this);
 
       let addons = await AddonManager.getAddonsByTypes(["theme"]);
@@ -221,14 +230,16 @@ var CustomizableUIInternal = {
       "back-button",
       "forward-button",
       "stop-reload-button",
-      "home-button",
-      "spring",
       "urlbar-container",
-      "spring",
+      ...CustomizableUI.CLIQZ_WIDGET_IDS,
+      "bookmarks-menu-button",
+      "home-button",
       "downloads-button",
+#if 0
       "library-button",
       "sidebar-button",
       "fxa-toolbar-menu-button",
+#endif
     ];
 
     if (AppConstants.MOZ_DEV_EDITION) {
@@ -368,11 +379,11 @@ var CustomizableUIInternal = {
       gSavedState.placements[CustomizableUI.AREA_NAVBAR]
     ) {
       let placements = gSavedState.placements[CustomizableUI.AREA_NAVBAR];
+      /* Cliqz. "home-button" removed from default placements we add on upgrade. */
       let newPlacements = [
         "back-button",
         "forward-button",
         "stop-reload-button",
-        "home-button",
       ];
       for (let button of placements) {
         if (!newPlacements.includes(button)) {
@@ -380,9 +391,11 @@ var CustomizableUIInternal = {
         }
       }
 
+#if 0
       if (!newPlacements.includes("sidebar-button")) {
         newPlacements.push("sidebar-button");
       }
+#endif
 
       gSavedState.placements[CustomizableUI.AREA_NAVBAR] = newPlacements;
     }
@@ -406,7 +419,11 @@ var CustomizableUIInternal = {
         "find-button",
         "preferences-button",
         "add-ons-button",
+        "https-everywhere_cliqz_com-browser-action",
+#ifdef MOZ_SERVICES_SYNC
         "sync-button",
+#endif
+        "mobilepairing_btn", // Cliqz connect/pairing
       ];
 
       if (!AppConstants.MOZ_DEV_EDITION) {
@@ -432,6 +449,7 @@ var CustomizableUIInternal = {
       }
     }
 
+#if 0
     if (
       currentVersion < 9 &&
       gSavedState.placements &&
@@ -477,6 +495,7 @@ var CustomizableUIInternal = {
         placements.splice(libraryIndex, 0, "library-button");
       }
     }
+#endif
 
     if (currentVersion < 10 && gSavedState.placements) {
       for (let placements of Object.values(gSavedState.placements)) {
@@ -537,6 +556,16 @@ var CustomizableUIInternal = {
       }
     }
 
+    // Cliqz
+    // Make sure no "search-container" is in navbar left from previous versions
+    const navbarPlacements = gSavedState.placements[CustomizableUI.AREA_NAVBAR];
+    if (navbarPlacements) {
+      const searchContainerIndex = navbarPlacements.indexOf("search-container");
+      if (searchContainerIndex !== -1) {
+        navbarPlacements.splice(searchContainerIndex, 1);
+      }
+    }
+
     // Remove the old placements from the now-gone Nightly-only
     // "New non-e10s window" button.
     if (currentVersion < 13 && gSavedState.placements) {
@@ -556,7 +585,7 @@ var CustomizableUIInternal = {
         }
       }
     }
-
+#if 0
     // Add the FxA toolbar menu as the right most button item
     if (currentVersion < 16 && gSavedState.placements) {
       let navbarPlacements = gSavedState.placements[CustomizableUI.AREA_NAVBAR];
@@ -565,6 +594,7 @@ var CustomizableUIInternal = {
         navbarPlacements.push("fxa-toolbar-menu-button");
       }
     }
+#endif
   },
 
   /**
@@ -2544,6 +2574,13 @@ var CustomizableUIInternal = {
   },
 
   createWidget(aProperties) {
+    /**
+     * CLIQZ-SPECIAL: pushing https-everywhere always to customize pane
+     */
+    if (aProperties.id === "https-everywhere_cliqz_com-browser-action") {
+      aProperties.defaultArea = null;
+    }
+
     let widget = this.normalizeWidget(
       aProperties,
       CustomizableUI.SOURCE_EXTERNAL
@@ -2571,15 +2608,18 @@ var CustomizableUIInternal = {
       let addToDefaultPlacements = false;
       let area = gAreas.get(widget.defaultArea);
       if (
-        !CustomizableUI.isBuiltinToolbar(widget.defaultArea) &&
-        widget.defaultArea != CustomizableUI.AREA_FIXED_OVERFLOW_PANEL
+        (!CustomizableUI.isBuiltinToolbar(widget.defaultArea) &&
+         widget.defaultArea != CustomizableUI.AREA_FIXED_OVERFLOW_PANEL) ||
+        CustomizableUI.isCliqzWidget(widget.id)
       ) {
         addToDefaultPlacements = true;
       }
 
       if (addToDefaultPlacements) {
         if (area.has("defaultPlacements")) {
-          area.get("defaultPlacements").push(widget.id);
+          // Cliqz widgets should be placed after urlbar by default.
+          // That is why we have special method to take care of it.
+          CustomizableUI.addWidgetToDefaultPlacements(widget.id, area);
         } else {
           area.set("defaultPlacements", [widget.id]);
         }
@@ -3439,6 +3479,15 @@ var CustomizableUI = {
    * unregistered separately from window closing mechanics.
    */
   REASON_AREA_UNREGISTERED: "area-unregistered",
+
+  /**
+   * Cliqz.
+   * List of Cliqz widget ids.
+   */
+  CLIQZ_WIDGET_IDS: [
+    "cliqz_cliqz_com-browser-action", // Myoffrz button
+    "cliqz_cliqz_com-browser-action2", // Cliqz control center
+  ],
 
   /**
    * An iteratable property of windows managed by CustomizableUI.
@@ -4332,6 +4381,33 @@ var CustomizableUI = {
    */
   createSpecialWidget(aId, aDocument) {
     return CustomizableUIInternal.createSpecialWidget(aId, aDocument);
+  },
+
+  /**
+   * Cliqz.
+   * Add widget to the list of defaultPlacements.
+   * We always add widget after 'urlbar-container' if it exists, or
+   * to the end of the list if it doesn't.
+   * @param aWidgetId
+   * @param aArea
+   */
+  addWidgetToDefaultPlacements(aWidgetId, aArea) {
+    const placements = aArea.get("defaultPlacements");
+    let urlbarIndex = placements.indexOf('urlbar-container');
+    if (urlbarIndex === -1) {
+      placements.push(aWidgetId);
+    } else {
+      placements.splice(urlbarIndex, 0, aWidgetId);
+    }
+  },
+
+  /**
+   * Cliqz.
+   * Check if widget id belongs to one of Cliqz's.
+   * @param aWidgetId the ID of the widget you want to check
+   */
+  isCliqzWidget(aWidgetId) {
+    return CustomizableUI.CLIQZ_WIDGET_IDS.includes(aWidgetId);
   },
 
   /**

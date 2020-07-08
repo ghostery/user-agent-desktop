@@ -13,6 +13,9 @@ var { FileUtils } = ChromeUtils.import("resource://gre/modules/FileUtils.jsm");
 var { TransientPrefs } = ChromeUtils.import(
   "resource:///modules/TransientPrefs.jsm"
 );
+var { AddonManager } = ChromeUtils.import(
+  "resource://gre/modules/AddonManager.jsm"
+);
 var { AppConstants } = ChromeUtils.import(
   "resource://gre/modules/AppConstants.jsm"
 );
@@ -97,7 +100,15 @@ if (AppConstants.MOZ_DEV_EDITION) {
 
 Preferences.addAll([
   // Startup
+#if 0
   { id: "browser.startup.page", type: "int" },
+#endif
+  { id: "browser.startup.homepage", type: "wstring" },
+
+  { id: "pref.browser.homepage.disable_button.current_page", type: "bool" },
+  { id: "pref.browser.homepage.disable_button.bookmark_page", type: "bool" },
+  { id: "pref.browser.homepage.disable_button.restore_default", type: "bool" },
+
   { id: "browser.privatebrowsing.autostart", type: "bool" },
   { id: "browser.sessionstore.warnOnQuit", type: "bool" },
 
@@ -132,6 +143,7 @@ Preferences.addAll([
   { id: "browser.tabs.warnOnOpen", type: "bool" },
   { id: "browser.ctrlTab.recentlyUsedOrder", type: "bool" },
 
+#if 0
   // CFR
   {
     id: "browser.newtabpage.activity-stream.asrouter.userprefs.cfr.addons",
@@ -141,6 +153,7 @@ Preferences.addAll([
     id: "browser.newtabpage.activity-stream.asrouter.userprefs.cfr.features",
     type: "bool",
   },
+#endif
 
   // Fonts
   { id: "font.language.group", type: "wstring" },
@@ -199,6 +212,11 @@ Preferences.addAll([
     id: "privacy.userContext.newTabContainerOnLeftClick.enabled",
     type: "bool",
   },
+
+  // Cliqz
+  { id: "browser.privatebrowsing.apt", type: "bool" },
+  { id: "browser.startup.restoreTabs", type: "bool" },
+  { id: "browser.startup.addFreshTab", type: "bool" },
 
   // Picture-in-Picture
   {
@@ -269,10 +287,12 @@ var gMainPane = {
   // that match that string.
   _visibleTypes: [],
 
+#if 0
   // browser.startup.page values
   STARTUP_PREF_BLANK: 0,
   STARTUP_PREF_HOMEPAGE: 1,
   STARTUP_PREF_RESTORE_SESSION: 3,
+#endif
 
   // Convenience & Performance Shortcuts
 
@@ -378,6 +398,7 @@ var gMainPane = {
     // listener for future menu changes.
     gMainPane.initDefaultZoomValues();
 
+#if 0
     let cfrLearnMoreUrl =
       Services.urlFormatter.formatURLPref("app.support.baseURL") +
       "extensionrecommendations";
@@ -385,6 +406,7 @@ var gMainPane = {
       let link = document.getElementById(id);
       link.setAttribute("href", cfrLearnMoreUrl);
     }
+#endif
 
     if (
       Services.prefs.getBoolPref(
@@ -423,9 +445,12 @@ var gMainPane = {
     setEventListener("ctrlTabRecentlyUsedOrder", "command", function() {
       Services.prefs.clearUserPref("browser.ctrlTab.migrated");
     });
+#if 0
+    // CLIQZ-SPECIAL: DB-2343, see comment in main.inc.xul about hiding language switcher
     setEventListener("manageBrowserLanguagesButton", "command", function() {
       gMainPane.showBrowserLanguages({ search: false });
     });
+#endif
     if (AppConstants.MOZ_UPDATER) {
       // These elements are only compiled in when the updater is enabled
       setEventListener("checkForUpdatesButton", "command", function() {
@@ -447,7 +472,7 @@ var gMainPane = {
 
     // Startup pref
     setEventListener(
-      "browserRestoreSession",
+      "restoreSessionCheckbox",
       "command",
       gMainPane.onBrowserRestoreSessionChange
     );
@@ -458,15 +483,23 @@ var gMainPane = {
       "change",
       gMainPane.updateBrowserStartupUI
     );
+#if 0
     Preferences.get("browser.startup.page").on(
       "change",
       gMainPane.updateBrowserStartupUI
     );
+#endif
     Preferences.get("browser.startup.homepage").on(
       "change",
       gMainPane.updateBrowserStartupUI
     );
     gMainPane.updateBrowserStartupUI();
+
+    Preferences.get("browser.startup.homepage").on(
+      "change",
+      () => gHomePane.syncFromHomePref()
+    );
+    gHomePane.syncFromHomePref();
 
     if (AppConstants.HAVE_SHELL_SERVICE) {
       setEventListener(
@@ -584,13 +617,22 @@ var gMainPane = {
       ? "aboutDialog.architecture.sixtyFourBit"
       : "aboutDialog.architecture.thirtyTwoBit";
     let arch = bundle.GetStringFromName(archResource);
-    version += ` (${arch})`;
 
-    document.l10n.setAttributes(
-      document.getElementById("updateAppInfo"),
-      "update-application-version",
-      { version }
-    );
+    // Add Firefox and nav-extension versions
+    let cliqzAddon = AddonManager.getAddonByID("cliqz@cliqz.com").then(cliqzAddon => {
+      let componentsVersion = Services.appinfo.platformVersion;
+      if (cliqzAddon) {
+        componentsVersion += `+${cliqzAddon.version}`;
+      }
+      version += ` (${componentsVersion})`;
+      version += ` (${arch})`;
+
+      document.l10n.setAttributes(
+        document.getElementById("updateAppInfo"),
+        "update-application-version",
+        { version }
+      );
+    });
 
     // Show a release notes link if we have a URL.
     let relNotesLink = document.getElementById("releasenotes");
@@ -605,6 +647,8 @@ var gMainPane = {
       }
     }
 
+#if 0
+    // Not used in Cliqz build because Cliqz itself a "distributed" build
     let distroId = Services.prefs.getCharPref("distribution.id", "");
     if (distroId) {
       let distroString = distroId;
@@ -628,6 +672,7 @@ var gMainPane = {
         distroField.hidden = false;
       }
     }
+#endif
 
     if (AppConstants.MOZ_UPDATER) {
       // XXX Workaround bug 1523453 -- changing selectIndex of a <deck> before
@@ -681,7 +726,7 @@ var gMainPane = {
           );
           wrk.open(
             wrk.ROOT_KEY_LOCAL_MACHINE,
-            "SOFTWARE\\Mozilla\\MaintenanceService",
+            "SOFTWARE\\Cliqz\\MaintenanceService",
             wrk.ACCESS_READ | wrk.WOW64_64
           );
           installed = wrk.readIntValue("Installed");
@@ -888,18 +933,192 @@ var gMainPane = {
   /*
    * Preferences:
    *
-   * browser.startup.page
-   * - what page(s) to show when the user starts the application, as an integer:
-   *
-   *     0: a blank page (DEPRECATED - this can be set via browser.startup.homepage)
-   *     1: the home page (as set by the browser.startup.homepage pref)
-   *     2: the last page the user visited (DEPRECATED)
-   *     3: windows and tabs from the last session (a.k.a. session restore)
-   *
-   *   The deprecated option is not exposed in UI; however, if the user has it
-   *   selected and doesn't change the UI for this preference, the deprecated
-   *   option is preserved.
+   * browser.startup.homepage
+   * - the user's home page, as a string; if the home page is a set of tabs,
+   *   this will be those URLs separated by the pipe character "|"
+   * browser.startup.restoreTabs
+   * - whether to restore windows and tabs from the last session (a.k.a. session
+   *   restore)
    */
+
+  syncFromHomePref() {
+    let homePref = HomePage.getAsString(true);
+
+    // Set the "Use Current Page(s)" button's text and enabled state.
+    this._updateUseCurrentButton();
+
+    function setInputDisabledStates(isControlled) {
+      let tabCount = this._getTabsForHomePage().length;
+
+      // Disable or enable the inputs based on if this is controlled by an extension.
+      document.querySelectorAll("#browserHomePage, .homepage-button")
+        .forEach((element) => {
+          let pref = element.getAttribute("preference");
+
+          let isDisabled = Preferences.get(pref).locked || isControlled;
+          if (pref == "pref.browser.disable_button.current_page") {
+            // Special case for current_page to disable it if tabCount is 0
+            isDisabled = isDisabled || tabCount < 1;
+          }
+
+          element.disabled = isDisabled;
+        });
+    }
+#if 0
+    if (homePref.locked) {
+      // An extension can't control these settings if they're locked.
+      hideControllingExtension(HOMEPAGE_OVERRIDE_KEY);
+      setInputDisabledStates.call(this, false);
+    } else {
+      // Asynchronously update the extension controlled UI.
+      handleControllingExtension(
+        PREF_SETTING_TYPE, HOMEPAGE_OVERRIDE_KEY, "extensionControlled.homepage_override2")
+        .then(setInputDisabledStates.bind(this));
+    }
+#endif
+    // If the pref is set to about:home or about:newtab, set the value to ""
+    // to show the placeholder text (about:home title) rather than
+    // exposing those URLs to users.
+    let defaultBranch = Services.prefs.getDefaultBranch("");
+    let defaultValue = HomePage.getAsString(true);
+    let currentValue = homePref.toLowerCase();
+    if (currentValue == "about:home" ||
+      (currentValue == defaultValue && currentValue == "about:newtab")) {
+      return "";
+    }
+
+    // If the pref is actually "", show about:blank.  The actual home page
+    // loading code treats them the same, and we don't want the placeholder text
+    // to be shown.
+    if (homePref == "")
+      return "about:blank";
+
+    // Otherwise, show the actual pref value.
+    return undefined;
+  },
+
+  syncToHomePref(value) {
+    // If the value is "", use about:home.
+    if (value == "")
+      return "about:home";
+
+    // Otherwise, use the actual textbox value.
+    return undefined;
+  },
+
+  /**
+   * Sets the home page to the current displayed page (or frontmost tab, if the
+   * most recent browser window contains multiple tabs), updating preference
+   * window UI to reflect this.
+   */
+  setHomePageToCurrent() {
+    let tabs = this._getTabsForHomePage();
+    function getTabURI(t) {
+      return t.linkedBrowser.currentURI.spec;
+    }
+
+    // FIXME Bug 244192: using dangerous "|" joiner!
+    if (tabs.length) {
+      HomePage.set(tabs.map(getTabURI).join("|"));
+    }
+
+    Services.telemetry.scalarAdd("preferences.use_current_page", 1);
+  },
+
+  /**
+   * Displays a dialog in which the user can select a bookmark to use as home
+   * page.  If the user selects a bookmark, that bookmark's name is displayed in
+   * UI and the bookmark's address is stored to the home page preference.
+   */
+  setHomePageToBookmark() {
+    var rv = { urls: null, names: null };
+    gSubDialog.open("chrome://browser/content/preferences/selectBookmark.xul",
+      "resizable=yes, modal=yes", rv,
+      this._setHomePageToBookmarkClosed.bind(this, rv));
+    Services.telemetry.scalarAdd("preferences.use_bookmark", 1);
+  },
+
+  onBrowserHomePageChange() {
+    if (this.telemetryHomePageTimer) {
+      clearTimeout(this.telemetryHomePageTimer);
+    }
+    let browserHomePage = document.querySelector("#browserHomePage").value;
+    // The length of the home page URL string should be more then four,
+    // and it should contain at least one ".", for example, "https://mozilla.org".
+    if (browserHomePage.length > 4 && browserHomePage.includes(".")) {
+      this.telemetryHomePageTimer = setTimeout(() => {
+        let homePageNumber = browserHomePage.split("|").length;
+        Services.telemetry.scalarAdd("preferences.browser_home_page_change", 1);
+        Services.telemetry.keyedScalarAdd("preferences.browser_home_page_count", homePageNumber, 1);
+      }, 3000);
+    }
+  },
+
+  _setHomePageToBookmarkClosed(rv, aEvent) {
+    if (aEvent.detail.button != "accept")
+      return;
+    if (rv.urls && rv.names) {
+      // XXX still using dangerous "|" joiner!
+      HomePage.set(rv.urls.join("|"));
+    }
+  },
+
+  /**
+   * Switches the "Use Current Page" button between its singular and plural
+   * forms.
+   */
+  async _updateUseCurrentButton() {
+    let useCurrent = document.getElementById("useCurrent");
+    let tabs = this._getTabsForHomePage();
+
+    const tabCount = tabs.length;
+
+    document.l10n.setAttributes(useCurrent, "use-current-pages", { tabCount });
+
+#if 0
+    // If the homepage is controlled by an extension then you can't use this.
+    if (await getControllingExtensionInfo(PREF_SETTING_TYPE, HOMEPAGE_OVERRIDE_KEY)) {
+      return;
+    }
+#endif
+    // In this case, the button's disabled state is set by preferences.xml.
+    let prefName = "pref.browser.homepage.disable_button.current_page";
+    if (Preferences.get(prefName).locked)
+      return;
+
+    useCurrent.disabled = tabCount < 1;
+  },
+
+  _getTabsForHomePage() {
+    var tabs = [];
+    var win = Services.wm.getMostRecentWindow("navigator:browser");
+
+    if (win && win.document.documentElement
+      .getAttribute("windowtype") == "navigator:browser") {
+      // We should only include visible & non-pinned tabs
+
+      tabs = win.gBrowser.visibleTabs.slice(win.gBrowser._numPinnedTabs);
+      tabs = tabs.filter(this.isNotAboutPreferences);
+      // XXX: Bug 1441637 - Fix tabbrowser to report tab.closing before it blurs it
+      tabs = tabs.filter(tab => !tab.closing);
+    }
+
+    return tabs;
+  },
+
+  /**
+   * Check to see if a tab is not about:preferences
+   */
+  isNotAboutPreferences(aElement, aIndex, aArray) {
+    return !aElement.linkedBrowser.currentURI.spec.startsWith("about:preferences");
+  },
+
+  /**
+   * Restores the default home page as the user's home page.
+   */
+  restoreDefaultHomePage() {
+    HomePage.set(HomePage.getAsString(true));
+  },
 
   /**
    * Utility function to enable/disable the button specified by aButtonID based
@@ -920,30 +1139,28 @@ var gMainPane = {
     const pbAutoStartPref = Preferences.get(
       "browser.privatebrowsing.autostart"
     );
-    const startupPref = Preferences.get("browser.startup.page");
 
     let newValue;
-    let checkbox = document.getElementById("browserRestoreSession");
+    let checkbox = document.getElementById("restoreSessionCheckbox");
     let warnOnQuitCheckbox = document.getElementById(
       "browserRestoreSessionQuitWarning"
     );
-    if (pbAutoStartPref.value || startupPref.locked) {
+    if (pbAutoStartPref.value) {
       checkbox.setAttribute("disabled", "true");
+      checkbox.checked = false;
       warnOnQuitCheckbox.setAttribute("disabled", "true");
     } else {
       checkbox.removeAttribute("disabled");
     }
+
+    const restoreSessionPref = Preferences.get("browser.startup.restoreTabs");
     newValue = pbAutoStartPref.value
       ? false
-      : startupPref.value === this.STARTUP_PREF_RESTORE_SESSION;
-    if (checkbox.checked !== newValue) {
-      checkbox.checked = newValue;
-      let warnOnQuitPref = Preferences.get("browser.sessionstore.warnOnQuit");
-      if (newValue && !warnOnQuitPref.locked && !pbAutoStartPref.value) {
-        warnOnQuitCheckbox.removeAttribute("disabled");
-      } else {
-        warnOnQuitCheckbox.setAttribute("disabled", "true");
-      }
+      : restoreSessionPref.value;
+    if (newValue) {
+      warnOnQuitCheckbox.removeAttribute("disabled");
+    } else {
+      warnOnQuitCheckbox.setAttribute("disabled", "true");
     }
   },
   /**
@@ -997,12 +1214,14 @@ var gMainPane = {
       true
     );
 
+#if 0
+    // CLIQZ-SPECIAL, DB-2146: temporarily hide Language section
     // This will register the "command" listener.
     let menulist = document.getElementById("defaultBrowserLanguage");
     new SelectionChangedMenulist(menulist, event => {
       gMainPane.onBrowserLanguageChange(event);
     });
-
+#endif
     gMainPane.setBrowserLocales(Services.locale.appLocaleAsBCP47);
   },
 
@@ -1025,6 +1244,8 @@ var gMainPane = {
       fragment.appendChild(menuitem);
     }
 
+#if 0
+    // CLIQZ-SPECIAL: DB-2146: temporarily hide Language section
     // Add an option to search for more languages if downloading is supported.
     if (Services.prefs.getBoolPref("intl.multilingual.downloadEnabled")) {
       let menuitem = document.createXULElement("menuitem");
@@ -1044,6 +1265,8 @@ var gMainPane = {
     menulist.value = selected;
 
     document.getElementById("browserLanguagesBox").hidden = false;
+
+#endif
   },
 
   /* Show the confirmation message bar to allow a restart into the new locales. */
@@ -1186,28 +1409,43 @@ var gMainPane = {
   },
 
   onBrowserRestoreSessionChange(event) {
-    const value = event.target.checked;
-    const startupPref = Preferences.get("browser.startup.page");
-    let newValue;
+    /* 
+      // CLIQZ-SPECIAL: removed startup prefs
+      const value = event.target.checked;
+      const startupPref = Preferences.get("browser.startup.page");
+      let newValue;
 
+      let warnOnQuitCheckbox = document.getElementById(
+        "browserRestoreSessionQuitWarning"
+      );
+      if (value) {
+        // We need to restore the blank homepage setting in our other pref
+        if (startupPref.value === this.STARTUP_PREF_BLANK) {
+          HomePage.safeSet("about:blank");
+        }
+        newValue = this.STARTUP_PREF_RESTORE_SESSION;
+        let warnOnQuitPref = Preferences.get("browser.sessionstore.warnOnQuit");
+        if (!warnOnQuitPref.locked) {
+          warnOnQuitCheckbox.removeAttribute("disabled");
+        }
+      } else {
+        newValue = this.STARTUP_PREF_HOMEPAGE;
+        warnOnQuitCheckbox.setAttribute("disabled", "true");
+      }
+      startupPref.value = newValue;
+    */
+    const value = event.target.checked;
     let warnOnQuitCheckbox = document.getElementById(
       "browserRestoreSessionQuitWarning"
     );
     if (value) {
-      // We need to restore the blank homepage setting in our other pref
-      if (startupPref.value === this.STARTUP_PREF_BLANK) {
-        HomePage.safeSet("about:blank");
-      }
-      newValue = this.STARTUP_PREF_RESTORE_SESSION;
       let warnOnQuitPref = Preferences.get("browser.sessionstore.warnOnQuit");
       if (!warnOnQuitPref.locked) {
         warnOnQuitCheckbox.removeAttribute("disabled");
       }
     } else {
-      newValue = this.STARTUP_PREF_HOMEPAGE;
       warnOnQuitCheckbox.setAttribute("disabled", "true");
     }
-    startupPref.value = newValue;
   },
 
   // TABS

@@ -155,6 +155,11 @@
         "type": "string",
         "allowedContexts": ["content", "devtools"],
         "description": "The ID of the extension/app."
+      },
+      "isCliqz": {
+        "type": "boolean",
+        "default": false,
+        "description": "Check if browser is cliqz."
       }
     },
     "functions": [

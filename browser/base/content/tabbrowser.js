@@ -6462,6 +6462,7 @@ var TabContextMenu = {
     contextUnpinSelectedTabs.hidden =
       !this.contextTab.pinned || !multiselectionContext;
 
+#if 0
     let contextMoveTabOptions = document.getElementById(
       "context_moveTabOptions"
     );
@@ -6498,6 +6499,7 @@ var TabContextMenu = {
       tabsToMove[0] == visibleTabs[0] ||
       tabsToMove[0] == visibleTabs[gBrowser._numPinnedTabs];
     contextMoveTabToStart.disabled = isFirstTab && allSelectedTabsAdjacent;
+#endif
 
     // Only one of "Duplicate Tab"/"Duplicate Tabs" should be visible.
     document.getElementById(
@@ -6587,18 +6589,45 @@ var TabContextMenu = {
     this.contextTab.toggleMultiSelectMuteMenuItem = toggleMultiSelectMute;
     this._updateToggleMuteMenuItems(this.contextTab);
 
+    // Privateness related menu items.
+    const windowIsPrivate = PrivateBrowsingUtils.isWindowPrivate(window);
+    const whiteListToggle =
+      document.getElementById("context_togglePrivatePinUnpin");
+    // CLIQZ-SPECIAL: DB-2322; we show this menu option only for private window and if
+    // Enable automatic forget mode is on.
+    whiteListToggle.hidden = !windowIsPrivate || !autoForgetTabs.isActive();
+    if (!whiteListToggle.hidden) {
+      const { spec: currentUrl} = this.contextTab.linkedBrowser.currentURI;
+      const isAdult = autoForgetTabs.blacklisted(currentUrl, true);
+      whiteListToggle.label = gNavigatorBundle
+        .getString(isAdult ? "afw.tabContext.unpinToFW" : "afw.tabContext.pinToFW");
+    }
+
     let selectAllTabs = document.getElementById("context_selectAllTabs");
     selectAllTabs.disabled = gBrowser.allTabsSelected();
 
     this.contextTab.addEventListener("TabAttrModified", this);
     aPopupMenu.addEventListener("popuphiding", this);
 
+#ifdef MOZ_SERVICES_SYNC
     gSync.updateTabContextMenu(aPopupMenu, this.contextTab);
+#endif
 
     document.getElementById("context_reopenInContainer").hidden =
       !Services.prefs.getBoolPref("privacy.userContext.enabled", false) ||
       PrivateBrowsingUtils.isWindowPrivate(window);
   },
+
+  togglePrivatePinUnpin: function() {
+    const { spec: currentUrl} = this.contextTab.linkedBrowser.currentURI;
+    const isAdult = autoForgetTabs.blacklisted(currentUrl, true);
+    if (isAdult) {
+      autoForgetTabs.whitelistDomain(currentUrl, true);
+    } else {
+      autoForgetTabs.blacklistDomain(currentUrl, true);
+    }
+  },
+
   handleEvent(aEvent) {
     switch (aEvent.type) {
       case "popuphiding":

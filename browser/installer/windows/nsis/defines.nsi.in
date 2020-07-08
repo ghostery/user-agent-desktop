@@ -21,18 +21,19 @@
 !endif
 
 # These defines should match application.ini settings
-!define AppName               "Firefox"
+!define AppName               "Cliqz"
 !define AppVersion            "@APP_VERSION@"
 !define GREVersion            @MOZILLA_VERSION@
 !define AB_CD                 "@AB_CD@"
 
 !define FileMainEXE           "@MOZ_APP_NAME@.exe"
-!define MainWindowClass       "MozillaWindowClass"
-!define DialogWindowClass     "MozillaDialogClass"
-!define DDEApplication        "Firefox"
-!define AppRegName            "Firefox"
+!define WindowClass           "CLIQZMessageWindow"
+!define MainWindowClass       "CliqzWindowClass"
+!define DialogWindowClass     "CliqzDialogClass"
+!define DDEApplication        "CLIQZ"
+!define AppRegName            "CLIQZ"
 
-!define BrandProductName      "Firefox"
+!define BrandProductName      "Cliqz"
 !ifndef DEV_EDITION
 !define BrandShortName        "@MOZ_APP_DISPLAYNAME@"
 !endif
@@ -40,12 +41,8 @@
 !define BrandFullName         "${BrandFullNameInternal}"
 !endif
 
-!define CERTIFICATE_NAME            "Mozilla Corporation"
-!define CERTIFICATE_ISSUER          "DigiCert SHA2 Assured ID Code Signing CA"
-; Changing the name or issuer requires us to have both the old and the new
-;  in the registry at the same time, temporarily.
-!define CERTIFICATE_NAME_PREVIOUS   "Mozilla Corporation"
-!define CERTIFICATE_ISSUER_PREVIOUS "DigiCert Assured ID Code Signing CA-1"
+!define CERTIFICATE_NAME      "Cliqz GmbH"
+!define CERTIFICATE_ISSUER    "DigiCert SHA2 Assured ID Code Signing CA"
 
 # LSP_CATEGORIES is the permitted LSP categories for the application. Each LSP
 # category value is ANDed together to set multiple permitted categories.
@@ -65,23 +62,23 @@
 
 !if "@MOZ_UPDATE_CHANNEL@" == "default"
 #ifdef DEBUG
-!define AccessibleHandlerCLSID "{398FFD8D-5382-48F7-9E3B-19012762D39A}"
+!define AccessibleHandlerCLSID "{E052D988-37A6-4F28-85F4-8B6ED3A4333F}"
 #else
-!define AccessibleHandlerCLSID "{CE573FAF-7815-4FC2-A031-B092268ACE9E}"
+!define AccessibleHandlerCLSID "{0E1B433B-A383-4513-9542-6DD082A09F48}"
 #endif
 !else if "@MOZ_UPDATE_CHANNEL@" == "nightly"
-!define AccessibleHandlerCLSID "{4629216B-8753-41BF-9527-5BFF51401671}"
+!define AccessibleHandlerCLSID "{9E544F3D-D90A-45A0-A87B-40B5DB30AA40}"
 !else if "@MOZ_UPDATE_CHANNEL@" == "beta"
-!define AccessibleHandlerCLSID "{21E9F98D-A6C9-4CB5-B288-AE2FD2A96C58}"
+!define AccessibleHandlerCLSID "{8C493661-D0FE-4868-A728-944AEA83134A}"
 !else if "@MOZ_UPDATE_CHANNEL@" == "release"
-!define AccessibleHandlerCLSID "{1BAA303D-B4B9-45E5-9CCB-E3FCA3E274B6}"
+!define AccessibleHandlerCLSID "{F40A82CD-24D7-413D-AADC-843816FB4331}"
 !else
-!define AccessibleHandlerCLSID "{4A195748-DCA2-45FB-9295-0A139E76A9E7}"
+!define AccessibleHandlerCLSID "{1C579561-9A8D-4EFB-9F18-4122CDCC7134}"
 !endif
 
 #ifdef MOZ_LAUNCHER_PROCESS
 !define MOZ_LAUNCHER_PROCESS
-!define MOZ_LAUNCHER_SUBKEY "Software\Mozilla\${AppName}\Launcher"
+!define MOZ_LAUNCHER_SUBKEY "Software\${AppName}\Launcher"
 #endif
 
 #ifdef RELEASE_OR_BETA
@@ -94,7 +91,7 @@
 !define BETA_UPDATE_CHANNEL
 !endif
 
-!define BaseURLStubPing "http://download-stats.mozilla.org/stub"
+!define BaseURLStubPing "https://reports.cliqz.com/submit/mini-installer"
 
 # ARCH is used when it is necessary to differentiate the x64 registry keys from
 # the x86 registry keys (e.g. the uninstall registry key).
@@ -142,7 +139,8 @@ VIProductVersion "1.0.0.0"
 VIAddVersionKey "ProductName"     "${BrandShortName}"
 VIAddVersionKey "CompanyName"     "${CompanyName}"
 #ifdef MOZ_OFFICIAL_BRANDING
-VIAddVersionKey "LegalTrademarks" "${BrandShortName} is a Trademark of The Mozilla Foundation."
+#Cliqz. Don't use Trademarks
+#VIAddVersionKey "LegalTrademarks" "${BrandShortName} is a Trademark of Cliqz GmbH."
 #endif
 VIAddVersionKey "LegalCopyright"  "${CompanyName}"
 VIAddVersionKey "FileVersion"     "${AppVersion}"
@@ -156,8 +154,19 @@ VIAddVersionKey "ProductVersion"  "${AppVersion}"
 # least 15 MB additional for working room.
 !define APPROXIMATE_REQUIRED_SPACE_MB "145"
 
+# Control positions in Dialog Units so they are placed correctly with
+# non-default DPI settings
+!define PROFILE_CLEANUP_LABEL_TOP_DU 64u
+!define NOW_INSTALLING_TOP_DU 221u
+!define INSTALL_BLURB1_TOP_DU 60u
+!define INSTALL_BLURB2_TOP_DU 100u
+!define INSTALL_BLURB3_TOP_DU 128u
+!define INSTALL_FOOTER_TOP_DU 19u
+!define INSTALL_FOOTER_WIDTH_DU 400u
+!define PROGRESS_BAR_TOP_DU 210u
+
 # Constants for parts of the telemetry submission URL
-!define TELEMETRY_BASE_URL https://incoming.telemetry.mozilla.org/submit
-!define TELEMETRY_NAMESPACE firefox-installer
+!define TELEMETRY_BASE_URL https://reports.cliqz.com/submit
+!define TELEMETRY_NAMESPACE cliqz-installer
 !define TELEMETRY_INSTALL_PING_VERSION 1
 !define TELEMETRY_INSTALL_PING_DOCTYPE install

@@ -471,7 +471,8 @@ var TabCrashHandler = {
     if (message.data.autoSubmit) {
       // The user has opted in to autosubmitted backlogged
       // crash reports in the future.
-      UnsubmittedCrashHandler.autoSubmit = true;
+      // CLIQZ-SPECIAL: Make sure crashreport submit cant be submitted.
+      // UnsubmittedCrashHandler.autoSubmit = true;
     }
 
     let childID = this.browserMap.get(browser);

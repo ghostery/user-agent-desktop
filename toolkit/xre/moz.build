@@ -146,6 +146,10 @@ SOURCES += [
     'ProfileReset.cpp',
 ]
 
+SOURCES += [
+    'MigratePwdFirefox.cpp',
+]
+
 if CONFIG['MOZ_X11']:
     UNIFIED_SOURCES += [
         'glxtest.cpp',

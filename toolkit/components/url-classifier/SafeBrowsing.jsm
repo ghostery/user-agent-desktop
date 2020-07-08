@@ -110,6 +110,7 @@ const FEATURES = [
       );
     },
   },
+#if 0
   {
     name: "trackingAnnotation",
     list: [
@@ -147,6 +148,7 @@ const FEATURES = [
       );
     },
   },
+#endif
   {
     name: "flashBlock",
     list: [
@@ -277,6 +279,23 @@ const FEATURES = [
   },
 ];
 
+function reportPhishingURL(url, kind) {
+  /* CLIQZ-TEMP: this is legacy code, need to be replaced
+     by webext approach
+  try {
+    Components.utils.import('chrome://cliqzmodules/content/CLIQZ.jsm')
+      .CLIQZ.System.import('core/kord/inject').then(function (mod) {
+        const inject = mod.default;
+        const humanWeb = inject.module('human-web');
+        humanWeb.action('addDataToUrl', url, 'anti-phishing', kind);
+      });
+  }
+  catch (e) {
+    Cu.reportError(e);
+  }
+  */
+}
+
 var SafeBrowsing = {
   init() {
     if (this.initialized) {
@@ -284,8 +303,10 @@ var SafeBrowsing = {
       return;
     }
 
-    Services.prefs.addObserver("browser.safebrowsing", this);
+#if 0
     Services.prefs.addObserver("privacy.trackingprotection", this);
+#endif
+    Services.prefs.addObserver("browser.safebrowsing", this);
     Services.prefs.addObserver("urlclassifier", this);
     Services.prefs.addObserver("plugins.flashBlock.enabled", this);
 
@@ -357,9 +378,16 @@ var SafeBrowsing = {
     switch (kind) {
       case "Phish":
         pref = "browser.safebrowsing.reportPhishURL";
+        Services.telemetry.getHistogramById("REPORT_DECEPTIVE_SITE").add(0);
+        reportPhishingURL(info.uri, 'user-report-phish');
         break;
 
       case "PhishMistake":
+        pref = "browser.safebrowsing.provider." + info.provider + ".report" + kind + "URL";
+        Services.telemetry.getHistogramById("REPORT_DECEPTIVE_SITE").add(1);
+        reportPhishingURL(info.uri, 'user-report-phish-mistake');
+        break;
+
       case "MalwareMistake":
         pref =
           "browser.safebrowsing.provider." +
@@ -367,6 +395,8 @@ var SafeBrowsing = {
           ".report" +
           kind +
           "URL";
+        Services.telemetry.getHistogramById("REPORT_DECEPTIVE_SITE").add(2);
+        reportPhishingURL(info.uri, 'user-report-malware-mistake');
         break;
 
       default:
@@ -388,9 +418,12 @@ var SafeBrowsing = {
       reportUrl = null;
     }
 
+#if 0
+    // CLIQZ-SPECIAL: DB-2442
     if (reportUrl) {
       reportUrl += encodeURIComponent(info.uri);
     }
+#endif
     return reportUrl;
   },
 

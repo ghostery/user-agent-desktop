@@ -323,9 +323,15 @@
   margin-inline: 4px 8px;
 }
 
-#blockCookiesMenu,
 #trackingProtectionMenu {
   margin: 0;
+}
+
+#keepCookiesUntil,
+#blockCookiesMenu {
+  margin-top: 0;
+  margin-bottom: 0;
+  max-width: 520px;
 }
 
 #changeBlockListLink {

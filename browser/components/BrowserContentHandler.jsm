@@ -27,8 +27,10 @@ XPCOMUtils.defineLazyModuleGetters(this, {
   SessionStartup: "resource:///modules/sessionstore/SessionStartup.jsm",
   ShellService: "resource:///modules/ShellService.jsm",
   UpdatePing: "resource://gre/modules/UpdatePing.jsm",
+#if 0
   RemotePages:
     "resource://gre/modules/remotepagemanager/RemotePageManagerParent.jsm",
+#endif
 });
 XPCOMUtils.defineLazyServiceGetter(
   this,
@@ -46,9 +48,11 @@ XPCOMUtils.defineLazyServiceGetter(
 XPCOMUtils.defineLazyGetter(this, "gSystemPrincipal", () =>
   Services.scriptSecurityManager.getSystemPrincipal()
 );
+#if 0
 XPCOMUtils.defineLazyGlobalGetters(this, [URL]);
 
 const NEWINSTALL_PAGE = "about:newinstall";
+#endif
 
 // One-time startup homepage override configurations
 const ONCE_DOMAINS = ["mozilla.org", "firefox.com"];
@@ -96,7 +100,7 @@ function resolveURIInternal(aCmdLine, aArgument) {
 }
 
 let gKiosk = false;
-
+#if 0
 let gRemoteInstallPage = null;
 
 function getNewInstallPage() {
@@ -106,14 +110,16 @@ function getNewInstallPage() {
 
   return NEWINSTALL_PAGE;
 }
-
+#endif
 var gFirstWindow = false;
 
 const OVERRIDE_NONE = 0;
 const OVERRIDE_NEW_PROFILE = 1;
 const OVERRIDE_NEW_MSTONE = 2;
 const OVERRIDE_NEW_BUILD_ID = 3;
+#if 0
 const OVERRIDE_ALTERNATE_PROFILE = 4;
+#endif
 /**
  * Determines whether a home page override is needed.
  * Returns:
@@ -125,16 +131,31 @@ const OVERRIDE_ALTERNATE_PROFILE = 4;
  *  OVERRIDE_NONE otherwise.
  */
 function needHomepageOverride(prefb) {
+#if 0
   let pService = Cc["@mozilla.org/toolkit/profile-service;1"].getService(
     Ci.nsIToolkitProfileService
   );
   if (pService.createdAlternateProfile) {
     return OVERRIDE_ALTERNATE_PROFILE;
   }
+#endif
   var savedmstone = prefb.getCharPref(
     "browser.startup.homepage_override.mstone",
     ""
   );
+
+  // CLIQZ-SPECIAL: DB-2131 | DB-2186,
+  // We should show WhatsNewPage for a user only in case of there is something to tell about;
+  // That includes major updates only + the fact that these updates have definitely
+  // features we would like to promote.
+  const shouldShowWhatsNew = prefb.getBoolPref(
+    "browser.migration.showWhatsNew",
+    false
+  );
+  if (shouldShowWhatsNew) {
+    // set the flag to false to not show next time
+    Services.prefs.setBoolPref("browser.migration.showWhatsNew", false);
+  }
 
   if (savedmstone == "ignore") {
     return OVERRIDE_NONE;
@@ -160,7 +181,7 @@ function needHomepageOverride(prefb) {
 
     prefb.setCharPref("browser.startup.homepage_override.mstone", mstone);
     prefb.setCharPref("browser.startup.homepage_override.buildID", buildID);
-    return savedmstone ? OVERRIDE_NEW_MSTONE : OVERRIDE_NEW_PROFILE;
+    return shouldShowWhatsNew ? OVERRIDE_NEW_MSTONE : OVERRIDE_NEW_PROFILE;
   }
 
   if (buildID != savedBuildID) {
@@ -205,6 +226,9 @@ function getPostUpdateOverridePage(update, defaultOverridePage) {
   return update.getProperty("openURL") || defaultOverridePage;
 }
 
+function isCommandLineInitialLaunch(cmdLine) {
+  return cmdLine.state == Ci.nsICommandLine.STATE_INITIAL_LAUNCH;
+}
 /**
  * Open a browser window. If this is the initial launch, this function will
  * attempt to use the navigator:blank window opened by BrowserGlue.jsm during
@@ -246,8 +270,9 @@ function openBrowserWindow(
   let args;
   if (!urlOrUrlList) {
     // Just pass in the defaultArgs directly. We'll use system principal on the other end.
-    args = [gBrowserContentHandler.getArgs(isStartup)];
+    args = [gBrowserContentHandler.getDefaultArgs(isCommandLineInitialLaunch(cmdLine))];
   } else {
+#if 0
     let pService = Cc["@mozilla.org/toolkit/profile-service;1"].getService(
       Ci.nsIToolkitProfileService
     );
@@ -259,6 +284,7 @@ function openBrowserWindow(
         urlOrUrlList = [url, urlOrUrlList];
       }
     }
+#endif
 
     if (Array.isArray(urlOrUrlList)) {
       // There isn't an explicit way to pass a principal here, so we load multiple URLs
@@ -567,7 +593,7 @@ nsBrowserContentHandler.prototype = {
     // PB builds.
     if (cmdLine.handleFlag("private", false) && PrivateBrowsingUtils.enabled) {
       PrivateBrowsingUtils.enterTemporaryAutoStartMode();
-      if (cmdLine.state == Ci.nsICommandLine.STATE_INITIAL_LAUNCH) {
+      if (isCommandLineInitialLaunch(cmdLine)) {
         let win = Services.wm.getMostRecentWindow("navigator:blank");
         if (win) {
           win.docShell.QueryInterface(
@@ -634,11 +660,55 @@ nsBrowserContentHandler.prototype = {
   /* nsIBrowserHandler */
 
   get defaultArgs() {
-    return this.getArgs();
+    return this.getDefaultArgs();
   },
 
-  getArgs(isStartup = false) {
-    var prefb = Services.prefs;
+  getDefaultArgs: function bch_getDefaultArgs(initialLaunch) {
+    // CLIQZ-SPECIAL:
+    // DB-2064:
+    // overridePage will be used in case of a user has restarted the browser after update.
+    // A function needHomepageOverride determines whether our homepage has to be replaced.
+    // In this case it means that we might need to display What's New page for a user.
+    // There are 2 different prefs (taken into account in needHomepageOverride);
+    // browser.startup.homepage_override.mstone - it stores last saved platform version.
+    // That value could be an actual version like 65.0.x or empty string (new profile start).
+    // Also there is Services.appinfo.platformVersion which is 'live' meaning that whenever new
+    // update gets unstalled the property will be affected.
+    // If last stored platformVersion exists (not equal empty string) and does not equal
+    // Services.appinfo.platformVersion then the latest one is saved under
+    // browser.startup.homepage_override.mstone and taken into account further.
+    // Also OVERRIDE_NEW_MSTONE will be returned from needHomepageOverride;
+    var overridePage = "";
+
+    try {
+      // Read the old value of homepage_override.mstone before
+      // needHomepageOverride updates it, so that we can later add it to the
+      // URL if we do end up showing an overridePage. This makes it possible
+      // to have the overridePage's content vary depending on the version we're
+      // upgrading from.
+      let override = needHomepageOverride(Services.prefs);
+      if (override === OVERRIDE_NEW_MSTONE) {
+        let old_cliqz_mstone = Services.prefs.getCharPref("distribution.previous_version", "");
+        let new_cliqz_mstone = Services.prefs.getCharPref("distribution.version", "");
+
+        overridePage = Services.prefs.getStringPref("startup.homepage_override_url");
+#if 0
+        // %VERSION% placeholder gets formatted by Services.urlFormatter internally
+        // https://dxr.mozilla.org/mozilla-central/source/toolkit/components/urlformatter/URLFormatter.jsm#96
+        overridePage = Services.urlFormatter.formatURLPref("startup.homepage_override_url");
+        overridePage = overridePage.replace("%OLD_VERSION%", old_mstone);
+#endif
+
+        overridePage = overridePage.replace("%VERSION%", new_cliqz_mstone)
+                                   .replace("%OLD_VERSION%", old_cliqz_mstone);
+
+        Services.prefs.setCharPref("distribution.previous_version", new_cliqz_mstone);
+      }
+    } catch (ex) {}
+
+    if (overridePage !== '') {
+      return overridePage;
+    }
 
     if (!gFirstWindow) {
       gFirstWindow = true;
@@ -646,7 +716,24 @@ nsBrowserContentHandler.prototype = {
         return "about:privatebrowsing";
       }
     }
+    // CLIQZ-SPECIAL
+    // Remove source code below which only complicated the logical process
+    // rather than made it simple.
+    //
+    // DB-1929 According to this ticket we have a simple final steps which define
+    // when should be displayed home page and restored windows
+    // (details could be found in the ticket).
+    //
+    // Shortly: home page defines a rule when it should/could be displayed.
+    // It is up to us to decide whether we need to do this check or not.
+    // Meaning that if some other rules beyond appear
+    // then we can combine them with what we have in HomePage.canBeDisplayed.
+    if (HomePage.canBeDisplayed()) {
+      return HomePage.get();
+    }
 
+    return 'about:blank';
+#if 0
     var override;
     var overridePage = "";
     var additionalPage = "";
@@ -779,6 +866,10 @@ nsBrowserContentHandler.prototype = {
       }
     }
 
+    // CLIQZ-SPECIAL, DB-1849, DB-1878
+    // If this is initial launch (meaning that isCommandLineInitialLaunch returns true)
+    // then we need to show a Cliqz home page only if browser.startup.addFreshTab is true.
+    // Otherwise a blank page should be displayed.
     var startPage = "";
     try {
       var choice = prefb.getIntPref("browser.startup.page");
@@ -804,6 +895,7 @@ nsBrowserContentHandler.prototype = {
     }
 
     return overridePage || startPage || "about:blank";
+#endif
   },
 
   mFeatures: null,
@@ -1020,10 +1112,7 @@ nsDefaultCommandLineHandler.prototype = {
     }
 
     if (urilist.length) {
-      if (
-        cmdLine.state != Ci.nsICommandLine.STATE_INITIAL_LAUNCH &&
-        urilist.length == 1
-      ) {
+      if (!isCommandLineInitialLaunch(cmdLine) && urilist.length == 1) {
         // Try to find an existing window and load our URI into the
         // current tab, new tab, or new window as prefs determine.
         try {
@@ -1040,12 +1129,18 @@ nsDefaultCommandLineHandler.prototype = {
 
       var URLlist = urilist.filter(shouldLoadURI).map(u => u.spec);
       if (URLlist.length) {
+        // DB-1929
+        // If HomePage can be displayed then we get its' URL and add it to the URLlist
+        // So a window could start loading two tabs at once (without waiting for restore process).
+        if (HomePage.canBeDisplayed()) {
+          URLlist.push(HomePage.get());
+        }
         openBrowserWindow(cmdLine, gSystemPrincipal, URLlist);
       }
     } else if (!cmdLine.preventDefault) {
       if (
         AppConstants.isPlatformAndVersionAtLeast("win", "10") &&
-        cmdLine.state != Ci.nsICommandLine.STATE_INITIAL_LAUNCH &&
+        !isCommandLineInitialLaunch(cmdLine) &&
         WindowsUIUtils.inTabletMode
       ) {
         // In windows 10 tablet mode, do not create a new window, but reuse the existing one.

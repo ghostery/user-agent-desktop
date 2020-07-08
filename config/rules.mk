@@ -914,6 +914,47 @@ endif
 ################################################################################
 # CHROME PACKAGING
 
+# Cliqz additional distribution files
+CLIQZ_EXT_URL = "https://repository.cliqz.com/dist/$(CQZ_RELEASE_CHANNEL)/$(CQZ_VERSION)/$(MOZ_BUILD_DATE)/cliqz@cliqz.com.xpi"
+HTTPSE_EXT_URL = "https://repository.cliqz.com/dist/$(CQZ_RELEASE_CHANNEL)/$(CQZ_VERSION)/$(MOZ_BUILD_DATE)/https-everywhere@cliqz.com.xpi"
+CONSENTRICK_EXT_URL = "https://repository.cliqz.com/dist/$(CQZ_RELEASE_CHANNEL)/$(CQZ_VERSION)/$(MOZ_BUILD_DATE)/gdprtool@cliqz.com.xpi"
+DAT_EXT_URL = "https://repository.cliqz.com/dist/$(CQZ_RELEASE_CHANNEL)/$(CQZ_VERSION)/$(MOZ_BUILD_DATE)/dat@cliqz.com.xpi"
+
+DIST_RESPATH = $(DIST)/bin
+EXTENSIONS_PATH = $(DIST_RESPATH)/browser/features
+$(EXTENSIONS_PATH):
+	mkdir -p $(EXTENSIONS_PATH)
+
+CLIQZ_XPI_PATH = $(EXTENSIONS_PATH)/cliqz@cliqz.com.xpi
+$(CLIQZ_XPI_PATH): $(EXTENSIONS_PATH)
+	echo CLIQZ_XPI_PATH in `pwd`
+	wget --output-document $(CLIQZ_XPI_PATH) $(CLIQZ_EXT_URL)
+
+HTTPSE_XPI_PATH = $(EXTENSIONS_PATH)/https-everywhere@cliqz.com.xpi
+$(HTTPSE_XPI_PATH): $(EXTENSIONS_PATH)
+ifdef HTTPSE_EXT_URL
+	echo HTTPSE_XPI_PATH in `pwd`
+	wget --output-document $(HTTPSE_XPI_PATH) $(HTTPSE_EXT_URL)
+endif
+
+CONSENTRICK_XPI_PATH = $(EXTENSIONS_PATH)/gdprtool@cliqz.com.xpi
+$(CONSENTRICK_XPI_PATH): $(EXTENSIONS_PATH)
+ifdef CONSENTRICK_EXT_URL
+	echo CONSENTRICK_XPI_PATH in `pwd`
+	wget --output-document $(CONSENTRICK_XPI_PATH) $(CONSENTRICK_EXT_URL)
+endif
+
+DAT_XPI_PATH = $(EXTENSIONS_PATH)/dat@cliqz.com.xpi
+$(DAT_XPI_PATH): $(EXTENSIONS_PATH)
+ifdef DAT_EXT_URL
+	echo DAT_XPI_PATH in `pwd`
+	wget --output-document $(DAT_XPI_PATH) $(DAT_EXT_URL)
+endif
+
+# Package Cliqz stuff
+cliqz_distr: $(CLIQZ_XPI_PATH) $(HTTPSE_XPI_PATH) $(CONSENTRICK_XPI_PATH) $(DAT_XPI_PATH)
+	echo cliqz_distr in `pwd`
+
 chrome::
 	$(MAKE) realchrome
 	$(LOOP_OVER_DIRS)
@@ -929,16 +970,16 @@ ifdef XPI_ROOT_APPID
 # sub-dir should be added to the root chrome manifest with
 # a specific application id.
 MAKE_JARS_FLAGS += --root-manifest-entry-appid='$(XPI_ROOT_APPID)'
-endif
+endif  # XPI_ROOT_APPID
 
 # if DIST_SUBDIR is defined but XPI_ROOT_APPID is not there's
 # no way langpacks will get packaged right, so error out.
 ifneq (,$(DIST_SUBDIR))
 ifndef XPI_ROOT_APPID
 $(error XPI_ROOT_APPID is not defined - langpacks will break.)
-endif
-endif
-endif
+endif   # ifndef XPI_ROOT_APPID
+endif  # ifneq (,$(DIST_SUBDIR))
+endif  # ifdef XPI_NAME
 
 libs realchrome:: $(FINAL_TARGET)/chrome
 	$(call py3_action,jar_maker,\
@@ -946,7 +987,7 @@ libs realchrome:: $(FINAL_TARGET)/chrome
 	  $(MAKE_JARS_FLAGS) $(DEFINES) $(ACDEFINES) \
 	  $(JAR_MANIFEST))
 
-endif
+endif  # ifndef NO_DIST_INSTALL
 
 endif
 

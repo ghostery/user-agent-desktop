@@ -7,8 +7,8 @@
      zeros to show it isn't valid, and add the real version to the Name. -->
 <Product Name="$(var.BrandFullName) $(var.Version) $(var.Architecture) $(var.AB_CD)"
          Manufacturer="$(var.Vendor)" Language="0" Codepage="1252"
-         Version="$(var.EmbeddedVersionCode)" Id="1294a4c5-9977-480f-9497-c0ea1e630130"
-         UpgradeCode="3118ab4c-b433-4fbb-b9fa-8f9ca4b5c103" >
+         Version="$(var.EmbeddedVersionCode)" Id="5f6279e9-05cc-4033-816c-2bda1166ced0"
+         UpgradeCode="07e9ffa1-31bf-4f7e-9e87-0f0706755569" >
 
   <Package Id="*" InstallerVersion="200" Compressed="yes"
            Platform="$(var.Architecture)" />
@@ -19,7 +19,7 @@
   <!-- We need a component and feature, or msiexec will refuse to load us. -->
   <Directory Id="TARGETDIR" Name="SourceDir">
     <Directory Id="TempFolder">
-      <Component Id="EmptyComponent" Guid="55a76b76-7496-4b47-a7a6-c5fbdd5e51a4">
+      <Component Id="EmptyComponent" Guid="eed6331d-fd92-4bc2-bfb3-337ffd83ba29">
         <CreateFolder />
       </Component>
     </Directory>

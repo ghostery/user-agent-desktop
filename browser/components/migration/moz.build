@@ -12,16 +12,24 @@ JAR_MANIFESTS += ['jar.mn']
 
 XPIDL_SOURCES += [
     'nsIBrowserProfileMigrator.idl',
+    'nsIFirefoxPasswordMigrator.idl',
 ]
 
 XPIDL_MODULE = 'migration'
 
+UNIFIED_SOURCES += [
+    'nsFirefoxPasswordMigrator.cpp'
+]
+
 EXTRA_JS_MODULES += [
     'ChromeMigrationUtils.jsm',
     'ChromeProfileMigrator.jsm',
-    'FirefoxProfileMigrator.jsm',
     'MigrationUtils.jsm',
     'ProfileMigrator.jsm',
+]
+
+EXTRA_PP_JS_MODULES += [
+    'FirefoxProfileMigrator.jsm',
 ]
 
 if CONFIG['OS_ARCH'] == 'WINNT':
@@ -62,6 +70,8 @@ XPCOM_MANIFESTS += [
 ]
 
 FINAL_LIBRARY = 'browsercomps'
+
+include('/ipc/chromium/chromium-config.mozbuild')
 
 with Files('**'):
     BUG_COMPONENT = ('Firefox', 'Migration')

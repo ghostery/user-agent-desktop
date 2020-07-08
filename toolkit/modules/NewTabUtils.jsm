@@ -12,9 +12,10 @@ const { XPCOMUtils } = ChromeUtils.import(
 );
 
 // Android tests don't import these properly, so guard against that
+let didSuccessfulImport = false;
+#if 0
 let shortURL = {};
 let searchShortcuts = {};
-let didSuccessfulImport = false;
 try {
   ChromeUtils.import("resource://activity-stream/lib/ShortURL.jsm", shortURL);
   ChromeUtils.import(
@@ -25,6 +26,7 @@ try {
 } catch (e) {
   // The test failed to import these files
 }
+#endif
 
 ChromeUtils.defineModuleGetter(
   this,
@@ -44,6 +46,7 @@ ChromeUtils.defineModuleGetter(
   "resource://gre/modules/BinarySearch.jsm"
 );
 
+#if 0
 ChromeUtils.defineModuleGetter(
   this,
   "pktApi",
@@ -55,6 +58,7 @@ ChromeUtils.defineModuleGetter(
   "Pocket",
   "chrome://pocket/content/Pocket.jsm"
 );
+#endif
 
 let BrowserWindowTracker;
 try {
@@ -1057,6 +1061,8 @@ var ActivityStreamProvider = {
    * saved Pocket items.
    */
   fetchSavedPocketItems(requestData) {
+    return Promise.reject(null);
+#if 0
     const latestSince =
       Services.prefs.getStringPref(PREF_POCKET_LATEST_SINCE, 0) * 1000;
 
@@ -1078,6 +1084,7 @@ var ActivityStreamProvider = {
         },
       });
     });
+#endif
   },
 
   /**
@@ -1546,10 +1553,13 @@ var ActivityStreamLinks = {
    *@returns {Promise} Returns a promise at completion
    */
   deletePocketEntry(aItemID) {
+    return Promise.reject(null);
+#if 0
     this._savedPocketStories = null;
     return new Promise((success, error) =>
       pktApi.deleteItem(aItemID, { success, error })
     );
+#endif
   },
 
   /**
@@ -1562,10 +1572,13 @@ var ActivityStreamLinks = {
    *@returns {Promise} Returns a promise at completion
    */
   archivePocketEntry(aItemID) {
+    return Promise.reject(null);
+#if 0
     this._savedPocketStories = null;
     return new Promise((success, error) =>
       pktApi.archiveItem(aItemID, { success, error })
     );
+#endif
   },
 
   /**
@@ -1583,6 +1596,8 @@ var ActivityStreamLinks = {
    *@returns {Promise} Returns a promise at completion
    */
   addPocketEntry(aUrl, aTitle, aBrowser) {
+    return Promise.reject(null);
+#if 0
     // If the user is not logged in, show the panel to prompt them to log in
     if (!pktApi.isUserLoggedIn()) {
       Pocket.savePage(aBrowser, aUrl, aTitle);
@@ -1599,6 +1614,7 @@ var ActivityStreamLinks = {
         error,
       });
     });
+#endif
   },
 
   /**
@@ -1625,6 +1641,7 @@ var ActivityStreamLinks = {
     }
 
     // Add the Pocket items if we need more and want them
+    aOptions.excludePocket = true; // Cliqz. Hardcoded, don't use Pocket
     if (aOptions.numItems - results.length > 0 && !aOptions.excludePocket) {
       const latestSince = ~~Services.prefs.getStringPref(
         PREF_POCKET_LATEST_SINCE,

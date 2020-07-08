@@ -55,10 +55,12 @@ static const RedirEntry kRedirMap[] = {
     {"framecrashed", "chrome://browser/content/aboutFrameCrashed.html",
      nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT |
          nsIAboutModule::HIDE_FROM_ABOUTABOUT},
+/* CLIQZ-SPECIAL: remove about:logins
     {"logins", "chrome://browser/content/aboutlogins/aboutLogins.html",
      nsIAboutModule::ALLOW_SCRIPT | nsIAboutModule::URI_MUST_LOAD_IN_CHILD |
          nsIAboutModule::URI_CAN_LOAD_IN_PRIVILEGEDABOUT_PROCESS |
          nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT},
+*/
     {"tabcrashed", "chrome://browser/content/aboutTabCrashed.xhtml",
      nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT |
          nsIAboutModule::ALLOW_SCRIPT | nsIAboutModule::HIDE_FROM_ABOUTABOUT},
@@ -80,6 +82,8 @@ static const RedirEntry kRedirMap[] = {
      nsIAboutModule::ALLOW_SCRIPT | nsIAboutModule::HIDE_FROM_ABOUTABOUT},
     {"welcomeback", "chrome://browser/content/aboutWelcomeBack.xhtml",
      nsIAboutModule::ALLOW_SCRIPT | nsIAboutModule::HIDE_FROM_ABOUTABOUT},
+    {"importedtabs", "chrome://browser/content/aboutImportedTabs.xhtml",
+     nsIAboutModule::ALLOW_SCRIPT | nsIAboutModule::HIDE_FROM_ABOUTABOUT},
     // Actual activity stream URL for home and newtab are set in channel
     // creation
     {"home", "about:blank", ACTIVITY_STREAM_FLAGS},
@@ -88,7 +92,7 @@ static const RedirEntry kRedirMap[] = {
      nsIAboutModule::URI_MUST_LOAD_IN_CHILD |
          nsIAboutModule::URI_CAN_LOAD_IN_PRIVILEGEDABOUT_PROCESS |
          nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT |
-         nsIAboutModule::ALLOW_SCRIPT},
+         nsIAboutModule::ALLOW_SCRIPT | nsIAboutModule::HIDE_FROM_ABOUTABOUT},
     {"pocket-saved", "chrome://pocket/content/panels/saved.html",
      nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT |
          nsIAboutModule::URI_CAN_LOAD_IN_CHILD | nsIAboutModule::ALLOW_SCRIPT |
@@ -113,10 +117,12 @@ static const RedirEntry kRedirMap[] = {
      nsIAboutModule::URI_MUST_LOAD_IN_CHILD |
          nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT |
          nsIAboutModule::ALLOW_SCRIPT | nsIAboutModule::HIDE_FROM_ABOUTABOUT},
+/* CLIQZ-SPECIAL: remove about:protections
     {"protections", "chrome://browser/content/protections.html",
      nsIAboutModule::URI_SAFE_FOR_UNTRUSTED_CONTENT |
          nsIAboutModule::URI_MUST_LOAD_IN_CHILD | nsIAboutModule::ALLOW_SCRIPT |
          nsIAboutModule::URI_CAN_LOAD_IN_PRIVILEGEDABOUT_PROCESS},
+*/
 };
 
 static nsAutoCString GetAboutModuleName(nsIURI* aURI) {
@@ -189,6 +195,12 @@ AboutRedirector::NewChannel(nsIURI* aURI, nsILoadInfo* aLoadInfo,
       rv = NS_URIChainHasFlags(tempURI, nsIProtocolHandler::URI_IS_UI_RESOURCE,
                                &isUIResource);
       NS_ENSURE_SUCCESS(rv, rv);
+      // Cliqz: after FF 56 "isUIResource" flag need to set to false because of
+      // SetResultPrincipalURI, because our NewTab contain relative paths.
+      // Could be removed if path in extension will be changed to absolute.
+      if (path.EqualsLiteral("home") || path.EqualsLiteral("newtab")) {
+        isUIResource = false;
+      }
 
       rv = NS_NewChannelInternal(getter_AddRefs(tempChannel), tempURI,
                                  aLoadInfo);

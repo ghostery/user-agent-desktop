@@ -88,6 +88,13 @@ var FileUtils = {
     return dir;
   },
 
+  openFileInputStream: function FileUtils_openFileInputStream(file) {
+    let inStream = Cc["@mozilla.org/network/file-input-stream;1"].
+        createInstance(Ci.nsIFileInputStream);
+    inStream.init(file, this.MODE_RDONLY, 0, inStream.CLOSE_ON_EOF);
+    return inStream;
+  },
+
   /**
    * Opens a file output stream for writing.
    * @param   file

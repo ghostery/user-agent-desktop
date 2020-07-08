@@ -107,6 +107,14 @@ void WriteConsoleLog();
 void OverrideDefaultLocaleIfNeeded();
 
 /**
+ * CLIQZ. Special function to help with password migration from FF.
+ *
+ * Using separate cliqz process with migratepwdff switch to initialize NSS
+ * library with FF profile.
+ */
+void ServiceMigratePasswordsFromFF(int gArgc, char **gArgv);
+
+/**
  * Allow exit() calls to complete. This should be done from a proper Gecko
  * shutdown path. Otherwise we aim to catch improper shutdowns.
  */

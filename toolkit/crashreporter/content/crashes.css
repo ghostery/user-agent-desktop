@@ -67,6 +67,15 @@ th {
   text-align: start;
 }
 
+#reportList tr > td {
+  cursor: text;
+}
+
+#reportList tr > td > a {
+  pointer-events: none;
+  color: var(--in-content-page-color);
+}
+
 @media (min-resolution: 1.1dppx) {
   .submitting {
     background-image: url(chrome://global/skin/icons/loading@2x.png);

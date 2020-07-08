@@ -5,10 +5,10 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 DIRS += [
-    'doh-rollout',
-    'formautofill',
+#   'doh-rollout',
+#   'formautofill',
     'pdfjs',
-    'screenshots',
-    'webcompat',
-    'report-site-issue'
+#   'screenshots',
+#   'webcompat',
+#   'report-site-issue'
 ]

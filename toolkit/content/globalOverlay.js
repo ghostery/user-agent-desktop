@@ -107,7 +107,11 @@ function goDoCommand(aCommand) {
   }
 }
 
-function goSetCommandEnabled(aID, aEnabled) {
+function goSetCommandEnabled(aID, aEnabled, win) {
+  if (win != null) {
+    document = win.document;
+  }
+
   var node = document.getElementById(aID);
 
   if (node) {

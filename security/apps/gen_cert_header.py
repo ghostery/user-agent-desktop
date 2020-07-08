@@ -33,6 +33,7 @@ array_names = [
     'addonsPublicRoot',
     'addonsPublicIntermediate',
     'addonsStageRoot',
+    'cliqzAddonsRoot',
 ]
 
 for n in array_names:

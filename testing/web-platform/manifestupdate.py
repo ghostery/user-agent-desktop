@@ -109,10 +109,10 @@ def run(src_root, obj_root, logger=None, **kwargs):
 
     if not kwargs["rebuild"] and kwargs["download"] is not False:
         force_download = False if kwargs["download"] is None else True
-        manifestdownload.download_from_taskcluster(logger,
-                                                   src_root,
-                                                   test_paths,
-                                                   force=force_download)
+        #manifestdownload.download_from_taskcluster(logger,
+        #                                           src_root,
+        #                                           test_paths,
+        #                                           force=force_download)
     else:
         logger.debug("Skipping manifest download")
 

@@ -6,12 +6,15 @@
 
 EXTRA_JS_MODULES.addons += [
     'AddonRepository.jsm',
-    'AddonSettings.jsm',
     'AddonUpdateChecker.jsm',
     'Content.js',
     'ProductAddonChecker.jsm',
     'XPIDatabase.jsm',
     'XPIInstall.jsm',
+]
+
+EXTRA_PP_JS_MODULES.addons += [
+    'AddonSettings.jsm',
     'XPIProvider.jsm',
 ]
 

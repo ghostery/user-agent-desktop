@@ -9,6 +9,7 @@ var EXPORTED_SYMBOLS = [
   "Dictionary",
   "Extension",
   "ExtensionData",
+  "getExtensionUUID",
   "Langpack",
   "Management",
   "ExtensionAddonObserver",
@@ -260,6 +261,10 @@ var UUIDMap = {
     delete map[id];
     this._write(map);
   },
+};
+
+var getExtensionUUID = function(id) {
+  return UUIDMap.get(id, false);
 };
 
 /**

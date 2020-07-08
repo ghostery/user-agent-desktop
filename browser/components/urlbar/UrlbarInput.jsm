@@ -13,6 +13,7 @@ const { XPCOMUtils } = ChromeUtils.import(
 XPCOMUtils.defineLazyModuleGetters(this, {
   AppConstants: "resource://gre/modules/AppConstants.jsm",
   BrowserUtils: "resource://gre/modules/BrowserUtils.jsm",
+  CliqzResources: "resource:///modules/CliqzResources.jsm",
   ExtensionSearchHandler: "resource://gre/modules/ExtensionSearchHandler.jsm",
   PrivateBrowsingUtils: "resource://gre/modules/PrivateBrowsingUtils.jsm",
   ReaderMode: "resource://gre/modules/ReaderMode.jsm",
@@ -155,7 +156,10 @@ class UrlbarInput {
 
     this.inputField = this.querySelector("#urlbar-input");
     this.dropmarker = this.querySelector(".urlbar-history-dropmarker");
+    /* CLIQZ-SPECIAL: We do not need dropmarker in urlbar
     this.dropmarker.hidden = this.megabar;
+    */
+    this.dropmarker.hidden = true;
     this._inputContainer = this.querySelector("#urlbar-input-container");
     this._identityBox = this.querySelector("#identity-box");
     this._toolbar = this.textbox.closest("toolbar");
@@ -209,6 +213,10 @@ class UrlbarInput {
     // recording abandonment events when the command causes a blur event.
     this.view.panel.addEventListener("command", this, true);
 
+    // CLIQZ-SPECIAL: we do not need to attach controller, as its hijacked by extension also DB-2229
+    // this._copyCutController = new CopyCutController(this);
+    this._copyCutController = null;
+    // this.inputField.controllers.insertControllerAt(0, this._copyCutController);
     this.window.gBrowser.tabContainer.addEventListener("TabSelect", this);
 
     this.window.addEventListener("customizationstarting", this);
@@ -295,7 +303,7 @@ class UrlbarInput {
       // Replace initial page URIs with an empty string
       // only if there's no opener (bug 370555).
       if (
-        this.window.isInitialPage(uri) &&
+        CliqzResources.isInitialPage(uri) &&
         BrowserUtils.checkEmptyPageOrigin(
           this.window.gBrowser.selectedBrowser,
           uri
@@ -313,8 +321,15 @@ class UrlbarInput {
 
       valid =
         !this.window.isBlankPageURL(uri.spec) || uri.schemeIs("moz-extension");
+
+      // CLIQZ-SPECIAL: Invalidate page proxy state for inital pages ie. freshtab.
+      // set valid = false => pageproxystate = false
+      if (CliqzResources.isInitialPage(uri.spec)) {
+        valid = false;
+      }
+
     } else if (
-      this.window.isInitialPage(value) &&
+      CliqzResources.isInitialPage(value) &&
       BrowserUtils.checkEmptyPageOrigin(this.window.gBrowser.selectedBrowser)
     ) {
       value = "";
@@ -1231,7 +1246,17 @@ class UrlbarInput {
 
     this.valueIsTyped = false;
     this._resultForCurrentValue = null;
-    this.inputField.value = val;
+
+    // DB-2378 => CLIQZ-SPECIAL: do not set url if freshtabURL exists,
+    let setVal = val;
+    if (val.startsWith("moz-ext")) {
+      const homeUrl = Services.prefs.getCharPref("browser.startup.homepage", "");
+      if (val === homeUrl) {
+        setVal = "";
+      }
+    }
+    this.inputField.value = setVal;
+
     this.formatValue();
     this.removeAttribute("actiontype");
 
@@ -2187,6 +2212,23 @@ class UrlbarInput {
   }
 
   _on_TabSelect(event) {
+    // CLIQZ-SPECIAL: DB-2272
+    // There might be a case when opening and selecting a new tab
+    // results in displaying the gradient mask-image on url bar.
+    // Even if the value of it is empty or not long enough for
+    // horizontal scrollbar to appear.
+    // In that case _inOverflow is always true.
+    // And since scrollWidth and clientWidth might have been changed since
+    // the last time call we first check the value of _inOverflow.
+    // But even if _inOverflow equals "true" it still requires to check
+    // whether inputField does really have horizontal scrollbar.
+    // If the latter is not there then we need to updateTextOverflow
+    // as if the input field is not overflown.
+    let input = this.inputField;
+    if (this._overflowing && input.scrollWidth === input.clientWidth) {
+      this._overflowing = false;
+      this._updateTextOverflow();
+    }
     this._gotTabSelect = true;
     this._afterTabSelectAndFocusChange();
   }

@@ -9,7 +9,8 @@ toolkit.jar:
 #ifdef MOZILLA_OFFICIAL
    content/global/aboutRights.xhtml
 #else
-   content/global/aboutRights.xhtml           (aboutRights-unbranded.xhtml)
+# use same page in Cliqz
+   content/global/aboutRights.xhtml
 #endif
    content/global/aboutNetworking.js
    content/global/aboutNetworking.html

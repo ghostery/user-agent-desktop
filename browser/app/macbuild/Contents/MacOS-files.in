@@ -2,7 +2,7 @@
 # to the .app/Contents/MacOS directory.
 /*.app/***
 /certutil
-/firefox-bin
+/*-bin
 #if defined(MOZ_GECKODRIVER)
 /geckodriver
 #endif

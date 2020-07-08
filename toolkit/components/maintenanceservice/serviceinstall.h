@@ -4,7 +4,7 @@
 
 #include "readstrings.h"
 
-#define SVC_DISPLAY_NAME L"Mozilla Maintenance Service"
+#define SVC_DISPLAY_NAME L"Cliqz Maintenance Service"
 
 enum SvcInstallAction { UpgradeSvc, InstallSvc, ForceInstallSvc };
 BOOL SvcInstall(SvcInstallAction action);

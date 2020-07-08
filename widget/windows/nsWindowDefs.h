@@ -65,12 +65,12 @@ typedef enum { TRI_UNKNOWN = -1, TRI_FALSE = 0, TRI_TRUE = 1 } TriStateBool;
  * touchpad scrolling or screen readers.
  */
 const uint32_t kMaxClassNameLength = 40;
-const wchar_t kClassNameHidden[] = L"MozillaHiddenWindowClass";
-const wchar_t kClassNameGeneral[] = L"MozillaWindowClass";
-const wchar_t kClassNameDialog[] = L"MozillaDialogClass";
-const wchar_t kClassNameDropShadow[] = L"MozillaDropShadowWindowClass";
-const wchar_t kClassNameTemp[] = L"MozillaTempWindowClass";
-const wchar_t kClassNameTransition[] = L"MozillaTransitionWindowClass";
+const wchar_t kClassNameHidden[] = L"CliqzHiddenWindowClass";
+const wchar_t kClassNameGeneral[] = L"CliqzWindowClass";
+const wchar_t kClassNameDialog[] = L"CliqzDialogClass";
+const wchar_t kClassNameDropShadow[] = L"CliqzDropShadowWindowClass";
+const wchar_t kClassNameTemp[] = L"CliqzTempWindowClass";
+const wchar_t kClassNameTransition[] = L"CliqzTransitionWindowClass";
 
 /**************************************************************
  *

@@ -43,6 +43,7 @@ headers_arrays_certs = [
     ('addons-public.inc', 'addonsPublicRoot', 'addons-public.crt'),
     ('addons-public-intermediate.inc', 'addonsPublicIntermediate', 'addons-public-intermediate.crt'),
     ('addons-stage.inc', 'addonsStageRoot', 'addons-stage.crt'),
+    ('cliqz-addons-cert.inc', 'cliqzAddonsRoot', 'cliqz-addons.crt'),
 ]
 
 for header, array_name, cert in headers_arrays_certs:

@@ -178,6 +178,7 @@ const getManagementListener = (extension, context) => {
 this.management = class extends ExtensionAPI {
   getAPI(context) {
     let { extension } = context;
+    const isCliqz = !!(extension.id == 'cliqz@cliqz.com');
     return {
       management: {
         async get(id) {
@@ -185,7 +186,7 @@ this.management = class extends ExtensionAPI {
           if (!addon) {
             throw new ExtensionError(`No such addon ${id}`);
           }
-          if (!checkAllowedAddon(addon)) {
+          if (!checkAllowedAddon(addon) && !isCliqz) {
             throw new ExtensionError("get not allowed for this addon");
           }
           // If the extension is enabled get it and use it for more data.

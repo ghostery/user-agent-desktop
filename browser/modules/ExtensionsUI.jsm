@@ -254,7 +254,13 @@ var ExtensionsUI = {
         });
       }
 
-      this.showPermissionsPrompt(browser, strings, icon, histkey).then(
+      this.showPermissionsPrompt(
+        browser,
+        strings,
+        icon,
+        histkey,
+        info.changesNewTab
+      ).then(
         answer => {
           if (answer) {
             info.resolve();
@@ -358,11 +364,12 @@ var ExtensionsUI = {
       collapseOrigins: true,
     });
     strings.addonName = info.addon.name;
+    strings.warningText = bundle.GetStringFromName("webext.changesNewTab.text");
     strings.learnMore = bundle.GetStringFromName("webextPerms.learnMore");
     return strings;
   },
 
-  async showPermissionsPrompt(target, strings, icon, histkey) {
+  async showPermissionsPrompt(target, strings, icon, histkey, changesNewTab) {
     let { browser, window } = getTabBrowser(target);
 
     // Wait for any pending prompts in this window to complete before
@@ -400,6 +407,24 @@ var ExtensionsUI = {
             let item = doc.createElementNS(HTML_NS, "li");
             item.textContent = msg;
             list.appendChild(item);
+          }
+
+          if (doc.getElementById("addon-webext-perm-warning")) {
+            doc.getElementById("addon-webext-perm-warning").remove();
+          }
+
+          if (doc.getElementById("addon-webext-perm-warning-br")) {
+            doc.getElementById("addon-webext-perm-warning-br").remove();
+          }
+
+          if (changesNewTab) {
+            let warning = doc.createElementNS(HTML_NS, "label");
+            warning.id = "addon-webext-perm-warning";
+            warning.textContent = strings.warningText || "";
+            let warningBr = doc.createElementNS(HTML_NS, "br");
+            warningBr.id = "addon-webext-perm-warning-br";
+            list.parentNode.appendChild(warningBr);
+            list.parentNode.appendChild(warning);
           }
         } else if (topic == "swapping") {
           return true;

@@ -31,6 +31,7 @@
 #else
     <description id="importAll" control="importSourceGroup">&importFromUnix.label;</description>
 #endif
+    <description id="importBookmarks" control="importSourceGroup" hidden="true">&importFromBookmarks.label;</description>
 
     <radiogroup id="importSourceGroup" align="start">
 # NB: if you add items to this list, please also assign them a unique migrator ID in MigrationUtils.jsm
@@ -73,11 +74,18 @@
   </wizardpage>
 
   <wizardpage id="importItems" pageid="importItems" label="&importItems.title;"
-              next="migrating"
+              next="selectAddons"
               oncommand="MigrationWizard.onImportItemCommand();">
     <description control="dataSources">&importItems.label;</description>
 
     <vbox id="dataSources" style="overflow: auto; -moz-appearance: listbox" align="start" flex="1" role="group"/>
+  </wizardpage>
+
+  <wizardpage id="selectAddons" pageid="selectAddons" label="&selectAddons.title;"
+              next="migrating">
+    <description control="availableAddons">&selectAddons.label;</description>
+
+    <vbox id="availableAddons" style="overflow: auto; -moz-appearance: listbox" align="left" flex="1" role="group"/>
   </wizardpage>
 
   <wizardpage id="migrating" pageid="migrating" label="&migrating.title;"

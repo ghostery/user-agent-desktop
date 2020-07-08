@@ -35,6 +35,7 @@ CUSTOM_NSIS_PLUGINS = \
 	BitsUtils.dll \
 	CertCheck.dll \
 	CityHash.dll \
+	CliqzHelper.dll \
 	ExecInExplorer.dll \
 	InetBgDL.dll \
 	InvokeShellVerb.dll \
@@ -57,6 +58,10 @@ $(CONFIG_DIR)/setup.exe::
 ifdef MOZ_STUB_INSTALLER
 	cd $(CONFIG_DIR) && $(call WINEWRAP,$(MAKENSISU)) $(MAKENSISU_FLAGS) stub.nsi
 endif
+
+# Need to find new place for this stuff. For now need to change version manualy
+#	../../../../cliqz-helpers/rcedit.exe $(CONFIG_DIR)/7zSD_tmp.sfx -sfv "$(CQZ_VERSION)"
+#	$(CYGWIN_WRAPPER) upx --best -o $(CONFIG_DIR)/7zSD.sfx $(CONFIG_DIR)/7zSD_tmp.sfx
 
 ifdef ZIP_IN
 installer:: $(CONFIG_DIR)/setup.exe $(ZIP_IN)

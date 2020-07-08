@@ -23,6 +23,7 @@ var Preferences = {
       ["panePrivacy", certManager],
       ["panePrivacy", deviceManager],
       ["panePrivacy", DNTDialog],
+      ["paneConnect"],
       ["paneSync"],
     ];
 

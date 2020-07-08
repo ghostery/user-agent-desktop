@@ -77,7 +77,7 @@ class BrowserElementParent extends JSWindowActorParent {
         // on the browser so that the front-end code can do the right thing with the
         // request to close.
         if (!this.manager.browsingContext.parent) {
-          let browser = this.manager.browsingContext.embedderElement;
+          let browser = this.manager.browsingContext.embedderElement || {};
           let win = browser.ownerGlobal;
           // If this is a non-remote browser, the DOMWindowClose event will bubble
           // up naturally, and doesn't need to be re-dispatched.

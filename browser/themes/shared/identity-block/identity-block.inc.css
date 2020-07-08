@@ -220,6 +220,7 @@
   50% { opacity: 0; }
 }
 
+%if 0
 /* TRACKING PROTECTION ICON */
 
 #tracking-protection-icon-container {
@@ -299,6 +300,7 @@
 #tracking-protection-icon-tooltip {
   max-width: 500px;
 }
+%endif
 
 #urlbar-input-container[pageproxystate="valid"] > #tracking-protection-icon-container > #tracking-protection-icon-box > #tracking-protection-icon {
   list-style-image: url(chrome://browser/skin/tracking-protection.svg);

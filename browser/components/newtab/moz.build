@@ -22,7 +22,7 @@ XPIDL_SOURCES += [
 
 XPIDL_MODULE = 'browser-newtab'
 
-EXTRA_JS_MODULES += [
+EXTRA_PP_JS_MODULES += [
     'AboutNewTabService.jsm',
 ]
 

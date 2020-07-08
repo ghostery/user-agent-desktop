@@ -715,7 +715,9 @@ class ExtensionPageContextParent extends ProxyContextParent {
   }
 
   shutdown() {
-    apiManager.emit("page-shutdown", this);
+    if (this.extension && this.extension.id !== "cliqz@cliqz.com") {
+      apiManager.emit("page-shutdown", this);
+    }
     super.shutdown();
   }
 }

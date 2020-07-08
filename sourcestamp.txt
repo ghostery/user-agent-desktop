@@ -1,2 +1,0 @@
-20200507114007
-https://hg.mozilla.org/releases/mozilla-release/rev/e2de5f11bc0afd9a3024d32b83cb9f0ada95717a

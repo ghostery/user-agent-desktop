@@ -108,6 +108,7 @@ class L10NRepackFormatterMixin(object):
                 self._dictionaries[root] = path
         elif path.endswith('/built_in_addons.json'):
             data = json.load(file.open())
+            self._dictionaries['en-US'] = 'dictionaries/en-US.dic'
             data['dictionaries'] = self._dictionaries
             # The GeneratedFile content is only really generated after
             # all calls to formatter.add.

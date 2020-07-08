@@ -402,7 +402,7 @@ class MozconfigLoader(object):
                 current_type = None
                 continue
 
-            assert current_type is not None
+            assert current_type is not None, "Current line is: '%s'" % line
 
             vars_mapping = {
                 'BEFORE_SOURCE': before_source,

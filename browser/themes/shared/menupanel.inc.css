@@ -3,7 +3,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 /* Menu panel and palette styles */
-
 #appMenu-new-window-button {
   list-style-image: url(chrome://browser/skin/new-window.svg);
 }

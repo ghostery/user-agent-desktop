@@ -17,7 +17,7 @@ menu-file-new-window =
     .label = New Window
     .accesskey = N
 menu-file-new-private-window =
-    .label = New Private Window
+    .label = New Forget Window
     .accesskey = W
 # "Open Location" is only displayed on macOS, and only on windows
 # that aren't main browser windows, or when there are no windows
@@ -239,9 +239,10 @@ menu-window-bring-all-to-front =
 menu-help =
     .label = Help
     .accesskey = H
+## CLIQZ-SPECIAL
 menu-help-product =
-    .label = { -brand-shorter-name } Help
-    .accesskey = H
+    .label = Mozilla Support
+    .accesskey = S
 menu-help-show-tour =
     .label = { -brand-shorter-name } Tour
     .accesskey = o

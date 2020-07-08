@@ -453,6 +453,8 @@ this.theme = class extends ExtensionAPI {
           return Promise.resolve(defaultTheme.details);
         },
         update: (windowId, details) => {
+          // CLIQZ-SPECIAL: do not allow addons to update theme
+          return;
           if (windowId) {
             const browserWindow = windowTracker.getWindow(windowId, context);
             if (!browserWindow) {
@@ -468,6 +470,8 @@ this.theme = class extends ExtensionAPI {
           });
         },
         reset: windowId => {
+          // CLIQZ-SPECIAL: do not allow addons to reset theme
+          return;
           if (windowId) {
             const browserWindow = windowTracker.getWindow(windowId, context);
             if (!browserWindow) {

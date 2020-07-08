@@ -3,6 +3,13 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 browser.jar:
+# Disabled in favor of Cliqz own design
+#if 0
     content/browser/aboutPrivateBrowsing.css              (content/aboutPrivateBrowsing.css)
-    content/browser/aboutPrivateBrowsing.html            (content/aboutPrivateBrowsing.html)
+    content/browser/aboutPrivateBrowsing.html             (content/aboutPrivateBrowsing.html)
     content/browser/aboutPrivateBrowsing.js               (content/aboutPrivateBrowsing.js)
+#endif
+    content/browser/aboutPrivateBrowsing.css              (content-cliqz/aboutPrivateBrowsing.css)
+    content/browser/aboutPrivateBrowsing.js               (content-cliqz/aboutPrivateBrowsing.js)
+    content/browser/aboutPrivateBrowsing.html             (content-cliqz/aboutPrivateBrowsing.html)
+    content/browser/eraser.svg                            (content-cliqz/eraser.svg)

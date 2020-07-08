@@ -31,16 +31,27 @@ Var CheckboxSetAsDefault
 Var CheckboxShortcuts
 Var CheckboxSendPing
 Var CheckboxInstallMaintSvc
-Var LabelBlurb
+Var DroplistArch
+Var LabelBlurb1
+Var LabelBlurb2
+Var LabelBlurb3
 Var BgBitmapImage
 Var HwndBgBitmapControl
 Var CurrentBlurbIdx
 Var CheckboxCleanupProfile
 
-Var FontFamilyName
+Var Bitmap1
+Var Bitmap2
+Var Bitmap3
+Var Bitmap4
+Var HwndBitmap1
+Var HwndBitmap2
+Var HwndBitmap3
+Var HwndBitmap4
+
 Var FontInstalling
-Var FontHeader
-Var FontBlurb
+Var FontBlurb1
+Var FontBlurb2
 Var FontFooter
 Var FontButton
 Var FontCheckbox
@@ -58,7 +69,6 @@ Var CanSetAsDefault
 Var InstallCounterStep
 Var InstallTotalSteps
 Var ProgressCompleted
-Var UsingHighContrastMode
 
 Var ExitCode
 Var FirefoxLaunchCode
@@ -79,6 +89,7 @@ Var EndDownloadPhaseTickCount
 Var EndPreInstallPhaseTickCount
 Var EndInstallPhaseTickCount
 Var EndFinishPhaseTickCount
+Var SendPingTimestamp
 
 Var InitialInstallRequirementsCode
 Var ExistingProfile
@@ -90,15 +101,19 @@ Var OpenedDownloadPage
 Var DownloadServerIP
 Var PostSigningData
 Var PreviousInstallDir
+Var PreviousInstallArch
 Var ProfileCleanupPromptType
 Var ProfileCleanupHeaderString
 Var ProfileCleanupButtonString
 Var AppLaunchWaitTickCount
 
-!define ARCH_X86 1
-!define ARCH_AMD64 2
-!define ARCH_AARCH64 3
-Var ArchToInstall
+; Cliqz. Still use only two platform, x86 and x64. ARM not supported yet.
+; A lot of related code removed from script for now. After starting support
+; for ARM - uncomment this and put other related code back.
+; !define ARCH_X86 1
+; !define ARCH_AMD64 2
+; !define ARCH_AARCH64 3
+; Var ArchToInstall
 
 ; Uncomment the following to prevent pinging the metrics server when testing
 ; the stub installer
@@ -181,8 +196,8 @@ Var ArchToInstall
 !define InstallPaveOverTotalSteps 1650
 
 ; Blurb duty cycle
-!define BlurbDisplayMS 19500
-!define BlurbBlankMS 500
+!define BlurbDisplayMS 11700
+!define BlurbBlankMS 300
 
 ; Interval between checks for the application window and progress bar updates.
 !define AppLaunchWaitIntervalMS 100
@@ -192,7 +207,7 @@ Var ArchToInstall
 
 ; Maximum value of the download/install/launch progress bar, and the end values
 ; for each individual stage.
-!define PROGRESS_BAR_TOTAL_STEPS 500 
+!define PROGRESS_BAR_TOTAL_STEPS 500
 !define PROGRESS_BAR_DOWNLOAD_END_STEP 300
 !define PROGRESS_BAR_INSTALL_END_STEP 475
 !define PROGRESS_BAR_APP_LAUNCH_END_STEP 500
@@ -206,7 +221,6 @@ Var ArchToInstall
 !define NONADMIN_ELEVATE
 
 !define CONFIG_INI "config.ini"
-!define PARTNER_INI "$EXEDIR\partner.ini"
 
 !ifndef FILE_SHARE_READ
   !define FILE_SHARE_READ 1
@@ -247,20 +261,24 @@ Var ArchToInstall
 ; The OFFICIAL define is a workaround to support different urls for Release and
 ; Beta since they share the same branding when building with other branches that
 ; set the update channel to beta.
-!ifdef OFFICIAL
-!ifdef BETA_UPDATE_CHANNEL
-!undef URLStubDownloadX86
-!undef URLStubDownloadAMD64
-!undef URLStubDownloadAArch64
-!define URLStubDownloadX86 "https://download.mozilla.org/?os=win&lang=${AB_CD}&product=firefox-beta-latest"
-!define URLStubDownloadAMD64 "https://download.mozilla.org/?os=win64&lang=${AB_CD}&product=firefox-beta-latest"
-!define URLStubDownloadAArch64 "https://download.mozilla.org/?os=win64-aarch64&lang=${AB_CD}&product=firefox-beta-latest"
-!undef URLManualDownload
-!define URLManualDownload "https://www.mozilla.org/${AB_CD}/firefox/installer-help/?channel=beta&installer_lang=${AB_CD}"
-!undef Channel
-!define Channel "beta"
-!endif
-!endif
+; Cliqz: do not support beta version distributon with mini_installer
+;!ifdef OFFICIAL
+;!ifdef BETA_UPDATE_CHANNEL
+;!undef URLStubDownloadX86
+;!undef URLStubDownloadAMD64
+;!undef URLStubDownloadAArch64
+;!define URLStubDownloadX86 "https://download.mozilla.org/?os=win&lang=${AB_CD}&product=firefox-beta-latest"
+;!define URLStubDownloadAMD64 "https://download.mozilla.org/?os=win64&lang=${AB_CD}&product=firefox-beta-latest"
+;!define URLStubDownloadAArch64 "https://download.mozilla.org/?os=win64-aarch64&lang=${AB_CD}&product=firefox-beta-latest"
+;!undef URLManualDownload
+;!define URLManualDownload "https://www.mozilla.org/${AB_CD}/firefox/installer-help/?channel=beta&installer_lang=${AB_CD}"
+;!undef Channel
+;!define Channel "beta"
+;!endif
+;!endif
+
+!undef INSTALL_BLURB_TEXT_COLOR
+!define INSTALL_BLURB_TEXT_COLOR 0xFFFFFF
 
 !include "common.nsh"
 
@@ -270,7 +288,6 @@ Var ArchToInstall
 !insertmacro GetParent
 !insertmacro GetSingleInstallPath
 !insertmacro GetTextWidthHeight
-!insertmacro InitHashAppModelId
 !insertmacro IsUserAdmin
 !insertmacro RemovePrecompleteEntries
 !insertmacro SetBrandNameVars
@@ -334,11 +351,12 @@ Function .onInit
     Quit
   ${EndIf}
 
-  Call GetArchToInstall
-  ${If} $ArchToInstall == ${ARCH_AARCH64}
-  ${OrIf} $ArchToInstall == ${ARCH_AMD64}
+  Call ShouldInstall64Bit
+  ${If} $0 == 1
+    StrCpy $DroplistArch "$(VERSION_64BIT)"
     StrCpy $INSTDIR "${DefaultInstDir64bit}"
   ${Else}
+    StrCpy $DroplistArch "$(VERSION_32BIT)"
     StrCpy $INSTDIR "${DefaultInstDir32bit}"
   ${EndIf}
 
@@ -349,32 +367,48 @@ Function .onInit
   ; path for this install, even if it's not the same architecture.
   SetRegView 32
   SetShellVarContext all ; Set SHCTX to HKLM
-  ${GetSingleInstallPath} "Software\Mozilla\${BrandFullNameInternal}" $R9
+  ${GetSingleInstallPath} "Software\Cliqz\${BrandFullNameInternal}" $R9
 
   ${If} "$R9" == "false"
-    ${If} ${IsNativeAMD64}
-    ${OrIf} ${IsNativeARM64}
-      SetRegView 64
-      ${GetSingleInstallPath} "Software\Mozilla\${BrandFullNameInternal}" $R9
-    ${EndIf}
+  ${AndIf} ${RunningX64}
+    SetRegView 64
+    ${GetSingleInstallPath} "Software\Cliqz\${BrandFullNameInternal}" $R9
   ${EndIf}
 
   ${If} "$R9" == "false"
     SetShellVarContext current ; Set SHCTX to HKCU
-    ${GetSingleInstallPath} "Software\Mozilla\${BrandFullNameInternal}" $R9
+    ${GetSingleInstallPath} "Software\Cliqz\${BrandFullNameInternal}" $R9
   ${EndIf}
 
   StrCpy $PreviousInstallDir ""
+  StrCpy $PreviousInstallArch ""
   ${If} "$R9" != "false"
-    StrCpy $PreviousInstallDir "$R9"
-    StrCpy $INSTDIR "$PreviousInstallDir"
+    ; Don't override the default install path with an existing installation
+    ; of a different architecture.
+    System::Call "*(i)p.r0"
+    StrCpy $1 "$R9\${FileMainEXE}"
+    System::Call "Kernel32::GetBinaryTypeW(w r1, p r0)i"
+    System::Call "*$0(i.r2)"
+    System::Free $0
+
+    ${If} $2 == "6" ; 6 == SCS_64BIT_BINARY
+    ${AndIf} ${RunningX64}
+      StrCpy $PreviousInstallDir "$R9"
+      StrCpy $PreviousInstallArch "64"
+      StrCpy $INSTDIR "$PreviousInstallDir"
+    ${ElseIf} $2 == "0" ; 0 == SCS_32BIT_BINARY
+    ${AndIfNot} ${RunningX64}
+      StrCpy $PreviousInstallDir "$R9"
+      StrCpy $PreviousInstallArch "32"
+      StrCpy $INSTDIR "$PreviousInstallDir"
+    ${EndIf}
   ${EndIf}
 
   ; Used to determine if the default installation directory was used.
   StrCpy $InitialInstallDir "$INSTDIR"
 
   ClearErrors
-  WriteRegStr HKLM "Software\Mozilla" "${BrandShortName}InstallerTest" \
+  WriteRegStr HKLM "Software\Cliqz" "${BrandShortName}InstallerTest" \
                    "Write Test"
 
   ; Only display set as default when there is write access to HKLM and on Win7
@@ -383,7 +417,7 @@ Function .onInit
   ${OrIf} ${AtLeastWin8}
     StrCpy $CanSetAsDefault "false"
   ${Else}
-    DeleteRegValue HKLM "Software\Mozilla" "${BrandShortName}InstallerTest"
+    DeleteRegValue HKLM "Software\Cliqz" "${BrandShortName}InstallerTest"
     StrCpy $CanSetAsDefault "true"
   ${EndIf}
   StrCpy $CheckboxSetAsDefault "0"
@@ -419,46 +453,38 @@ Function .onInit
   StrCpy $CheckboxInstallMaintSvc "0"
 !endif
 
-  StrCpy $FontFamilyName ""
+  StrCpy $0 ""
 !ifdef FONT_FILE1
   ${If} ${FileExists} "$FONTS\${FONT_FILE1}"
-    StrCpy $FontFamilyName "${FONT_NAME1}"
+    StrCpy $0 "${FONT_NAME1}"
   ${EndIf}
 !endif
 
 !ifdef FONT_FILE2
-  ${If} $FontFamilyName == ""
+  ${If} $0 == ""
   ${AndIf} ${FileExists} "$FONTS\${FONT_FILE2}"
-    StrCpy $FontFamilyName "${FONT_NAME2}"
+    StrCpy $0 "${FONT_NAME2}"
   ${EndIf}
 !endif
 
-  ${If} $FontFamilyName == ""
-    StrCpy $FontFamilyName "$(^Font)"
+  ${If} $0 == ""
+    StrCpy $0 "$(^Font)"
   ${EndIf}
 
-  CreateFont $FontHeader     "$FontFamilyName" "${INSTALL_HEADER_FONT_SIZE}" \
-                                               "${INSTALL_HEADER_FONT_WEIGHT}"
-  CreateFont $FontInstalling "$FontFamilyName" "${INSTALL_INSTALLING_FONT_SIZE}" \
-                                               "${INSTALL_INSTALLING_FONT_WEIGHT}"
-  CreateFont $FontButton     "$FontFamilyName" "10" "500"
-  CreateFont $FontBlurb      "$FontFamilyName" "15" "400"
-  CreateFont $FontFooter     "$FontFamilyName" "13" "400"
-  CreateFont $FontCheckbox   "$FontFamilyName" "10" "400"
+  CreateFont $FontInstalling "$0" "11" "400"
+  CreateFont $FontBlurb1     "$0" "26" "600"
+  CreateFont $FontBlurb2     "$0" "14" "400"
+  CreateFont $FontButton     "$0" "14" "600"
+  CreateFont $FontFooter     "$0" "10" "600"
+  CreateFont $FontCheckbox   "$0" "12" "400"
 
   InitPluginsDir
-  File /oname=$PLUGINSDIR\bgstub.jpg "bgstub.jpg"
-  File /oname=$PLUGINSDIR\bgstub_2x.jpg "bgstub_2x.jpg"
-
-  ; Detect whether the machine is running with a high contrast theme.
-  ; We'll hide our background images in that case, both because they don't
-  ; always render properly and also to improve the contrast.
-  System::Call '*(i 12, i 0, p 0) p . r0'
-  ; 0x42 == SPI_GETHIGHCONTRAST
-  System::Call 'user32::SystemParametersInfoW(i 0x42, i 0, p r0, i 0)'
-  System::Call '*$0(i, i . r1, p)'
-  System::Free $0
-  IntOp $UsingHighContrastMode $1 & 1
+  File /oname=$PLUGINSDIR\cliqzlogo.gif "cliqzlogo.gif"
+  File /oname=$PLUGINSDIR\cliqzlogo_2x.gif "cliqzlogo_2x.gif"
+  File /oname=$PLUGINSDIR\artboard1.bmp "artboard1.bmp"
+  File /oname=$PLUGINSDIR\artboard2.bmp "artboard2.bmp"
+  File /oname=$PLUGINSDIR\artboard3.bmp "artboard3.bmp"
+  File /oname=$PLUGINSDIR\artboard5.bmp "artboard5.bmp"
 
   SetShellVarContext all ; Set SHCTX to All Users
   ; If the user doesn't have write access to the installation directory set
@@ -513,7 +539,8 @@ Function .onInit
     Quit
   ${EndIf}
 
-  ${InitHashAppModelId} "$INSTDIR" "Software\Mozilla\${AppName}\TaskBarIDs"
+  ; Save information about brand to registry for later use from full installer
+  CliqzHelper::saveTaggedParams "Software\CLIQZ" 259200
 FunctionEnd
 
 ; .onGUIInit isn't needed except for RTL locales
@@ -583,13 +610,13 @@ Function DrawBackgroundImage
   System::Call 'gdi32::GetDeviceCaps(i $0, i 88) i .r1' ; 88 = LOGPIXELSX
   System::Call 'user32::ReleaseDC(i $HWNDPARENT, i $0)'
   ${If} $1 <= 96
-    ${SetStretchedImageOLE} $HwndBgBitmapControl $PLUGINSDIR\bgstub.jpg $BgBitmapImage
+    ${SetStretchedImageOLE} $HwndBgBitmapControl $PLUGINSDIR\cliqzlogo.gif $BgBitmapImage
   ${Else}
-    ${SetStretchedImageOLE} $HwndBgBitmapControl $PLUGINSDIR\bgstub_2x.jpg $BgBitmapImage
+    ${SetStretchedImageOLE} $HwndBgBitmapControl $PLUGINSDIR\cliqzlogo_2x.gif $BgBitmapImage
   ${EndIf}
 
   ; transparent bg on control prevents flicker on redraw
-  SetCtlColors $HwndBgBitmapControl ${COMMON_TEXT_COLOR} transparent
+  SetCtlColors $HwndBgBitmapControl ${INSTALL_BLURB_TEXT_COLOR} transparent
 FunctionEnd
 
 Function createProfileCleanup
@@ -609,11 +636,11 @@ Function createProfileCleanup
   nsDialogs::Create /NOUNLOAD 1018
   Pop $Dialog
 
-  SetCtlColors $HWNDPARENT ${COMMON_TEXT_COLOR} ${COMMON_BACKGROUND_COLOR}
+  SetCtlColors $HWNDPARENT ${FOOTER_CONTROL_TEXT_COLOR_NORMAL} ${FOOTER_BKGRD_COLOR}
 
   ; Since the text color for controls is set in this Dialog the foreground and
   ; background colors of the Dialog must also be hardcoded.
-  SetCtlColors $Dialog ${COMMON_TEXT_COLOR} ${COMMON_BACKGROUND_COLOR}
+  SetCtlColors $Dialog ${COMMON_TEXT_COLOR_NORMAL} ${COMMON_BKGRD_COLOR}
 
   FindWindow $7 "#32770" "" $HWNDPARENT
   ${GetDlgItemWidthHeight} $HWNDPARENT $8 $9
@@ -643,97 +670,66 @@ Function createProfileCleanup
   ShowWindow $0 ${SW_HIDE}
   EnableWindow $0 0
 
-  ; Draw the main prompt header label.
-  !if ${PROFILE_CLEANUP_LABEL_WIDTH} == "100%"
-    ${GetDlgItemWidthHeight} $HWNDPARENT $0 $1
-    ; Allow for some padding around the dialog edges.
-    IntOp $1 $0 * 90
-    IntOp $1 $1 / 100
-
-    ; Center the text in the dialog.
-    IntOp $R1 $1 / 2
-    IntOp $0 $0 / 2
-    IntOp $9 $0 - $R1
-    ${GetTextWidthHeight} $ProfileCleanupHeaderString $FontHeader $1 $R1 $R2
-  !else
-    ${DialogUnitsToPixels} ${PROFILE_CLEANUP_LABEL_WIDTH} X $1
-    ${GetTextWidthHeight} $ProfileCleanupHeaderString $FontHeader $1 $1 $R2
-    ${ConvertLeftCoordForRTL} ${PROFILE_CLEANUP_LABEL_LEFT} $1 $9
-  !endif
-  ; If this text is over the maximum height, drop the font size until it fits.
-  StrCpy $4 $FontHeader
-  !ifdef PROFILE_CLEANUP_LABEL_HEIGHT
-    ${DialogUnitsToPixels} ${PROFILE_CLEANUP_LABEL_HEIGHT} Y $2
-    StrCpy $3 ${INSTALL_HEADER_FONT_SIZE}
-    ${While} $R2 > $2
-      IntOp $3 $3 - 2
-      CreateFont $4 "$FontFamilyName" $3 ${INSTALL_HEADER_FONT_WEIGHT}
-      ${GetTextWidthHeight} $ProfileCleanupHeaderString $4 $1 $R1 $R2
-    ${EndWhile}
-  !endif
-  ${NSD_CreateLabel} $9 ${PROFILE_CLEANUP_LABEL_TOP} $1 $R2 \
-    "$ProfileCleanupHeaderString"
+  ${GetDlgItemWidthHeight} $HWNDPARENT $R1 $R2
+  ${GetTextWidthHeight} $ProfileCleanupHeaderString $FontBlurb1 $R1 $R1 $R2
+  ${NSD_CreateLabelCenter} 0 ${PROFILE_CLEANUP_LABEL_TOP_DU} 100% $R2 \
+    $ProfileCleanupHeaderString
   Pop $0
-  !if ${PROFILE_CLEANUP_LABEL_ALIGN} == "center"
-    ${NSD_AddStyle} $0 ${SS_CENTER}
-  !endif
-  SendMessage $0 ${WM_SETFONT} $4 0
-  SetCtlColors $0 ${COMMON_TEXT_COLOR} transparent
+  SendMessage $0 ${WM_SETFONT} $FontBlurb1 0
+  SetCtlColors $0 ${INSTALL_BLURB_TEXT_COLOR} transparent
 
-  ; For the checkbox, first find how much height we're going to need for the
-  ; label text.
-  ${If} ${PROFILE_CLEANUP_CHECKBOX_WIDTH} == "100%"
-    ${GetDlgItemWidthHeight} $HWNDPARENT $R1 $R2
-  ${Else}
-    ${DialogUnitsToPixels} ${PROFILE_CLEANUP_CHECKBOX_WIDTH} X $R1
-  ${EndIf}
-  ; Subtract out the width of the checkbox itself and any padding/border so that
-  ; PROFILE_CLEANUP_CHECKBOX_WIDTH can be the width of the entire control and
-  ; doesn't have to guess. We used a fixed (but DPI-adjusted) 25 pixels to
-  ; represent all the things we need to subtract. Using a fixed number of pixels
-  ; for this seems dubious, but the obvious method of using SM_CXMENUCHECK
-  ; seems to be not quite enough by a pixel or two in certain situations for
-  ; mysterious reasons, and this method was taken from what the WinForms
-  ; checkbox control does according to the .NET Framework 4.8 reference source.
-  ; Get the DPI for the monitor this window is on.
-  System::Call 'user32::GetWindowDC(i $HWNDPARENT) i .R8'
-  System::Call 'gdi32::GetDeviceCaps(i $R8, i 88) i .R9' ; 88 = LOGPIXELSX
-  System::Call 'user32::ReleaseDC(i $HWNDPARENT, i $R8)'
-  ; Divide the DPI by 96 to get the scaling factor, and multiply the scaling
-  ; factor by 25 (but backwards to avoid truncating the scale factor).
-  IntOp $1 $R9 * 25
-  IntOp $1 $1 / 96
-  ; Subtract out the converted 25 pixels from the width available for the text.
-  IntOp $R2 $R1 - $1
-  ${GetTextWidthHeight} "$(STUB_CLEANUP_CHECKBOX_LABEL)" $FontCheckbox $R2 \
-    $R3 $R2
-  ; Now that we know the size for the checkbox, position it in the dialog.
-  ${If} ${PROFILE_CLEANUP_CHECKBOX_LEFT} == "center"
-    ${GetDlgItemWidthHeight} $HWNDPARENT $R4 $R5
-    IntOp $R5 $R3 + $1
-    IntOp $R6 $R5 / 2
-    IntOp $R3 $R4 / 2
-    IntOp $R3 $R3 - $R6
-  ${Else}
-    StrCpy $R3 ${PROFILE_CLEANUP_CHECKBOX_LEFT}
-  ${EndIf}
-  ${GetDlgItemBottomPX} $0 $1
-  ; Add a bit of margin above the checkbox.
-  ${DialogUnitsToPixels} ${PROFILE_CLEANUP_CHECKBOX_TOP_MARGIN} Y $2
-  IntOp $1 $1 + $2
-  ClearErrors
-  ${WordFind} "${PROFILE_CLEANUP_CHECKBOX_WIDTH}" "%" "E#" $9
-  ${If} ${Errors}
-    ${ConvertLeftCoordForRTL} $R3 ${PROFILE_CLEANUP_CHECKBOX_WIDTH} $R3
-  ${EndIf}
-  ${NSD_CreateCheckbox} $R3 $1 ${PROFILE_CLEANUP_CHECKBOX_WIDTH} $R2 \
-    $(STUB_CLEANUP_CHECKBOX_LABEL)
+  ${GetDlgItemBottomDU} $Dialog $0 $1
+  IntOp $1 $1 + 40 ; add a bit of padding between the header and the button
+  ${GetTextExtent} $ProfileCleanupButtonString $FontButton $R1 $R2
+  ; Add some padding to both dimensions of the button.
+  IntOp $R1 $R1 + 90
+  IntOp $R2 $R2 + 24
+  ; Now that we know the size and the Y coordinate for the button, we can find
+  ; the correct X coordinate to get it properly centered.
+  ${GetDlgItemWidthHeight} $HWNDPARENT $R3 $R4
+  IntOp $R5 $R1 / 2
+  IntOp $R3 $R3 / 2
+  IntOp $R3 $R3 - $R5
+  ; We need a custom button because the default ones get drawn underneath the
+  ; background image we're about to insert.
+  ${NSD_CreateButton} $R3 $1 $R1 $R2 $ProfileCleanupButtonString
+  Pop $0
+  SendMessage $0 ${WM_SETFONT} $FontButton 0
+  ${NSD_OnClick} $0 gotoInstallPage
+  ${NSD_SetFocus} $0
+
+  ; For the checkbox, first we need to know the width of the checkbox itself,
+  ; since it can vary with the display scaling and the theme.
+  System::Call 'User32::GetSystemMetrics(i 71) i .r1' ; 71 == SM_CXMENUCHECK
+  ; Now get the width of the label test, if it were all on one line.
+  ${GetTextExtent} $(STUB_CLEANUP_CHECKBOX_LABEL) $FontCheckbox $R1 $R2
+  ${GetDlgItemWidthHeight} $HWNDPARENT $R3 $R4
+  ; Add the checkbox width to the text width, then figure out how many lines
+  ; we're going to need in order to display that text in our dialog.
+  IntOp $R1 $R1 + $1
+  IntOp $R1 $R1 + 5
+  StrCpy $R5 $R1
+  StrCpy $R6 $R2
+  IntOp $R3 $R3 - 150 ; leave some padding on the sides of the dialog
+  ${While} $R1 > $R3
+    StrCpy $R5 $R3
+    IntOp $R2 $R2 + $R6
+    IntOp $R1 $R1 - $R3
+  ${EndWhile}
+  ${GetDlgItemBottomDU} $Dialog $0 $1
+  ; Now that we know the size for the checkbox, center it in the dialog.
+  ${GetDlgItemWidthHeight} $HWNDPARENT $R3 $R4
+  IntOp $R6 $R5 / 2
+  IntOp $R3 $R3 / 2
+  IntOp $R3 $R3 - $R6
+  IntOp $1 $1 + 30 ; add a bit of padding between the button and the checkbox
+  ${NSD_CreateCheckbox} $R3 $1 $R5 $R2 $(STUB_CLEANUP_CHECKBOX_LABEL)
   Pop $CheckboxCleanupProfile
   SendMessage $CheckboxCleanupProfile ${WM_SETFONT} $FontCheckbox 0
   ; The uxtheme must be disabled on checkboxes in order to override the system
   ; colors and have a transparent background.
   System::Call 'uxtheme::SetWindowTheme(i $CheckboxCleanupProfile, w " ", w " ")'
-  SetCtlColors $CheckboxCleanupProfile ${COMMON_TEXT_COLOR} transparent
+  SetCtlColors $CheckboxCleanupProfile ${INSTALL_BLURB_TEXT_COLOR} transparent
   ; Setting the background color to transparent isn't enough to actually make a
   ; checkbox background transparent, you also have to set the right style.
   ${NSD_AddExStyle} $CheckboxCleanupProfile ${WS_EX_TRANSPARENT}
@@ -745,64 +741,28 @@ Function createProfileCleanup
   ${NSD_OnClick} $CheckboxCleanupProfile RedrawWindow
   ${NSD_Check} $CheckboxCleanupProfile
 
-  ; Time to draw the continue button. Compute its height based on the top and
-  ; height of the checkbox, since GetDlgItemBottomPX returns nonsense for the
-  ; checkbox for some reason.
-  IntOp $1 $1 + $R2
-  ; Also add some margin above the button.
-  ${DialogUnitsToPixels} ${PROFILE_CLEANUP_BUTTON_TOP_MARGIN} Y $2
-  IntOp $1 $1 + $2
-  ; Determine the size of the button.
-  ${GetTextExtent} $ProfileCleanupButtonString $FontFooter $R1 $R2
-  ; Add some padding around the text for both dimensions.
-  ${DialogUnitsToPixels} ${PROFILE_CLEANUP_BUTTON_X_PADDING} X $2
-  IntOp $R1 $R1 + $2
-  ${DialogUnitsToPixels} ${PROFILE_CLEANUP_BUTTON_Y_PADDING} Y $2
-  IntOp $R2 $R2 + $2
-  ${If} ${PROFILE_CLEANUP_BUTTON_LEFT} == "center"
-    ${GetDlgItemWidthHeight} $HWNDPARENT $R3 $R4
-    IntOp $R5 $R1 / 2
-    IntOp $R3 $R3 / 2
-    IntOp $R3 $R3 - $R5
-  ${Else}
-    ${ConvertLeftCoordForRTL} ${PROFILE_CLEANUP_BUTTON_LEFT} $R1 $R3
-  ${EndIf}
-  ; We need a custom button because the default ones get drawn underneath the
-  ; background image we're about to insert.
-  ${NSD_CreateButton} $R3 $1 $R1 $R2 "$ProfileCleanupButtonString"
+  ${NSD_CreateLabel} 60% ${INSTALL_FOOTER_TOP_DU} 35% 60u "$(STUB_BLURB_FOOTER2)"
+;  ${GetTextWidthHeight} "$(STUB_BLURB_FOOTER2)" $FontFooter \
+;    ${INSTALL_FOOTER_WIDTH_DU} $R1 $R2
+;  !ifdef ${AB_CD}_rtl
+;    nsDialogs::CreateControl STATIC ${DEFAULT_STYLES}|${SS_NOTIFY} \
+;      ${WS_EX_TRANSPARENT} 30u ${INSTALL_FOOTER_TOP_DU} ${INSTALL_FOOTER_WIDTH_DU} \
+;       "$R2u" "$(STUB_BLURB_FOOTER2)"
+;  !else
+;    nsDialogs::CreateControl STATIC ${DEFAULT_STYLES}|${SS_NOTIFY}|${SS_RIGHT} \
+;      ${WS_EX_TRANSPARENT} 175u ${INSTALL_FOOTER_TOP_DU} ${INSTALL_FOOTER_WIDTH_DU} \
+;      "$R2u" "$(STUB_BLURB_FOOTER2)"
+;  !endif
   Pop $0
-  SendMessage $0 ${WM_SETFONT} $FontButton 0
-  ${NSD_OnClick} $0 gotoInstallPage
-  ${NSD_SetFocus} $0
+  SendMessage $0 ${WM_SETFONT} $FontFooter 0
+  SetCtlColors $0 ${INSTALL_BLURB_TEXT_COLOR} transparent
 
-  ; Draw the footer text.
-  !ifdef INSTALL_FOOTER_WIDTH
-    ${GetTextWidthHeight} "$(STUB_BLURB_FOOTER2)" $FontFooter \
-      ${INSTALL_FOOTER_WIDTH} $R1 $R2
-    !ifdef ${AB_CD}_rtl
-      nsDialogs::CreateControl STATIC ${DEFAULT_STYLES}|${SS_NOTIFY} \
-        ${WS_EX_TRANSPARENT} 30u ${INSTALL_FOOTER_TOP} ${INSTALL_FOOTER_WIDTH} \
-        "$R2" "$(STUB_BLURB_FOOTER2)"
-    !else
-      nsDialogs::CreateControl STATIC ${DEFAULT_STYLES}|${SS_NOTIFY}|${SS_RIGHT} \
-        ${WS_EX_TRANSPARENT} 175u ${INSTALL_FOOTER_TOP} ${INSTALL_FOOTER_WIDTH} \
-        "$R2" "$(STUB_BLURB_FOOTER2)"
-    !endif
-    Pop $0
-    SendMessage $0 ${WM_SETFONT} $FontFooter 0
-    SetCtlColors $0 ${COMMON_TEXT_COLOR} transparent
-  !endif
-
-  ${If} $UsingHighContrastMode == 0
-    Call DrawBackgroundImage
-  ${EndIf}
+  Call DrawBackgroundImage
 
   LockWindow off
   nsDialogs::Show
 
-  ${If} $UsingHighContrastMode == 0
-    ${NSD_FreeImage} $BgBitmapImage
-  ${EndIf}
+  ${NSD_FreeImage} $BgBitmapImage
 FunctionEnd
 
 Function RedrawWindow
@@ -828,11 +788,11 @@ Function createInstall
   nsDialogs::Create /NOUNLOAD 1018
   Pop $Dialog
 
-  SetCtlColors $HWNDPARENT ${COMMON_TEXT_COLOR} ${COMMON_BACKGROUND_COLOR}
+  SetCtlColors $HWNDPARENT ${FOOTER_CONTROL_TEXT_COLOR_NORMAL} ${FOOTER_BKGRD_COLOR}
 
   ; Since the text color for controls is set in this Dialog the foreground and
   ; background colors of the Dialog must also be hardcoded.
-  SetCtlColors $Dialog ${COMMON_TEXT_COLOR} ${COMMON_BACKGROUND_COLOR}
+  SetCtlColors $Dialog ${COMMON_TEXT_COLOR_NORMAL} ${COMMON_BKGRD_COLOR}
 
   FindWindow $7 "#32770" "" $HWNDPARENT
   ${GetDlgItemWidthHeight} $HWNDPARENT $8 $9
@@ -840,115 +800,82 @@ Function createInstall
   ; Resize the Dialog to fill the entire window
   System::Call 'user32::MoveWindow(i$Dialog,i0,i0,i $8,i $9,i0)'
 
-  !ifdef INSTALL_HEADER_WIDTH
-    ; Draw the header text.
-    ${DialogUnitsToPixels} ${INSTALL_HEADER_WIDTH} X $0
-    ${GetTextWidthHeight} "$(STUB_INSTALLING_HEADLINE)" $FontHeader $0 $R1 $R2
-    ${ConvertLeftCoordForRTL} ${INSTALL_HEADER_LEFT} $0 $9
-    ; If this text is over the maximum height, drop the font size until it fits.
-    StrCpy $4 $FontHeader
-    !ifdef INSTALL_HEADER_HEIGHT
-      ${DialogUnitsToPixels} ${INSTALL_HEADER_HEIGHT} Y $2
-      StrCpy $3 ${INSTALL_HEADER_FONT_SIZE}
-      ${While} $R2 > $2
-        IntOp $3 $3 - 2
-        CreateFont $4 "$FontFamilyName" $3 ${INSTALL_HEADER_FONT_WEIGHT}
-        ${GetTextWidthHeight} "$(STUB_INSTALLING_HEADLINE)" $4 $0 $R1 $R2
-      ${EndWhile}
-    !endif
-    ${NSD_CreateLabel} $9 ${INSTALL_HEADER_TOP} $0 $R2 \
-      "$(STUB_INSTALLING_HEADLINE)"
-    Pop $0
-    SendMessage $0 ${WM_SETFONT} $4 0
-    SetCtlColors $0 ${COMMON_TEXT_COLOR} transparent
-  !endif
-
-  !ifdef INSTALL_BODY_WIDTH
-    ; Draw the body text the same way as the header, but we also need to work
-    ; out where to put it based on where the bottom of the header is.
-    ${GetDlgItemBottomPX} $0 $1
-    ; Add a bit of padding above this text.
-    ${DialogUnitsToPixels} ${INSTALL_BODY_TOP_MARGIN} Y $2
-    IntOp $1 $1 + $2
-    ${DialogUnitsToPixels} ${INSTALL_BODY_WIDTH} X $0
-    ${GetTextWidthHeight} "$(STUB_INSTALLING_BODY)" $FontCheckbox $0 $R1 $R2
-    ${ConvertLeftCoordForRTL} ${INSTALL_BODY_LEFT} $0 $9
-    ${NSD_CreateLabel} $9 $1 ${INSTALL_BODY_WIDTH} $R2 "$(STUB_INSTALLING_BODY)"
-    Pop $0
-    SendMessage $0 ${WM_SETFONT} $FontCheckbox 0
-    SetCtlColors $0 ${COMMON_TEXT_COLOR} transparent
-  !endif
-
-  ; Draw the "Now installing" text
-  !if ${INSTALL_INSTALLING_WIDTH} == "100%"
-    ${GetDlgItemWidthHeight} $HWNDPARENT $0 $1
-  !else
-    ${DialogUnitsToPixels} ${INSTALL_INSTALLING_WIDTH} X $0
-  !endif
-  ${GetTextWidthHeight} "$(STUB_INSTALLING_LABEL2)" $FontInstalling $0 $R1 $R2
-  ${ConvertLeftCoordForRTL} ${INSTALL_INSTALLING_LEFT} $0 $9
-  ${NSD_CreateLabelCenter} $9 ${INSTALL_INSTALLING_TOP} \
-    ${INSTALL_INSTALLING_WIDTH} $R2 "$(STUB_INSTALLING_LABEL2)"
+  ; The header string may need more than half the width of the window, but it's
+  ; currently not close to needing multiple lines in any localization.
+  ${NSD_CreateLabelCenter} 0% ${NOW_INSTALLING_TOP_DU} 100% 47u "$(STUB_INSTALLING_LABEL2)"
   Pop $0
   SendMessage $0 ${WM_SETFONT} $FontInstalling 0
-  ${If} $UsingHighContrastMode == 0
-    SetCtlColors $0 ${INSTALL_INSTALLING_TEXT_COLOR} transparent
-  ${Else}
-    SetCtlColors $0 ${COMMON_TEXT_COLOR} transparent
-  ${EndIf}
+  SetCtlColors $0 ${INSTALL_BLURB_TEXT_COLOR} transparent
 
-  ; Initialize these variables even if we won't use them to silence warnings.
+  ${NSD_CreateLabel} 60% ${INSTALL_BLURB1_TOP_DU} 37% 100u "$(STUB_BLURB1_FIRST1)"
+  Pop $LabelBlurb1
+  SendMessage $LabelBlurb1 ${WM_SETFONT} $FontBlurb1 0
+  SetCtlColors $LabelBlurb1 ${INSTALL_BLURB_TEXT_COLOR} transparent
+
+!if "${AB_CD}" == "de"
+  ${NSD_CreateLabel} 60% ${INSTALL_BLURB3_TOP_DU} 37% 100u "$(STUB_BLURB2_FIRST1)"
+!else
+  ${NSD_CreateLabel} 60% ${INSTALL_BLURB2_TOP_DU} 37% 100u "$(STUB_BLURB2_FIRST1)"
+!endif
+  Pop $LabelBlurb2
+  SendMessage $LabelBlurb2 ${WM_SETFONT} $FontBlurb2 0
+  SetCtlColors $LabelBlurb2 ${INSTALL_BLURB_TEXT_COLOR} transparent
+
+  ${NSD_CreateLabel} 60% ${INSTALL_BLURB3_TOP_DU} 37% 100u "$(STUB_BLURB2_FIFTH1)"
+  Pop $LabelBlurb3
+  SendMessage $LabelBlurb3 ${WM_SETFONT} $FontBlurb2 0
+  SetCtlColors $LabelBlurb3 ${INSTALL_BLURB_TEXT_COLOR} transparent
+  ShowWindow $LabelBlurb3 ${SW_HIDE}
+
   StrCpy $CurrentBlurbIdx "0"
-  StrCpy $LabelBlurb "0"
-  !ifdef INSTALL_BLURB_WIDTH
-    ${NSD_CreateLabelCenter} 0% ${INSTALL_BLURB_TOP} 100% ${INSTALL_BLURB_WIDTH} \
-      "$(STUB_BLURB_FIRST1)"
-    Pop $LabelBlurb
-    SendMessage $LabelBlurb ${WM_SETFONT} $FontBlurb 0
-    SetCtlColors $LabelBlurb ${COMMON_TEXT_COLOR} transparent
-    ${NSD_CreateTimer} ClearBlurb ${BlurbDisplayMS}
-  !endif
 
-  !ifdef INSTALL_FOOTER_WIDTH
-    ${GetTextWidthHeight} "$(STUB_BLURB_FOOTER2)" $FontFooter \
-      ${INSTALL_FOOTER_WIDTH} $R1 $R2
-    !ifdef ${AB_CD}_rtl
-      nsDialogs::CreateControl STATIC ${DEFAULT_STYLES}|${SS_NOTIFY} \
-        ${WS_EX_TRANSPARENT} 30u ${INSTALL_FOOTER_TOP} \
-        ${INSTALL_FOOTER_WIDTH} "$R2u" "$(STUB_BLURB_FOOTER2)"
-    !else
-      nsDialogs::CreateControl STATIC ${DEFAULT_STYLES}|${SS_NOTIFY}|${SS_RIGHT} \
-        ${WS_EX_TRANSPARENT} 175u ${INSTALL_FOOTER_TOP} \
-        ${INSTALL_FOOTER_WIDTH} "$R2u" "$(STUB_BLURB_FOOTER2)"
-    !endif
-    Pop $0
-    SendMessage $0 ${WM_SETFONT} $FontFooter 0
-    SetCtlColors $0 ${COMMON_TEXT_COLOR} transparent
-  !endif
+  ${NSD_CreateLabel} 60% ${INSTALL_FOOTER_TOP_DU} 35% 60u "$(STUB_BLURB_FOOTER2)"
+  Pop $0
+  SendMessage $0 ${WM_SETFONT} $FontFooter 0
+  SetCtlColors $0 ${INSTALL_BLURB_TEXT_COLOR} transparent
 
-  ; And now draw the progress bar.
-  ClearErrors
-  ${WordFind} "${INSTALL_PROGRESS_BAR_WIDTH}" "%" "E#" $9
-  ${If} ${Errors}
-    ${ConvertLeftCoordForRTL} ${INSTALL_PROGRESS_BAR_LEFT} ${INSTALL_PROGRESS_BAR_WIDTH} $9
-  ${Else}
-    StrCpy $9 "${INSTALL_PROGRESS_BAR_LEFT}"
-  ${EndIf}
-  ${NSD_CreateProgressBar} $9 ${INSTALL_PROGRESS_BAR_TOP} \
-    ${INSTALL_PROGRESS_BAR_WIDTH} ${INSTALL_PROGRESS_BAR_HEIGHT} ""
+  ; load all images
+  ${NSD_CreateBitmap} 29u 52u 210u 141u ""
+  Pop $Bitmap1
+  ${NSD_SetImage} $Bitmap1 $PLUGINSDIR\artboard1.bmp $HwndBitmap1
+
+  ${NSD_CreateBitmap} 29u 52u 210u 141u ""
+  Pop $Bitmap2
+  ${NSD_SetImage} $Bitmap2 $PLUGINSDIR\artboard2.bmp $HwndBitmap2
+  ShowWindow $Bitmap2 ${SW_HIDE}
+
+  ${NSD_CreateBitmap} 29u 52u 210u 141u ""
+  Pop $Bitmap3
+  ${NSD_SetImage} $Bitmap3 $PLUGINSDIR\artboard3.bmp $HwndBitmap3
+  ShowWindow $Bitmap3 ${SW_HIDE}
+
+  ${NSD_CreateBitmap} 29u 52u 210u 141u ""
+  Pop $Bitmap4
+  ${NSD_SetImage} $Bitmap4 $PLUGINSDIR\artboard5.bmp $HwndBitmap4
+  ShowWindow $Bitmap4 ${SW_HIDE}
+
+;  ${GetTextWidthHeight} "$(STUB_BLURB_FOOTER2)" $FontFooter \
+;    ${INSTALL_FOOTER_WIDTH_DU} $R1 $R2
+;  !ifdef ${AB_CD}_rtl
+;    nsDialogs::CreateControl STATIC ${DEFAULT_STYLES}|${SS_NOTIFY} \
+;      ${WS_EX_TRANSPARENT} 30u ${INSTALL_FOOTER_TOP_DU} ${INSTALL_FOOTER_WIDTH_DU} "$R2u" \
+;      "$(STUB_BLURB_FOOTER2)"
+;  !else
+;    nsDialogs::CreateControl STATIC ${DEFAULT_STYLES}|${SS_NOTIFY}|${SS_RIGHT} \
+;      ${WS_EX_TRANSPARENT} 175u ${INSTALL_FOOTER_TOP_DU} ${INSTALL_FOOTER_WIDTH_DU} "$R2u" \
+;      "$(STUB_BLURB_FOOTER2)"
+;  !endif
+;  Pop $0
+;  SendMessage $0 ${WM_SETFONT} $FontFooter 0
+;  SetCtlColors $0 ${INSTALL_BLURB_TEXT_COLOR} transparent
+
+  ${NSD_CreateProgressBar} 19% ${PROGRESS_BAR_TOP_DU} 62% 3u ""
   Pop $Progressbar
-  !ifdef PROGRESS_BAR_BACKGROUND_COLOR
-    ; The uxtheme must be disabled so we can change the color.
-    System::Call 'uxtheme::SetWindowTheme(i $Progressbar, w " ", w " ")'
-    SendMessage $Progressbar ${PBM_SETBARCOLOR} 0 ${PROGRESS_BAR_BACKGROUND_COLOR}
-  !endif
   ${NSD_AddStyle} $Progressbar ${PBS_MARQUEE}
   SendMessage $Progressbar ${PBM_SETMARQUEE} 1 \
               $ProgressbarMarqueeIntervalMS ; start=1|stop=0 interval(ms)=+N
 
-  ${If} $UsingHighContrastMode == 0
-    Call DrawBackgroundImage
-  ${EndIf}
+  Call DrawBackgroundImage
 
   GetDlgItem $0 $HWNDPARENT 1 ; Install button
   EnableWindow $0 0
@@ -998,7 +925,7 @@ Function createInstall
     StrCpy $ExistingBuildID "0"
   ${EndIf}
 
-  ${If} ${FileExists} "$LOCALAPPDATA\Mozilla\Firefox"
+  ${If} ${FileExists} "$LOCALAPPDATA\Cliqz"
     StrCpy $ExistingProfile "1"
   ${Else}
     StrCpy $ExistingProfile "0"
@@ -1023,20 +950,29 @@ Function createInstall
   Delete "$PLUGINSDIR\download.exe"
   ${NSD_CreateTimer} StartDownload ${DownloadIntervalMS}
 
+  ${NSD_CreateTimer} ClearBlurb ${BlurbDisplayMS}
+
   LockWindow off
   nsDialogs::Show
 
-  ${If} $UsingHighContrastMode == 0
-    ${NSD_FreeImage} $BgBitmapImage
-  ${EndIf}
+  ${NSD_FreeImage} $BgBitmapImage
+  ${NSD_FreeImage} $HwndBitmap1
+  ${NSD_FreeImage} $HwndBitmap2
+  ${NSD_FreeImage} $HwndBitmap3
+  ${NSD_FreeImage} $HwndBitmap4
 FunctionEnd
 
 Function StartDownload
   ${NSD_KillTimer} StartDownload
-  Call GetDownloadURL
-  Pop $0
-  InetBgDL::Get "$0" "$PLUGINSDIR\download.exe" \
-                /CONNECTTIMEOUT 120 /RECEIVETIMEOUT 120 /END
+  ${If} $DroplistArch == "$(VERSION_64BIT)"
+    InetBgDL::Get "${URLStubDownload64}${URLStubDownloadAppend}" \
+                  "$PLUGINSDIR\download.exe" \
+                  /CONNECTTIMEOUT 120 /RECEIVETIMEOUT 120 /END
+  ${Else}
+    InetBgDL::Get "${URLStubDownload32}${URLStubDownloadAppend}" \
+                  "$PLUGINSDIR\download.exe" \
+                  /CONNECTTIMEOUT 120 /RECEIVETIMEOUT 120 /END
+  ${EndIf}
   StrCpy $4 ""
   ${NSD_CreateTimer} OnDownload ${DownloadIntervalMS}
   ${If} ${FileExists} "$INSTDIR\${TO_BE_DELETED}"
@@ -1053,17 +989,29 @@ Function NextBlurb
   ${NSD_KillTimer} NextBlurb
 
   IntOp $CurrentBlurbIdx $CurrentBlurbIdx + 1
-  IntOp $CurrentBlurbIdx $CurrentBlurbIdx % 3
+  IntOp $CurrentBlurbIdx $CurrentBlurbIdx % 4
 
   ${If} $CurrentBlurbIdx == "0"
-    StrCpy $0 "$(STUB_BLURB_FIRST1)"
+    StrCpy $0 "$(STUB_BLURB1_FIRST1)"
+    StrCpy $1 "$(STUB_BLURB2_FIRST1)"
+    ShowWindow $Bitmap1 ${SW_SHOW}
   ${ElseIf} $CurrentBlurbIdx == "1"
-    StrCpy $0 "$(STUB_BLURB_SECOND1)"
+    StrCpy $0 "$(STUB_BLURB1_SECOND1)"
+    StrCpy $1 "$(STUB_BLURB2_SECOND1)"
+    ShowWindow $Bitmap2 ${SW_SHOW}
   ${ElseIf} $CurrentBlurbIdx == "2"
-    StrCpy $0 "$(STUB_BLURB_THIRD1)"
+    StrCpy $0 "$(STUB_BLURB1_THIRD1)"
+    StrCpy $1 "$(STUB_BLURB2_THIRD1)"
+    ShowWindow $Bitmap3 ${SW_SHOW}
+  ${ElseIf} $CurrentBlurbIdx == "3"
+    StrCpy $0 "$(STUB_BLURB1_FIFTH1)"
+    StrCpy $1 "$(STUB_BLURB2_FIRST1)"
+    ShowWindow $Bitmap4 ${SW_SHOW}
+    ShowWindow $LabelBlurb3 ${SW_SHOW}
   ${EndIf}
 
-  SendMessage $LabelBlurb ${WM_SETTEXT} 0 "STR:$0"
+  SendMessage $LabelBlurb1 ${WM_SETTEXT} 0 "STR:$0"
+  SendMessage $LabelBlurb2 ${WM_SETTEXT} 0 "STR:$1"
 
   ${NSD_CreateTimer} ClearBlurb ${BlurbDisplayMS}
 FunctionEnd
@@ -1071,11 +1019,28 @@ FunctionEnd
 Function ClearBlurb
   ${NSD_KillTimer} ClearBlurb
 
-  SendMessage $LabelBlurb ${WM_SETTEXT} 0 "STR:"
+  SendMessage $LabelBlurb1 ${WM_SETTEXT} 0 "STR:"
+  SendMessage $LabelBlurb2 ${WM_SETTEXT} 0 "STR:"
+
+  ${If} $CurrentBlurbIdx == "0"
+    ShowWindow $Bitmap1 ${SW_HIDE}
+  ${ElseIf} $CurrentBlurbIdx == "1"
+    ShowWindow $Bitmap2 ${SW_HIDE}
+  ${ElseIf} $CurrentBlurbIdx == "2"
+    ShowWindow $Bitmap3 ${SW_HIDE}
+  ${ElseIf} $CurrentBlurbIdx == "3"
+    ShowWindow $Bitmap4 ${SW_HIDE}
+    ShowWindow $LabelBlurb3 ${SW_HIDE}
+  ${EndIf}
 
   ; force the background to repaint to clear the transparent label
   System::Call "*(i,i,i,i) p .r0"
-  System::Call "user32::GetWindowRect(p $LabelBlurb, p r0)"
+  System::Call "user32::GetWindowRect(p $LabelBlurb1, p r0)"
+  System::Call "user32::MapWindowPoints(p 0, p $HwndBgBitmapControl, p r0, i 2)"
+  System::Call "user32::InvalidateRect(p $HwndBgBitmapControl, p r0, i 0)"
+  System::Free $0
+  System::Call "*(i,i,i,i) p .r0"
+  System::Call "user32::GetWindowRect(p $LabelBlurb2, p r0)"
   System::Call "user32::MapWindowPoints(p 0, p $HwndBgBitmapControl, p r0, i 2)"
   System::Call "user32::InvalidateRect(p $HwndBgBitmapControl, p r0, i 0)"
   System::Free $0
@@ -1399,6 +1364,10 @@ Function SendPing
       StrCpy $EndInstallPhaseTickCount "$EndFinishPhaseTickCount"
     ${EndIf}
 
+    ; Get current time (UTC)
+    ${GetTime} "" "LS" $0 $1 $2 $3 $4 $5 $6
+    StrCpy $SendPingTimestamp "$2$1$0$4$5$6"
+
     ; Get the seconds elapsed from the start of the download phase to the end of
     ; the download phase.
     ${GetSecondsElapsed} "$StartDownloadPhaseTickCount" "$EndDownloadPhaseTickCount" $0
@@ -1419,15 +1388,13 @@ Function SendPing
     ; completion of all phases.
     ${GetSecondsElapsed} "$EndInstallPhaseTickCount" "$EndFinishPhaseTickCount" $4
 
-    ${If} $ArchToInstall == ${ARCH_AMD64}
-    ${OrIf} $ArchToInstall == ${ARCH_AARCH64}
+    ${If} $DroplistArch == "$(VERSION_64BIT)"
       StrCpy $R0 "1"
     ${Else}
       StrCpy $R0 "0"
     ${EndIf}
 
-    ${If} ${IsNativeAMD64}
-    ${OrIf} ${IsNativeARM64}
+    ${If} ${RunningX64}
       StrCpy $R1 "1"
     ${Else}
       StrCpy $R1 "0"
@@ -1463,12 +1430,12 @@ Function SendPing
     ${EndIf}
 
     ClearErrors
-    WriteRegStr HKLM "Software\Mozilla" "${BrandShortName}InstallerTest" \
+    WriteRegStr HKLM "Software\Cliqz" "${BrandShortName}InstallerTest" \
                      "Write Test"
     ${If} ${Errors}
       StrCpy $R8 "0"
     ${Else}
-      DeleteRegValue HKLM "Software\Mozilla" "${BrandShortName}InstallerTest"
+      DeleteRegValue HKLM "Software\Cliqz" "${BrandShortName}InstallerTest"
       StrCpy $R8 "1"
     ${EndIf}
 
@@ -1484,17 +1451,17 @@ Function SendPing
       ${GetParent} "$R2" $R3
       ${GetLongPath} "$R3" $R3
       ${If} $R3 == $INSTDIR
-        StrCpy $R2 "1" ; This Firefox install is set as default.
+        StrCpy $R2 "1" ; This Cliqz install is set as default.
       ${Else}
-        StrCpy $R2 "$R2" "" -11 # length of firefox.exe
+        StrCpy $R2 "$R2" "" -9 # length of cliqz.exe
         ${If} "$R2" == "${FileMainEXE}"
-          StrCpy $R2 "2" ; Another Firefox install is set as default.
+          StrCpy $R2 "2" ; Another Cliqz install is set as default.
         ${Else}
           StrCpy $R2 "0"
         ${EndIf}
       ${EndIf}
     ${Else}
-      StrCpy $R2 "0" ; Firefox is not set as default.
+      StrCpy $R2 "0" ; Cliqz is not set as default.
     ${EndIf}
 
     ${If} "$R2" == "0"
@@ -1505,17 +1472,17 @@ Function SendPing
         ${GetParent} "$R2" $R3
         ${GetLongPath} "$R3" $R3
         ${If} $R3 == $INSTDIR
-          StrCpy $R2 "1" ; This Firefox install is set as default.
+          StrCpy $R2 "1" ; This Cliqz install is set as default.
         ${Else}
-          StrCpy $R2 "$R2" "" -11 # length of firefox.exe
+          StrCpy $R2 "$R2" "" -9 # length of cliqz.exe
           ${If} "$R2" == "${FileMainEXE}"
-            StrCpy $R2 "2" ; Another Firefox install is set as default.
+            StrCpy $R2 "2" ; Another Cliqz install is set as default.
           ${Else}
             StrCpy $R2 "0"
           ${EndIf}
         ${EndIf}
       ${Else}
-        StrCpy $R2 "0" ; Firefox is not set as default.
+        StrCpy $R2 "0" ; Cliqz is not set as default.
       ${EndIf}
     ${EndIf}
 
@@ -1559,6 +1526,7 @@ Function SendPing
                       $\nPreinstall Phase Seconds = $2 \
                       $\nInstall Phase Seconds = $3 \
                       $\nFinish Phase Seconds = $4 \
+                      $\nSeng Ping Timestamp = $SendPingTimestamp \
                       $\nInitial Install Requirements Code = $InitialInstallRequirementsCode \
                       $\nOpened Download Page = $OpenedDownloadPage \
                       $\nExisting Profile = $ExistingProfile \
@@ -1580,7 +1548,7 @@ Function SendPing
     Call RelativeGotoPage
 !else
     ${NSD_CreateTimer} OnPing ${DownloadIntervalMS}
-    InetBgDL::Get "${BaseURLStubPing}/${StubURLVersion}${StubURLVersionAppend}/${Channel}/${UpdateChannel}/${AB_CD}/$R0/$R1/$5/$6/$7/$8/$9/$ExitCode/$FirefoxLaunchCode/$DownloadRetryCount/$DownloadedBytes/$DownloadSizeBytes/$IntroPhaseSeconds/$OptionsPhaseSeconds/$0/$1/$DownloadFirstTransferSeconds/$2/$3/$4/$InitialInstallRequirementsCode/$OpenedDownloadPage/$ExistingProfile/$ExistingVersion/$ExistingBuildID/$R5/$R6/$R7/$R8/$R2/$R3/$DownloadServerIP/$PostSigningData/$ProfileCleanupPromptType/$CheckboxCleanupProfile" \
+    InetBgDL::Get "${BaseURLStubPing}/${StubURLVersion}${StubURLVersionAppend}/${Channel}/${UpdateChannel}/${AB_CD}/$R0/$R1/$5/$6/$7/$8/$9/$ExitCode/$FirefoxLaunchCode/$DownloadRetryCount/$DownloadedBytes/$DownloadSizeBytes/$IntroPhaseSeconds/$OptionsPhaseSeconds/$0/$1/$DownloadFirstTransferSeconds/$2/$3/$4/$SendPingTimestamp/$InitialInstallRequirementsCode/$OpenedDownloadPage/$ExistingProfile/$ExistingVersion/$ExistingBuildID/$R5/$R6/$R7/$R8/$R2/$R3/$DownloadServerIP/$PostSigningData/$ProfileCleanupPromptType/$CheckboxCleanupProfile" \
                   "$PLUGINSDIR\_temp" /END
 !endif
   ${Else}
@@ -1673,7 +1641,8 @@ Function FinishInstall
 
   StrCpy $ExitCode "${ERR_SUCCESS}"
 
-  Call CopyPostSigningData
+  ; Cliqz. Using our own way to say branding data
+  ; Call CopyPostSigningData
   Call LaunchApp
 FunctionEnd
 
@@ -1832,8 +1801,8 @@ Function CopyPostSigningData
     ClearErrors
     StrCpy $PostSigningData "0"
   ${Else}
-    CreateDirectory "$LOCALAPPDATA\Mozilla\Firefox"
-    CopyFiles /SILENT "$EXEDIR\postSigningData" "$LOCALAPPDATA\Mozilla\Firefox"
+    CreateDirectory "$LOCALAPPDATA\Cliqz"
+    CopyFiles /SILENT "$EXEDIR\postSigningData" "$LOCALAPPDATA\Cliqz"
   ${Endif}
 FunctionEnd
 
@@ -1865,12 +1834,10 @@ Function LaunchHelpPage
 FunctionEnd
 
 Function OpenManualDownloadURL
-  ClearErrors
-  ReadINIStr $0 "${PARTNER_INI}" "DownloadURL" "FallbackPage"
-  ${IfNot} ${Errors}
-    ExecShell "open" "$0"
+  ${If} $DroplistArch == "$(VERSION_64BIT)"
+    ExecShell "open" "$(MINIINSTALLER_64_ERROR_SUPPORT_PAGE)"
   ${Else}
-    ExecShell "open" "${URLManualDownload}${URLManualDownloadAppend}"
+    ExecShell "open" "$(MINIINSTALLER_32_ERROR_SUPPORT_PAGE)"
   ${EndIf}
 FunctionEnd
 
@@ -1879,8 +1846,7 @@ Function ShouldPromptForProfileCleanup
   StrCpy $ProfileCleanupPromptType 0
 
   ; Only consider installations of the same architecture we're installing.
-  ${If} $ArchToInstall == ${ARCH_AMD64}
-  ${OrIf} $ArchToInstall == ${ARCH_AARCH64}
+  ${If} $DroplistArch == "$(VERSION_64BIT)"
     SetRegView 64
   ${Else}
     SetRegView 32
@@ -1890,58 +1856,38 @@ Function ShouldPromptForProfileCleanup
   ; We'll set this back to all at the end of the function.
   SetShellVarContext current
 
+  ; Check each Profile section in profiles.ini until we find the default profile.
   StrCpy $R0 ""
-  ; First look for an install-specific profile, which might be listed as
-  ; either a relative or an absolute path (installs.ini doesn't say which).
-  ${If} ${FileExists} "$APPDATA\Mozilla\Firefox\installs.ini"
-    ClearErrors
-    ReadINIStr $1 "$APPDATA\Mozilla\Firefox\installs.ini" "$AppUserModelID" "Default"
-    ${IfNot} ${Errors}
-      ${GetLongPath} "$APPDATA\Mozilla\Firefox\$1" $2
-      ${If} ${FileExists} $2
-        StrCpy $R0 $2
-      ${Else}
-        ${GetLongPath} "$1" $2
-        ${If} ${FileExists} $2
-          StrCpy $R0 $2
-        ${EndIf}
-      ${EndIf}
-    ${EndIf}
-  ${EndIf}
-
-  ${If} $R0 == ""
-    ; We don't have an install-specific profile, so look for an old-style
-    ; default profile instead by checking each numbered Profile section.
+  ${If} ${FileExists} "$APPDATA\Cliqz\profiles.ini"
     StrCpy $0 0
     ${Do}
       ClearErrors
       ; Check if the section exists by reading a value that must be present.
-      ReadINIStr $1 "$APPDATA\Mozilla\Firefox\profiles.ini" "Profile$0" "Path"
+      ReadINIStr $1 "$APPDATA\Cliqz\profiles.ini" "Profile$0" "Path"
       ${If} ${Errors}
         ; We've run out of profile sections.
         ${Break}
       ${EndIf}
 
       ClearErrors
-      ReadINIStr $1 "$APPDATA\Mozilla\Firefox\profiles.ini" "Profile$0" "Default"
+      ReadINIStr $1 "$APPDATA\Cliqz\profiles.ini" "Profile$0" "Default"
       ${IfNot} ${Errors}
       ${AndIf} $1 == "1"
         ; We've found the default profile
-        ReadINIStr $1 "$APPDATA\Mozilla\Firefox\profiles.ini" "Profile$0" "Path"
-        ReadINIStr $2 "$APPDATA\Mozilla\Firefox\profiles.ini" "Profile$0" "IsRelative"
+        ReadINIStr $1 "$APPDATA\Cliqz\profiles.ini" "Profile$0" "Path"
+        ReadINIStr $2 "$APPDATA\Cliqz\profiles.ini" "Profile$0" "IsRelative"
         ${If} $2 == "1"
-          StrCpy $R0 "$APPDATA\Mozilla\Firefox\$1"
+          StrCpy $R0 "$APPDATA\Cliqz\$1"
         ${Else}
           StrCpy $R0 "$1"
         ${EndIf}
+        GetFullPathName $R0 $R0
         ${Break}
       ${EndIf}
 
       IntOp $0 $0 + 1
     ${Loop}
   ${EndIf}
-
-  GetFullPathName $R0 $R0
 
   ${If} $R0 == ""
     ; No profile to clean up, so don't show the cleanup prompt.
@@ -1950,7 +1896,7 @@ Function ShouldPromptForProfileCleanup
 
   ; We have at least one profile present. If we don't have any installations,
   ; then we need to show the re-install prompt. We'll say there's an
-  ; installation present if HKCR\FirefoxURL* exists and points to a real path.
+  ; installation present if HKCR\CliqzURL* exists and points to a real path.
   StrCpy $0 0
   StrCpy $R9 ""
   ${Do}
@@ -1961,7 +1907,7 @@ Function ShouldPromptForProfileCleanup
       ${Break}
     ${EndIf}
     ${WordFind} "$1" "-" "+1{" $2
-    ${If} $2 == "FirefoxURL"
+    ${If} $2 == "CliqzURL"
       ClearErrors
       ReadRegStr $2 HKCR "$1\DefaultIcon" ""
       ${IfNot} ${Errors}
@@ -1981,10 +1927,10 @@ Function ShouldPromptForProfileCleanup
 
   ; Okay, there's at least one install, let's see if it's for this channel.
   SetShellVarContext all
-  ${GetSingleInstallPath} "Software\Mozilla\${BrandFullNameInternal}" $0
+  ${GetSingleInstallPath} "Software\Cliqz\${BrandFullNameInternal}" $0
   ${If} $0 == "false"
     SetShellVarContext current
-    ${GetSingleInstallPath} "Software\Mozilla\${BrandFullNameInternal}" $0
+    ${GetSingleInstallPath} "Software\Cliqz\${BrandFullNameInternal}" $0
     ${If} $0 == "false"
       ; Existing installs are not for this channel. Don't show any prompt.
       GoTo end
@@ -2003,12 +1949,14 @@ Function ShouldPromptForProfileCleanup
     ; We don't know what version we're about to install because we haven't
     ; downloaded it yet. Find out what the latest version released on this
     ; channel is and assume we'll be installing that one.
-    Call GetLatestReleasedVersion
-    ${If} ${Errors}
+    ; Cliqz. Use only internal version, we don't want for now to support one
+    ; more network resource
+    ; Call GetLatestReleasedVersion
+    ; ${If} ${Errors}
       ; Use this stub installer's version as a fallback when we can't get the
       ; real current version; this may be behind, but it's better than nothing.
-      StrCpy $1 ${AppVersion}
-    ${EndIf}
+      StrCpy $1 ${GREVersion}
+    ; ${EndIf}
 
     ${WordFind} $1 "." "+1{" $1
     IntOp $1 $1 - 2
@@ -2027,38 +1975,10 @@ FunctionEnd
 
 Function GetLatestReleasedVersion
   ClearErrors
-  Push $0 ; InetBgDl::GetStats uses $0 for the HTTP error code
-  ; $1 is our return value, so don't save it
-  Push $2 ; InetBgDl::GetStats uses $2 to tell us when the transfer is done
-  Push $3 ; $3 - $5 are also set by InetBgDl::GetStats, but we don't use them
-  Push $4
-  Push $5
-  Push $6 ; This is our response timeout counter
-
-  InetBgDL::Get /RESET /END
-  InetBgDL::Get "https://product-details.mozilla.org/1.0/firefox_versions.json" \
-                "$PLUGINSDIR\firefox_versions.json" \
-                /CONNECTTIMEOUT 120 /RECEIVETIMEOUT 120 /END
-
-  ; Wait for the response, but only give it half a second since this is on the
-  ; installer startup path (we haven't even shown a window yet).
-  StrCpy $6 0
-  ${Do}
-    Sleep 100
-    InetBgDL::GetStats
-    IntOp $6 $6 + 1
-
-    ${If} $2 == 0
-      ${Break}
-    ${ElseIf} $6 >= 5
-      InetBgDL::Get /RESET /END
-      SetErrors
-      GoTo end
-    ${EndIf}
-  ${Loop}
-
-  StrCpy $1 0
-  nsJSON::Set /file "$PLUGINSDIR\firefox_versions.json"
+  nsJSON::Set /tree requestConfig /value \
+    `{"Url": "https://product-details.mozilla.org/1.0/firefox_versions.json", "Async": false}`
+  IfErrors end
+  nsJSON::Set /http requestConfig
   IfErrors end
   ${Select} ${Channel}
   ${Case} "unofficial"
@@ -2072,44 +1992,23 @@ Function GetLatestReleasedVersion
   ${Case} "release"
     StrCpy $1 "LATEST_FIREFOX_VERSION"
   ${EndSelect}
-  nsJSON::Get $1 /end
+  nsJSON::Get "Output" $1 /end
+  IfErrors end
+  Pop $1
 
   end:
-  ${If} ${Errors}
-  ${OrIf} $1 == 0
-    SetErrors
-    StrCpy $1 0
-  ${Else}
-    Pop $1
-  ${EndIf}
-
-  Pop $6
-  Pop $5
-  Pop $4
-  Pop $3
-  Pop $2
-  Pop $0
 FunctionEnd
 
-; Determine which architecture build we should download and install.
-; AArch64 is always selected if it's the native architecture of the machine.
-; Otherwise, we check a few things to determine if AMD64 is appropriate:
+; Returns 1 in $0 if we should install the 64-bit build, or 0 if not.
+; The requirements for selecting the 64-bit build to install are:
 ; 1) Running a 64-bit OS (we've already checked the OS version).
 ; 2) An amount of RAM strictly greater than RAM_NEEDED_FOR_64BIT
 ; 3) No third-party products installed that cause issues with the 64-bit build.
 ;    Currently this includes Lenovo OneKey Theater and Lenovo Energy Management.
-; We also make sure that the partner.ini file contains a download URL for the
-; selected architecture, when a partner.ini file eixsts.
-; If any of those checks fail, the 32-bit x86 build is selected.
-Function GetArchToInstall
-  StrCpy $ArchToInstall ${ARCH_X86}
+Function ShouldInstall64Bit
+  StrCpy $0 0
 
-  ${If} ${IsNativeARM64}
-    StrCpy $ArchToInstall ${ARCH_AARCH64}
-    GoTo downloadUrlCheck
-  ${EndIf}
-
-  ${IfNot} ${IsNativeAMD64}
+  ${IfNot} ${RunningX64}
     Return
   ${EndIf}
 
@@ -2131,60 +2030,7 @@ Function GetArchToInstall
     Return
   ${EndIf}
 
-  StrCpy $ArchToInstall ${ARCH_AMD64}
-
-  downloadUrlCheck:
-  ; If we've selected an architecture that doesn't have a download URL in the
-  ; partner.ini, but there is a URL there for 32-bit x86, then fall back to
-  ; 32-bit x86 on the theory that we should never use a non-partner build if
-  ; we are configured as a partner installer, even if the only build that's
-  ; provided is suboptimal for the machine. If there isn't even an x86 URL,
-  ; then we won't force x86 and GetDownloadURL will stick with the built-in URL.
-  ClearErrors
-  ReadINIStr $1 "${PARTNER_INI}" "DownloadURL" "X86"
-  ${IfNot} ${Errors}
-    ${If} $ArchToInstall == ${ARCH_AMD64}
-      ReadINIStr $1 "${PARTNER_INI}" "DownloadURL" "AMD64"
-      ${If} ${Errors}
-        StrCpy $ArchToInstall ${ARCH_X86}
-      ${EndIf}
-    ${ElseIf} $ArchToInstall == ${ARCH_AARCH64}
-      ReadINIStr $1 "${PARTNER_INI}" "DownloadURL" "AArch64"
-      ${If} ${Errors}
-        StrCpy $ArchToInstall ${ARCH_X86}
-      ${EndIf}
-    ${EndIf}
-  ${EndIf}
-FunctionEnd
-
-Function GetDownloadURL
-  Push $0
-  Push $1
-
-  ; Start with the appropriate URL from our built-in branding info.
-  ${If} $ArchToInstall == ${ARCH_AMD64}
-    StrCpy $0 "${URLStubDownloadAMD64}${URLStubDownloadAppend}"
-  ${ElseIf} $ArchToInstall == ${ARCH_AARCH64}
-    StrCpy $0 "${URLStubDownloadAArch64}${URLStubDownloadAppend}"
-  ${Else}
-    StrCpy $0 "${URLStubDownloadX86}${URLStubDownloadAppend}"
-  ${EndIf}
-
-  ; If we have a partner.ini file then use the URL from there instead.
-  ClearErrors
-  ${If} $ArchToInstall == ${ARCH_AMD64}
-    ReadINIStr $1 "${PARTNER_INI}" "DownloadURL" "AMD64"
-  ${ElseIf} $ArchToInstall == ${ARCH_AARCH64}
-    ReadINIStr $1 "${PARTNER_INI}" "DownloadURL" "AArch64"
-  ${Else}
-    ReadINIStr $1 "${PARTNER_INI}" "DownloadURL" "X86"
-  ${EndIf}
-  ${IfNot} ${Errors}
-    StrCpy $0 "$1"
-  ${EndIf}
-
-  Pop $1
-  Exch $0
+  StrCpy $0 1
 FunctionEnd
 
 Section

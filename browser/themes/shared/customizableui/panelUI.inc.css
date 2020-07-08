@@ -1820,6 +1820,11 @@ toolbarpaletteitem[place="menu-panel"] > .subviewbutton-nav::after {
   background-color: var(--arrowpanel-dimmed-even-further);
 }
 
+/* CLIQZ-SPECIAL: Hide Search pannel in navbar */
+toolbarpaletteitem#wrapper-search-container {
+  display: none!important;
+}
+
 /* What's New panel */
 #customizationui-widget-multiview #PanelUI-whatsNew {
   max-width: @menuPanelWidth@;

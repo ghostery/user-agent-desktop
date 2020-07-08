@@ -109,7 +109,7 @@ main-context-menu-open-link-new-window =
     .accesskey = W
 
 main-context-menu-open-link-new-private-window =
-    .label = Open Link in New Private Window
+    .label = Open Link in New Forget Window
     .accesskey = P
 
 main-context-menu-bookmark-this-link =

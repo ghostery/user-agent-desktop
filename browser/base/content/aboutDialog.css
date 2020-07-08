@@ -12,12 +12,13 @@
 }
 
 #rightBox {
-  background-image: url("chrome://branding/content/about-wordmark.svg");
+  /* Cliqz. Don't use
+  background-image: url("chrome://branding/content/about-wordmark.svg");*/
   background-repeat: no-repeat;
   background-size: 288px auto;
   /* padding-top creates room for the wordmark */
-  padding-top: 38px;
   margin-top: 20px;
+  margin-bottom: 38px;
 }
 
 #rightBox:-moz-locale-dir(rtl) {
@@ -36,7 +37,6 @@
 }
 
 #version {
-  font-weight: bold;
   margin-top: 10px;
   margin-inline-start: 0;
   -moz-user-select: text;
@@ -50,6 +50,7 @@
 
 #distribution,
 #distributionId {
+  font-weight: bold;
   display: none;
   margin-block: 0;
 }

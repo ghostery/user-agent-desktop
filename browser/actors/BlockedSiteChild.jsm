@@ -84,7 +84,9 @@ class BlockedSiteChild extends JSWindowActorChild {
     if (desc) {
       doc
         .getElementById("error_desc_link")
-        .setAttribute("href", desc + encodeURIComponent(aEvent.detail.url));
+        //.setAttribute("href", desc + encodeURIComponent(aEvent.detail.url));
+        // CLIQZ-SPECIAL: DB-2442
+        .setAttribute("href", desc);
     }
 
     // Set other links in error details.
@@ -115,7 +117,7 @@ class BlockedSiteChild extends JSWindowActorChild {
           .setAttribute(
             "href",
             SafeBrowsing.getReportURL("PhishMistake", blockedInfo) ||
-              "https://safebrowsing.google.com/safebrowsing/report_error/?tpl=mozilla"
+              "https://cliqz.com/report-url"
           );
         doc
           .getElementById("learn_more_link")

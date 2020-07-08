@@ -126,7 +126,7 @@
 ; [Base Browser Files]
 #ifndef XP_UNIX
 @BINPATH@/@MOZ_APP_NAME@.exe
-@BINPATH@/firefox.VisualElementsManifest.xml
+@BINPATH@/cliqz.VisualElementsManifest.xml
 @BINPATH@/browser/VisualElements/VisualElements_150.png
 @BINPATH@/browser/VisualElements/VisualElements_70.png
 #else
@@ -146,6 +146,9 @@
 @BINPATH@/@DLL_PREFIX@mozavutil@DLL_SUFFIX@
 @BINPATH@/@DLL_PREFIX@mozavcodec@DLL_SUFFIX@
 #endif
+#if CQZ_ADULT_DOMAINS_BF
+@RESPATH@/browser/adult-domains.bin
+#endif  ; CQZ_ADULT_DOMAINS_BF
 #ifdef XP_WIN
 #ifdef _AMD64_
 @BINPATH@/@DLL_PREFIX@qipcap64@DLL_SUFFIX@
@@ -165,6 +168,7 @@
 #endif
 
 ; JavaScript components
+@RESPATH@/browser/components/AutoForgetTabsService.js
 @RESPATH@/browser/components/BrowserComponents.manifest
 @RESPATH@/components/EnterprisePolicies.js
 @RESPATH@/components/EnterprisePoliciesContent.js
@@ -181,7 +185,9 @@
 @RESPATH@/browser/components/MacTouchBar.manifest
 @RESPATH@/browser/components/MacTouchBar.js
 #endif
+#ifdef MOZ_SERVICES_SYNC
 @RESPATH@/components/SyncComponents.manifest
+#endif
 @RESPATH@/components/servicesComponents.manifest
 @RESPATH@/components/servicesSettings.manifest
 @RESPATH@/components/cryptoComponents.manifest
@@ -490,3 +496,6 @@ i686/gmp-clearkey/0.1/clearkey.dll
 ; build, which, practically speaking, is the case.
 @BINPATH@/gmp-clearkey/0.1/manifest.json
 #endif
+
+; Extra distrubution files
+@RESPATH@/browser/defaults/preferences/distribution-prefs.js

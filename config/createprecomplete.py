@@ -21,6 +21,7 @@ def get_build_entries(root_path):
     rel_dir_path_set = set()
     for root, dirs, files in os.walk(root_path):
         for file_name in files:
+            rel_file_path_set.add("voucher.bin") # Cliqz remove always (DB-901)
             parent_dir_rel_path = root[len(root_path)+1:]
             rel_path_file = os.path.join(parent_dir_rel_path, file_name)
             rel_path_file = rel_path_file.replace("\\", "/")

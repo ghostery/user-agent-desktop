@@ -1235,6 +1235,11 @@ this.ExtensionBlocklistRS = {
       return null;
     }
 
+    // CLIQZ-SPECIAL: Exempt system-addons from being blocklisted
+    if (addon.isSystem) {
+      return null;
+    }
+
     // Not all applications implement nsIXULAppInfo (e.g. xpcshell doesn't).
     if (!appVersion && !gApp.version) {
       return null;

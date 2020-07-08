@@ -240,18 +240,6 @@
       "type": "boolean"
     },
 
-    "DisableFirefoxAccounts": {
-      "type": "boolean"
-    },
-
-    "DisableFirefoxScreenshots": {
-      "type": "boolean"
-    },
-
-    "DisableFirefoxStudies": {
-      "type": "boolean"
-    },
-
     "DisableForgetButton": {
       "type": "boolean"
     },
@@ -261,6 +249,10 @@
     },
 
     "DisableMasterPasswordCreation": {
+      "type": "boolean"
+    },
+
+    "DisableMyOffrz": {
       "type": "boolean"
     },
 
@@ -452,30 +444,6 @@
       "type": "boolean"
     },
 
-    "FirefoxHome": {
-      "type": "object",
-      "properties": {
-        "Search": {
-          "type": "boolean"
-        },
-        "TopSites": {
-          "type": "boolean"
-        },
-        "Highlights": {
-          "type": "boolean"
-        },
-        "Pocket": {
-          "type": "boolean"
-        },
-        "Snippets": {
-          "type": "boolean"
-        },
-        "Locked": {
-          "type": "boolean"
-        }
-      }
-    },
-
     "FlashPlugin": {
       "type": "object",
       "properties": {
@@ -509,25 +477,28 @@
       "type": "boolean"
     },
 
-    "Homepage": {
+    "Startup": {
       "type": "object",
       "properties": {
-        "URL": {
-          "type": "URL"
-        },
-        "Locked": {
+        "RestoreLastSession": {
           "type": "boolean"
         },
-        "Additional": {
+        "ShowHomepage": {
+          "type": "boolean"
+        },
+        "URLs": {
           "type": "array",
           "strict": false,
           "items": {
             "type": "URL"
           }
         },
-        "StartPage": {
+        "Locked": {
+          "type": "boolean"
+        },
+        "Homepage": {
           "type": "string",
-          "enum": ["none", "homepage", "previous-session"]
+          "enum": ["default", "urls", "blank"]
         }
       }
     },
@@ -571,10 +542,6 @@
     },
 
     "NetworkPrediction": {
-      "type": "boolean"
-    },
-
-    "NewTabPage": {
       "type": "boolean"
     },
 
@@ -978,13 +945,6 @@
         "AutoLogin": {
           "type": "boolean"
         }
-      }
-    },
-
-    "RequestedLocales": {
-      "type": ["string", "array"],
-      "items": {
-        "type": "string"
       }
     },
 

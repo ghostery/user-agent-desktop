@@ -49,15 +49,15 @@
 #define LEGACY_BUILD_ID "20181001000000"
 #define LEGACY_UA_GECKO_TRAIL "20100101"
 
-#define SPOOFED_POINTER_INTERFACE MouseEvent_Binding::MOZ_SOURCE_MOUSE
-
 // For the HTTP User-Agent header, we use a simpler set of spoofed values
 // that do not reveal the specific desktop platform.
 #if defined(MOZ_WIDGET_ANDROID)
-#  define SPOOFED_HTTP_UA_OS "Android 6.0; Mobile"
+#define SPOOFED_HTTP_UA_OS      "Android 6.0; Mobile"
 #else
-#  define SPOOFED_HTTP_UA_OS "Windows NT 10.0"
+#define SPOOFED_HTTP_UA_OS      "Windows NT 10.0"
 #endif
+
+#define SPOOFED_POINTER_INTERFACE MouseEvent_Binding::MOZ_SOURCE_MOUSE
 
 // Forward declare LRUCache, defined in nsRFPService.cpp
 class LRUCache;

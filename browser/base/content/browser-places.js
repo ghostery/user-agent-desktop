@@ -10,10 +10,13 @@ XPCOMUtils.defineLazyScriptGetter(
   ["PlacesToolbar", "PlacesMenu", "PlacesPanelview", "PlacesPanelMenuView"],
   "chrome://browser/content/places/browserPlacesViews.js"
 );
+
+/*
+CLIQZ-SPECIAL: remove bookmark recommendation served from activity stream
 XPCOMUtils.defineLazyModuleGetters(this, {
   BookmarkPanelHub: "resource://activity-stream/lib/BookmarkPanelHub.jsm",
 });
-
+*/
 var StarUI = {
   _itemGuids: null,
   _batching: false,
@@ -195,11 +198,13 @@ var StarUI = {
   },
 
   getRecommendation(data) {
-    return BookmarkPanelHub.messageRequest(data, window);
+    // CLIQZ-SPECIAL: remove bookmark recommendation served from activity stream
+    // return BookmarkPanelHub.messageRequest(data, window);
   },
 
   toggleRecommendation() {
-    BookmarkPanelHub.toggleRecommendation();
+    // CLIQZ-SPECIAL: remove bookmark recommendation served from activity stream
+    // BookmarkPanelHub.toggleRecommendation();
   },
 
   async showEditBookmarkPopup(aNode, aIsNewBookmark, aUrl) {
@@ -254,6 +259,8 @@ var StarUI = {
 
     this._setIconAndPreviewImage();
 
+    /*
+    CLIQZ-SPECIAL: remove bookmark recommendation served from activity stream
     await this.getRecommendation({
       container: this._element("editBookmarkPanelRecommendation"),
       infoButton: this._element("editBookmarkPanelInfoButton"),
@@ -268,7 +275,7 @@ var StarUI = {
         this.panel.hidePopup();
       },
     });
-
+    */
     this.beginBatch();
 
     this._anchorElement = BookmarkingUI.anchor;
@@ -755,6 +762,7 @@ HistoryMenu.prototype = {
   },
 
   toggleTabsFromOtherComputers: function PHM_toggleTabsFromOtherComputers() {
+#ifdef MOZ_SERVICES_SYNC
     // Enable/disable the Tabs From Other Computers menu. Some of the menus handled
     // by HistoryMenu do not have this menuitem.
     if (!this.syncTabsMenuitem) {
@@ -767,6 +775,7 @@ HistoryMenu.prototype = {
     }
 
     this.syncTabsMenuitem.setAttribute("hidden", false);
+#endif
   },
 
   _onPopupShowing: function HM__onPopupShowing(aEvent) {
@@ -1600,9 +1609,18 @@ var BookmarkingUI = {
   },
 
   onLocationChange: function BUI_onLocationChange() {
-    if (this._uri && gBrowser.currentURI.equals(this._uri)) {
+    // CLIQZ-SPECIAL: DB-2327: for unknown reasons equals throws an exception for
+    // moz-extension urls (specifically for history page).
+    // This error first was noticed in 1.29.x
+    // Remove this try/catch clause after solving this issue.
+    try {
+      if (this._uri && gBrowser.currentURI.equals(this._uri)) {
+        return;
+      }
+    } catch (e) {
       return;
     }
+
     this.updateStarState();
   },
 

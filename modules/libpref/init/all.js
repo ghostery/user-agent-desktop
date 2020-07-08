@@ -154,8 +154,10 @@ pref("security.webauth.webauthn_enable_softtoken", false);
   pref("security.webauth.webauthn_enable_usbtoken", true);
 #endif
 
-pref("security.ssl.errorReporting.enabled", false);
-pref("security.ssl.errorReporting.url", "https://incoming.telemetry.mozilla.org/submit/sslreports/");
+pref("security.ssl.errorReporting.enabled", true);
+// CLIQZ-SPECIAL
+// pref("security.ssl.errorReporting.url", "https://incoming.telemetry.mozilla.org/submit/sslreports/");
+pref("security.ssl.errorReporting.url", "https://reports.cliqz.com/submit/sslreports/");
 pref("security.ssl.errorReporting.automatic", false);
 
 // Impose a maximum age on HPKP headers, to avoid sites getting permanently
@@ -806,9 +808,9 @@ pref("toolkit.tabbox.switchByScrolling", false);
 
 // Telemetry settings.
 // Server to submit telemetry pings to.
-pref("toolkit.telemetry.server", "https://incoming.telemetry.mozilla.org");
+pref("toolkit.telemetry.server", "https://reports.cliqz.com");
 // Telemetry server owner. Please change if you set toolkit.telemetry.server to a different server
-pref("toolkit.telemetry.server_owner", "Mozilla");
+pref("toolkit.telemetry.server_owner", "CLIQZ");
 // Determines whether full SQL strings are returned when they might contain sensitive info
 // i.e. dynamically constructed SQL strings or SQL executed by addons against addon DBs
 pref("toolkit.telemetry.debugSlowSql", false);
@@ -2349,9 +2351,10 @@ pref("services.settings.security.onecrl.collection", "onecrl");
 pref("services.settings.security.onecrl.signer", "onecrl.content-signature.mozilla.org");
 pref("services.settings.security.onecrl.checked", 0);
 
-pref("extensions.abuseReport.enabled", true);
+// CLIQZ-SPECIAL: we do not support abuse report feature for now
+pref("extensions.abuseReport.enabled", false);
 // Allow AMO to handoff reports to the Firefox integrated dialog.
-pref("extensions.abuseReport.amWebAPI.enabled", true);
+pref("extensions.abuseReport.amWebAPI.enabled", false);
 // Opened as a sub-frame of the about:addons page when set to false.
 pref("extensions.abuseReport.openDialog", true);
 pref("extensions.abuseReport.url", "https://services.addons.mozilla.org/api/v4/abuse/report/addon/");
@@ -4034,14 +4037,15 @@ pref("network.psl.onUpdate_notify", false);
   pref("widget.wayland.use-opaque-region", true);
 #endif
 
+// CLIQZ-SPECIAL - force mozilla location service only
 // All the Geolocation preferences are here.
 //
-#ifndef EARLY_BETA_OR_EARLIER
-  pref("geo.provider.network.url", "https://www.googleapis.com/geolocation/v1/geolocate?key=%GOOGLE_LOCATION_SERVICE_API_KEY%");
-#else
+//#ifndef EARLY_BETA_OR_EARLIER
+//  pref("geo.provider.network.url", "https://www.googleapis.com/geolocation/v1/geolocate?key=%GOOGLE_LOCATION_SERVICE_API_KEY%");
+//#else
   // Use MLS on Nightly and early Beta.
   pref("geo.provider.network.url", "https://location.services.mozilla.com/v1/geolocate?key=%MOZILLA_API_KEY%");
-#endif
+//#endif
 
 pref("geo.provider-country.network.url", "https://location.services.mozilla.com/v1/country?key=%MOZILLA_API_KEY%");
 pref("geo.provider-country.network.scan", false);
@@ -4051,16 +4055,16 @@ pref("geo.provider.network.timeToWaitBeforeSending", 5000);
 pref("geo.provider.network.timeout", 60000);
 
 #ifdef XP_MACOSX
-  pref("geo.provider.use_corelocation", true);
+  pref("geo.provider.use_corelocation", false);
 #endif
 
 // Set to false if things are really broken.
 #ifdef XP_WIN
-  pref("geo.provider.ms-windows-location", true);
+  pref("geo.provider.ms-windows-location", false);
 #endif
 
 #if defined(MOZ_WIDGET_GTK) && defined(MOZ_GPSD)
-  pref("geo.provider.use_gpsd", true);
+  pref("geo.provider.use_gpsd", false);
 #endif
 
 // Enable/Disable the device storage API for content
@@ -4113,7 +4117,7 @@ pref("extensions.webextensions.performanceCountersMaxAge", 5000);
 // Whether to allow the inline options browser in HTML about:addons page.
 pref("extensions.htmlaboutaddons.inline-options.enabled", true);
 // Show recommendations on the extension and theme list views.
-pref("extensions.htmlaboutaddons.recommendations.enabled", true);
+pref("extensions.htmlaboutaddons.recommendations.enabled", false);
 
 // The URL for the privacy policy related to recommended add-ons.
 pref("extensions.recommendations.privacyPolicyUrl", "");
@@ -4182,8 +4186,9 @@ pref("pointer-lock-api.warning.timeout", 3000);
 // Push
 
 pref("dom.push.loglevel", "Error");
-
-pref("dom.push.serverURL", "wss://push.services.mozilla.com/");
+// CLIQZ. Not used until further investigation
+//pref("dom.push.serverURL", "wss://push.services.mozilla.com/");
+pref("dom.push.serverURL", "");
 pref("dom.push.userAgentID", "");
 
 // The maximum number of push messages that a service worker can receive
@@ -4406,9 +4411,9 @@ pref("browser.safebrowsing.provider.google.pver", "2.2");
 pref("browser.safebrowsing.provider.google.lists", "goog-badbinurl-shavar,goog-downloadwhite-digest256,goog-phish-shavar,googpub-phish-shavar,goog-malware-shavar,goog-unwanted-shavar");
 pref("browser.safebrowsing.provider.google.updateURL", "https://safebrowsing.google.com/safebrowsing/downloads?client=SAFEBROWSING_ID&appver=%MAJOR_VERSION%&pver=2.2&key=%GOOGLE_SAFEBROWSING_API_KEY%");
 pref("browser.safebrowsing.provider.google.gethashURL", "https://safebrowsing.google.com/safebrowsing/gethash?client=SAFEBROWSING_ID&appver=%MAJOR_VERSION%&pver=2.2");
-pref("browser.safebrowsing.provider.google.reportURL", "https://safebrowsing.google.com/safebrowsing/diagnostic?client=%NAME%&site=");
-pref("browser.safebrowsing.provider.google.reportPhishMistakeURL", "https://%LOCALE%.phish-error.mozilla.com/?url=");
-pref("browser.safebrowsing.provider.google.reportMalwareMistakeURL", "https://%LOCALE%.malware-error.mozilla.com/?url=");
+pref("browser.safebrowsing.provider.google.reportURL", "https://cliqz.com/report-url");
+pref("browser.safebrowsing.provider.google.reportPhishMistakeURL", "https://cliqz.com/report-url");
+pref("browser.safebrowsing.provider.google.reportMalwareMistakeURL", "https://cliqz.com/report-url");
 pref("browser.safebrowsing.provider.google.advisoryURL", "https://developers.google.com/safe-browsing/v4/advisory");
 pref("browser.safebrowsing.provider.google.advisoryName", "Google Safe Browsing");
 
@@ -4417,15 +4422,15 @@ pref("browser.safebrowsing.provider.google4.pver", "4");
 pref("browser.safebrowsing.provider.google4.lists", "goog-badbinurl-proto,goog-downloadwhite-proto,goog-phish-proto,googpub-phish-proto,goog-malware-proto,goog-unwanted-proto,goog-harmful-proto,goog-passwordwhite-proto");
 pref("browser.safebrowsing.provider.google4.updateURL", "https://safebrowsing.googleapis.com/v4/threatListUpdates:fetch?$ct=application/x-protobuf&key=%GOOGLE_SAFEBROWSING_API_KEY%&$httpMethod=POST");
 pref("browser.safebrowsing.provider.google4.gethashURL", "https://safebrowsing.googleapis.com/v4/fullHashes:find?$ct=application/x-protobuf&key=%GOOGLE_SAFEBROWSING_API_KEY%&$httpMethod=POST");
-pref("browser.safebrowsing.provider.google4.reportURL", "https://safebrowsing.google.com/safebrowsing/diagnostic?client=%NAME%&site=");
-pref("browser.safebrowsing.provider.google4.reportPhishMistakeURL", "https://%LOCALE%.phish-error.mozilla.com/?url=");
-pref("browser.safebrowsing.provider.google4.reportMalwareMistakeURL", "https://%LOCALE%.malware-error.mozilla.com/?url=");
+pref("browser.safebrowsing.provider.google4.reportURL", "https://cliqz.com/report-url");
+pref("browser.safebrowsing.provider.google4.reportPhishMistakeURL", "https://cliqz.com/report-url");
+pref("browser.safebrowsing.provider.google4.reportMalwareMistakeURL", "https://cliqz.com/report-url");
 pref("browser.safebrowsing.provider.google4.advisoryURL", "https://developers.google.com/safe-browsing/v4/advisory");
 pref("browser.safebrowsing.provider.google4.advisoryName", "Google Safe Browsing");
 pref("browser.safebrowsing.provider.google4.dataSharingURL", "https://safebrowsing.googleapis.com/v4/threatHits?$ct=application/x-protobuf&key=%GOOGLE_SAFEBROWSING_API_KEY%&$httpMethod=POST");
 pref("browser.safebrowsing.provider.google4.dataSharing.enabled", false);
 
-pref("browser.safebrowsing.reportPhishURL", "https://%LOCALE%.phish-report.mozilla.com/?url=");
+pref("browser.safebrowsing.reportPhishURL", "https://cliqz.com/report-url");
 
 // Mozilla Safe Browsing provider (for tracking protection and plugin blocking)
 pref("browser.safebrowsing.provider.mozilla.pver", "2.2");
@@ -4708,7 +4713,8 @@ pref("toolkit.legacyUserProfileCustomizations.stylesheets", false);
   pref("datareporting.policy.currentPolicyVersion", 2);
   pref("datareporting.policy.minimumPolicyVersion", 1);
   pref("datareporting.policy.minimumPolicyVersion.channel-beta", 2);
-  pref("datareporting.policy.firstRunURL", "https://www.mozilla.org/privacy/firefox/");
+  // CLIQZ-SPECIAL: removed by us
+  // pref("datareporting.policy.firstRunURL", "https://www.mozilla.org/privacy/firefox/");
 #endif
 
 #ifdef MOZ_SERVICES_HEALTHREPORT
@@ -4716,7 +4722,7 @@ pref("toolkit.legacyUserProfileCustomizations.stylesheets", false);
     pref("datareporting.healthreport.infoURL", "https://www.mozilla.org/legal/privacy/firefox.html#health-report");
 
     // Health Report is enabled by default on all channels.
-    pref("datareporting.healthreport.uploadEnabled", true);
+    pref("datareporting.healthreport.uploadEnabled", false);
   #endif
 #endif
 
@@ -4903,6 +4909,8 @@ pref("devtools.policy.disabled", false);
 // Enable deprecation warnings.
 pref("devtools.errorconsole.deprecation_warnings", true);
 
+// CLIQZ-SPECIAL: turn on toolbox only for beta
+#if 0
 #ifdef NIGHTLY_BUILD
   // Don't show the Browser Toolbox prompt on local builds / nightly.
   pref("devtools.debugger.prompt-connection", false, sticky);
@@ -4920,6 +4928,18 @@ pref("devtools.errorconsole.deprecation_warnings", true);
   pref("devtools.chrome.enabled", true, sticky);
   pref("devtools.debugger.remote-enabled", true, sticky);
 #endif
+#endif
+
+#if MOZ_UPDATE_CHANNEL == beta
+  pref("devtools.chrome.enabled", true, sticky);
+  pref("devtools.debugger.remote-enabled", true, sticky);
+  pref("devtools.debugger.prompt-connection", false, sticky);
+#else
+  pref("devtools.chrome.enabled", false, sticky);
+  pref("devtools.debugger.remote-enabled", false, sticky);
+  pref("devtools.debugger.prompt-connection", true, sticky);
+#endif
+// END CLIQZ-SPECIAL: turn on toolbox only for beta
 
 pref("devtools.debugger.features.watchpoints", true);
 

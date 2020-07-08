@@ -32,7 +32,7 @@ tabpanels {
   margin-top: 10px;
 }
 
-#advancedPrefs {
+#advancedPrefs, #connectPrefs {
   margin: 0 8px;
 }
 
@@ -70,6 +70,7 @@ tabpanels {
   margin-inline-start: 10px;
 }
 
+%ifdef MOZ_SERVICES_SYNC
 /* ----- SYNC PANE ----- */
 
 #noFxaAccount {
@@ -79,3 +80,5 @@ tabpanels {
 #noFxaAccount > label:first-child {
   margin-bottom: 0.6em;
 }
+
+%endif

@@ -78,14 +78,32 @@ XPCOMUtils.defineLazyGetter(this, "homepagePopup", () => {
   });
 });
 
+// CLIQZ-SPECIAL
+// If Preferences -> Show home page is checked then we need to show a home page specific for Cliqz.
+// An URL for this page is defined in a nsBrowserContentHandler.js file (defaultArgs).
+// handleInitialHomepagePopup MUST have a check against browser.startup.addFreshTab,
+// meaning that Cliqz home page to be displayed otherwise a blank page will be shown.
+// Other words, if browser.startup.addFreshTab is not tested here then selected Homepage
+// and new windows in Preferences will not take affect.
+//
 // When the browser starts up it will trigger the observer topic we're expecting
 // but that happens before our observer has been registered. To handle the
 // startup case we need to check if the preferences are set to load the homepage
 // and check if the homepage is active, then show the doorhanger in that case.
 async function handleInitialHomepagePopup(extensionId, homepageUrl) {
   // browser.startup.page == 1 is show homepage.
+  /*
   if (
+    
     Services.prefs.getIntPref("browser.startup.page") == 1 &&
+    windowTracker.topWindow
+  ) {
+    */
+
+  /* CLIQZ-SPECIAL: cliqz tab setting*/
+  /* CLIQZ-MERGE check if we need windowtracker part*/
+  if (
+    Services.prefs.getBoolPref("browser.startup.addFreshTab") &&
     windowTracker.topWindow
   ) {
     let { gBrowser } = windowTracker.topWindow;
@@ -141,11 +159,13 @@ async function handleHomepageUrl(extension, homepageUrl) {
     );
     // Also set this now as an upgraded browser will need this.
     Services.prefs.setBoolPref(HOMEPAGE_EXTENSION_CONTROLLED, true);
+    /* CLIQZ-SPECIAL: Hide warning popup for homepage
     if (extension.startupReason == "APP_STARTUP") {
       handleInitialHomepagePopup(extension.id, homepageUrl);
     } else {
       homepagePopup.addObserver(extension.id);
     }
+    */
   }
 
   // We need to monitor permission change and update the preferences.
@@ -322,6 +342,17 @@ this.chrome_settings_overrides = class extends ExtensionAPI {
     let { extension } = this;
     let { manifest } = extension;
     let homepageUrl = manifest.chrome_settings_overrides.homepage;
+
+    // CLIQZ: if its not system addon dont change homepage
+    if (extension.id === "cliqz@cliqz.com") {
+      // CLIQZ-SPECIAL: Only for Cliqz Addon and for the very first run.
+      // So far the extension is either system or built-in.
+      // First we try to get the value of chrome_settings_overrides.homepage or
+      // fall back to baseURL which is always there.
+      homepageUrl = homepageUrl || `${extension.baseURL}modules/freshtab/home.html`;
+    } else {
+      homepageUrl = null;
+    }
 
     // If this is a page we ignore, just skip the homepage setting completely.
     if (homepageUrl) {
@@ -524,7 +555,8 @@ ExtensionPreferencesManager.addSetting("homepage_override", {
   // has been returned to the user.
   async onPrefsChanged(item) {
     if (item.id) {
-      homepagePopup.addObserver(item.id);
+      // CLIQZ-SPECIAL: Hide warning popup for homepage
+      // homepagePopup.addObserver(item.id);
 
       let policy = ExtensionParent.WebExtensionPolicy.getByID(item.id);
       let allowed = policy && policy.privateBrowsingAllowed;
@@ -536,7 +568,8 @@ ExtensionPreferencesManager.addSetting("homepage_override", {
       Services.prefs.setBoolPref(HOMEPAGE_PRIVATE_ALLOWED, allowed);
       Services.prefs.setBoolPref(HOMEPAGE_EXTENSION_CONTROLLED, true);
     } else {
-      homepagePopup.removeObserver();
+      // CLIQZ-SPECIAL: Hide warning popup for homepage
+      // homepagePopup.removeObserver();
 
       Services.prefs.clearUserPref(HOMEPAGE_PRIVATE_ALLOWED);
       Services.prefs.clearUserPref(HOMEPAGE_EXTENSION_CONTROLLED);

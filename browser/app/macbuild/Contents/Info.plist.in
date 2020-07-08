@@ -163,9 +163,9 @@
 		</dict>
 	</array>
 	<key>CFBundleExecutable</key>
-	<string>firefox</string>
+	<string>%MOZ_APP_NAME%</string>
 	<key>CFBundleGetInfoString</key>
-	<string>%MAC_APP_NAME% %APP_VERSION%</string>
+        <string>%MAC_APP_NAME% %APP_VERSION_DISPLAY%</string>
 	<key>CFBundleIconFile</key>
 	<string>firefox.icns</string>
 	<key>CFBundleIdentifier</key>
@@ -177,9 +177,9 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>%APP_VERSION%</string>
+        <string>%APP_VERSION_DISPLAY%</string>
 	<key>CFBundleSignature</key>
-	<string>MOZB</string>
+	<string>CLQZ</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>

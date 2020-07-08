@@ -28,7 +28,7 @@
         data-l10n-id="aboutDialog-title"
 #endif
         role="dialog"
-        aria-describedby="version distribution distributionId communityDesc contributeDesc trademark"
+        aria-describedby="distribution distributionId communityDesc contributeDesc trademark"
         >
 #ifdef XP_MACOSX
 #include macWindow.inc.xhtml
@@ -48,6 +48,8 @@
     <hbox id="clientBox">
       <vbox id="leftBox" flex="1"/>
       <vbox id="rightBox" flex="1">
+#if 0
+# Cliqz displays its version info in #distribution. See below.
         <label id="release" hidden="true">
         <!-- This string is explicitly not translated -->
           Extended Support Release
@@ -56,10 +58,9 @@
           <label id="version"/>
           <label id="releasenotes" is="text-link" hidden="true" data-l10n-id="releaseNotes-link"></label>
         </hbox>
-
+#endif
         <label id="distribution" class="text-blurb"/>
         <label id="distributionId" class="text-blurb"/>
-
         <vbox id="detailsBox">
           <vbox id="updateBox">
 #ifdef MOZ_UPDATER
@@ -132,22 +133,32 @@
               <label is="text-link" useoriginprincipal="true" href="about:credits" data-l10n-name="community-exp-creditsLink"></label>
             </description>
           </vbox>
-          <description class="text-blurb" id="communityDesc" data-l10n-id="community-2">
-            <label is="text-link" href="http://www.mozilla.org/" data-l10n-name="community-mozillaLink"></label>
+          <description class="text-blurb" id="communityDesc" data-l10n-id="community-2"  hidden="true">
+            <label is="text-link" href="http://www.cliqz.com/" data-l10n-name="community-mozillaLink"></label>
             <label is="text-link" useoriginprincipal="true" href="about:credits" data-l10n-name="community-creditsLink"></label>
           </description>
-          <description class="text-blurb" id="contributeDesc" data-l10n-id="helpus">
+          <description class="text-blurb" id="contributeDesc" data-l10n-id="helpus" hidden="true">
             <label is="text-link" href="https://donate.mozilla.org/?utm_source=firefox&#38;utm_medium=referral&#38;utm_campaign=firefox_about&#38;utm_content=firefox_about" data-l10n-name="helpus-donateLink"></label>
             <label is="text-link" href="http://www.mozilla.org/contribute/" data-l10n-name="helpus-getInvolvedLink"></label>
+          </description>
+          <description class="text-blurb" data-l10n-id="cliqz-headline"/>
+          <description class="text-blurb" data-l10n-id="cliqz-description-1">
+            <label is="text-link" href="https://cliqz.com/privacy" data-l10n-name="cliqz-desc1-privacy"></label>
+            <label is="text-link" href="https://cliqz.com/privacy-browser" data-l10n-name="cliqz-desc1-policy"></label>
+            <label is="text-link" href="https://cliqz.com/support" data-l10n-name="cliqz-desc1-contact"></label>
+          </description>
+          <description class="text-blurb" data-l10n-id="cliqz-description-2">
+            <label is="text-link" href="https://mozilla.org" data-l10n-name="cliqz-desc2-mozilla"></label>
+            <label is="text-link" useoriginprincipal="true" href="about:license" data-l10n-name="cliqz-desc2-here"></label>
           </description>
         </vbox>
       </vbox>
     </hbox>
     <vbox id="bottomBox">
-      <hbox pack="center">
-        <label is="text-link" class="bottom-link" useoriginprincipal="true" href="about:license" data-l10n-id="bottomLinks-license"></label>
-        <label is="text-link" class="bottom-link" useoriginprincipal="true" href="about:rights" data-l10n-id="bottomLinks-rights"></label>
-        <label is="text-link" class="bottom-link" href="https://www.mozilla.org/privacy/" data-l10n-id="bottomLinks-privacy"></label>
+      <hbox pack="center" hidden="true">
+        <label is="text-link" class="bottom-link" useoriginprincipal="true" href="about:license" data-l10n-id="bottomLinks-license"/>
+        <label is="text-link" class="bottom-link" useoriginprincipal="true" href="about:rights" data-l10n-id="bottomLinks-rights"/>
+        <label is="text-link" class="bottom-link" href="https://www.mozilla.org/privacy/" data-l10n-id="bottomLinks-privacy"/>
       </hbox>
       <description id="trademark" data-l10n-id="trademarkInfo"></description>
     </vbox>

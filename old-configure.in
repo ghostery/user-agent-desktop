@@ -1601,6 +1601,15 @@ MOZ_SANDBOX=1
 MOZ_BINARY_EXTENSIONS=
 MOZ_DEVTOOLS=server
 
+# Path to bloom filter database of adult domains.
+# NB: This must be relative to source root.
+# NB: File name must be exactly "adult-domains.bin" :(
+AC_SUBST(CQZ_ADULT_DOMAINS_BF)
+if test "$CQZ_ADULT_DOMAINS_BF"; then
+  CQZ_ADULT_DOMAINS_BF="${_topsrcdir}/$CQZ_ADULT_DOMAINS_BF"
+  AC_DEFINE(CQZ_ADULT_DOMAINS_BF)
+fi
+
 case "$target_os" in
     mingw*)
         NS_ENABLE_TSF=1

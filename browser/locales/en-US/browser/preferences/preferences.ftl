@@ -3,6 +3,9 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 do-not-track-description = Send websites a “Do Not Track” signal that you don’t want to be tracked
+# CLIQZ-SPECIAL: we use it as checbox not label
+do-not-track-checkbox-description =
+    .label = Send websites a “Do Not Track” signal that you don’t want to be tracked
 do-not-track-learn-more = Learn more
 do-not-track-option-default-content-blocking-known =
     .label = Only when { -brand-short-name } is set to block known trackers
@@ -53,8 +56,12 @@ pane-sync-title2 = { -sync-brand-short-name }
 category-sync2 =
     .tooltiptext = { pane-sync-title2 }
 
+pane-experiments-title = Labs
+category-experiments =
+    .tooltiptext = { pane-experiments-title }
+
 help-button-label = { -brand-short-name } Support
-addons-button-label = Extensions & Themes
+addons-button-label = Extensions
 
 focus-search =
     .key = f
@@ -127,7 +134,7 @@ search-results-empty-message =
        *[other] Sorry! There are no results in Preferences for “<span data-l10n-name="query"></span>”.
     }
 
-search-results-help-link = Need help? Visit <a data-l10n-name="url">{ -brand-short-name } Support</a>
+search-results-help-link = Need help? Visit <a data-l10n-name="url">Mozilla Support</a>
 
 ## General Section
 
@@ -266,7 +273,7 @@ choose-button =
     .label = Choose…
     .accesskey = o
 
-choose-browser-language-description = Choose the languages used to display menus, messages, and notifications from { -brand-short-name }.
+choose-browser-language-description = Choose the languages used to display menus, messages and notifications from { -brand-short-name }.
 manage-browser-languages-button =
   .label = Set Alternatives…
   .accesskey = l
@@ -553,7 +560,7 @@ home-homepage-mode-label = Homepage and new windows
 home-newtabs-mode-label = New tabs
 
 home-restore-defaults =
-    .label = Restore Defaults
+    .label = Restore to Defaults
     .accesskey = R
 
 # "Firefox" should be treated as a brand and kept in English,
@@ -640,11 +647,11 @@ search-bar-hidden =
 search-bar-shown =
     .label = Add search bar in toolbar
 
-search-engine-default-header = Default Search Engine
-search-engine-default-desc-2 = This is your default search engine in the address bar and search bar. You can switch it at any time.
-search-engine-default-private-desc-2 = Choose a different default search engine for Private Windows only
+search-engine-default-header = Complementary search engine
+search-engine-default-desc-2 = Choose your backup search engine. If you are not happy with { -brand-short-name }’ suggestions for your query, you will be redirected to the results of this search engine when you hit „enter“.
+search-engine-default-private-desc-2 = Choose a different default search engine for Forget Windows only
 search-separate-default-engine =
-    .label = Use this search engine in Private Windows
+    .label = Use this search engine in Forget Windows
     .accesskey = U
 
 search-suggestions-header = Search Suggestions
@@ -667,15 +674,15 @@ search-show-suggestions-above-history-option =
     .label = Show search suggestions ahead of browsing history in address bar results
 
 search-show-suggestions-private-windows =
-    .label = Show search suggestions in Private Windows
+    .label = Show search suggestions in Forget Windows
 
 suggestions-addressbar-settings = Change preferences for browsing history, bookmarks, and tab suggestions
 
 search-suggestions-cant-show = Search suggestions will not be shown in location bar results because you have configured { -brand-short-name } to never remember history.
 
-search-one-click-header = One-Click Search Engines
+search-one-click-header = Direct searches
 
-search-one-click-desc = Choose the alternative search engines that appear below the address bar and search bar when you start to enter a keyword.
+search-one-click-desc = Put the key in front of your query to directly use a search engine, e.g. to find a specific location directly, type in #gm + your query and hit enter.
 
 search-choose-engine-column =
     .label = Search Engine
@@ -691,6 +698,7 @@ search-remove-engine =
     .accesskey = R
 
 search-find-more-link = Find more search engines
+search-find-more-desc = Cliqz supports most search engines of the official Mozilla Firefox repository.
 
 # This warning is displayed when the chosen keyword is already in use
 # ('Duplicate' is an adjective)
@@ -952,11 +960,11 @@ history-remember-option-never =
 history-remember-option-custom =
     .label = Use custom settings for history
 
-history-remember-description = { -brand-short-name } will remember your browsing, download, form, and search history.
-history-dontremember-description = { -brand-short-name } will use the same settings as private browsing, and will not remember any history as you browse the Web.
+history-remember-description = { -brand-short-name } will remember your browsing, download, form and search history.
+history-dontremember-description = { -brand-short-name } will use the same settings as forget mode, and will not remember any history as you browse the Web.
 
 history-private-browsing-permanent =
-    .label = Always use private browsing mode
+    .label = Always use forget mode
     .accesskey = p
 
 history-remember-browser-option =
@@ -992,11 +1000,17 @@ sitedata-total-size = Your stored cookies, site data, and cache are currently us
 
 sitedata-learn-more = Learn more
 
+sitedata-keep-until = Keep until
+    .accesskey = u
+
 sitedata-delete-on-close =
     .label = Delete cookies and site data when { -brand-short-name } is closed
     .accesskey = c
 
-sitedata-delete-on-close-private-browsing = In permanent private browsing mode, cookies and site data will always be cleared when { -brand-short-name } is closed.
+sitedata-keep-until-expire =
+    .label = They expire
+sitedata-keep-until-closed =
+    .label = { -brand-short-name } is closed
 
 sitedata-allow-cookies-option =
     .label = Accept cookies and site data
@@ -1011,6 +1025,8 @@ sitedata-disallow-cookies-option =
 sitedata-block-desc = Type blocked
     .accesskey = T
 
+sitedata-option-block-trackers =
+    .label = Third-party trackers
 sitedata-option-block-cross-site-trackers =
     .label = Cross-site trackers
 sitedata-option-block-cross-site-and-social-media-trackers =
@@ -1079,7 +1095,7 @@ content-blocking-etp-standard-desc = Balanced for protection and performance. Pa
 content-blocking-etp-strict-desc = Stronger protection, but may cause some sites or content to break.
 content-blocking-etp-custom-desc = Choose which trackers and scripts to block.
 
-content-blocking-private-windows = Tracking content in Private Windows
+content-blocking-private-windows = Tracking content in Forget Mode
 content-blocking-cross-site-tracking-cookies = Cross-site tracking cookies
 content-blocking-social-media-trackers = Social media trackers
 content-blocking-all-cookies = All cookies
@@ -1105,7 +1121,7 @@ content-blocking-tracking-protection-option-all-windows =
   .label = In all windows
   .accesskey = A
 content-blocking-option-private =
-  .label = Only in Private Windows
+  .label = Only in Forget Mode
   .accesskey = p
 content-blocking-tracking-protection-change-block-list = Change block list
 
@@ -1128,6 +1144,7 @@ content-blocking-fingerprinters-label =
   .accesskey = F
 
 ## Privacy Section - Tracking
+tracking-header-donottrack = Do Not Track
 
 tracking-manage-exceptions =
     .label = Manage Exceptions…
@@ -1190,7 +1207,7 @@ permissions-addon-exceptions =
     .accesskey = E
 
 permissions-a11y-privacy-checkbox =
-    .label = Prevent accessibility services from accessing your browser
+    .label = Prevent accessibility services from accessing { -brand-short-name } browser
     .accesskey = a
 
 permissions-a11y-privacy-link = Learn more
@@ -1312,3 +1329,51 @@ choose-download-folder-title = Choose Download Folder:
 #   $service-name (String) - Name of a cloud storage provider like Dropbox, Google Drive, etc...
 save-files-to-cloud-storage =
     .label = Save files to { $service-name }
+
+startup-page-2 =
+    .label = When { -brand-short-name } starts
+    .accesskey = s
+
+startup-prev-session =
+    .label = Show your windows and tabs from last time
+
+startup-user-home-page =
+    .label = Show home page
+
+about-home-page-title =
+    .label = { -brand-short-name } Start Page
+    .placeholder = { -brand-short-name } Start Page
+
+select-bookmark =
+    .title = Set Home Page
+    .label = Choose a Bookmark to be your Home Page. If you choose a folder, the Bookmarks in that folder will be opened in Tabs.
+
+forget-mode-header = Automatic Forget Mode
+forget-mode-enable-checkbox =
+    .label = Enable automatic forget mode
+forget-mode-explanation1 = Automatically opens websites with adult content inside a forget window, so that these websites will not be saved in your history.
+forget-mode-explanation2 = Behavior can be changed for each website via the tab context menu (right-click on respective tab in tab bar)
+forget-mode-note = Note: for improved privacy, it is recommended to always open websites with sensitive content in <b>Forget Windows</b> which allow for more reliable removal of temporary files.
+forget-mode-learn-more = Learn more
+
+cliqz-firefox-privacy = Parts of the Cliqz Browser are building upon the <label data-l10n-name="cliqz-firefox-privacy-mozilla">Mozilla open source project</label>. The <label data-l10n-name="cliqz-firefox-privacy-mozilla-privacy">Firefox Privacy Notice</label> applies, unless otherwise stated in the Cliqz <label data-l10n-name="cliqz-firefox-privacy-privacy-browser">Privacy Statement</label>.
+
+remember-logins-2-hint = To enable this feature please make sure Cliqz will remember your <label data-l10n-name="remember-logins-2-jump">History</label>.
+
+https-everywhere-header = HTTPS everywhere
+https-everywhere-checkbox =
+    .label = Enable HTTPS Everywhere
+    .accesskey = H
+https-everywhere-desc = HTTPS Everywhere is a third-party service provided by that automatically enables HTTPS encryption wherever possible. <label data-l10n-name="https-everywhere-learn-more">Learn more</label>
+
+consentric-header = re:consent
+consentric-enable =
+    .label = Enable re:consent
+    .accesskey = C
+consentric-desc = re:consent displays the types of personal data that are collected by websites.<br/>It offers an easy way to give or withdraw consent to this data collection. <label data-l10n-name="consentric-learn-more">Learn more</label>
+
+experiments-desc = Here you will find settings for the latest browser features that we are testing out.
+
+dat-enable = 
+    .label = Enable dat:// protocol
+    .accessKey = D

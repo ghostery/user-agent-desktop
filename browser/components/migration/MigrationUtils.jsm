@@ -226,6 +226,14 @@ var MigratorPrototype = {
   },
 
   /**
+   * Cliqz
+   * Flag for Firefox migrator. Only FirefoxProfileMigrator must set it to true.
+   */
+  get isFirefoxMigrator() {
+    return false;
+  },
+
+  /**
    * Override if the data to migrate is locked/in-use and the user should
    * probably shutdown the source browser.
    */
@@ -239,16 +247,29 @@ var MigratorPrototype = {
    *
    * @see nsIBrowserProfileMigrator
    */
-  getMigrateData: async function MP_getMigrateData(aProfile) {
+  getMigrateData: async function MP_getMigrateData(aProfile, isAutoMigration) {
     let resources = await this._getMaybeCachedResources(aProfile);
     if (!resources) {
       return [];
     }
     let types = resources.map(r => r.type);
+    // CLIQZ-SPECIAL: to prevent addons import window at startup/automigration
+    if (isAutoMigration) {
+      types = types.filter(t => t.type !== MigrationUtils.resourceTypes.ADDONS);
+    }
     return types.reduce((a, b) => {
       a |= b;
       return a;
     }, 0);
+  },
+
+  getAddons: async function MP_getAddons(aProfile) {
+    const resources = await this._getMaybeCachedResources(aProfile) || [];
+    const addons = resources.filter(r => r.type === MigrationUtils.resourceTypes.ADDONS);
+    if (addons[0] && addons[0].data) {
+      return addons[0].data
+    }
+    return [];
   },
 
   getBrowserKey: function MP_getBrowserKey() {
@@ -287,6 +308,12 @@ var MigratorPrototype = {
       }
       if (resourceType == MigrationUtils.resourceTypes.PASSWORDS) {
         return template.replace("*", "LOGINS");
+      }
+      if (resourceType == MigrationUtils.resourceTypes.ADDONS) {
+        return template.replace("*", "ADDONS");
+      }
+      if (resourceType == MigrationUtils.resourceTypes.COOKIES) {
+        return template.replace("*", "COOKIES");
       }
       return null;
     };
@@ -430,9 +457,19 @@ var MigratorPrototype = {
       }
     };
 
+    /**
+     * CLIQZ-SPECIAL
+     * In Cliqz browser it is possible to import data from Firefox always, not
+     * only on startup, this is one of the product in import list. Code below
+     * doesn't expecting such behavior (startupOnlyMigrator flag). If change
+     * this flag to false in FirefoxProfileMigrator will fall into problem here,
+     * when importing passwords (NSS database initialize before key3.db will be
+     * copied). So we replace this flag to our own, which signal about importing
+     * from Firefox.
+     */
     if (
       MigrationUtils.isStartupMigration &&
-      !this.startupOnlyMigrator &&
+      !this.isFirefoxMigrator &&
       Services.policies.isAllowed("defaultBookmarks")
     ) {
       MigrationUtils.profileStartup.doStartup();
@@ -478,6 +515,7 @@ var MigratorPrototype = {
       })();
       return;
     }
+
     doMigrate();
   },
 
@@ -539,6 +577,7 @@ var MigrationUtils = Object.freeze({
     BOOKMARKS: Ci.nsIBrowserProfileMigrator.BOOKMARKS,
     OTHERDATA: Ci.nsIBrowserProfileMigrator.OTHERDATA,
     SESSION: Ci.nsIBrowserProfileMigrator.SESSION,
+    ADDONS: Ci.nsIBrowserProfileMigrator.ADDONS,
   },
 
   /**
@@ -652,6 +691,8 @@ var MigrationUtils = Object.freeze({
         return "sourceNameFirefox";
       case "360se":
         return "sourceName360se";
+      case "cliqz":
+        return "sourceNameCliqz";
     }
     return null;
   },

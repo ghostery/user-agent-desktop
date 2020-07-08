@@ -33,6 +33,9 @@ XPCOMUtils.defineLazyGetter(this, "bundle", function() {
   );
 });
 
+XPCOMUtils.defineLazyScriptGetter(this, "goSetCommandEnabled",
+  "chrome://global/content/globalOverlay.js");
+
 const gInContentProcess =
   Services.appinfo.processType == Ci.nsIXULRuntime.PROCESS_TYPE_CONTENT;
 const FAVICON_REQUEST_TIMEOUT = 60 * 1000;
@@ -469,10 +472,8 @@ var PlacesUIUtils = {
       "placesCmd_paste",
       "placesCmd_delete",
     ]) {
-      win.goSetCommandEnabled(
-        command,
-        controller && controller.isCommandEnabled(command)
-      );
+      goSetCommandEnabled(command,
+        controller && controller.isCommandEnabled(command), win);
     }
   },
 

@@ -97,3 +97,8 @@ td.integer {
 .hidden {
   display: none;
 }
+
+#crashes-table tr > td > a {
+  pointer-events: none;
+  color: var(--in-content-page-color);
+}

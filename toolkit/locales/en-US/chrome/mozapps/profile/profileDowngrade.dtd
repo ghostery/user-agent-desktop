@@ -9,11 +9,11 @@
  Firefox" and "version" is used to mean "the specific revision number of a
  given Firefox channel". These terms are not synonymous.
 -->
-<!ENTITY window.title "You’ve launched an older version of Firefox">
+<!ENTITY window.title "You’ve launched an older version of &brandShortName;">
 <!ENTITY window.style "width: 490px;">
 
-<!ENTITY window.nosync "Using an older version of Firefox can corrupt bookmarks and browsing history already saved to an existing Firefox profile. To protect your information, create a new profile for this installation of &brandShortName;.">
-<!ENTITY window.sync "Using an older version of Firefox can corrupt bookmarks and browsing history already saved to an existing Firefox profile. To protect your information, create a new profile for this installation of &brandShortName;. You can always sign in with a &syncBrand.fxAccount.label; to sync your bookmarks and browsing history between profiles.">
+<!ENTITY window.nosync "Using an older version of &brandShortName; can corrupt bookmarks and browsing history already saved to an existing &brandShortName; profile. To protect your information, create a new profile for this installation of &brandShortName;.">
+<!ENTITY window.sync "Using an older version of &brandShortName; can corrupt bookmarks and browsing history already saved to an existing &brandShortName; profile. To protect your information, create a new profile for this installation of &brandShortName;. You can always sign in with a &syncBrand.fxAccount.label; to sync your bookmarks and browsing history between profiles.">
 
 <!ENTITY window.create "Create New Profile">
 <!ENTITY window.quit-win "Exit">

@@ -1,3 +1,7 @@
+#CLIQZ-TODO: needs to figure out how to embed AutoForgetTabsService into component.conf conception
+component {998eec19-ade7-4b42-ad3f-5d19d98de71d}        AutoForgetTabsService.js
+contract  @cliqz.com/browser/auto_forget_tabs_service;1 {998eec19-ade7-4b42-ad3f-5d19d98de71d}
+category  profile-after-change  AutoForgetTabsService   @cliqz.com/browser/auto_forget_tabs_service;1
 # nsBrowserGlue.js
 
 # This component must restrict its registration for the app-startup category

@@ -1,6 +1,6 @@
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
-# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+# file, You can obtain one at http://Mozilla.org/MPL/2.0/.
 
 !macro PostUpdate
   ; PostUpdate is called from both session 0 and from the user session
@@ -9,14 +9,17 @@
   System::Call "kernel32::GetCurrentProcessId() i.r0"
   System::Call "kernel32::ProcessIdToSessionId(i $0, *i ${NSIS_MAX_STRLEN} r9)"
 
+  ; Cliqz. Before processing futher - check and fix registry
+  Call FixCliqzAsFirefoxRegistry
+
   ; Determine if we're the protected UserChoice default or not. If so fix the
-  ; start menu tile.  In case there are 2 Firefox installations, we only do
+  ; start menu tile.  In case there are 2 Cliqz installations, we only do
   ; this if the application being updated is the default.
   ReadRegStr $0 HKCU "Software\Microsoft\Windows\Shell\Associations\UrlAssociations\http\UserChoice" "ProgId"
   ${WordFind} "$0" "-" "+1{" $0
-  ${If} $0 == "FirefoxURL"
+  ${If} $0 == "CliqzURL"
   ${AndIf} $9 != 0 ; We're not running in session 0
-    ReadRegStr $0 HKCU "Software\Classes\FirefoxURL\shell\open\command" ""
+    ReadRegStr $0 HKCU "Software\Classes\CliqzURL\shell\open\command" ""
     ${GetPathFromString} "$0" $0
     ${GetParent} "$0" $0
     ${If} ${FileExists} "$0"
@@ -27,25 +30,25 @@
   ${CreateShortcutsLog}
 
   ; Remove registry entries for non-existent apps and for apps that point to our
-  ; install location in the Software\Mozilla key and uninstall registry entries
+  ; install location in the Software\CLIQZ key and uninstall registry entries
   ; that point to our install location for both HKCU and HKLM.
   SetShellVarContext current  ; Set SHCTX to the current user (e.g. HKCU)
-  ${RegCleanMain} "Software\Mozilla"
+  ${RegCleanMain} "Software\CLIQZ"
   ${RegCleanUninstall}
   ${UpdateProtocolHandlers}
 
   ; setup the application model id registration value
-  ${InitHashAppModelId} "$INSTDIR" "Software\Mozilla\${AppName}\TaskBarIDs"
+  ${InitHashAppModelId} "$INSTDIR" "Software\${AppName}\TaskBarIDs"
 
   ClearErrors
-  WriteRegStr HKLM "Software\Mozilla" "${BrandShortName}InstallerTest" "Write Test"
+  WriteRegStr HKLM "Software\CLIQZ" "${BrandShortName}InstallerTest" "Write Test"
   ${If} ${Errors}
     StrCpy $TmpVal "HKCU"
   ${Else}
     SetShellVarContext all    ; Set SHCTX to all users (e.g. HKLM)
-    DeleteRegValue HKLM "Software\Mozilla" "${BrandShortName}InstallerTest"
+    DeleteRegValue HKLM "Software\CLIQZ" "${BrandShortName}InstallerTest"
     StrCpy $TmpVal "HKLM"
-    ${RegCleanMain} "Software\Mozilla"
+    ${RegCleanMain} "Software\CLIQZ"
     ${RegCleanUninstall}
     ${UpdateProtocolHandlers}
     ${FixShellIconHandler} "HKLM"
@@ -54,9 +57,9 @@
     ; Add the Firewall entries after an update
     Call AddFirewallEntries
 
-    ReadRegStr $0 HKLM "Software\mozilla.org\Mozilla" "CurrentVersion"
+    ReadRegStr $0 HKLM "Software\cliqz.com\CLIQZ" "CurrentVersion"
     ${If} "$0" != "${GREVersion}"
-      WriteRegStr HKLM "Software\mozilla.org\Mozilla" "CurrentVersion" "${GREVersion}"
+      WriteRegStr HKLM "Software\cliqz.com\CLIQZ" "CurrentVersion" "${GREVersion}"
     ${EndIf}
   ${EndIf}
 
@@ -127,7 +130,7 @@
     ${OrIf} ${IsNativeARM64}
       SetRegView 64
     ${EndIf}
-    ReadRegDWORD $5 HKLM "Software\Mozilla\MaintenanceService" "Attempted"
+    ReadRegDWORD $5 HKLM "Software\CLIQZ\MaintenanceService" "Attempted"
     ClearErrors
     ${If} ${RunningX64}
     ${OrIf} ${IsNativeARM64}
@@ -182,21 +185,25 @@
   ${ResetLauncherProcessDefaults}
 !endif
 
+; Uninstall the default browser agent scheduled task.
+; This also removes the registry entries it creates.
+ExecWait '"$INSTDIR\default-browser-agent.exe" unregister-task $AppUserModelID'
+
 ; Make sure the scheduled task registration for the default browser agent gets
 ; updated, but only if we're not the instance of PostUpdate that was started
 ; by the service, because this needs to run as the actual user. Also, don't do
 ; that if the installer was told not to register the agent task at all.
-!ifdef MOZ_DEFAULT_BROWSER_AGENT
-${If} $TmpVal == "HKCU"
-  ClearErrors
-  ReadRegDWORD $0 HKCU "Software\Mozilla\${AppName}\Installer\$AppUserModelID" \
-                    "DidRegisterDefaultBrowserAgent"
-  ${If} $0 != 0
-  ${OrIf} ${Errors}
-    Exec '"$INSTDIR\default-browser-agent.exe" update-task $AppUserModelID'
-  ${EndIf}
-${EndIf}
-!endif
+;!ifdef MOZ_DEFAULT_BROWSER_AGENT
+;${If} $TmpVal == "HKCU"
+;  ClearErrors
+;  ReadRegDWORD $0 HKCU "Software\Mozilla\${AppName}\Installer\$AppUserModelID" \
+;                    "DidRegisterDefaultBrowserAgent"
+;  ${If} $0 != 0
+;  ${OrIf} ${Errors}
+;    Exec '"$INSTDIR\default-browser-agent.exe" update-task $AppUserModelID'
+;  ${EndIf}
+;${EndIf}
+;!endif
 
 !macroend
 !define PostUpdate "!insertmacro PostUpdate"
@@ -403,16 +410,16 @@ ${EndIf}
         Pop $R7
         ${GetLongPath} "$R7" $R7
         ${If} $R7 == "$INSTDIR\${FileMainEXE}"
-        ${AndIf} $R8 != "${BrandShortName}.lnk"
-        ${AndIfNot} ${FileExists} "${SHORTCUT_DIR}\${BrandShortName}.lnk"
+        ${AndIf} $R8 != "${BrandShortcutName}.lnk"
+        ${AndIfNot} ${FileExists} "${SHORTCUT_DIR}\${BrandShortcutName}.lnk"
           ClearErrors
-          Rename "${SHORTCUT_DIR}\$R8" "${SHORTCUT_DIR}\${BrandShortName}.lnk"
+          Rename "${SHORTCUT_DIR}\$R8" "${SHORTCUT_DIR}\${BrandShortcutName}.lnk"
           ${IfNot} ${Errors}
             ; Update the shortcut log manually instead of calling LogShortcut
             ; because it would add a Shortcut1 entry, and we really do want to
             ; overwrite the existing entry 0, since we just renamed the file.
             WriteINIStr "$R9" "${LOG_SECTION}" "Shortcut0" \
-                        "${BrandShortName}.lnk"
+                        "${BrandShortcutName}.lnk"
           ${EndIf}
         ${EndIf}
       ${EndIf}
@@ -431,7 +438,7 @@ ${EndIf}
 !macroend
 !define AddAssociationIfNoneExist "!insertmacro AddAssociationIfNoneExist"
 
-; Adds the protocol and file handler registry entries for making Firefox the
+; Adds the protocol and file handler registry entries for making Cliqz the
 ; default handler (uses SHCTX).
 !macro SetHandlers
   ${GetLongPath} "$INSTDIR\${FileMainEXE}" $8
@@ -448,53 +455,52 @@ ${EndIf}
   StrCpy $0 "SOFTWARE\Classes"
   StrCpy $2 "$\"$8$\" -osint -url $\"%1$\""
 
-  ; Associate the file handlers with FirefoxHTML, if they aren't already.
+  ; Associate the file handlers with CliqzHTML, if they aren't already.
   ReadRegStr $6 SHCTX "$0\.htm" ""
   ${WordFind} "$6" "-" "+1{" $6
-  ${If} "$6" != "FirefoxHTML"
-    WriteRegStr SHCTX "$0\.htm"   "" "FirefoxHTML$5"
+  ${If} "$6" != "CliqzHTML"
+    WriteRegStr SHCTX "$0\.htm"   "" "CliqzHTML$5"
   ${EndIf}
 
   ReadRegStr $6 SHCTX "$0\.html" ""
   ${WordFind} "$6" "-" "+1{" $6
-  ${If} "$6" != "FirefoxHTML"
-    WriteRegStr SHCTX "$0\.html"  "" "FirefoxHTML$5"
+  ${If} "$6" != "CliqzHTML"
+    WriteRegStr SHCTX "$0\.html"  "" "CliqzHTML$5"
   ${EndIf}
 
   ReadRegStr $6 SHCTX "$0\.shtml" ""
   ${WordFind} "$6" "-" "+1{" $6
-  ${If} "$6" != "FirefoxHTML"
-    WriteRegStr SHCTX "$0\.shtml" "" "FirefoxHTML$5"
+  ${If} "$6" != "CliqzHTML"
+    WriteRegStr SHCTX "$0\.shtml" "" "CliqzHTML$5"
   ${EndIf}
 
   ReadRegStr $6 SHCTX "$0\.xht" ""
   ${WordFind} "$6" "-" "+1{" $6
-  ${If} "$6" != "FirefoxHTML"
-    WriteRegStr SHCTX "$0\.xht"   "" "FirefoxHTML$5"
+  ${If} "$6" != "CliqzHTML"
+    WriteRegStr SHCTX "$0\.xht"   "" "CliqzHTML$5"
   ${EndIf}
 
   ReadRegStr $6 SHCTX "$0\.xhtml" ""
   ${WordFind} "$6" "-" "+1{" $6
-  ${If} "$6" != "FirefoxHTML"
-    WriteRegStr SHCTX "$0\.xhtml" "" "FirefoxHTML$5"
+  ${If} "$6" != "CliqzHTML"
+    WriteRegStr SHCTX "$0\.xhtml" "" "CliqzHTML$5"
   ${EndIf}
 
+  ${AddAssociationIfNoneExist} ".pdf" "CliqzHTML$5"
+  ${AddAssociationIfNoneExist} ".oga" "CliqzHTML$5"
+  ${AddAssociationIfNoneExist} ".ogg" "CliqzHTML$5"
+  ${AddAssociationIfNoneExist} ".ogv" "CliqzHTML$5"
+  ${AddAssociationIfNoneExist} ".pdf" "CliqzHTML$5"
+  ${AddAssociationIfNoneExist} ".webm" "CliqzHTML$5"
+  ${AddAssociationIfNoneExist} ".svg" "CliqzHTML$5"
+  ${AddAssociationIfNoneExist} ".webp"  "CliqzHTML$5"
 
-  ${AddAssociationIfNoneExist} ".pdf" "FirefoxHTML$5"
-  ${AddAssociationIfNoneExist} ".oga" "FirefoxHTML$5"
-  ${AddAssociationIfNoneExist} ".ogg" "FirefoxHTML$5"
-  ${AddAssociationIfNoneExist} ".ogv" "FirefoxHTML$5"
-  ${AddAssociationIfNoneExist} ".pdf" "FirefoxHTML$5"
-  ${AddAssociationIfNoneExist} ".webm" "FirefoxHTML$5"
-  ${AddAssociationIfNoneExist} ".svg" "FirefoxHTML$5"
-  ${AddAssociationIfNoneExist} ".webp"  "FirefoxHTML$5"
-
-  ; An empty string is used for the 5th param because FirefoxHTML is not a
+  ; An empty string is used for the 5th param because CliqzHTML is not a
   ; protocol handler
-  ${AddDisabledDDEHandlerValues} "FirefoxHTML$5" "$2" "$8,1" \
+  ${AddDisabledDDEHandlerValues} "CliqzHTML$5" "$2" "$8,1" \
                                  "${AppRegName} HTML Document" ""
 
-  ${AddDisabledDDEHandlerValues} "FirefoxURL$5" "$2" "$8,1" "${AppRegName} URL" \
+  ${AddDisabledDDEHandlerValues} "CliqzURL$5" "$2" "$8,1" "${AppRegName} URL" \
                                  "true"
   ; An empty string is used for the 4th & 5th params because the following
   ; protocol handlers already have a display name and the additional keys
@@ -511,7 +517,7 @@ ${EndIf}
 !macroend
 !define WriteApplicationsSupportedType "!insertmacro WriteApplicationsSupportedType"
 
-; Adds the HKLM\Software\Clients\StartMenuInternet\Firefox-[pathhash] registry
+; Adds the HKLM\Software\Clients\StartMenuInternet\Cliqz-[pathhash] registry
 ; entries (does not use SHCTX).
 ;
 ; The values for StartMenuInternet are only valid under HKLM and there can only
@@ -533,7 +539,7 @@ ${EndIf}
   ${GetLongPath} "$INSTDIR\${FileMainEXE}" $8
   ${GetLongPath} "$INSTDIR\uninstall\helper.exe" $7
 
-  ; If we already have keys at the old FIREFOX.EXE path, then just update those.
+  ; If we already have keys at the old CLIQZ.EXE path, then just update those.
   ; We have to be careful to update the existing keys in place so that we don't
   ; create duplicate keys for the same installation, or cause Windows to think
   ; something "suspicious" has happened and it should reset the default browser.
@@ -572,20 +578,20 @@ ${EndIf}
   WriteRegStr ${RegKey} "$0\Capabilities" "ApplicationIcon" "$8,0"
   WriteRegStr ${RegKey} "$0\Capabilities" "ApplicationName" "${BrandShortName}"
 
-  WriteRegStr ${RegKey} "$0\Capabilities\FileAssociations" ".htm"   "FirefoxHTML$2"
-  WriteRegStr ${RegKey} "$0\Capabilities\FileAssociations" ".html"  "FirefoxHTML$2"
-  WriteRegStr ${RegKey} "$0\Capabilities\FileAssociations" ".shtml" "FirefoxHTML$2"
-  WriteRegStr ${RegKey} "$0\Capabilities\FileAssociations" ".xht"   "FirefoxHTML$2"
-  WriteRegStr ${RegKey} "$0\Capabilities\FileAssociations" ".xhtml" "FirefoxHTML$2"
-  WriteRegStr ${RegKey} "$0\Capabilities\FileAssociations" ".svg"   "FirefoxHTML$2"
-  WriteRegStr ${RegKey} "$0\Capabilities\FileAssociations" ".webp"  "FirefoxHTML$2"
+  WriteRegStr ${RegKey} "$0\Capabilities\FileAssociations" ".htm"   "CliqzHTML$2"
+  WriteRegStr ${RegKey} "$0\Capabilities\FileAssociations" ".html"  "CliqzHTML$2"
+  WriteRegStr ${RegKey} "$0\Capabilities\FileAssociations" ".shtml" "CliqzHTML$2"
+  WriteRegStr ${RegKey} "$0\Capabilities\FileAssociations" ".xht"   "CliqzHTML$2"
+  WriteRegStr ${RegKey} "$0\Capabilities\FileAssociations" ".xhtml" "CliqzHTML$2"
+  WriteRegStr ${RegKey} "$0\Capabilities\FileAssociations" ".svg"   "CliqzHTML$2"
+  WriteRegStr ${RegKey} "$0\Capabilities\FileAssociations" ".webp"  "CliqzHTML$2"
 
   WriteRegStr ${RegKey} "$0\Capabilities\StartMenu" "StartMenuInternet" "$1"
 
-  WriteRegStr ${RegKey} "$0\Capabilities\URLAssociations" "ftp"    "FirefoxURL$2"
-  WriteRegStr ${RegKey} "$0\Capabilities\URLAssociations" "http"   "FirefoxURL$2"
-  WriteRegStr ${RegKey} "$0\Capabilities\URLAssociations" "https"  "FirefoxURL$2"
-  WriteRegStr ${RegKey} "$0\Capabilities\URLAssociations" "mailto" "FirefoxURL$2"
+  WriteRegStr ${RegKey} "$0\Capabilities\URLAssociations" "ftp"    "CliqzURL$2"
+  WriteRegStr ${RegKey} "$0\Capabilities\URLAssociations" "http"   "CliqzURL$2"
+  WriteRegStr ${RegKey} "$0\Capabilities\URLAssociations" "https"  "CliqzURL$2"
+  WriteRegStr ${RegKey} "$0\Capabilities\URLAssociations" "mailto" "CliqzURL$2"
 
   WriteRegStr ${RegKey} "Software\RegisteredApplications" "$1" "$0\Capabilities"
 
@@ -652,63 +658,63 @@ ${EndIf}
 !macroend
 !define SetStartMenuInternet "!insertmacro SetStartMenuInternet"
 
-; Add registry keys to support the Firefox 32 bit to 64 bit migration. These
-; registry entries are not removed on uninstall at this time. After the Firefox
+; Add registry keys to support the Cliqz 32 bit to 64 bit migration. These
+; registry entries are not removed on uninstall at this time. After the Cliqz
 ; 32 bit to 64 bit migration effort is completed these registry entries can be
 ; removed during install, post update, and uninstall.
 !macro Set32to64DidMigrateReg
   ${GetLongPath} "$INSTDIR" $1
   ; These registry keys are always in the 32 bit hive since they are never
-  ; needed by a Firefox 64 bit install unless it has been updated from Firefox
+  ; needed by a Cliqz 64 bit install unless it has been updated from Cliqz
   ; 32 bit.
   SetRegView 32
 
 !ifdef HAVE_64BIT_BUILD
 
-  ; Running Firefox 64 bit on Windows 64 bit
+  ; Running Cliqz 64 bit on Windows 64 bit
   ClearErrors
-  ReadRegDWORD $2 HKLM "Software\Mozilla\${AppName}\32to64DidMigrate" "$1"
-  ; If there were no errors then the system was updated from Firefox 32 bit to
-  ; Firefox 64 bit and if the value is already 1 then the registry value has
+  ReadRegDWORD $2 HKLM "Software\${AppName}\32to64DidMigrate" "$1"
+  ; If there were no errors then the system was updated from Cliqz 32 bit to
+  ; Cliqz 64 bit and if the value is already 1 then the registry value has
   ; already been updated in the HKLM registry.
   ${IfNot} ${Errors}
   ${AndIf} $2 != 1
     ClearErrors
-    WriteRegDWORD HKLM "Software\Mozilla\${AppName}\32to64DidMigrate" "$1" 1
+    WriteRegDWORD HKLM "Software\${AppName}\32to64DidMigrate" "$1" 1
     ${If} ${Errors}
       ; There was an error writing to HKLM so just write it to HKCU
-      WriteRegDWORD HKCU "Software\Mozilla\${AppName}\32to64DidMigrate" "$1" 1
+      WriteRegDWORD HKCU "Software\${AppName}\32to64DidMigrate" "$1" 1
     ${Else}
       ; This will delete the value from HKCU if it exists
-      DeleteRegValue HKCU "Software\Mozilla\${AppName}\32to64DidMigrate" "$1"
+      DeleteRegValue HKCU "Software\${AppName}\32to64DidMigrate" "$1"
     ${EndIf}
   ${EndIf}
 
   ClearErrors
-  ReadRegDWORD $2 HKCU "Software\Mozilla\${AppName}\32to64DidMigrate" "$1"
-  ; If there were no errors then the system was updated from Firefox 32 bit to
-  ; Firefox 64 bit and if the value is already 1 then the registry value has
+  ReadRegDWORD $2 HKCU "Software\${AppName}\32to64DidMigrate" "$1"
+  ; If there were no errors then the system was updated from Cliqz 32 bit to
+  ; Cliqz 64 bit and if the value is already 1 then the registry value has
   ; already been updated in the HKCU registry.
   ${IfNot} ${Errors}
   ${AndIf} $2 != 1
-    WriteRegDWORD HKCU "Software\Mozilla\${AppName}\32to64DidMigrate" "$1" 1
+    WriteRegDWORD HKCU "Software\${AppName}\32to64DidMigrate" "$1" 1
   ${EndIf}
 
 !else
 
-  ; Running Firefox 32 bit
+  ; Running Cliqz 32 bit
   ${If} ${RunningX64}
   ${OrIf} ${IsNativeARM64}
-    ; Running Firefox 32 bit on a Windows 64 bit system
+    ; Running Cliqz 32 bit on a Windows 64 bit system
     ClearErrors
-    ReadRegDWORD $2 HKLM "Software\Mozilla\${AppName}\32to64DidMigrate" "$1"
+    ReadRegDWORD $2 HKLM "Software\${AppName}\32to64DidMigrate" "$1"
     ; If there were errors the value doesn't exist yet.
     ${If} ${Errors}
       ClearErrors
-      WriteRegDWORD HKLM "Software\Mozilla\${AppName}\32to64DidMigrate" "$1" 0
+      WriteRegDWORD HKLM "Software\${AppName}\32to64DidMigrate" "$1" 0
       ; If there were errors write the value in HKCU.
       ${If} ${Errors}
-        WriteRegDWORD HKCU "Software\Mozilla\${AppName}\32to64DidMigrate" "$1" 0
+        WriteRegDWORD HKCU "Software\${AppName}\32to64DidMigrate" "$1" 0
       ${EndIf}
     ${EndIf}
   ${EndIf}
@@ -720,17 +726,17 @@ ${EndIf}
 !macroend
 !define Set32to64DidMigrateReg "!insertmacro Set32to64DidMigrateReg"
 
-; The IconHandler reference for FirefoxHTML can end up in an inconsistent state
+; The IconHandler reference for CliqzHTML can end up in an inconsistent state
 ; due to changes not being detected by the IconHandler for side by side
 ; installs (see bug 268512). The symptoms can be either an incorrect icon or no
-; icon being displayed for files associated with Firefox (does not use SHCTX).
+; icon being displayed for files associated with Cliqz (does not use SHCTX).
 !macro FixShellIconHandler RegKey
-  ; Find the correct key to update, either FirefoxHTML or FirefoxHTML-[PathHash]
-  StrCpy $3 "FirefoxHTML-$AppUserModelID"
+  ; Find the correct key to update, either CliqzHTML or CliqzHTML-[PathHash]
+  StrCpy $3 "CliqzHTML-$AppUserModelID"
   ClearErrors
   ReadRegStr $0 ${RegKey} "Software\Classes\$3\DefaultIcon" ""
   ${If} ${Errors}
-    StrCpy $3 "FirefoxHTML"
+    StrCpy $3 "CliqzHTML"
   ${EndIf}
 
   ClearErrors
@@ -745,7 +751,7 @@ ${EndIf}
 !macroend
 !define FixShellIconHandler "!insertmacro FixShellIconHandler"
 
-; Add Software\Mozilla\ registry entries (uses SHCTX).
+; Add Software\CLIQZ\ registry entries (uses SHCTX).
 !macro SetAppKeys
   ; Check if this is an ESR release and if so add registry values so it is
   ; possible to determine that this is an ESR install (bug 726781).
@@ -758,14 +764,14 @@ ${EndIf}
   ${EndIf}
 
   ${GetLongPath} "$INSTDIR" $8
-  StrCpy $0 "Software\Mozilla\${BrandFullNameInternal}\${AppVersion}$3 (${ARCH} ${AB_CD})\Main"
+  StrCpy $0 "Software\CLIQZ\${BrandFullNameInternal}\${AppVersion}$3 (${ARCH} ${AB_CD})\Main"
   ${WriteRegStr2} $TmpVal "$0" "Install Directory" "$8" 0
   ${WriteRegStr2} $TmpVal "$0" "PathToExe" "$8\${FileMainEXE}" 0
 
-  StrCpy $0 "Software\Mozilla\${BrandFullNameInternal}\${AppVersion}$3 (${ARCH} ${AB_CD})\Uninstall"
+  StrCpy $0 "Software\CLIQZ\${BrandFullNameInternal}\${AppVersion}$3 (${ARCH} ${AB_CD})\Uninstall"
   ${WriteRegStr2} $TmpVal "$0" "Description" "${BrandFullNameInternal} ${AppVersion}$3 (${ARCH} ${AB_CD})" 0
 
-  StrCpy $0 "Software\Mozilla\${BrandFullNameInternal}\${AppVersion}$3 (${ARCH} ${AB_CD})"
+  StrCpy $0 "Software\CLIQZ\${BrandFullNameInternal}\${AppVersion}$3 (${ARCH} ${AB_CD})"
   ${WriteRegStr2} $TmpVal  "$0" "" "${AppVersion}$3 (${ARCH} ${AB_CD})" 0
   ${If} "$3" == ""
     DeleteRegValue SHCTX "$0" "ESR"
@@ -773,14 +779,14 @@ ${EndIf}
     ${WriteRegDWORD2} $TmpVal "$0" "ESR" 1 0
   ${EndIf}
 
-  StrCpy $0 "Software\Mozilla\${BrandFullNameInternal} ${AppVersion}$3\bin"
+  StrCpy $0 "Software\CLIQZ\${BrandFullNameInternal} ${AppVersion}$3\bin"
   ${WriteRegStr2} $TmpVal "$0" "PathToExe" "$8\${FileMainEXE}" 0
 
-  StrCpy $0 "Software\Mozilla\${BrandFullNameInternal} ${AppVersion}$3\extensions"
+  StrCpy $0 "Software\CLIQZ\${BrandFullNameInternal} ${AppVersion}$3\extensions"
   ${WriteRegStr2} $TmpVal "$0" "Components" "$8\components" 0
   ${WriteRegStr2} $TmpVal "$0" "Plugins" "$8\plugins" 0
 
-  StrCpy $0 "Software\Mozilla\${BrandFullNameInternal} ${AppVersion}$3"
+  StrCpy $0 "Software\CLIQZ\${BrandFullNameInternal} ${AppVersion}$3"
   ${WriteRegStr2} $TmpVal "$0" "GeckoVer" "${GREVersion}" 0
   ${If} "$3" == ""
     DeleteRegValue SHCTX "$0" "ESR"
@@ -788,7 +794,7 @@ ${EndIf}
     ${WriteRegDWORD2} $TmpVal "$0" "ESR" 1 0
   ${EndIf}
 
-  StrCpy $0 "Software\Mozilla\${BrandFullNameInternal}$3"
+  StrCpy $0 "Software\CLIQZ\${BrandFullNameInternal}$3"
   ${WriteRegStr2} $TmpVal "$0" "" "${GREVersion}" 0
   ${WriteRegStr2} $TmpVal "$0" "CurrentVersion" "${AppVersion}$3 (${ARCH} ${AB_CD})" 0
 !macroend
@@ -840,7 +846,7 @@ ${EndIf}
     ${WriteRegStr2} $1 "$0" "DisplayVersion" "${AppVersion}" 0
     ${WriteRegStr2} $1 "$0" "HelpLink" "${HelpLink}" 0
     ${WriteRegStr2} $1 "$0" "InstallLocation" "$8" 0
-    ${WriteRegStr2} $1 "$0" "Publisher" "Mozilla" 0
+    ${WriteRegStr2} $1 "$0" "Publisher" "Cliqz GmbH" 0
     ${WriteRegStr2} $1 "$0" "UninstallString" "$\"$8\uninstall\helper.exe$\"" 0
     DeleteRegValue SHCTX "$0" "URLInfoAbout"
 ; Don't add URLUpdateInfo which is the release notes url except for the release
@@ -874,7 +880,7 @@ ${EndIf}
 ; HKCU Software\Classes keys when associating handlers. The fix uses the merged
 ; view in HKCR to check for existance of an existing association. This macro
 ; cleans affected installations by removing the HKLM and HKCU value if it is set
-; to FirefoxHTML when there is a value for PersistentHandler or by removing the
+; to CliqzHTML when there is a value for PersistentHandler or by removing the
 ; HKCU value when the HKLM value has a value other than an empty string.
 !macro FixBadFileAssociation FILE_TYPE
   ; Only delete the default value in case the key has values for OpenWithList,
@@ -885,16 +891,16 @@ ${EndIf}
   ${WordFind} "$1" "-" "+1{" $1
   ReadRegStr $2 HKCR "${FILE_TYPE}\PersistentHandler" ""
   ${If} "$2" != ""
-    ; Since there is a persistent handler remove FirefoxHTML as the default
-    ; value from both HKCU and HKLM if it set to FirefoxHTML.
-    ${If} "$0" == "FirefoxHTML"
+    ; Since there is a persistent handler remove CliqzHTML as the default
+    ; value from both HKCU and HKLM if it set to CliqzHTML.
+    ${If} "$0" == "CliqzHTML"
       DeleteRegValue HKCU "Software\Classes\${FILE_TYPE}" ""
     ${EndIf}
-    ${If} "$1" == "FirefoxHTML"
+    ${If} "$1" == "CliqzHTML"
       DeleteRegValue HKLM "Software\Classes\${FILE_TYPE}" ""
     ${EndIf}
-  ${ElseIf} "$0" == "FirefoxHTML"
-    ; Since HKCU is set to FirefoxHTML remove FirefoxHTML as the default value
+  ${ElseIf} "$0" == "CliqzHTML"
+    ; Since HKCU is set to CliqzHTML remove CliqzHTML as the default value
     ; from HKCU if HKLM is set to a value other than an empty string.
     ${If} "$1" != ""
       DeleteRegValue HKCU "Software\Classes\${FILE_TYPE}" ""
@@ -950,28 +956,28 @@ ${EndIf}
   ; Only set the file and protocol handlers if the existing one under HKCR is
   ; for this install location.
 
-  ${IsHandlerForInstallDir} "FirefoxHTML-$AppUserModelID" $R9
+  ${IsHandlerForInstallDir} "CliqzHTML-$AppUserModelID" $R9
   ${If} "$R9" == "true"
-    ; An empty string is used for the 5th param because FirefoxHTML is not a
+    ; An empty string is used for the 5th param because CliqzHTML is not a
     ; protocol handler.
-    ${AddDisabledDDEHandlerValues} "FirefoxHTML-$AppUserModelID" "$2" "$8,1" \
+    ${AddDisabledDDEHandlerValues} "CliqzHTML-$AppUserModelID" "$2" "$8,1" \
                                    "${AppRegName} HTML Document" ""
   ${Else}
-    ${IsHandlerForInstallDir} "FirefoxHTML" $R9
+    ${IsHandlerForInstallDir} "CliqzHTML" $R9
     ${If} "$R9" == "true"
-      ${AddDisabledDDEHandlerValues} "FirefoxHTML" "$2" "$8,1" \
+      ${AddDisabledDDEHandlerValues} "CliqzHTML" "$2" "$8,1" \
                                      "${AppRegName} HTML Document" ""
     ${EndIf}
   ${EndIf}
 
-  ${IsHandlerForInstallDir} "FirefoxURL-$AppUserModelID" $R9
+  ${IsHandlerForInstallDir} "CliqzURL-$AppUserModelID" $R9
   ${If} "$R9" == "true"
-    ${AddDisabledDDEHandlerValues} "FirefoxURL-$AppUserModelID" "$2" "$8,1" \
+    ${AddDisabledDDEHandlerValues} "CliqzURL-$AppUserModelID" "$2" "$8,1" \
                                    "${AppRegName} URL" "true"
   ${Else}
-    ${IsHandlerForInstallDir} "FirefoxURL" $R9
+    ${IsHandlerForInstallDir} "CliqzURL" $R9
     ${If} "$R9" == "true"
-      ${AddDisabledDDEHandlerValues} "FirefoxURL" "$2" "$8,1" \
+      ${AddDisabledDDEHandlerValues} "CliqzURL" "$2" "$8,1" \
                                      "${AppRegName} URL" "true"
     ${EndIf}
   ${EndIf}
@@ -1006,7 +1012,7 @@ ${EndIf}
 ; For the cert to work, it must also be signed by a trusted cert for the user.
 !macro AddMaintCertKeys
   Push $R0
-  ; Allow main Mozilla cert information for updates
+  ; Allow main Cliqz cert information for updates
   ; This call will push the needed key on the stack
   ServicesHelper::PathToUniqueRegistryPath "$INSTDIR"
   Pop $R0
@@ -1028,17 +1034,12 @@ ${EndIf}
     ; Setting the Attempted value will ensure that a new Maintenance Service
     ; install will never be attempted again after this from updates.  The value
     ; is used only to see if updates should attempt new service installs.
-    WriteRegDWORD HKLM "Software\Mozilla\MaintenanceService" "Attempted" 1
+    WriteRegDWORD HKLM "Software\CLIQZ\MaintenanceService" "Attempted" 1
 
     ; These values associate the allowed certificates for the current
     ; installation.
     WriteRegStr HKLM "$R0\0" "name" "${CERTIFICATE_NAME}"
     WriteRegStr HKLM "$R0\0" "issuer" "${CERTIFICATE_ISSUER}"
-    ; These values associate the allowed certificates for the previous
-    ;  installation, so that we can update from it cleanly using the
-    ;  old updater.exe (which will still have this signature).
-    WriteRegStr HKLM "$R0\1" "name" "${CERTIFICATE_NAME_PREVIOUS}"
-    WriteRegStr HKLM "$R0\1" "issuer" "${CERTIFICATE_ISSUER_PREVIOUS}"
     ${If} ${RunningX64}
     ${OrIf} ${IsNativeARM64}
       SetRegView lastused
@@ -1065,12 +1066,12 @@ ${EndIf}
 !macro RemoveDeprecatedKeys
   StrCpy $0 "SOFTWARE\Classes"
   ; Remove support for launching chrome urls from the shell during install or
-  ; update if the DefaultIcon is from firefox.exe (Bug 301073).
+  ; update if the DefaultIcon is from cliqz.exe (Bug 301073).
   ${RegCleanAppHandler} "chrome"
 
   ; Remove protocol handler registry keys added by the MS shim
-  DeleteRegKey HKLM "Software\Classes\Firefox.URL"
-  DeleteRegKey HKCU "Software\Classes\Firefox.URL"
+  DeleteRegKey HKLM "Software\Classes\Cliqz.URL"
+  DeleteRegKey HKCU "Software\Classes\Cliqz.URL"
 !macroend
 !define RemoveDeprecatedKeys "!insertmacro RemoveDeprecatedKeys"
 
@@ -1082,8 +1083,14 @@ ${EndIf}
   ${EndIf}
 
   ; Remove talkback if it is present (remove after bug 386760 is fixed)
-  ${If} ${FileExists} "$INSTDIR\extensions\talkback@mozilla.org"
-    RmDir /r /REBOOTOK "$INSTDIR\extensions\talkback@mozilla.org"
+  ${If} ${FileExists} "$INSTDIR\extensions\talkback@cliqz.com"
+    RmDir /r /REBOOTOK "$INSTDIR\extensions\talkback@cliqz.com"
+  ${EndIf}
+
+  ; Remove Cliqz extension from distribution\extensions because now it must be
+  ; in System Addon (browser\feature)
+  ${If} ${FileExists} "$INSTDIR\distribution\extensions\cliqz@cliqz.com.xpi"
+    Delete "$INSTDIR\distribution\extensions\cliqz@cliqz.com.xpi"
   ${EndIf}
 
   ; Remove the Java Console extension (bug 1165156)
@@ -1224,7 +1231,7 @@ ${EndIf}
         ${If} $AddTaskbarSC == ""
           ; No need to check the default on Win8 and later
           ${If} ${AtMostWin2008R2}
-            ; Check if the Firefox is the http handler for this user
+            ; Check if the Cliqz is the http handler for this user
             SetShellVarContext current ; Set SHCTX to the current user
             ${IsHandlerForInstallDir} "http" $R9
             ${If} $TmpVal == "HKLM"
@@ -1240,7 +1247,7 @@ ${EndIf}
         ${EndIf}
       ${EndIf}
     ${ElseIf} ${AtLeastWin10}
-      ${GetInstallerRegistryPref} "Software\Mozilla\${AppName}" \
+      ${GetInstallerRegistryPref} "Software\${AppName}" \
         "installer.taskbarpin.win10.enabled" $2
       ${If} $2 == "true"
         ; On Windows 10, we may have previously tried to make a taskbar pin
@@ -1528,7 +1535,7 @@ Function SetAsDefaultAppUserHKCU
   StrCpy $0 $0 -2
   ${If} $0 != $8
     ${If} $AppUserModelID == ""
-      ${InitHashAppModelId} "$INSTDIR" "Software\Mozilla\${AppName}\TaskBarIDs"
+      ${InitHashAppModelId} "$INSTDIR" "Software\${AppName}\TaskBarIDs"
     ${EndIf}
     StrCpy $R9 "${AppRegName}-$AppUserModelID"
   ${EndIf}
@@ -1604,6 +1611,54 @@ Function AddFirewallEntries
   Pop $0
   ${If} "$0" == "true"
     liteFirewallW::AddRule "$INSTDIR\${FileMainEXE}" "${BrandShortName} ($INSTDIR)"
+  ${EndIf}
+FunctionEnd
+
+; Cliqz. Clean after accidently replaced data in FirefoxHTML and FirefoxURL
+; keys in registry with Cliqz value. For now Cliqz use it own identifiers
+Function FixCliqzAsFirefoxRegistry
+  ; Check values in HKCU, must be always accessible, delete inconsistent state
+  ReadRegStr $0 HKCU "Software\Classes\FirefoxHTML" ""
+  ${If} $0 == "CLIQZ HTML Document"
+    DeleteRegKey HKCU "Software\Classes\FirefoxHTML"
+    DeleteRegKey HKCU "Software\Classes\FirefoxURL"
+  ${EndIf}
+
+  ; Same check for HKLM, if can not delete - so, just can not
+  ReadRegStr $0 HKLM "Software\Classes\FirefoxHTML" ""
+  ${If} $0 == "CLIQZ Document"
+    DeleteRegKey HKLM "Software\Classes\FirefoxHTML"
+    DeleteRegKey HKLM "Software\Classes\FirefoxURL"
+  ${EndIf}
+
+  ; Just in case, clear possible errors
+  ClearErrors
+FunctionEnd
+
+; Cliqz. Get information about brand from registry and put it into
+; distribution.js file, if it doesn't exist. Here no any checks for
+; data freshness, outdated data must be removed with CliqzHelper.
+Function CliqzSaveBrandingInfo
+  ${If} ${RunningX64}
+    SetRegView 32
+  ${EndIf}
+
+  ; Check for brand information in registry
+  ReadRegStr $0 HKLM "Software\CLIQZ" "${BrandShortName}BrandInfo"
+  ${If} $0 != ""
+    ; Check for distribution.js file, do not replace the existing file.
+    ${IfNot} ${FileExists} "$INSTDIR\defaults\pref\distribution.js"
+      FileOpen $1 "$INSTDIR\defaults\pref\distribution.js" w
+      FileWrite $1 'pref("extensions.cliqz.full_distribution", "$0");'
+      FileClose $1
+    ${EndIf}
+    ; Always remove brand information from registry after installation complete
+    DeleteRegValue HKLM "Software\CLIQZ" "${BrandShortName}BrandInfo"
+    DeleteRegValue HKLM "Software\CLIQZ" "${BrandShortName}BrandInfoTime"
+  ${EndIf}
+
+  ${If} ${RunningX64}
+    SetRegView 64
   ${EndIf}
 FunctionEnd
 

@@ -99,7 +99,7 @@ cpp_quote("")
 import "objidl.idl";
 import "oaidl.idl";
 
-[object, uuid(1814ceeb-49e2-407f-af99-fa755a7d2607)]
+[object, uuid(32F5D26E-855F-4F27-9C53-9CA88DF52CB7)]
 interface ISimpleDOMNode : IUnknown
 {
   const unsigned short NODETYPE_ELEMENT = 1;
@@ -173,4 +173,3 @@ interface ISimpleDOMNode : IUnknown
 
   [propget] HRESULT language([out, retval] BSTR *language);
 }
-

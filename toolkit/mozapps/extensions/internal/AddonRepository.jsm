@@ -54,6 +54,7 @@ const PREF_GETADDONS_BROWSESEARCHRESULTS =
   "extensions.getAddons.search.browseURL";
 const PREF_GETADDONS_DB_SCHEMA = "extensions.getAddons.databaseSchema";
 const PREF_GET_LANGPACKS = "extensions.getAddons.langpacks.url";
+const PREF_ADDONS_UPDATE_URL = "extensions.update.url";
 
 const PREF_METADATA_LASTUPDATE = "extensions.getAddons.cache.lastUpdate";
 const PREF_METADATA_UPDATETHRESHOLD_SEC =
@@ -719,6 +720,56 @@ var AddonRepository = {
     }
 
     return result;
+  },
+
+ /**
+   * CLIQZ-SPECIAL
+   * Gets install URL from AMO based on ID
+   * using version check API
+   *
+   * @param {string} aId The id of the addon to retrieve.
+   */
+  async getInstallURLfromAMO(aId) {
+    const addonObj = {
+      isCompatible: true,
+      id: aId,
+      // Any version is > 0 so forcing to get latest version
+      version: 0
+    }
+    const updateURLPath = Services.prefs.getCharPref(PREF_ADDONS_UPDATE_URL);
+    const appVersion = Services.appinfo.version;
+    // Create an addon object and provide other parameters to generate proper parameters expected by AddonManager.escapeAddonURI
+    const updateURL = AddonManager.escapeAddonURI(addonObj, updateURLPath, appVersion);
+
+    return new Promise((resolve, reject) => {
+      let request = new ServiceRequest();
+      request.mozBackgroundRequest = true;
+      request.open("GET", updateURL, true);
+      request.responseType = "json";
+
+      request.addEventListener("error", aEvent => {
+        reject(new Error(`GET ${updateURL} failed`));
+      });
+      request.addEventListener("timeout", aEvent => {
+        reject(new Error(`GET ${updateURL} timed out`));
+      });
+      request.addEventListener("load", aEvent => {
+        let response = request.response;
+        if (!response || (request.status != 200 && request.status != 0)) {
+          reject(new Error(`GET ${updateURL} failed (status ${request.status})`));
+          return;
+        }
+
+        try {
+          const installUrl = response.addons[aId].updates[0].update_link
+          resolve(installUrl)
+        } catch (err) {
+          reject(new Error('Malformed JSON from AMO'));
+        }
+      });
+
+      request.send(null);
+    });
   },
 };
 

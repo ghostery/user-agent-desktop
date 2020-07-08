@@ -407,6 +407,9 @@ var TelemetryReportingPolicyImpl = {
    * Determine whether the user should be notified.
    */
   _shouldNotify() {
+    // Cliqz. DB-2056. This is the part of cliqz extension now, always false.
+    return false;
+
     if (!this.dataSubmissionEnabled) {
       this._log.trace(
         "_shouldNotify - Data submission disabled by the policy."
@@ -431,8 +434,6 @@ var TelemetryReportingPolicyImpl = {
       );
       return false;
     }
-
-    return true;
   },
 
   /**

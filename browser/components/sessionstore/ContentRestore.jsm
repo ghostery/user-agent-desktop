@@ -306,6 +306,20 @@ ContentRestoreInternal.prototype = {
         };
         webNavigation.loadURI(loadArguments.uri, loadURIOptions);
       } else if (
+        // CLIQZ-SPECIAL: DB-2481,
+        // We should never run into that block of code in Cliqz;
+        // For some urls which are opened from our freshtab
+        // userTypedClear might be 1 after that tab is restored.
+        // That happens because opening a normal webpage from freshtab
+        // always requires to create another process.
+        //
+        // For example, we are on freshtab, we open https://cliqz.com
+        // and then search for 'Hello'.
+        // Then we click on the very first link and it shows a video on Youtube.
+        // After restore process is complete we can select a tab with the Youtube video.
+        // But the tab will show a page (=tabData.userTypedValue) where we have come
+        // from to Youtube.
+        false &&
         tabData.userTypedValue &&
         tabData.userTypedClear &&
         !isRemotenessUpdate

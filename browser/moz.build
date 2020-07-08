@@ -55,6 +55,8 @@ if CONFIG['MOZ_GPSD']:
 JS_PREFERENCE_PP_FILES += [
     'app/profile/firefox.js',
 ]
+if CONFIG['CQZ_ADULT_DOMAINS_BF']:
+    FINAL_TARGET_FILES += ['%' + CONFIG['CQZ_ADULT_DOMAINS_BF']]
 FINAL_TARGET_FILES.defaults += ['app/permissions']
 
 with Files("**"):

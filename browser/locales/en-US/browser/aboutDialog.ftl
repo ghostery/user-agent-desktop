@@ -44,18 +44,13 @@ community-2 = { -brand-short-name } is designed by <label data-l10n-name="commun
 helpus = Want to help? <label data-l10n-name="helpus-donateLink">Make a donation</label> or <label data-l10n-name="helpus-getInvolvedLink">get involved!</label>
 
 bottomLinks-license = Licensing Information
-bottomLinks-rights = End-User Rights
+bottomLinks-rights = Terms of use
 bottomLinks-privacy = Privacy Policy
 
-# Example of resulting string: 66.0.1 (64-bit)
-# Variables:
-#   $version (String): version of Firefox, e.g. 66.0.1
-#   $bits (Number): bits of the architecture (32 or 64)
-aboutDialog-version = { $version } ({ $bits }-bit)
+aboutDialog-architecture-sixtyFourBit = 64-bit
+aboutDialog-architecture-thirtyTwoBit = 32-bit
 
-# Example of resulting string: 66.0a1 (2019-01-16) (64-bit)
-# Variables:
-#   $version (String): version of Firefox for Nightly builds, e.g. 66.0a1
-#   $isodate (String): date in ISO format, e.g. 2019-01-16
-#   $bits (Number): bits of the architecture (32 or 64)
-aboutDialog-version-nightly = { $version } ({ $isodate }) ({ $bits }-bit)
+cliqz-headline = We Redesign the Internet
+cliqz-description-1 = The protection of your data has priority for us. As a company based in Germany we are bound by strict data security regulations and also by our own high standards and policies. Our primary principle: Cliqz does not store any data on our servers that could be used to identify you or your equipment. Want to know all the details? Read about our <label data-l10n-name="cliqz-desc1-privacy">privacy standards</label>, check our <label data-l10n-name="cliqz-desc1-policy">privacy policy</label> or <label data-l10n-name="cliqz-desc1-contact">get in contact</label>.
+
+cliqz-description-2 = Parts of the Cliqz Browser are building upon the <label data-l10n-name="cliqz-desc2-mozilla">Mozilla open source project</label>. Information about the Mozilla Public License 2.0 and other open source and free software can be found <label data-l10n-name="cliqz-desc2-here">here.</label>

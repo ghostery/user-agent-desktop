@@ -76,9 +76,11 @@
       <menuitem id="context-savelink"
                 data-l10n-id="main-context-menu-save-link"
                 oncommand="gContextMenu.saveLink();"/>
+#ifdef 0
       <menuitem id="context-savelinktopocket"
                 data-l10n-id="main-context-menu-save-link-to-pocket"
                 oncommand= "Pocket.savePage(gContextMenu.browser, gContextMenu.linkURL);"/>
+#endif
       <menuitem id="context-copyemail"
                 data-l10n-id="main-context-menu-copy-email"
                 oncommand="gContextMenu.copyEmail();"/>
@@ -216,9 +218,11 @@
       <menuitem id="context-savepage"
                 data-l10n-id="main-context-menu-page-save"
                 oncommand="gContextMenu.savePageAs();"/>
+#ifdef 0
       <menuitem id="context-pocket"
                 data-l10n-id="main-context-menu-save-to-pocket"
                 oncommand="Pocket.savePage(gContextMenu.browser, gContextMenu.browser.currentURI.spec, gContextMenu.browser.contentTitle);"/>
+#endif
       <menuseparator id="context-sep-sendpagetodevice" class="sync-ui-item"
                      hidden="true"/>
       <menu id="context-sendpagetodevice"

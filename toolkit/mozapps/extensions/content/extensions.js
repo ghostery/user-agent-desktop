@@ -568,3 +568,67 @@ function htmlView(type) {
     },
   };
 }
+
+function ItemHandler(addon) {
+  this._addon = addon;
+  this._listItem = this.createItem(addon);
+  this._listItem.addEventListener("installClicked", this.onInstallClick.bind(this));
+}
+
+ItemHandler.prototype = {
+  get listItem() { return this._listItem; },
+
+  createItem: function(aObj) {
+    let item = document.createElement("richlistitem");
+    item.setAttribute("class", "cliqz-recommended-addons addon addon-view card");
+    item.mAddon = aObj;
+    return item;
+  },
+
+  onInstallClick: async function() {
+    let self = this;
+    let reloadTimeout = 3000;
+    const downloadText = gStrings.ext.GetStringFromName("installDownloading");
+    this.listItem.changeButtonLabel(downloadText);
+    let addonURI;
+    if(this._addon.sourceURI && this._addon.sourceURI != '') {
+      addonURI = this._addon.sourceURI;
+    } else {
+      // To make sure we can get XPI url from AMO
+      try {
+        addonURI = await AddonRepository.getInstallURLfromAMO(this._addon.id);
+      } catch(e) {
+        const errorText = gStrings.ext.GetStringFromName("installFailed");
+        this.listItem.changeButtonLabel(errorText);
+        return;
+      }
+    }
+
+    AddonManager.getInstallForURL(addonURI)
+      .then((addon) => {
+        addon.addListener({
+          onDownloadProgress: function(aInstall) {
+            let percent = gStrings.ext.GetStringFromName("installDownloading") + ' ' + parseInt(aInstall.progress / aInstall.maxProgress * 100) + "%";
+            self.listItem.changeButtonLabel(percent);
+          },
+          onDownloadFailed: function() {
+            let showText = gStrings.ext.GetStringFromName("installDownloadFailed");
+            self.listItem.changeButtonLabel(showText);
+            self.onFaliure(self, reloadTimeout);
+          },
+          onInstallFailed: function() {
+            let showText = gStrings.ext.GetStringFromName("installFailed");
+            self.listItem.changeButtonLabel(showText);
+            self.onFaliure(self, reloadTimeout);
+          },
+          onInstallEnded: async function(aInstall, aAddon) {
+            await gListView.handleRecommended();
+          }
+        });
+        addon.install();
+      });
+  },
+
+  // CLIQZ-TODO: if we need to something extra on install/download failure
+  onFaliure: function(failedItem, reloadTimeout) {console.log('failed', failedItem)}
+}

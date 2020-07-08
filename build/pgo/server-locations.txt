@@ -130,6 +130,13 @@ https://127.0.0.2:443                  privileged,ipV4Address
 http://www.itisatrap.org:80
 https://www.itisatrap.org:443
 
+# Cover Cliqz domains accessed by extension.
+https://api.cliqz.com:443
+https://cdn.cliqz.com:443
+https://hpn-collector.cliqz.com:443
+https://hpn-sign.cliqz.com:443
+https://stats.cliqz.com:443
+
 #
 # These are subdomains of <ält.example.org>.
 #

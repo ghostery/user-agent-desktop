@@ -142,9 +142,14 @@ ifdef MOZ_MAKE_COMPLETE_MAR
 	  PACKAGE_BASE_DIR='$(ABS_DIST)/l10n-stage'
 endif
 # packaging done, undo l10n stuff
+# Cliqz. Please, don't rename file back on Mac build. We need it to make MAR
+# update package from Cliqz.app in l10n-stage folder. Please, count, that this
+# will not allow to make several language repacks (we don't need in this now).
+ifdef 0
 ifneq (en,$(LPROJ_ROOT))
 ifeq (cocoa,$(MOZ_WIDGET_TOOLKIT))
 	mv '$(STAGEDIST)'/$(LPROJ_ROOT).lproj '$(STAGEDIST)'/en.lproj
+endif
 endif
 endif
 	$(NSINSTALL) -D $(DIST)/$(PKG_PATH)

@@ -110,6 +110,27 @@ const PERMISSION_MASKS = {
   "change-privatebrowsing": AddonManager.PERM_CAN_CHANGE_PRIVATEBROWSING_ACCESS,
 };
 
+const RECOMMENDED_ADDONS = {
+  "firefox@ghostery.com": {
+    "id": "firefox@ghostery.com",
+    "icon": "https://s3.amazonaws.com/cdn.cliqz.com/browser-f/features/firefox%40ghostery.com/64x64.png",
+    "name": "Ghostery",
+    "homepageURL": "https://www.ghostery.com",
+  },
+  "support@lastpass.com": {
+    "id": "support@lastpass.com",
+    "icon": "https://s3.amazonaws.com/cdn.cliqz.com/browser-f/features/support%40lastpass.com/64x64.png",
+    "name": "LastPass",
+    "homepageURL": "https://lastpass.com",
+  },
+  "{446900e4-71c2-419f-a6a7-df9c091e268b}": {
+    "id": "{446900e4-71c2-419f-a6a7-df9c091e268b}",
+    "icon": "https://s3.amazonaws.com/cdn.cliqz.com/browser-f/features/%7B446900e4-71c2-419f-a6a7-df9c091e268b%7D/64x64.png",
+    "name": "Bitwarden",
+    "homepageURL": "https://bitwarden.com",
+  }
+};
+
 const PREF_DISCOVERY_API_URL = "extensions.getAddons.discovery.api_url";
 const PREF_THEME_RECOMMENDATION_URL =
   "extensions.recommendations.themeRecommendationUrl";
@@ -1545,7 +1566,7 @@ class AddonPageOptions extends HTMLElement {
     if ("switchToTabHavingURI" in mainWindow) {
       let principal = Services.scriptSecurityManager.getSystemPrincipal();
       mainWindow.switchToTabHavingURI(
-        `about:debugging#/runtime/this-firefox`,
+        `about:debugging#/runtime/this-cliqz`,
         true,
         {
           ignoreFragment: "whenComparing",
@@ -3057,6 +3078,17 @@ class AddonCard extends HTMLElement {
         name: addon.name,
       });
     }
+    if (addon.userPermissions) {
+      let addonPermissions = card.querySelector(".addon-permissions");
+      const { permissions = [], origins = [] } = addon.userPermissions;
+      if (permissions.length || origins.length) {
+        if (origins.length) {
+          addonPermissions.textContent = browserBundle.formatStringFromName('webextPerms.domain.heading', [permissions.length], 1);
+        } else {
+          addonPermissions.textContent = browserBundle.formatStringFromName('webextPerms.heading', [permissions.length], 1);
+        }
+      }
+    }
     name.title = `${addon.name} ${addon.version}`;
 
     let toggleDisabledButton = card.querySelector('[action="toggle-disabled"]');
@@ -3100,10 +3132,12 @@ class AddonCard extends HTMLElement {
       });
     }
 
+    /* CLIQZ-SPECIAL: we do not support recommended addon feature for now
     // Show the recommended badge if needed.
     card.querySelector(
       ".addon-badge-recommended"
     ).hidden = !addon.isRecommended;
+    */
 
     // Update description.
     card.querySelector(".addon-description").textContent = addon.description;
@@ -4304,6 +4338,13 @@ class ListView {
     ]);
     frag.appendChild(list);
 
+    // CLIQZ recommendations
+    const cliqzRecommendations = await setRecommendations();
+    if (cliqzRecommendations) {
+      frag.appendChild(cliqzRecommendations);
+    }
+    //RECOMMENDED_ADDONS
+    /*
     // Show recommendations for themes and extensions.
     if (
       LIST_RECOMMENDATIONS_ENABLED &&
@@ -4319,6 +4360,7 @@ class ListView {
       recommendations.render();
       frag.appendChild(recommendations);
     }
+    */
 
     await list.render();
 
@@ -4326,6 +4368,72 @@ class ListView {
     this.root.appendChild(frag);
   }
 }
+
+async function setRecommendations() {
+  const holder = importTemplate('recommended-extensions-cliqz');
+  const recommendations = holder.getElementById('recommendations');
+  recommendations.textContent = '';
+  const installedAddons = await AddonManager.getAddonsByTypes(["extension"]);
+  const installedAddonsIds = installedAddons.map(a => a.id);
+  const recommendedAddonIds = Object.keys(RECOMMENDED_ADDONS).filter(r => !installedAddonsIds.includes(r));
+  if (recommendedAddonIds.length === 0) {
+    return null;
+  }
+  recommendedAddonIds.forEach(r => {
+    const recommendedCard = importTemplate('recommended-card');
+    const name = recommendedCard.querySelector('.addon-name');
+    name.textContent = RECOMMENDED_ADDONS[r].name;
+    const desc = recommendedCard.querySelector('.addon-description');
+    desc.href = RECOMMENDED_ADDONS[r].homepageURL;
+    const img = recommendedCard.querySelector('.addon-icon');
+    const installBtn = recommendedCard.querySelector('.recommended-addon-install');
+    installBtn.setAttribute('data-id', r);
+    installBtn.addEventListener('click', onInstallClick);
+    img.src = RECOMMENDED_ADDONS[r].icon;
+    recommendations.appendChild(recommendedCard); 
+  });
+  
+  holder.appendChild(recommendations);
+  return holder;
+}
+
+async function onInstallClick() {
+  let self = this;
+  const downloadText = extBundle.GetStringFromName("installDownloading");
+  self.textContent = downloadText;
+  let addonURI;
+
+  try {
+    addonURI = await AddonRepository.getInstallURLfromAMO(self.getAttribute('data-id'));
+  } catch(e) {
+    const errorText = extBundle.GetStringFromName("installFailed");
+    self.textContent = errorText;
+    return;
+  }
+
+  AddonManager.getInstallForURL(addonURI)
+    .then((addon) => {
+      addon.addListener({
+        onDownloadProgress: function(aInstall) {
+          let percent = extBundle.GetStringFromName("installDownloading") + ' ' + parseInt(aInstall.progress / aInstall.maxProgress * 100) + "%";
+          self.textContent = percent;
+        },
+        onDownloadFailed: function() {
+          let showText = extBundle.GetStringFromName("installDownloadFailed");
+          self.textContent = showText;
+          self.onFaliure(self, reloadTimeout);
+        },
+        onInstallFailed: function() {
+          let showText = extBundle.GetStringFromName("installFailed");
+          self.textContent = showText;
+        },
+        onInstallEnded: function() {
+          self.closest('.addon-card').remove();
+        }
+      });
+      addon.install();
+    });
+};
 
 class DetailView {
   constructor({ param, root }) {

@@ -80,7 +80,7 @@ newtab-menu-topsites-placeholder-tooltip =
 
 newtab-menu-edit-topsites = Edit
 newtab-menu-open-new-window = Open in a New Window
-newtab-menu-open-new-private-window = Open in a New Private Window
+newtab-menu-open-new-private-window = Open in a New Forget Window
 newtab-menu-dismiss = Dismiss
 newtab-menu-pin = Pin
 newtab-menu-unpin = Unpin

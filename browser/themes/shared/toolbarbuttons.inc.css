@@ -68,11 +68,6 @@ toolbar[brighttext] {
   margin-inline-end: 0 !important;
 }
 
-.toolbarbutton-1 > .toolbarbutton-icon,
-.toolbarbutton-1 > .toolbarbutton-badge-stack > .toolbarbutton-icon {
-  width: 16px;
-}
-
 #TabsToolbar .toolbarbutton-1,
 #tabbrowser-arrowscrollbox::part(scrollbutton-up),
 #tabbrowser-arrowscrollbox::part(scrollbutton-down) {

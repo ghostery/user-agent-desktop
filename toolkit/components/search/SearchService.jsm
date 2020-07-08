@@ -71,6 +71,13 @@ const TOPIC_LOCALES_CHANGE = "intl:app-locales-changed";
 const QUIT_APPLICATION_TOPIC = "quit-application";
 
 // The following constants are left undocumented in nsISearchService.idl
+// Cliqz. DB-927: Default search engine alias map
+const SEARCH_ENGINE_ALIAS = {
+  "youtube": "#yt",
+  "youtube-de": "#yt"
+}
+
+// The following constants are left undocumented in nsISearchService.idl
 // For the moment, they are meant for testing/debugging purposes only.
 
 // Delay for batching invalidation of the JSON cache (ms)
@@ -107,6 +114,12 @@ const MULTI_LOCALE_ENGINES = [
   "wiktionary",
   "yandex",
   "multilocale",
+  "qwant",
+  "yahoo",
+  "gimages",
+  "gmaps",
+  "startpage",
+  "youtube",
 ];
 
 // A method that tries to determine if this user is in a US geography.
@@ -2425,7 +2438,19 @@ SearchService.prototype = {
   async getVisibleEngines() {
     await this.init(true);
     SearchUtils.log("getVisibleEngines: getting all visible engines");
-    return this._getSortedEngines(false);
+    var engines = this._getSortedEngines(false) || [];
+
+    //CLIQZ-SPECIAL. DB-927: Restore alternate search engines' alias
+    engines.forEach(engine => {
+      if(!engine.alias && engine.identifier) {
+        SearchUtils.log("Set alias for: " + engine.identifier);
+        if (SEARCH_ENGINE_ALIAS[engine.identifier])
+          engine.setAttr("alias", SEARCH_ENGINE_ALIAS[engine.identifier]);
+        else
+          engine.setAttr("alias", "#" + engine.identifier.toLowerCase().substring(0,2));
+      }
+    });
+    return engines;
   },
 
   async getDefaultEngines() {

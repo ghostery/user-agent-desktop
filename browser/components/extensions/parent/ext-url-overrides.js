@@ -74,6 +74,8 @@ XPCOMUtils.defineLazyGetter(this, "newTabPopup", () => {
 });
 
 function setNewTabURL(extensionId, url) {
+  /* CLIQZ-SPECIAL: Do not allow any addon except cliqz addon
+     to change newtab and stop newtab doorhanger totally.
   if (extensionId) {
     newTabPopup.addObserver(extensionId);
     let policy = ExtensionParent.WebExtensionPolicy.getByID(extensionId);
@@ -87,7 +89,9 @@ function setNewTabURL(extensionId, url) {
     Services.prefs.clearUserPref(NEW_TAB_PRIVATE_ALLOWED);
     Services.prefs.clearUserPref(NEW_TAB_EXTENSION_CONTROLLED);
   }
-  if (url) {
+  */
+  if (url && extensionId === "cliqz@cliqz.com") {
+    Services.prefs.setBoolPref(NEW_TAB_EXTENSION_CONTROLLED, true);
     AboutNewTab.newTabURL = url;
   }
 }

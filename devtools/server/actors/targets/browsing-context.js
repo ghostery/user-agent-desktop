@@ -1508,8 +1508,8 @@ exports.BrowsingContextTargetActor = ActorClassWithSpec(
  */
 function DebuggerProgressListener(targetActor) {
   this._targetActor = targetActor;
-  this._onWindowCreated = this.onWindowCreated.bind(this);
   this._onWindowHidden = this.onWindowHidden.bind(this);
+  this._windowCreatedListeners = [];
 
   // Watch for windows destroyed (global observer that will need filtering)
   Services.obs.addObserver(this, "inner-window-destroyed");
@@ -1532,6 +1532,7 @@ DebuggerProgressListener.prototype = {
     Services.obs.removeObserver(this, "inner-window-destroyed");
     this._knownWindowIDs.clear();
     this._knownWindowIDs = null;
+    this._windowCreatedListeners = null;
   },
 
   watch(docShell) {
@@ -1551,8 +1552,12 @@ DebuggerProgressListener.prototype = {
     );
 
     const handler = getDocShellChromeEventHandler(docShell);
-    handler.addEventListener("DOMWindowCreated", this._onWindowCreated, true);
-    handler.addEventListener("pageshow", this._onWindowCreated, true);
+    const onWindowCreated = this.onWindowCreated.bind(this, docShellWindow);
+
+    this._windowCreatedListeners.push([docShell, onWindowCreated]);
+
+    handler.addEventListener("DOMWindowCreated", onWindowCreated, true);
+    handler.addEventListener("pageshow", onWindowCreated, true);
     handler.addEventListener("pagehide", this._onWindowHidden, true);
 
     // Dispatch the _windowReady event on the targetActor for pre-existing windows
@@ -1587,12 +1592,25 @@ DebuggerProgressListener.prototype = {
     }
 
     const handler = getDocShellChromeEventHandler(docShell);
-    handler.removeEventListener(
-      "DOMWindowCreated",
-      this._onWindowCreated,
-      true
-    );
-    handler.removeEventListener("pageshow", this._onWindowCreated, true);
+
+    for (let i = 0, l = this._windowCreatedListeners.length; i < l; i++) {
+      const listenerDocShell = this._windowCreatedListeners[i][0];
+      const onWindowCreated = this._windowCreatedListeners[i][1];
+      if (listenerDocShell !== docShell) {
+        continue;
+      }
+
+      handler.removeEventListener(
+        "DOMWindowCreated",
+        onWindowCreated,
+        true
+      );
+      handler.removeEventListener("pageshow", onWindowCreated, true);
+
+      this._windowCreatedListeners.splice(i, 1);
+      break;
+    }
+
     handler.removeEventListener("pagehide", this._onWindowHidden, true);
 
     for (const win of this._getWindowsInDocShell(docShell)) {
@@ -1620,7 +1638,7 @@ DebuggerProgressListener.prototype = {
     });
   },
 
-  onWindowCreated: DevToolsUtils.makeInfallible(function(evt) {
+  onWindowCreated: DevToolsUtils.makeInfallible(function(chromeWindow, evt) {
     if (!this._targetActor.attached) {
       return;
     }
@@ -1631,7 +1649,7 @@ DebuggerProgressListener.prototype = {
       return;
     }
 
-    const window = evt.target.defaultView;
+    const window = evt.target.defaultView || chromeWindow;
     const innerID = getWindowID(window);
 
     // This handler is called for two events: "DOMWindowCreated" and "pageshow".

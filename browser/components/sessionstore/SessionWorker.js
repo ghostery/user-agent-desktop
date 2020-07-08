@@ -165,10 +165,21 @@ var Agent = {
     let data = Encoder.encode(stateString);
 
     try {
+#if 0
       if (this.state == STATE_CLEAN || this.state == STATE_EMPTY) {
         // The backups directory may not exist yet. In all other cases,
         // we have either already read from or already written to this
         // directory, so we are satisfied that it exists.
+        File.makeDir(this.Paths.backups);
+      }
+#endif
+      // CLIQZ-SPECIAL:
+      // DB-1997:
+      // Before executing a move operation on a file system,
+      // we need to make <full_profile_path>/sessionstore-backups directory exists.
+      // Even though this happens in try/catch clause once removed (accidentaly) this directory
+      // does not get created again which leads to losing data which is supposed to be stored there.
+      if (!File.exists(this.Paths.backups)) {
         File.makeDir(this.Paths.backups);
       }
 
@@ -176,7 +187,9 @@ var Agent = {
         // Move $Path.clean out of the way, to avoid any ambiguity as
         // to which file is more recent.
         if (!this.useOldExtension) {
-          File.move(this.Paths.clean, this.Paths.cleanBackup);
+          if (File.exists(this.Paths.clean)) {
+            File.move(this.Paths.clean, this.Paths.cleanBackup);
+          }
         } else {
           // Since we are migrating from .js to .jsonlz4,
           // we need to compress the deprecated $Path.clean

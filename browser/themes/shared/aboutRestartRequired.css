@@ -30,10 +30,12 @@
   min-height: 350px;
   display: flex;
   flex-direction: column;
+  /* CLIQZ-SPECIAL: we do not show any mascots
   background-position: left center;
   background-repeat: no-repeat;
   background-size: 38%;
   background-image: url("chrome://browser/skin/illustrations/error-connection-failure.svg");
+  */
 }
 
 #restart {

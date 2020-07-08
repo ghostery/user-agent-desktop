@@ -51,7 +51,7 @@ pref("extensions.recommendations.themeRecommendationUrl", "https://color.firefox
 pref("extensions.update.autoUpdateDefault", true);
 
 // Check AUS for system add-on updates.
-pref("extensions.systemAddon.update.url", "https://aus5.mozilla.org/update/3/SystemAddons/%VERSION%/%BUILD_ID%/%BUILD_TARGET%/%LOCALE%/%CHANNEL%/%OS_VERSION%/%DISTRIBUTION%/%DISTRIBUTION_VERSION%/update.xml");
+pref("extensions.systemAddon.update.url", "https://updatecheck.cliqz.com/update/3/SystemAddons/%VERSION%/%BUILD_ID%/%BUILD_TARGET%/%LOCALE%/%CHANNEL%/%OS_VERSION%/%DISTRIBUTION%/%DISTRIBUTION_VERSION%/update.xml");
 pref("extensions.systemAddon.update.enabled", true);
 
 // Disable add-ons that are not installed by the user in all scopes by default.
@@ -159,7 +159,11 @@ pref("app.update.staging.enabled", true);
 #ifdef MOZ_BITS_DOWNLOAD
   // If set to true, the Update Service will attempt to use Windows BITS to
   // download updates and will fallback to downloading internally if that fails.
-  pref("app.update.BITS.enabled", true);
+  // pref("app.update.BITS.enabled", true);
+  // Cliqz. This looks very experimental, especially a used languages and
+  // libraries (XPCOM-C++-rust chain). Need to check how winapi-rs really works,
+  // I didn't find any popular service or project which use it.
+  pref("app.update.BITS.enabled", false);
 #endif
 
 // Symmetric (can be overridden by individual extensions) update preferences.
@@ -171,8 +175,16 @@ pref("app.update.staging.enabled", true);
 pref("extensions.update.enabled", true);
 pref("extensions.update.url", "https://versioncheck.addons.mozilla.org/update/VersionCheck.php?reqVersion=%REQ_VERSION%&id=%ITEM_ID%&version=%ITEM_VERSION%&maxAppVersion=%ITEM_MAXAPPVERSION%&status=%ITEM_STATUS%&appID=%APP_ID%&appVersion=%APP_VERSION%&appOS=%APP_OS%&appABI=%APP_ABI%&locale=%APP_LOCALE%&currentAppVersion=%CURRENT_APP_VERSION%&updateType=%UPDATE_TYPE%&compatMode=%COMPATIBILITY_MODE%");
 pref("extensions.update.background.url", "https://versioncheck-bg.addons.mozilla.org/update/VersionCheck.php?reqVersion=%REQ_VERSION%&id=%ITEM_ID%&version=%ITEM_VERSION%&maxAppVersion=%ITEM_MAXAPPVERSION%&status=%ITEM_STATUS%&appID=%APP_ID%&appVersion=%APP_VERSION%&appOS=%APP_OS%&appABI=%APP_ABI%&locale=%APP_LOCALE%&currentAppVersion=%CURRENT_APP_VERSION%&updateType=%UPDATE_TYPE%&compatMode=%COMPATIBILITY_MODE%");
+#if MOZ_UPDATE_CHANNEL == beta
+// CLIQZ-SPECIAL: force addons update in every 30 min on beta
+pref("extensions.update.interval", 1800);
+#else
 pref("extensions.update.interval", 86400);  // Check for updates to Extensions and
                                             // Themes every day
+#endif
+
+// CLIQZ-SPECIAL: Enable AFW by default
+pref("browser.privatebrowsing.apt", true);
 
 pref("lightweightThemes.getMoreURL", "https://addons.mozilla.org/%LOCALE%/firefox/themes");
 
@@ -183,7 +195,8 @@ pref("lightweightThemes.getMoreURL", "https://addons.mozilla.org/%LOCALE%/firefo
 #endif
 
 // UI tour experience.
-pref("browser.uitour.enabled", true);
+//CLIQZ-SPECIAL: turn off FF UI tour
+pref("browser.uitour.enabled", false);
 pref("browser.uitour.loglevel", "Error");
 pref("browser.uitour.requireSecure", true);
 pref("browser.uitour.themeOrigin", "https://addons.mozilla.org/%LOCALE%/firefox/themes/");
@@ -218,9 +231,19 @@ pref("browser.shell.didSkipDefaultBrowserCheckOnFirstRun", false);
 pref("browser.shell.defaultBrowserCheckCount", 0);
 pref("browser.defaultbrowser.notificationbar", false);
 
+// Not used in Cliqz. Replaced by the two below.
+#if 0
 // 0 = blank, 1 = home (browser.startup.homepage), 2 = last visited page, 3 = resume previous browser session
 // The behavior of option 3 is detailed at: http://wiki.mozilla.org/Session_Restore
 pref("browser.startup.page",                1);
+#endif
+// If true, Cliqz will restore tabs from previous session, same as
+// 'browser.startup.page' = 3 would do.
+pref("browser.startup.restoreTabs", false);
+// If true, Cliqz will open additional tab with 'browser.startup.homepage' URL.
+// This is similar to 'browser.startup.page' = 1, but without excluding session
+// restore.
+pref("browser.startup.addFreshTab", true);
 pref("browser.startup.homepage",            "about:home");
 pref("browser.startup.homepage.abouthome_cache.enabled", false);
 
@@ -240,7 +263,8 @@ pref("browser.startup.firstrunSkipsHomepage", true);
 // platforms that don't always need it (Win/Linux).
 pref("toolkit.lazyHiddenWindow", true);
 
-pref("browser.slowStartup.notificationDisabled", false);
+// CLIQZ-SPECIAL: Disable Slow Startup message
+pref("browser.slowStartup.notificationDisabled", true);
 pref("browser.slowStartup.timeThreshold", 20000);
 pref("browser.slowStartup.maxSamples", 5);
 
@@ -281,9 +305,22 @@ pref("browser.urlbar.maxHistoricalSearchSuggestions", 0);
 pref("browser.urlbar.suggest.history",              true);
 pref("browser.urlbar.suggest.bookmark",             true);
 pref("browser.urlbar.suggest.openpage",             true);
+#if 0
 pref("browser.urlbar.suggest.searches",             true);
+#endif
+pref("browser.urlbar.suggest.searches",             false);
 
-// Limit the number of characters sent to the current search engine to fetch
+/*
+// Whether the user made a choice in the old search suggestions opt-in bar.
+pref("browser.urlbar.userMadeSearchSuggestionsChoice", false);
+// The suggestion opt-out hint will be hidden after being shown 4 times.
+pref("browser.urlbar.timesBeforeHidingSuggestionsHint", 4);
+*/
+
+// CLIQZ-SPECIAL
+pref("browser.urlbar.userMadeSearchSuggestionsChoice", true);
+pref("browser.urlbar.timesBeforeHidingSuggestionsHint", 0);
+
 // suggestions.
 pref("browser.urlbar.maxCharsForSearchSuggestions", 20);
 
@@ -309,15 +346,18 @@ pref("browser.urlbar.usepreloadedtopurls.enabled", false);
 pref("browser.urlbar.usepreloadedtopurls.expire_days", 14);
 
 // Whether the quantum bar displays design update 1.
-pref("browser.urlbar.update1", true);
+pref("browser.urlbar.update1", false);
+// CLIQZ-SPECIAL: do not use megabar
 
 // If true, we show actionable tips in the Urlbar when the user is searching
 // for those actions.
-pref("browser.urlbar.update1.interventions", true);
+pref("browser.urlbar.update1.interventions", false);
+// CLIQZ-SPECIAL: do not use interventions
 
 // If true, we show new users and those about to start an organic search a tip
 // encouraging them to use the Urlbar.
-pref("browser.urlbar.update1.searchTips", true);
+pref("browser.urlbar.update1.searchTips", false);
+// CLIQZ-SPECIAL: do not use searchTips
 
 // Whether the urlbar should strip https from urls in the view.
 pref("browser.urlbar.update1.view.stripHttps", true);
@@ -362,10 +402,10 @@ pref("browser.download.autohideButton", true);
 #endif
 
 // search engines URL
-pref("browser.search.searchEnginesURL",      "https://addons.mozilla.org/%LOCALE%/firefox/search-engines/");
+pref("browser.search.searchEnginesURL",      "https://addons.mozilla.org/%LOCALE%/firefox/search-tools/");
 
 // Market-specific search defaults
-pref("browser.search.geoSpecificDefaults", true);
+pref("browser.search.geoSpecificDefaults", false);
 pref("browser.search.geoSpecificDefaults.url", "https://search.services.mozilla.com/1/%APP%/%VERSION%/%CHANNEL%/%LOCALE%/%REGION%/%DISTRIBUTION%/%DISTRIBUTION_VERSION%");
 
 // search bar results always open in a new tab
@@ -461,7 +501,7 @@ pref("browser.tabs.opentabfor.middleclick", true);
 pref("browser.tabs.loadDivertedInBackground", false);
 pref("browser.tabs.loadBookmarksInBackground", false);
 pref("browser.tabs.loadBookmarksInTabs", false);
-pref("browser.tabs.tabClipWidth", 140);
+pref("browser.tabs.tabClipWidth", 1); // CLIQZ DB-1418: Allow more tabs' close button to be visible
 pref("browser.tabs.tabMinWidth", 76);
 // Initial titlebar state is managed by -moz-gtk-csd-hide-titlebar-by-default
 // on Linux.
@@ -1151,6 +1191,7 @@ pref("dom.ipc.shims.enabledWarnings", false);
   pref("browser.taskbar.lists.refreshInSeconds", 120);
 #endif
 
+#ifdef MOZ_SERVICES_SYNC
 // Preferences to be synced by default
 pref("services.sync.prefs.sync.accessibility.blockautorefresh", true);
 pref("services.sync.prefs.sync.accessibility.browsewithcaret", true);
@@ -1190,7 +1231,8 @@ pref("services.sync.prefs.sync.browser.offline-apps.notify", true);
 pref("services.sync.prefs.sync.browser.search.update", true);
 pref("services.sync.prefs.sync.browser.search.widget.inNavBar", true);
 pref("services.sync.prefs.sync.browser.startup.homepage", true);
-pref("services.sync.prefs.sync.browser.startup.page", true);
+pref("services.sync.prefs.sync.browser.startup.restoreTabs", true);
+pref("services.sync.prefs.sync.browser.startup.addFreshTab", true);
 pref("services.sync.prefs.sync.browser.tabs.loadInBackground", true);
 pref("services.sync.prefs.sync.browser.tabs.warnOnClose", true);
 pref("services.sync.prefs.sync.browser.tabs.warnOnOpen", true);
@@ -1201,6 +1243,7 @@ pref("services.sync.prefs.sync.browser.urlbar.suggest.bookmark", true);
 pref("services.sync.prefs.sync.browser.urlbar.suggest.history", true);
 pref("services.sync.prefs.sync.browser.urlbar.suggest.openpage", true);
 pref("services.sync.prefs.sync.browser.urlbar.suggest.searches", true);
+pref("services.sync.prefs.sync.browser.urlbar.suggest.searches", false);
 pref("services.sync.prefs.sync.dom.disable_open_during_load", true);
 pref("services.sync.prefs.sync.dom.disable_window_flip", true);
 pref("services.sync.prefs.sync.dom.disable_window_move_resize", true);
@@ -1253,6 +1296,7 @@ pref("services.sync.prefs.dangerously_allow_arbitrary", false);
 // fetching these icons to show remote tabs may leak information about that
 // user's tabs and bookmarks. Note this pref is also synced.
 pref("services.sync.syncedTabs.showRemoteIcons", true);
+#endif  // MOZ_SERVICES_SYNC
 
 // Whether the character encoding menu is under the main Firefox button. This
 // preference is a string so that localizers can alter it.
@@ -1262,20 +1306,20 @@ pref("browser.menu.showCharacterEncoding", "chrome://browser/locale/browser.prop
 pref("prompts.tab_modal.enabled", true);
 
 // Activates preloading of the new tab url.
-pref("browser.newtab.preload", true);
+pref("browser.newtab.preload", false);
 
 // Activity Stream prefs that control to which page to redirect
 #ifndef RELEASE_OR_BETA
   pref("browser.newtabpage.activity-stream.debug", false);
 #endif
 
-pref("browser.library.activity-stream.enabled", true);
+pref("browser.library.activity-stream.enabled", false);
 
 // The remote FxA root content URL for the Activity Stream firstrun page.
 pref("browser.newtabpage.activity-stream.fxaccounts.endpoint", "https://accounts.firefox.com/");
 
 // The pref that controls if the search shortcuts experiment is on
-pref("browser.newtabpage.activity-stream.improvesearch.topSiteSearchShortcuts", true);
+pref("browser.newtabpage.activity-stream.improvesearch.topSiteSearchShortcuts", false);
 
 // ASRouter provider configuration
 pref("browser.newtabpage.activity-stream.asrouter.providers.cfr", "{\"id\":\"cfr\",\"enabled\":true,\"type\":\"remote-settings\",\"bucket\":\"cfr\",\"frequency\":{\"custom\":[{\"period\":\"daily\",\"cap\":1}]},\"categories\":[\"cfrAddons\",\"cfrFeatures\"],\"updateCycleInMs\":3600000}");
@@ -1317,7 +1361,7 @@ pref("browser.newtabpage.activity-stream.discoverystream.personalization.modelKe
 pref("trailhead.firstrun.branches", "join-dynamic");
 
 // Separate about welcome
-pref("browser.aboutwelcome.enabled", true);
+pref("browser.aboutwelcome.enabled", false); // ALWAYS FALSE
 // See Console.jsm LOG_LEVELS for all possible values
 pref("browser.aboutwelcome.log", "warn");
 
@@ -1337,7 +1381,8 @@ pref("full-screen-api.enabled", true);
 // Startup Crash Tracking
 // number of startup crashes that can occur before starting into safe mode automatically
 // (this pref has no effect if more than 6 hours have passed since the last crash)
-pref("toolkit.startup.max_resumed_crashes", 3);
+// CLIQZ-SPECIAL: Disable Safe Mode trigger on start
+pref("toolkit.startup.max_resumed_crashes", -1);
 
 // Whether to use RegisterApplicationRestart to restart the browser and resume
 // the session on next Windows startup
@@ -1397,7 +1442,8 @@ pref("dom.debug.propagate_gesture_events_through_content", false);
 pref("browser.uiCustomization.debug", false);
 
 // CustomizableUI state of the browser's user interface
-pref("browser.uiCustomization.state", "");
+// pref("browser.uiCustomization.state", "");
+pref("browser.uiCustomization.state", "{\"placements\":{\"widget-overflow-fixed-list\":[],\"PersonalToolbar\":[\"personal-bookmarks\"],\"nav-bar\":[\"back-button\",\"forward-button\",\"stop-reload-button\",\"urlbar-container\",\"cliqz_cliqz_com-browser-action2\",\"cliqz_cliqz_com-browser-action\",\"bookmarks-menu-button\",\"home-button\",\"downloads-button\"],\"toolbar-menubar\":[\"menubar-items\"],\"TabsToolbar\":[\"tabbrowser-tabs\",\"new-tab-button\",\"alltabs-button\"]},\"seen\":[\"cliqz_cliqz_com-browser-action2\",\"cliqz_cliqz_com-browser-action\",\"webide-button\",\"developer-button\"],\"dirtyAreaCache\":[\"PersonalToolbar\",\"nav-bar\",\"toolbar-menubar\",\"TabsToolbar\"],\"currentVersion\":14,\"newElementCount\":0}");
 
 // If set to false, FxAccounts and Sync will be unavailable.
 // A restart is mandatory after flipping that preference.
@@ -1481,6 +1527,8 @@ pref("media.gmp-gmpopenh264.enabled", true);
 pref("media.autoplay.enabled.user-gestures-needed", true);
 // Set Firefox to block autoplay, asking for permission by default.
 pref("media.autoplay.default", 1); // 0=Allowed, 1=Blocked, 5=All Blocked
+// CLIQZ-SPECIAL: whitelist for unblocking autoplay.
+pref("blockautoplay.whitelist.add", "https://www.youtube.com/");
 
 #ifdef NIGHTLY_BUILD
   // Block WebAudio from playing automatically.
@@ -1535,20 +1583,36 @@ pref("browser.ping-centre.log", false);
 pref("media.gmp-provider.enabled", true);
 
 // Enable blocking access to storage from tracking resources by default.
+// pref("network.cookie.cookieBehavior", 4 /* BEHAVIOR_REJECT_TRACKER */);
+// CLIQZ-SPECIAL
 pref("network.cookie.cookieBehavior", 4 /* BEHAVIOR_REJECT_TRACKER */);
 
 // Enable fingerprinting blocking by default for all channels, only on desktop.
+// CLIQZ-MERGE - check if we can remove beta check (Firefox get this unconditionoial)
+#ifdef EARLY_BETA_OR_EARLIER
 pref("privacy.trackingprotection.fingerprinting.enabled", true);
+#endif
+
+// Start Cliqz referer options
+// Limit referer to origin only for cross-origin requests: https://wiki.mozilla.org/Security/Referrer
+pref("network.http.referer.XOriginTrimmingPolicy", 2);
+// End Cliqz
 
 // Enable cryptomining blocking by default for all channels, only on desktop.
 pref("privacy.trackingprotection.cryptomining.enabled", true);
 
-pref("browser.contentblocking.database.enabled", true);
+pref("browser.contentblocking.database.enabled", false);
+pref("browser.contentblocking.allowlist.storage.enabled", false);
 
 pref("dom.storage_access.enabled", true);
 
+#if 0
 pref("browser.contentblocking.cryptomining.preferences.ui.enabled", true);
 pref("browser.contentblocking.fingerprinting.preferences.ui.enabled", true);
+#endif
+
+pref("browser.contentblocking.cryptomining.preferences.ui.enabled", false);
+pref("browser.contentblocking.fingerprinting.preferences.ui.enabled", false);
 
 // Possible values for browser.contentblocking.features.strict pref:
 //   Tracking Protection:
@@ -1585,10 +1649,10 @@ pref("browser.contentblocking.customBlockList.preferences.ui.enabled", false);
 pref("browser.contentblocking.reportBreakage.url", "https://tracking-protection-issues.herokuapp.com/new");
 
 // Enable Protections report's Lockwise card by default.
-pref("browser.contentblocking.report.lockwise.enabled", true);
+pref("browser.contentblocking.report.lockwise.enabled", false);
 
 // Enable Protections report's Monitor card by default.
-pref("browser.contentblocking.report.monitor.enabled", true);
+pref("browser.contentblocking.report.monitor.enabled", false);
 
 // Disable Protections report's Proxy card by default.
 pref("browser.contentblocking.report.proxy.enabled", false);
@@ -1693,7 +1757,8 @@ pref("view_source.tab", true);
 pref("dom.serviceWorkers.enabled", true);
 
 // Enable Push API.
-pref("dom.push.enabled", true);
+// CLIQZ. Not used until further investigation
+pref("dom.push.enabled", false);
 
 // These are the thumbnail width/height set in about:newtab.
 // If you change this, ENSURE IT IS THE SAME SIZE SET
@@ -1727,9 +1792,11 @@ pref("signon.generation.confidenceThreshold", "0.75");
 
 pref("signon.management.page.os-auth.enabled", true);
 pref("signon.management.page.breach-alerts.enabled", true);
+/* CLIQZ-SPECIAL: force use old password
 pref("signon.management.page.vulnerable-passwords.enabled", true);
 pref("signon.management.page.sort", "name");
 pref("signon.management.overrideURI", "about:logins?filter=%DOMAIN%");
+*/
 // The utm_creative value is appended within the code (specific to the location on
 // where it is clicked). Be sure that if these two prefs are updated, that
 // the utm_creative param be last.
@@ -1809,10 +1876,10 @@ pref("browser.sessionstore.restore_tabs_lazily", true);
 pref("browser.suppress_first_window_animation", true);
 
 // Preference that allows individual users to disable Screenshots.
-pref("extensions.screenshots.disabled", false);
+pref("extensions.screenshots.disabled", true);
 // Preference that allows individual users to leave Screenshots enabled, but
 // disable uploading to the server.
-pref("extensions.screenshots.upload-disabled", false);
+pref("extensions.screenshots.upload-disabled", true);
 
 // DoH Rollout: the earliest date of profile creation for which we don't need
 // to show the doorhanger. This is when the version of the privacy statement
@@ -1827,7 +1894,7 @@ pref("browser.chrome.errorReporter.infoURL",
 // Normandy client preferences
 pref("app.normandy.api_url", "https://normandy.cdn.mozilla.net/api/v1");
 pref("app.normandy.dev_mode", false);
-pref("app.normandy.enabled", true);
+pref("app.normandy.enabled", false);
 pref("app.normandy.first_run", true);
 pref("app.normandy.logging.level", 50); // Warn
 pref("app.normandy.run_interval_seconds", 21600); // 6 hours
@@ -1835,7 +1902,8 @@ pref("app.normandy.shieldLearnMoreUrl", "https://support.mozilla.org/1/firefox/%
 pref("app.normandy.last_seen_buildid", "");
 pref("app.normandy.onsync_skew_sec", 600);
 #ifdef MOZ_DATA_REPORTING
-  pref("app.shield.optoutstudies.enabled", true);
+  // Cliqz. Always false
+  pref("app.shield.optoutstudies.enabled", false);
 #else
   pref("app.shield.optoutstudies.enabled", false);
 #endif
@@ -1890,7 +1958,8 @@ pref("identity.fxaccounts.service.sendLoginUrl", "https://send.firefox.com/login
 pref("identity.fxaccounts.service.monitorLoginUrl", "https://monitor.firefox.com/");
 
 // Check bundled omni JARs for corruption.
-pref("corroborator.enabled", true);
+// CLIQZ-SPECIAL: don't use yet, must be carefully checked first
+pref("corroborator.enabled", false);
 
 // Toolbox preferences
 pref("devtools.toolbox.footer.height", 250);
@@ -2316,5 +2385,29 @@ pref("first-startup.timeout", 30000);
 // The agent still runs as scheduled if this pref is disabled,
 // but it exits immediately before taking any action.
 #ifdef XP_WIN
-  pref("default-browser-agent.enabled", true);
+  pref("default-browser-agent.enabled", false);
+#endif
+
+
+// CLIQZ-SPECIAL: custom prefs
+pref("extensions.cliqz.labs.enabled", true);
+#if MOZ_UPDATE_CHANNEL == beta
+  pref("extension.cliqz.dat.enabled", true);
+#else
+  pref("extension.cliqz.dat.enabled", false);
+#endif
+
+// Turn off thumbnails for New Tab (not used in Cliqz browser)
+pref("browser.pagethumbnails.capturing_disabled", true);
+
+// DB-2142 | Enable mozaddonmanager on AMO
+pref("privacy.resistFingerprinting.block_mozAddonManager", true);
+
+// Hide system addons
+pref("extensions.cliqz.listed", false);
+
+#ifdef UNIX_BUT_NOT_MAC
+  // CLIQZ-SPECIAL: carried forward relevant prefs from no-updates.js
+  pref("app.update.auto", false);
+  pref("app.update.service.enabled", false);
 #endif

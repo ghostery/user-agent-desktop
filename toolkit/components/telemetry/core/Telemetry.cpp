@@ -1152,8 +1152,7 @@ TelemetryImpl::GetCanRecordPrereleaseData(bool* ret) {
 
 NS_IMETHODIMP
 TelemetryImpl::GetIsOfficialTelemetry(bool* ret) {
-#if defined(MOZILLA_OFFICIAL) && defined(MOZ_TELEMETRY_REPORTING) && \
-    !defined(DEBUG)
+#if defined(MOZ_TELEMETRY_REPORTING)
   *ret = true;
 #else
   *ret = false;

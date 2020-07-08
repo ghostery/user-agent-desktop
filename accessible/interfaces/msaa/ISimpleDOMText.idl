@@ -51,7 +51,7 @@ cpp_quote("/////////////////////////////////////////////////////////////////////
 cpp_quote("")
 cpp_quote("")
 
-[object, uuid(4e747be5-2052-4265-8af0-8ecad7aad1c0)]
+[object, uuid(63087273-32CA-4909-9BD9-9F81CD2EDDFC)]
 interface ISimpleDOMText: IUnknown
 {
   // Includes whitespace in DOM

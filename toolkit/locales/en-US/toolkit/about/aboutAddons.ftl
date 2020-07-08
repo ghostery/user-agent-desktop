@@ -28,6 +28,15 @@ list-empty-find-updates =
 list-empty-button =
     .label = Learn more about add-ons
 
+install-addon-from-file =
+    .label = Install Add-on From File…
+    .accesskey = I
+
+recommended-addon =
+    .value = Recommended Extensions
+
+install-addon-disclaimer = Proceed with caution when installing add-ons. <label data-l10n-name="addon-risks">Learn more about the risks.</label>
+
 help-button = Add-ons Support
 sidebar-help-button-title =
     .title = Add-ons Support
@@ -115,24 +124,24 @@ detail-update-manual =
     .tooltiptext = Don’t automatically install updates
 
 # Used as a description for the option to allow or block an add-on in private windows.
-detail-private-browsing-label = Run in Private Windows
+detail-private-browsing-label = Run in Forget Windows
 
-# Some add-ons may elect to not run in private windows by setting incognito: not_allowed in the manifest.  This
+# Some add-ons may elect to not run in Forget Windows by setting incognito: not_allowed in the manifest.  This
 # cannot be overridden by the user.
-detail-private-disallowed-label = Not Allowed in Private Windows
+detail-private-disallowed-label = Not Allowed in Forget Windows
 detail-private-disallowed-description2 = This extension does not run while private browsing. <a data-l10n-name="learn-more">Learn more</a>
 
-# Some special add-ons are privileged, run in private windows automatically, and this permission can't be revoked
-detail-private-required-label = Requires Access to Private Windows
+# Some special add-ons are privileged, run in Forget mode automatically, and this permission can't be revoked
+detail-private-required-label = Requires Access to Forget mode
 detail-private-required-description2 = This extension has access to your online activities while private browsing. <a data-l10n-name="learn-more">Learn more</a>
 
 detail-private-browsing-on =
     .label = Allow
-    .tooltiptext = Enable in Private Browsing
+    .tooltiptext = Enable in Forget Windows
 
 detail-private-browsing-off =
     .label = Don’t Allow
-    .tooltiptext = Disable in Private Browsing
+    .tooltiptext = Disable in Forget Windows
 
 detail-home =
     .label = Homepage
@@ -200,7 +209,7 @@ legacy-extensions-description =
 
 private-browsing-description2 =
     { -brand-short-name } is changing how extensions work in private browsing. Any new extensions you add to
-    { -brand-short-name } won’t run by default in Private Windows. Unless you allow it in settings, the
+    { -brand-short-name } won’t run by default in Forget Windows. Unless you allow it in settings, the
     extension won’t work while private browsing, and won’t have access to your online activities
     there. We’ve made this change to keep your private browsing private.
     <label data-l10n-name="private-browsing-learn-more">Learn how to manage extension settings</label>
@@ -447,7 +456,7 @@ install-update-button = Update
 # This is the tooltip text for the private browsing badge in about:addons. The
 # badge is the private browsing icon included next to the extension's name.
 addon-badge-private-browsing-allowed2 =
-    .title = Allowed in private windows
+    .title = Allowed in forget windows
     .aria-label = { addon-badge-private-browsing-allowed2.title }
 addon-detail-private-browsing-help = When allowed, the extension will have access to your online activities while private browsing. <a data-l10n-name="learn-more">Learn more</a>
 addon-detail-private-browsing-allow = Allow
@@ -469,6 +478,8 @@ addon-permissions-empty = This extension doesn’t require any permissions
 
 recommended-extensions-heading = Recommended Extensions
 recommended-themes-heading = Recommended Themes
+install-recommended-addon = Install
+recommended-addon-learn-more = Learn more...
 
 # A recommendation for the Firefox Color theme shown at the bottom of the theme
 # list view. The "Firefox Color" name itself should not be translated.

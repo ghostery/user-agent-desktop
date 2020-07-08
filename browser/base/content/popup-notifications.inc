@@ -117,3 +117,10 @@
         </vbox>
       </popupnotificationfooter>
     </popupnotification>
+
+    <popupnotification id="forget-mode-notification" hidden="true">
+      <popupnotificationcontent id="forget-mode-notification-content" orient="vertical">
+        <description id="forget-mode-notification-description"></description>
+        <label id="forget-mode-notification-link" is="text-link"/>
+      </popupnotificationcontent>
+    </popupnotification>

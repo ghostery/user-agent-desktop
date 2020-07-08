@@ -171,6 +171,7 @@ exports.menuitems = [
     checkbox: true,
   },
   { separator: true, id: "devToolsEndSeparator" },
+/* blocked by Cliqz
   {
     id: "getMoreDevtools",
     l10nKey: "getMoreDevtoolsCmd",
@@ -180,4 +181,5 @@ exports.menuitems = [
       );
     },
   },
+*/
 ];

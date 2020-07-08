@@ -680,7 +680,7 @@ this.tabs = class extends ExtensionAPI {
               options.userContextId = getUserContextIdForCookieStoreId(
                 extension,
                 createProperties.cookieStoreId,
-                PrivateBrowsingUtils.isBrowserPrivate(window.gBrowser)
+                PrivateBrowsingUtils.isBrowserPrivate(window.gBrowser, true)
               );
             }
 
@@ -712,7 +712,8 @@ this.tabs = class extends ExtensionAPI {
                 {
                   userContextId: options.userContextId,
                   privateBrowsingId: PrivateBrowsingUtils.isBrowserPrivate(
-                    window.gBrowser
+                    window.gBrowser,
+                    true
                   )
                     ? 1
                     : 0,
@@ -1046,9 +1047,10 @@ this.tabs = class extends ExtensionAPI {
             // prevents this, we want to silently ignore it.
             if (
               nativeTab.ownerGlobal != window &&
-              PrivateBrowsingUtils.isBrowserPrivate(window.gBrowser) !=
+              PrivateBrowsingUtils.isBrowserPrivate(window.gBrowser, true) !=
                 PrivateBrowsingUtils.isBrowserPrivate(
-                  nativeTab.ownerGlobal.gBrowser
+                  nativeTab.ownerGlobal.gBrowser,
+                  true
                 )
             ) {
               continue;

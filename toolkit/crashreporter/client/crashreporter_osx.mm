@@ -167,7 +167,10 @@ static bool RestartApplication() {
   } else {
     [userDefaults setBool:submitChecked forKey:@"submitReport"];
   }
+  // CLIQZ-SPECIAL: DB-2500: Do not allow to send Crash Report
+  submitChecked = NO;
   [mSubmitReportButton setState:(submitChecked ? NSOnState : NSOffState)];
+  [mSubmitReportButton setEnabled:NO];
 
   [self updateSubmit];
   [self updateURL];

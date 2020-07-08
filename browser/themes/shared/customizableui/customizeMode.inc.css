@@ -565,6 +565,14 @@ toolbarpaletteitem > #search-container > #searchbar > .searchbar-textbox {
   padding: 0;
 }
 
+/* Cliqz. Hide:
+ * 1. Search panel from the toolbar
+ * 2. "Compact" option in "Density" menu */
+toolbarpaletteitem#wrapper-search-container,
+#customization-uidensity-menuitem-compact {
+  display: none!important;
+}
+
 #whimsy-button {
   /* Don't need HiDPI versions since the size used will be scaled down to 20x20. */
   list-style-image: url("chrome://browser/skin/customizableui/whimsy.png");

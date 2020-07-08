@@ -158,7 +158,7 @@ this container is a toolbar. This avoids double-speaking. -->
 <!ENTITY manageUserContext.label          "Manage Containers">
 <!ENTITY manageUserContext.accesskey      "O">
 <!ENTITY newNavigatorCmd.label        "New Window">
-<!ENTITY newPrivateWindow.label     "New Private Window">
+<!ENTITY newPrivateWindow.label     "New Forget Window">
 
 <!ENTITY editMenu.label         "Edit">
 <!ENTITY preferencesCmd2.label       "Options">
@@ -250,7 +250,7 @@ this container is a toolbar. This avoids double-speaking. -->
     secondary commands. -->
 <!ENTITY moreMenu.label "More">
 
-<!ENTITY urlbar.placeholder2          "Search or enter address">
+<!ENTITY urlbar.placeholder2          "Search Cliqz or enter URL">
 <!-- LOCALIZATION NOTE (urlbar.extension.label): Used to indicate that a selected autocomplete entry is provided by an extension. -->
 <!ENTITY urlbar.extension.label       "Extension:">
 <!ENTITY urlbar.switchToTab.label     "Switch to tab:">

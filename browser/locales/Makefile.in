@@ -56,12 +56,14 @@ libs-%:
 	$(if $(filter en-US,$(AB_CD)),, @$(MAKE) merge-$*)
 	$(NSINSTALL) -D $(DIST)/install
 	@$(MAKE) -C ../../toolkit/locales libs-$* XPI_ROOT_APPID='$(XPI_ROOT_APPID)'
+ifdef MOZ_SERVICES_SYNC
 	@$(MAKE) -C ../../services/sync/locales AB_CD=$* XPI_NAME=locale-$*
+endif
 	@$(MAKE) -C ../../extensions/spellcheck/locales AB_CD=$* XPI_NAME=locale-$*
 ifneq (,$(wildcard ../extensions/formautofill/locales))
 	@$(MAKE) -C ../extensions/formautofill/locales AB_CD=$* XPI_NAME=locale-$*
 endif
-	@$(MAKE) -C ../extensions/report-site-issue/locales AB_CD=$* XPI_NAME=locale-$*
+#	@$(MAKE) -C ../extensions/report-site-issue/locales AB_CD=$* XPI_NAME=locale-$*
 	@$(MAKE) -C ../../devtools/client/locales AB_CD=$* XPI_NAME=locale-$* XPI_ROOT_APPID='$(XPI_ROOT_APPID)'
 	@$(MAKE) -C ../../devtools/startup/locales AB_CD=$* XPI_NAME=locale-$* XPI_ROOT_APPID='$(XPI_ROOT_APPID)'
 	@$(MAKE) libs AB_CD=$* XPI_NAME=locale-$* PREF_DIR=$(PREF_DIR)
@@ -73,7 +75,7 @@ chrome-%: IS_LANGUAGE_REPACK=1
 chrome-%:
 	$(if $(filter en-US,$(AB_CD)),, @$(MAKE) merge-$*)
 	@$(MAKE) -C ../../toolkit/locales chrome-$*
-	@$(MAKE) -C ../../services/sync/locales chrome AB_CD=$*
+#	@$(MAKE) -C ../../services/sync/locales chrome AB_CD=$*
 	@$(MAKE) -C ../../extensions/spellcheck/locales chrome AB_CD=$*
 ifneq (,$(wildcard ../extensions/formautofill/locales))
 	@$(MAKE) -C ../extensions/formautofill/locales chrome AB_CD=$*
@@ -82,7 +84,7 @@ endif
 	@$(MAKE) -C ../../devtools/startup/locales chrome AB_CD=$*
 	@$(MAKE) chrome AB_CD=$*
 	@$(MAKE) -C $(DEPTH)/$(MOZ_BRANDING_DIRECTORY)/locales chrome AB_CD=$*
-	@$(MAKE) -C ../extensions/report-site-issue/locales chrome AB_CD=$*
+#	@$(MAKE) -C ../extensions/report-site-issue/locales chrome AB_CD=$*
 
 package-win32-installer: $(SUBMAKEFILES)
 	$(MAKE) -C ../installer/windows CONFIG_DIR=l10ngen ZIP_IN='$(ZIP_OUT)' installer

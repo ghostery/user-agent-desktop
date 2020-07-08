@@ -59,7 +59,7 @@ static LazyLogModule sUpdateLog("updatedriver");
 
 #ifdef XP_WIN
 #  define UPDATER_BIN "updater.exe"
-#  define MAINTENANCE_SVC_NAME L"MozillaMaintenance"
+#  define MAINTENANCE_SVC_NAME L"CliqzMaintenance"
 #elif XP_MACOSX
 #  define UPDATER_APP "updater.app"
 #  define UPDATER_BIN "org.mozilla.updater"

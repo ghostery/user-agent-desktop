@@ -87,6 +87,7 @@ class nsDNSService final : public nsPIDNSService,
   bool mDisableIPv6;
   bool mDisablePrefetch;
   bool mBlockDotOnion;
+  bool mDisableDNS;
   bool mNotifyResolution;
   bool mOfflineLocalhost;
   bool mForceResolveOn;

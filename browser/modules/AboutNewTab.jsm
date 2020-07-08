@@ -14,7 +14,9 @@ const { XPCOMUtils } = ChromeUtils.import(
 const { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
 
 XPCOMUtils.defineLazyModuleGetters(this, {
+#if 0
   ActivityStream: "resource://activity-stream/lib/ActivityStream.jsm",
+#endif
   RemotePages:
     "resource://gre/modules/remotepagemanager/RemotePageManagerParent.jsm",
 });
@@ -151,7 +153,10 @@ const AboutNewTab = {
   },
 
   get activityStreamEnabled() {
+    return false;
+#if 0
     return this._activityStreamEnabled;
+#endif
   },
 
   resetNewTabURL() {
@@ -169,6 +174,8 @@ const AboutNewTab = {
    * onBrowserReady - Continues the initialization of Activity Stream after browser is ready.
    */
   onBrowserReady() {
+#if 0
+    return;
     if (this.activityStream && this.activityStream.initialized) {
       return;
     }
@@ -179,6 +186,7 @@ const AboutNewTab = {
     } catch (e) {
       Cu.reportError(e);
     }
+#endif
   },
 
   /**
@@ -224,7 +232,8 @@ const AboutNewTab = {
       : [];
   },
 
-  _alreadyRecordedTopsitesPainted: false,
+  // CLIQZ-SPECIAL: set it initially to true in Cliqz browser;
+  _alreadyRecordedTopsitesPainted: true,
   _nonDefaultStartup: false,
 
   noteNonDefaultStartup() {

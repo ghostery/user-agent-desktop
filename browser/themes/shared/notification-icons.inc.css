@@ -127,6 +127,10 @@
   fill-opacity: 1;
 }
 
+.afw-icon {
+  list-style-image: url(chrome://browser/skin/private-browsing.svg);
+}
+
 .camera-icon {
   list-style-image: url(chrome://browser/skin/notification-icons/camera.svg);
 }

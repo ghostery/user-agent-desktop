@@ -8,15 +8,17 @@
 # having to create the same entry for each locale.
 
 [localization] @AB_CD@.jar:
-  preview/protections.ftl                          (../components/protections/content/protections.ftl)
+#  preview/protections.ftl                          (../components/protections/content/protections.ftl)
+# CLIQZ-AFTER-MERGE: check whether we really need this ftl file?
+# It's being used in mozilla-release/browser/components//urlbar/UrlbarProviderInterventions.js
   preview/interventions.ftl                        (../components/urlbar/content/interventions.ftl)
   browser                                          (%browser/**/*.ftl)
+# locale/browser/cliqzPrivateBrowsing.ftl          (%chrome/browser/cliqzPrivateBrowsing.ftl)
 
 @AB_CD@.jar:
 % locale browser @AB_CD@ %locale/browser/
 # bookmarks.html is produced by LOCALIZED_GENERATED_FILES.
     locale/browser/bookmarks.html                  (bookmarks.html)
-
     locale/browser/accounts.properties             (%chrome/browser/accounts.properties)
     locale/browser/app-extension-fields.properties (%chrome/browser/app-extension-fields.properties)
     locale/browser/browser.dtd                     (%chrome/browser/browser.dtd)
@@ -44,8 +46,10 @@
     locale/browser/feeds/subscribe.properties       (%chrome/browser/feeds/subscribe.properties)
     locale/browser/migration/migration.dtd         (%chrome/browser/migration/migration.dtd)
     locale/browser/migration/migration.properties  (%chrome/browser/migration/migration.properties)
+#ifdef MOZ_SERVICES_SYNC
     locale/browser/syncBrand.dtd                (%chrome/browser/syncBrand.dtd)
     locale/browser/syncSetup.properties         (%chrome/browser/syncSetup.properties)
+#endif
 % locale browser-region @AB_CD@ %locale/browser-region/
     locale/browser-region/region.properties        (%chrome/browser-region/region.properties)
 # the following files are browser-specific overrides
@@ -59,9 +63,12 @@
     locale/browser/brandings.dtd                   (%chrome/browser/brandings.dtd)
     locale/browser/fxmonitor.properties            (%chrome/browser/fxmonitor.properties)
 
+#if 0
+# Cliqz. System Addons processing differently
 #ifdef XPI_NAME
 # Bug 1240628, restructure how l10n repacks work with feature addons
 # This is hacky, but ensures the chrome.manifest chain is complete
 [.] chrome.jar:
 % manifest features/chrome.manifest
+#endif
 #endif

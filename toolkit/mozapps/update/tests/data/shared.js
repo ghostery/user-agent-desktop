@@ -716,7 +716,7 @@ function getPerInstallationMutexName() {
   let data = converter.convertToByteArray(exeFile.path.toLowerCase());
 
   hasher.update(data, data.length);
-  return "Global\\MozillaUpdateMutex-" + hasher.finish(true);
+  return "Global\\CliqzUpdateMutex-" + hasher.finish(true);
 }
 
 /**

@@ -106,7 +106,8 @@ function addReportRow(isPending, id, date, dateFormatter) {
     const link = document
       .importNode(linkTemplate.content, true)
       .querySelector("a");
-    link.href = `${reportURL}${id}`;
+    link.href = `#${id}`;
+    link.style.visibility = "hidden";
     cells[2].appendChild(link);
     document.getElementById("submitted").appendChild(row);
   }

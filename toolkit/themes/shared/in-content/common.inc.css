@@ -29,7 +29,8 @@
   --in-content-border-invalid-shadow: var(--red-50-a30);
   --in-content-border-color: #d7d7db;
   --in-content-category-outline-focus: 1px dotted #0a84ff;
-  --in-content-category-text-selected: #0a84ff;
+  --in-content-category-text-active: #0c0c0d;
+  --in-content-category-text-selected: #0078ca;
   --in-content-category-text-selected-active: #0060df;
   --in-content-category-background-hover: rgba(12,12,13,0.1);
   --in-content-category-background-active: rgba(12,12,13,0.15);
@@ -802,6 +803,20 @@ html|*#categories[last-input-type="mouse"] > html|button.category:-moz-focusring
   margin: 0;
   -moz-user-select: none;
 }
+
+/*
+*|*.header-mozilla-support-label {
+  margin-inline-end: 3px;
+  font-weight: initial;
+  line-height: 32px;
+  font-size: 14px;
+  color: #999;
+}
+
+*|*.header-mozilla-support-label > html|a.help-button {
+  margin-bottom: -3px;
+}
+*/
 
 /* List boxes */
 

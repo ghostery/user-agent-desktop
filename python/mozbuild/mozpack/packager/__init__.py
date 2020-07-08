@@ -337,9 +337,12 @@ class SimplePackager(object):
                 if addon:
                     self._addons[addon] = 'unpacked'
             if isinstance(e, Manifest):
+                '''
+                Cliqz. Since FF 57 manifest entries support flags, like platformversion
                 if e.flags:
                     errors.fatal('Flags are not supported on ' +
                                  '"manifest" entries')
+                '''
                 self._included_manifests[e.path] = path
 
     def get_bases(self, addons=True):

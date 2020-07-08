@@ -2,6 +2,10 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+#suggestionsInSearchFieldsCheckbox {
+  display: none !important;  /* Hidden in Cliqz. We have search! */
+}
+
 .searchBarImage {
   height: 36px;
   width: 631px;
@@ -35,6 +39,12 @@
 
 #defaultEngine > .menulist-label-box > .menulist-icon,
 #defaultPrivateEngine > .menulist-label-box > .menulist-icon {
+  /* Preferences -> Search engine list
+   * Cliqz browser uses an svg icon.
+   * xul:image does not display it if a width value
+   * is not provided.
+   * */
+  width: 16px;
   height: 16px;
   width: 16px;
 }
@@ -74,3 +84,4 @@
 #restoreDefaultSearchEngines {
   margin-inline: 0;
 }
+

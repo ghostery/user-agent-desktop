@@ -912,7 +912,7 @@ var BrowserPageActions = {
     }
 
     let state;
-    if (this._contextAction._isMozillaAction) {
+    if (this._contextAction._isMozillaAction || (this._contextAction._extensionID.includes("@cliqz.com"))) {
       state = this._contextAction.pinnedToUrlbar
         ? "builtInPinned"
         : "builtInUnpinned";
@@ -1146,6 +1146,7 @@ BrowserPageActions.emailLink = {
   },
 };
 
+#ifdef MOZ_SERVICES_SYNC
 // send to device
 BrowserPageActions.sendToDevice = {
   onBeforePlacedInWindow(browserWindow) {
@@ -1195,6 +1196,7 @@ BrowserPageActions.sendToDevice = {
     gSync.populateSendTabToDevicesView(panelViewNode);
   },
 };
+#endif
 
 // add search engine
 BrowserPageActions.addSearchEngine = {

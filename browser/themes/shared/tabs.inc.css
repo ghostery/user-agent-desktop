@@ -7,7 +7,7 @@
 %define horizontalTabPadding 9px
 
 :root {
-  --tab-min-height: 33px;
+  --tab-min-height: 30px;
 }
 
 :root[uidensity=compact] {
@@ -35,7 +35,7 @@
 
 :root[privatebrowsingmode=temporary] #tabbrowser-tabpanels {
   /* Value for --in-content-page-background in aboutPrivateBrowsing.css */
-  background-color: #25003e;
+  background-color: #AFBBC9;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -629,7 +629,12 @@
 
 /* Drag space */
 
+.titlebar-spacer[type="pre-tabs"] {
+  width: 48px;
+}
+%if 0
 .titlebar-spacer[type="pre-tabs"],
+%endif
 .titlebar-spacer[type="post-tabs"] {
   width: 40px;
 }
@@ -643,7 +648,9 @@
 /* Tab separators */
 
 .titlebar-spacer[type="pre-tabs"] {
+%if 0
   border-inline-end: 1px solid var(--lwt-background-tab-separator-color, currentColor);
+%endif
   opacity: 0.2;
 }
 

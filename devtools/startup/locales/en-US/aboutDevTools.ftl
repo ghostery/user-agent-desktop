@@ -3,18 +3,18 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 head-title = About Developer Tools
-enable-title = Enable Firefox Developer Tools
-enable-inspect-element-title = Enable Firefox Developer Tools to use Inspect Element
+enable-title = Enable Cliqz Developer Tools
+enable-inspect-element-title = Enable Cliqz Developer Tools to use Inspect Element
 enable-inspect-element-message = Examine and edit HTML and CSS with the Developer Tools’ Inspector.
-enable-about-debugging-message = Develop and debug WebExtensions, web workers, service workers and more with Firefox Developer Tools.
+enable-about-debugging-message = Develop and debug WebExtensions, web workers, service workers and more with Cliqz Developer Tools.
 enable-key-shortcut-message = You activated a Developer Tools shortcut. If that was a mistake, you can close this Tab.
 enable-menu-message = Perfect your website’s HTML, CSS, and JavaScript with tools like Inspector and Debugger.
-enable-common-message = Firefox Developer Tools are disabled by default to give you more control over your browser.
+enable-common-message = Cliqz Developer Tools are disabled by default to give you more control over your browser.
 enable-learn-more-link = Learn more about Developer Tools
 enable-enable-button = Enable Developer Tools
 enable-close-button = Close this Tab
 
-welcome-title = Welcome to Firefox Developer Tools!
+welcome-title = Welcome to Cliqz Developer Tools!
 newsletter-title = Mozilla Developer Newsletter
 newsletter-message = Get developer news, tricks and resources sent straight to your inbox.
 newsletter-email-placeholder =
@@ -24,7 +24,7 @@ newsletter-subscribe-button = Subscribe
 newsletter-thanks-title = Thanks!
 newsletter-thanks-message = If you haven’t previously confirmed a subscription to a Mozilla-related newsletter you may have to do so. Please check your inbox or your spam filter for an email from us.
 
-footer-title = Firefox Developer Edition
+footer-title = Cliqz Developer Edition
 footer-message = Looking for more than just Developer Tools? Check out the Firefox browser that is built specifically for developers and modern workflows.
 footer-learn-more-link = Learn more
 

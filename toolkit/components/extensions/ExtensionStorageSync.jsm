@@ -343,6 +343,7 @@ global.KeyRingEncryptionRemoteTransformer = KeyRingEncryptionRemoteTransformer;
  */
 async function storageSyncInit() {
   // Memoize the result to share the connection.
+
   if (storageSyncInit.promise === undefined) {
     const path = "storage-sync.sqlite";
     storageSyncInit.promise = FirefoxAdapter.openConnection({ path })

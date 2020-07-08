@@ -66,61 +66,63 @@ interface IGeckoBackChannel;
 // channels are present. Note that we do not do this for all UUIDs in this IDL,
 // just the ones that are written to the registry (coclass and interfaces that
 // have the [object] annotation)
+// Cliqz. Replace all IIDs and CLSIDs with new one.
+
 #if defined(USE_LOCAL_UUID)
 
 # if defined(DEBUG)
 
 // Local debug builds
-#  define HANDLER_CLSID 398ffd8d-5382-48f7-9e3b-19012762d39a
-#  define IHANDLERCONTROL_IID a218497e-8b10-460b-b668-a92b7ee39ff2
-#  define ASYNCIHANDLERCONTROL_IID ca18b9ab-04b6-41be-87f7-d99913d6a2e8
-#  define IGECKOBACKCHANNEL_IID 231c4946-4479-4c8e-aadc-8a0e48fc4c51
+#  define HANDLER_CLSID e052d988-37a6-4f28-85f4-8b6ed3a4333f
+#  define IHANDLERCONTROL_IID cd8b48f4-1cbb-49e0-b8cc-6af7576e0093
+#  define ASYNCIHANDLERCONTROL_IID 0dc778f8-0fce-49ad-a6e6-e46d39f7158e
+#  define IGECKOBACKCHANNEL_IID 0e05453e-1380-4fc4-b1be-35cceff68c0b
 
 # else
 
 // Local non-debug builds
-#  define HANDLER_CLSID ce573faf-7815-4fc2-a031-b092268ace9e
-#  define IHANDLERCONTROL_IID 2b715cce-1790-4fe1-aef5-48bb5acdf3a1
-#  define ASYNCIHANDLERCONTROL_IID 8e089670-4f57-41a7-89c0-37f17482fa6f
-#  define IGECKOBACKCHANNEL_IID 18e2488d-310f-400f-8339-0e50b513e801
+#  define HANDLER_CLSID 0e1b433b-a383-4513-9542-6dd082a09f48
+#  define IHANDLERCONTROL_IID 627770c0-51d2-4017-bb19-d13deb18e3d6
+#  define ASYNCIHANDLERCONTROL_IID e91fee74-dff6-4f22-ba26-e95f31ce3869
+#  define IGECKOBACKCHANNEL_IID 04dcf3c8-6a35-4fa1-ae01-bcb3643fb10c
 
 # endif
 
 #elif defined(NIGHTLY_BUILD)
 
 // Nightly Builds
-# define IHANDLERCONTROL_IID c57343fc-e011-40c2-b748-da82eabf0f1f
-# define ASYNCIHANDLERCONTROL_IID 648c92a1-ea35-46da-a806-6b55c6247373
-# define HANDLER_CLSID 4629216b-8753-41bf-9527-5bff51401671
-# define IGECKOBACKCHANNEL_IID e61e038d-40dd-464a-9aba-66b206b6911b
+# define IHANDLERCONTROL_IID f00b9065-a654-432f-9d08-e2a0216ad77f
+# define ASYNCIHANDLERCONTROL_IID 5e0055e8-ac26-47eb-9d27-4bdc852876f6
+# define HANDLER_CLSID 9e544f3d-d90a-45a0-a87b-40b5db30aa40
+# define IGECKOBACKCHANNEL_IID 7a26e090-b401-4cf5-88fc-000b1c549c22
 
 #elif defined(USE_BETA_UUID)
 
 // Beta Builds
-# define IHANDLERCONTROL_IID 119149fa-d212-4f22-9517-082eecc1a084
-# define ASYNCIHANDLERCONTROL_IID 4e253d9b-59cf-4b32-a973-38bc85495d61
-# define HANDLER_CLSID 21e9f98d-a6c9-4cb5-b288-ae2fd2a96c58
-# define IGECKOBACKCHANNEL_IID 77b75c7d-d1c2-4469-864d-31aaebb67cc6
+# define IHANDLERCONTROL_IID ef7acd32-cc55-4c47-913d-cba79af4a7f0
+# define ASYNCIHANDLERCONTROL_IID 4ba5bca1-84d3-4c4e-ba37-41276af9ff40
+# define HANDLER_CLSID 8c493661-d0fe-4868-a728-944aea83134a
+# define IGECKOBACKCHANNEL_IID f11c1159-f38d-4945-ba65-fac7433d44f7
 
 #elif defined(RELEASE_OR_BETA)
 
 // Release Builds
-# define IHANDLERCONTROL_IID ce30f77e-8847-44f0-a648-a9656bd89c0d
-# define ASYNCIHANDLERCONTROL_IID dca8d857-1a63-4045-8f36-8809eb093d04
-# define HANDLER_CLSID 1baa303d-b4b9-45e5-9ccb-e3fca3e274b6
-# define IGECKOBACKCHANNEL_IID b32983ff-ef84-4945-8f86-fb7491b4f57b
+# define IHANDLERCONTROL_IID e6c4e2ad-b2da-42a0-bc88-e882814522d6
+# define ASYNCIHANDLERCONTROL_IID 4935884e-5190-499f-a24e-cf468fe66be7
+# define HANDLER_CLSID f40a82cd-24d7-413d-aadc-843816fb4331
+# define IGECKOBACKCHANNEL_IID 3205fda4-24de-4d7e-8dc6-89041664f451
 
 #else
 
 // Catch-all
-# define IHANDLERCONTROL_IID 3316ce35-f892-4832-97c5-06c52c03cdba
-# define ASYNCIHANDLERCONTROL_IID 15b48b76-ad38-4ad3-bd1a-d3c48a5a9947
-# define HANDLER_CLSID 4a195748-dca2-45fb-9295-0a139e76a9e7
-# define IGECKOBACKCHANNEL_IID dd2e4a89-999e-4d65-8b65-440c923ddb61
+# define IHANDLERCONTROL_IID d97eab6b-e1fc-479c-9d17-33c077b2b0e1
+# define ASYNCIHANDLERCONTROL_IID 3c85a1c0-c9a0-4e98-9bb5-964ad02382aa
+# define HANDLER_CLSID 1c579561-9a8d-4efb-9f18-4122cdcc7134
+# define IGECKOBACKCHANNEL_IID 25ed5138-85bd-421f-b919-f0a79f543172
 
 #endif
 
-[uuid(2b0e83b3-fd1a-443f-9ed6-c00d39055b58)]
+[uuid(0492045c-2a9b-4933-9b92-0bdaf939ac84)]
 interface HandlerData
 {
   typedef struct _IA2Payload
@@ -182,7 +184,7 @@ interface IGeckoBackChannel : IUnknown
     [out] ULONG* aNChildren);
 }
 
-[uuid(1e545f07-f108-4912-9471-546827a80983)]
+[uuid(98c6b50d-7967-49c9-b76b-92aaf91e491b)]
 library AccessibleHandlerTypeLib
 {
   importlib("stdole2.tlb");

@@ -14,6 +14,7 @@
   <html:h1 data-l10n-id="privacy-header"/>
 </hbox>
 
+#if 0
 <!-- Tracking / Content Blocking -->
 <groupbox id="trackingGroup" data-category="panePrivacy" hidden="true" aria-describedby="contentBlockingDescription">
   <label id="contentBlockingHeader"><html:h2 data-l10n-id="content-blocking-enhanced-tracking-protection"/></label>
@@ -314,18 +315,35 @@
     </vbox>
   </vbox>
 </groupbox>
+#endif
 
 <!-- Site Data -->
 <groupbox id="siteDataGroup" data-category="panePrivacy" hidden="true" aria-describedby="totalSiteDataSize">
   <label><html:h2 data-l10n-id="sitedata-header"/></label>
 
-  <hbox data-subcategory="sitedata" align="baseline">
+  <hbox data-subcategory="sitedata" align="baseline" pack="end">
     <vbox flex="1">
       <description class="description-with-side-element" flex="1">
         <html:span id="totalSiteDataSize" class="tail-with-learn-more"></html:span>
         <label id="siteDataLearnMoreLink"
           class="learnMore" is="text-link" data-l10n-id="sitedata-learn-more"/>
       </description>
+      <description class="description-with-side-element warning-description"
+                   flex="1" hidden="true" id="blockCookiesWarning"
+                   data-l10n-id="sitedata-warning-your-settings-prevent-changes"/>
+      <radiogroup id="blockCookies"
+                  class="formatBoxSize"
+                  preference="network.cookie.cookieBehavior"
+                  onsyncfrompreference="return gPrivacyPane.readBlockCookies();"
+                  onsynctopreference="return gPrivacyPane.writeBlockCookies(this.value);">
+        <radio value="allow"
+               data-l10n-id="sitedata-allow-cookies-option"
+               flex="1" />
+        <radio value="disallow"
+               data-l10n-id="sitedata-disallow-cookies-option"
+               flex="1" />
+      </radiogroup>
+#if 0
       <hbox flex="1" id="deleteOnCloseNote" class="info-panel">
         <description flex="1" data-l10n-id="sitedata-delete-on-close-private-browsing" />
       </hbox>
@@ -336,6 +354,7 @@
                   preference="network.cookie.lifetimePolicy"
                   flex="1" />
       </hbox>
+#endif
     </vbox>
     <vbox align="end">
       <!-- Please don't remove the wrapping hbox/vbox/box for these elements. It's used to properly compute the search tooltip position. -->
@@ -379,6 +398,51 @@
       </hbox>
     </vbox>
   </hbox>
+
+  <!--
+	    CLIQZ-SPECIAL:
+	    DB-2210: I copied (no layout changes) and pasted those hboxes here
+	    just to let blockCookiesMenu take all available space horizontally.
+	  -->
+  <hbox id="blockThirdPartyRow"
+        class="indent"
+        align="center">
+    <label id="blockCookiesLabel"
+        control="blockCookiesMenu"
+        data-l10n-id="sitedata-block-desc"/>
+    <!-- Please don't remove the wrapping hbox/vbox/box for these elements. It's used to properly compute the search tooltip position. -->
+    <hbox pack="end">
+      <menulist id="blockCookiesMenu" preference="network.cookie.cookieBehavior"
+                onsyncfrompreference="return gPrivacyPane.readBlockCookiesMenu();"
+                onsynctopreference="return gPrivacyPane.writeBlockCookiesMenu(this.selectedItem.value);">
+        <menupopup>
+          <menuitem id="blockCookiesFromTrackers" data-l10n-id="sitedata-option-block-trackers" value="trackers"/>
+          <menuitem data-l10n-id="sitedata-option-block-unvisited" value="unvisited"/>
+          <menuitem data-l10n-id="sitedata-option-block-all-third-party" value="all-third-parties"/>
+          <menuitem data-l10n-id="sitedata-option-block-all" value="always"/>
+        </menupopup>
+      </menulist>
+    </hbox>
+  </hbox>
+  <hbox id="keepRow"
+        class="indent"
+        align="center">
+    <label id="keepUntil"
+            control="keepCookiesUntil"
+            data-l10n-id="sitedata-keep-until"/>
+    <!-- Please don't remove the wrapping hbox/vbox/box for these elements. It's used to properly compute the search tooltip position. -->
+    <hbox>
+      <menulist id="keepCookiesUntil"
+                onsyncfrompreference="return gPrivacyPane.readKeepCookiesUntil();"
+                preference="network.cookie.lifetimePolicy">
+        <menupopup>
+          <menuitem data-l10n-id="sitedata-keep-until-expire" value="0"/>
+          <menuitem data-l10n-id="sitedata-keep-until-closed" value="2"/>
+        </menupopup>
+      </menulist>
+    </hbox>
+  </hbox>
+
 </groupbox>
 
 <!-- Passwords -->
@@ -386,15 +450,15 @@
   <label><html:h2 data-l10n-id="logins-header"/></label>
 
   <vbox id="passwordSettings">
-    <hbox>
-      <vbox flex="1">
+    <hbox id="savePasswordsBox" align="top">
+      <vbox flex="2">
         <hbox>
           <checkbox id="savePasswords"
                     data-l10n-id="forms-ask-to-save-logins"
                     preference="signon.rememberSignons"
                     flex="1" />
         </hbox>
-        <hbox class="indent" flex="1">
+        <hbox class="indent" flex="1" pack="end">
           <checkbox id="passwordAutofillCheckbox"
                     data-l10n-id="forms-fill-logins-and-passwords"
                     search-l10n-id="forms-fill-logins-and-passwords.label"
@@ -468,11 +532,26 @@
   <label id="fips-desc" hidden="true" data-l10n-id="forms-master-pw-fips-desc"></label>
 </groupbox>
 
+<!-- Consentric -->
+<groupbox id="consentricGroup" data-category="panePrivacy" hidden="true" class="formatBoxSize">
+  <label><html:h2 data-l10n-id="consentric-header"/></label>
+  <checkbox id="consentricEnable" data-l10n-id="consentric-enable"/>
+  <vbox>
+    <description class="tail-with-learn-more" data-l10n-id="consentric-desc">
+      <label class="learnMore" is="text-link"
+            href="http://cliqz.com/magazine/re-consent"
+            data-l10n-name="consentric-learn-more"/>
+    </description>
+  </vbox>
+</groupbox>
+
+#if 0
 <!-- The form autofill section is inserted in to this box
      after the form autofill extension has initialized. -->
 <groupbox id="formAutofillGroupBox"
           data-category="panePrivacy"
           data-subcategory="form-autofill" hidden="true"></groupbox>
+#endif
 
 <!-- History -->
 <groupbox id="historyGroup" data-category="panePrivacy" hidden="true">
@@ -524,11 +603,11 @@
         </hbox>
       </vbox>
       <vbox id="historyCustomPane">
-        <vbox>
+        <vbox class="formatBoxSize">
           <checkbox id="privateBrowsingAutoStart"
                     data-l10n-id="history-private-browsing-permanent"
                     preference="browser.privatebrowsing.autostart"/>
-          <vbox class="indent">
+          <vbox class="indent formatBoxSize">
             <checkbox id="rememberHistory"
                       data-l10n-id="history-remember-browser-option"
                       preference="places.history.enabled"/>
@@ -574,9 +653,31 @@
   </hbox>
 </groupbox>
 
+<!-- Forget mode tabs -->
+<vbox data-category="panePrivacy" hidden="true">
+  <groupbox id="forgetMode" hidden="true" class="formatBoxSize">
+    <label><html:h2 data-l10n-id="forget-mode-header"/></label>
+    <checkbox
+        id="forgetModeEnable"
+        data-l10n-id="forget-mode-enable-checkbox"
+        preference="browser.privatebrowsing.apt"/>
+    <html:ul>
+      <description>
+        <html:li data-l10n-id="forget-mode-explanation1"/>
+        <html:li data-l10n-id="forget-mode-explanation2"/>
+      </description>
+    </html:ul>
+    <separator class="thin"/>
+    <description data-l10n-id="forget-mode-note"/>
+    <separator class="thin"/>
+    <label href="https://cliqz.com/support/automatic-forget-mode" is="text-link" data-l10n-id="forget-mode-learn-more"/>
+  </groupbox>
+</vbox>
+
 <!-- Address Bar -->
 <groupbox id="locationBarGroup"
           data-category="panePrivacy"
+          class="formatBoxSize"
           hidden="true"
           data-subcategory="locationBar">
   <label><html:h2 data-l10n-id="addressbar-header"/></label>
@@ -590,6 +691,24 @@
   <label id="openSearchEnginePreferences" is="text-link"
          data-l10n-id="addressbar-suggestions-settings"/>
 </groupbox>
+
+<!-- Tracking -->
+#if 0
+<groupbox id="trackingGroup" data-category="panePrivacy" hidden="true">
+  <label><html:h2 data-l10n-id="tracking-header-donottrack"/></label>
+    <hbox align="center">
+      <checkbox id="trackingProtectionPBM"
+                preference="privacy.donottrackheader.enabled"
+                data-l10n-id="do-not-track-checkbox-description"
+                flex="2"
+                class="tail-with-learn-more"/>
+      <label class="learnMore" is="text-link"
+              flex="1"
+              data-l10n-id="do-not-track-learn-more"
+              href="https://www.mozilla.org/dnt"/>
+    </hbox>
+</groupbox>
+#endif
 
 <hbox id="permissionsCategory"
       class="subcategory"
@@ -755,9 +874,11 @@
   <separator flex="1"/>
 
   <hbox data-subcategory="permissions-block-popups">
+    <hbox flex="1">
     <checkbox id="popupPolicy" preference="dom.disable_open_during_load"
               data-l10n-id="permissions-block-popups"
               flex="1" />
+    </hbox>
     <!-- Please don't remove the wrapping hbox/vbox/box for these elements. It's used to properly compute the search tooltip position. -->
     <hbox>
       <button id="popupPolicyButton"
@@ -774,6 +895,7 @@
     </hbox>
   </hbox>
 
+#if 0
   <hbox id="addonInstallBox">
     <checkbox id="warnAddonInstall"
               data-l10n-id="permissions-addon-install-warning"
@@ -797,12 +919,15 @@
               " />
     </hbox>
   </hbox>
-
+#endif
+<!-- CLIQZ-MERGE shall we use here oncommand="return gPrivacyPane.updateA11yPrefs(this.checked)" -->
   <vbox id="a11yPermissionsBox">
     <hbox flex="1" align="center">
       <checkbox id="a11yPrivacyCheckbox" class="tail-with-learn-more"
+                flex="2"
                 data-l10n-id="permissions-a11y-privacy-checkbox"/>
       <label id="a11yLearnMoreLink" class="learnMore" is="text-link"
+             flex="1"
              data-l10n-id="permissions-a11y-privacy-link"/>
     </hbox>
   </vbox>
@@ -818,15 +943,16 @@
   <html:h1 data-l10n-id="collection-header"/>
 </hbox>
 
-<groupbox id="dataCollectionGroup" data-category="panePrivacy" hidden="true">
+<groupbox id="dataCollectionGroup" data-category="panePrivacy" hidden="true" class="formatBoxSize">
   <label class="search-header" hidden="true"><html:h2 data-l10n-id="collection-header"/></label>
-
+#if 0
   <description>
     <label class="tail-with-learn-more" data-l10n-id="collection-description"/>
     <label id="dataCollectionPrivacyNotice"
            class="learnMore" is="text-link"
            data-l10n-id="collection-privacy-notice"/>
   </description>
+#endif
   <description>
     <hbox id="telemetry-container" align="stretch" flex="1" hidden="true">
       <hbox align="top">
@@ -846,7 +972,11 @@
     <description flex="1">
       <checkbox id="submitHealthReportBox"
                 data-l10n-id="collection-health-report"
-                class="tail-with-learn-more"/>
+#if 0
+	                class="tail-with-learn-more"
+#endif
+	      />
+#if 0
       <label id="FHRLearnMore"
              class="learnMore" is="text-link"
              data-l10n-id="collection-health-report-link"/>
@@ -860,6 +990,7 @@
                  data-l10n-id="addon-recommendations-link"/>
         </hbox>
       </vbox>
+#endif
     </description>
 #ifndef MOZ_TELEMETRY_REPORTING
   <description id="TelemetryDisabledDesc"
@@ -868,6 +999,7 @@
 #endif
 
 #ifdef MOZ_NORMANDY
+#if 0
     <hbox align="center">
       <checkbox id="optOutStudiesEnabled"
                 class="tail-with-learn-more"
@@ -879,18 +1011,28 @@
               data-l10n-id="collection-studies-link"/>
     </hbox>
 #endif
+#endif
 
 #ifdef MOZ_CRASHREPORTER
     <hbox align="center">
       <checkbox id="automaticallySubmitCrashesBox"
+#if 0
                 class="tail-with-learn-more"
+#endif
                 preference="browser.crashReports.unsubmittedCheck.autoSubmit2"
                 data-l10n-id="collection-backlogged-crash-reports"
                 flex="1"/>
+#if 0
       <label id="crashReporterLearnMore"
               class="learnMore" is="text-link" data-l10n-id="collection-backlogged-crash-reports-link"/>
+#endif
     </hbox>
 #endif
+    <description data-l10n-id="cliqz-firefox-privacy">
+      <label data-l10n-name="cliqz-firefox-privacy-mozilla" is="text-link" href="https://www.mozilla.org"/>
+      <label data-l10n-name="cliqz-firefox-privacy-mozilla-privacy" is="text-link" href="https://www.mozilla.org/en-US/privacy/firefox"/>
+      <label data-l10n-name="cliqz-firefox-privacy-privacy-browser" is="text-link" href="https://cliqz.com/en/privacy-browser"/>
+    </description>
   </vbox>
 </groupbox>
 #endif
@@ -912,12 +1054,25 @@
     <label id="enableSafeBrowsingLearnMore"
            class="learnMore" is="text-link" data-l10n-id="security-enable-safe-browsing-link"/>
   </hbox>
-  <vbox class="indent">
+  <vbox class="indent formatBoxSize">
     <checkbox id="blockDownloads"
               data-l10n-id="security-block-downloads"/>
     <checkbox id="blockUncommonUnwanted"
               data-l10n-id="security-block-uncommon-software"/>
   </vbox>
+</groupbox>
+
+<!-- HTTPS Everywhere -->
+<groupbox id="httpsEverywhereGroup" data-category="panePrivacy" hidden="true"  class="formatBoxSize">
+  <label><html:h2 data-l10n-id="https-everywhere-header"/></label>
+  <checkbox id="httpsEverywhereEnable" data-l10n-id="https-everywhere-checkbox"/>
+  <hbox>
+    <description class="tail-with-learn-more" data-l10n-id="https-everywhere-desc">
+      <label class="learnMore" is="text-link"
+            href="https://www.eff.org/https-everywhere"
+            data-l10n-name="https-everywhere-learn-more"/>
+    </description>
+  </hbox>
 </groupbox>
 
 <!-- Certificates -->
@@ -931,6 +1086,7 @@
     I KID YOU NOT.
   -->
   <radiogroup id="certSelection"
+              class="formatBoxSize"
               preftype="string"
               preference="security.default_personal_cert"
               aria-labelledby="CertSelectionDesc">
@@ -943,8 +1099,8 @@
     <checkbox id="enableOCSP"
               data-l10n-id="certs-enable-ocsp"
               preference="security.OCSP.enabled"
-              flex="1" />
-    <vbox>
+              flex="2" />
+    <vbox flex="1">
       <!-- Please don't remove the wrapping hbox/vbox/box for these elements. It's used to properly compute the search tooltip position. -->
       <hbox pack="end">
         <button id="viewCertificatesButton"

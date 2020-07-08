@@ -12,6 +12,7 @@ const kDragDataTypePrefix = "text/toolbarwrapper-id/";
 const kSkipSourceNodePref = "browser.uiCustomization.skipSourceNodeCheck";
 const kDrawInTitlebarPref = "browser.tabs.drawInTitlebar";
 const kExtraDragSpacePref = "browser.tabs.extraDragSpace";
+const kCliqzBlueThemePref = "extensions.cliqz.freshtab.blueTheme.enabled";
 const kKeepBroadcastAttributes = "keepbroadcastattributeswhencustomizing";
 
 const kPanelItemContextMenu = "customizationPanelItemContextMenu";
@@ -165,7 +166,8 @@ function CustomizeMode(aWindow) {
     this.$("customization-titlebar-visibility-checkbox").hidden = true;
     this.$("customization-extra-drag-space-checkbox").hidden = true;
   }
-
+  this._updateBlueThemeCheckbox();
+  Services.prefs.addObserver(kCliqzBlueThemePref, this);
   this.window.addEventListener("unload", this);
 }
 
@@ -198,6 +200,7 @@ CustomizeMode.prototype = {
       Services.prefs.removeObserver(kDrawInTitlebarPref, this);
       Services.prefs.removeObserver(kExtraDragSpacePref, this);
     }
+    Services.prefs.removeObserver(kCliqzBlueThemePref, this);
   },
 
   $(id) {
@@ -1709,6 +1712,7 @@ CustomizeMode.prototype = {
           this._updateTitlebarCheckbox();
           this._updateDragSpaceCheckbox();
         }
+        this._updateBlueThemeCheckbox();
         break;
     }
   },
@@ -1775,6 +1779,17 @@ CustomizeMode.prototype = {
     }
   },
 
+  _updateBlueThemeCheckbox() {
+    let showBlueTheme = Services.prefs.getBoolPref(kCliqzBlueThemePref, true);
+    let checkbox = this.document.getElementById("customization-cliqz-blue-theme-checkbox");
+
+    if (showBlueTheme) {
+      checkbox.setAttribute("checked", "true");
+    } else {
+      checkbox.removeAttribute("checked");
+    }
+  },
+
   toggleTitlebar(aShouldShowTitlebar) {
     // Drawing in the titlebar means not showing the titlebar, hence the negation:
     Services.prefs.setBoolPref(kDrawInTitlebarPref, !aShouldShowTitlebar);
@@ -1783,6 +1798,11 @@ CustomizeMode.prototype = {
 
   toggleDragSpace(aShouldShowDragSpace) {
     Services.prefs.setBoolPref(kExtraDragSpacePref, aShouldShowDragSpace);
+  },
+
+  toggleBlueTheme(aShouldShowBlueTheme) {
+    Services.prefs.setBoolPref(kCliqzBlueThemePref, aShouldShowBlueTheme);
+    this._updateBlueThemeCheckbox();
   },
 
   _getBoundsWithoutFlushing(element) {

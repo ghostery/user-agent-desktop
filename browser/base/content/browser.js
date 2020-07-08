@@ -12,6 +12,10 @@ var { AppConstants } = ChromeUtils.import(
 );
 ChromeUtils.import("resource://gre/modules/NotificationDB.jsm");
 
+var { CliqzResources } = ChromeUtils.import(
+  "resource:///modules/CliqzResources.jsm"
+);
+
 // lazy module getters
 
 XPCOMUtils.defineLazyModuleGetters(this, {
@@ -22,7 +26,9 @@ XPCOMUtils.defineLazyModuleGetters(this, {
   BrowserUsageTelemetry: "resource:///modules/BrowserUsageTelemetry.jsm",
   BrowserUtils: "resource://gre/modules/BrowserUtils.jsm",
   BrowserWindowTracker: "resource:///modules/BrowserWindowTracker.jsm",
+#ifdef MOZ_ACTIVITY_STREAM
   CFRPageActions: "resource://activity-stream/lib/CFRPageActions.jsm",
+#endif
   CharsetMenu: "resource://gre/modules/CharsetMenu.jsm",
   Color: "resource://gre/modules/Color.jsm",
   ContentSearch: "resource:///modules/ContentSearch.jsm",
@@ -85,7 +91,9 @@ XPCOMUtils.defineLazyModuleGetters(this, {
   UrlbarTokenizer: "resource:///modules/UrlbarTokenizer.jsm",
   UrlbarUtils: "resource:///modules/UrlbarUtils.jsm",
   UrlbarValueFormatter: "resource:///modules/UrlbarValueFormatter.jsm",
+#ifdef MOZ_SERVICES_SYNC
   Weave: "resource://services-sync/main.js",
+#endif
   WebNavigationFrames: "resource://gre/modules/WebNavigationFrames.jsm",
   fxAccounts: "resource://gre/modules/FxAccounts.jsm",
   webrtcUI: "resource:///modules/webrtcUI.jsm",
@@ -100,6 +108,11 @@ if (AppConstants.MOZ_CRASHREPORTER) {
   );
 }
 
+XPCOMUtils.defineLazyScriptGetter(
+  this,
+  ["isBlankPageURL"],
+  "chrome://browser/content/utilityOverlay.js"
+);
 XPCOMUtils.defineLazyScriptGetter(
   this,
   "PlacesTreeView",
@@ -165,11 +178,15 @@ XPCOMUtils.defineLazyScriptGetter(
   "gIdentityHandler",
   "chrome://browser/content/browser-siteIdentity.js"
 );
+
+#if 0
 XPCOMUtils.defineLazyScriptGetter(
   this,
   "gProtectionsHandler",
   "chrome://browser/content/browser-siteProtections.js"
 );
+#endif
+
 XPCOMUtils.defineLazyScriptGetter(
   this,
   ["gGestureSupport", "gHistorySwipeAnimation"],
@@ -180,11 +197,13 @@ XPCOMUtils.defineLazyScriptGetter(
   "gSafeBrowsing",
   "chrome://browser/content/browser-safebrowsing.js"
 );
+#ifdef MOZ_SERVICES_SYNC
 XPCOMUtils.defineLazyScriptGetter(
   this,
   "gSync",
   "chrome://browser/content/browser-sync.js"
 );
+#endif
 XPCOMUtils.defineLazyScriptGetter(
   this,
   "gBrowserThumbnails",
@@ -364,6 +383,10 @@ XPCOMUtils.defineLazyGetter(this, "gURLBar", () => {
   return urlbar;
 });
 
+// CLIQZ-SPECIAL: used in tab-browser context menu popup
+const autoForgetTabs = Cc["@cliqz.com/browser/auto_forget_tabs_service;1"].
+  getService(Ci.nsISupports).wrappedJSObject;
+
 XPCOMUtils.defineLazyGetter(this, "ReferrerInfo", () =>
   Components.Constructor(
     "@mozilla.org/referrer-info;1",
@@ -477,6 +500,7 @@ XPCOMUtils.defineLazyPreferenceGetter(
   }
 );
 
+#ifdef MOZ_SERVICES_SYNC
 XPCOMUtils.defineLazyPreferenceGetter(
   this,
   "gFxaToolbarEnabled",
@@ -496,6 +520,7 @@ XPCOMUtils.defineLazyPreferenceGetter(
     updateFxaToolbarMenu(gFxaToolbarEnabled);
   }
 );
+#endif
 
 XPCOMUtils.defineLazyPreferenceGetter(
   this,
@@ -587,6 +612,59 @@ async function gLazyFindCommand(cmd, ...args) {
   }
 }
 
+// CLIQZ Blue Theme
+// TODO - move this out into a separate file!
+try {
+  var THEME_PREF = "extensions.cliqz.freshtab.blueTheme.enabled",
+      THEME_CLASS = "cliqz-blue",
+      FRESHTAB_CONFIG = "extensions.cliqz.freshtabConfig",
+      branch = Services.prefs.getBranch('');
+
+  function observe(subject, topic, data) {
+    setThemeState(getThemeState());
+  }
+
+  function getThemeState() {
+    return !branch.prefHasUserValue(THEME_PREF) || branch.getBoolPref(THEME_PREF);
+  }
+
+  function getThemeInitialState() {
+    // set the current state of the Blue theme
+    var freshtabConfig = branch.prefHasUserValue(FRESHTAB_CONFIG) ? branch.getStringPref(FRESHTAB_CONFIG) : '{}';
+    var freshtabBackground = JSON.parse(freshtabConfig).background || {};
+    var themeEnabled = false;
+
+    if (branch.prefHasUserValue(THEME_PREF)) {
+      themeEnabled = branch.getBoolPref(THEME_PREF);
+    } else if (Object.keys(freshtabBackground).length === 0) {
+      // we also set the blue theme if the user did not set any freshtab background
+      themeEnabled = true;
+      // once we decided should user see the theme or not, save the result in prefs
+      branch.setBoolPref(THEME_PREF, true);
+    }
+
+    return themeEnabled;
+  }
+
+  function setThemeState(enabled) {
+    var win = window.document.getElementById('main-window');
+    if (!win) {
+      // In case of sidebar, window dont have main-window element
+      return;
+    }
+    if (enabled) {
+      win.classList.add(THEME_CLASS);
+    } else {
+      win.classList.remove(THEME_CLASS);
+    }
+  }
+  // handles changes
+  branch.addObserver(THEME_PREF, { observe:observe }, false);
+} catch (e) {
+  Cu.reportError(e);
+}
+// CLIQZ Blue Theme end
+
 var gPageIcons = {
   "about:home": "chrome://branding/content/icon32.png",
   "about:newtab": "chrome://branding/content/icon32.png",
@@ -595,13 +673,22 @@ var gPageIcons = {
   "about:privatebrowsing": "chrome://browser/skin/privatebrowsing/favicon.svg",
 };
 
+// CLIQZ-SPECIAL:
+// This variable is a pretty magical thing.
+// Not only it is used as a REAL global Array (is used in SessionStore.jsm, tabbrowser.js, etc.)
+// but also it provides a feature for any url stored in it not to be displayed in a URL bar
+// after it has been loaded.
+// Other words if a user goes to about:newtab and that page exists and is loaded then
+// literally the url will not be visible in a URL bar itself (it will not contain anything).
 var gInitialPages = [
+#if 0
   "about:blank",
   "about:newtab",
   "about:home",
   "about:privatebrowsing",
   "about:welcomeback",
   "about:sessionrestore",
+  "about:cliqz",
   "about:welcome",
   "about:newinstall",
 ];
@@ -618,6 +705,8 @@ function isInitialPage(url) {
   let nonQuery = url.prePath + url.filePath;
   return gInitialPages.includes(nonQuery) || nonQuery == BROWSER_NEW_TAB_URL;
 }
+#endif
+].concat(CliqzResources.INITIAL_PAGES);
 
 function browserWindows() {
   return Services.wm.getEnumerator("navigator:browser");
@@ -634,6 +723,7 @@ var gNavigatorBundle = {
   },
 };
 
+#ifdef MOZ_SERVICES_SYNC
 function updateFxaToolbarMenu(enable, isInitialUpdate = false) {
   // We only show the Firefox Account toolbar menu if the feature is enabled and
   // if sync is enabled.
@@ -678,6 +768,7 @@ function updateFxaToolbarMenu(enable, isInitialUpdate = false) {
     mainWindowEl.removeAttribute("fxatoolbarmenu");
   }
 }
+#endif
 
 function UpdateBackForwardCommands(aWebNavigation) {
   var backCommand = document.getElementById("Browser:Back");
@@ -1485,6 +1576,10 @@ function _loadURI(browser, uri, params = {}) {
   let loadFlags =
     params.loadFlags || params.flags || Ci.nsIWebNavigation.LOAD_FLAGS_NONE;
 
+  if (CliqzResources.isCliqzPage(uri) || uri === HomePage.getOriginalDefault()) {
+    loadFlags = loadFlags | Ci.nsIWebNavigation.LOAD_FLAGS_BYPASS_HISTORY;
+  }
+
   if (!triggeringPrincipal) {
     throw new Error("Must load with a triggering Principal");
   }
@@ -1501,6 +1596,7 @@ function _loadURI(browser, uri, params = {}) {
     gFissionBrowser,
     loadFlags
   );
+
   if (uriObject && handleUriInChrome(browser, uriObject)) {
     // If we've handled the URI in Chrome then just return here.
     return;
@@ -1775,6 +1871,13 @@ var gBrowserInit = {
 
     BrowserWindowTracker.track(window);
 
+    // CLIQZ-SPECIAL:
+    // DB-1913: set blue theme initial state.
+    // Since the method is trying to get access to DOM element
+    // we need to make sure it actually exists.
+    // onDOMContentLoaded event trigger is a good place to do that.
+    setThemeState(getThemeInitialState());
+
     gNavToolbox.palette = document.getElementById("BrowserToolbarPalette");
     gNavToolbox.palette.remove();
     let areas = CustomizableUI.areas;
@@ -1802,7 +1905,9 @@ var gBrowserInit = {
 
     this._setInitialFocus();
 
+#ifdef MOZ_SERVICES_SYNC
     updateFxaToolbarMenu(gFxaToolbarEnabled, true);
+#endif
   },
 
   onLoad() {
@@ -1983,7 +2088,9 @@ var gBrowserInit = {
     BookmarkingUI.init();
     BrowserSearch.delayedStartupInit();
     AutoShowBookmarksToolbar.init();
+#if 0
     gProtectionsHandler.init();
+#endif
     HomePage.delayedStartup().catch(Cu.reportError);
 
     let safeMode = document.getElementById("helpSafeMode");
@@ -2029,14 +2136,15 @@ var gBrowserInit = {
       MenuTouchModeObserver.init();
     }
 
+#if 0
+    // Cliqz. DB-2056. The part of cliqz extension now.
     if (AppConstants.MOZ_DATA_REPORTING) {
       gDataNotificationInfoBar.init();
     }
-
-    if (!AppConstants.MOZILLA_OFFICIAL) {
+    if (!AppConstants.MOZILLA_RELEASE) {
       DevelopmentHelpers.init();
     }
-
+#endif
     gExtensionsNotifications.init();
 
     let wasMinimized = window.windowState == window.STATE_MINIMIZED;
@@ -2166,6 +2274,7 @@ var gBrowserInit = {
       if (Array.isArray(uriToLoad)) {
         // This function throws for certain malformed URIs, so use exception handling
         // so that we don't disrupt startup
+
         try {
           gBrowser.loadTabs(uriToLoad, {
             inBackground: false,
@@ -2250,8 +2359,10 @@ var gBrowserInit = {
     }
 
     scheduleIdleTask(() => {
+#ifdef MOZ_SERVICES_SYNC
       // Initialize the Sync UI
       gSync.init();
+#endif
     });
 
     scheduleIdleTask(() => {
@@ -2349,6 +2460,19 @@ var gBrowserInit = {
       let uri = window.arguments[0];
       let defaultArgs = BrowserHandler.defaultArgs;
 
+      // CLIQZ-SPECIAL: DB-2345, this is how it works now.
+      // If show homepage at the browser start up is selected
+      // then defaultArgs will have a value of whatever is set to homepage.
+      // Otherwise defaultArgs equals "about:blank".
+      //
+      // In case of uri equals "about:blank" (a user opens the browser just by clicking on its'
+      // icon or in case of Windows OS click on "Open new tab" in the context menu, etc.)
+      // but at the same time defaultArgs does not (has other value than "about:blank") then
+      // it makes sense to load defaultArgs rather then showing empty page.
+      if (uri == "about:blank" && uri != defaultArgs) {
+        return defaultArgs;
+      }
+
       // If the given URI is different from the homepage, we want to load it.
       if (uri != defaultArgs) {
         AboutNewTab.noteNonDefaultStartup();
@@ -2356,10 +2480,20 @@ var gBrowserInit = {
         if (uri instanceof Ci.nsIArray) {
           // Transform the nsIArray of nsISupportsString's into a JS Array of
           // JS strings.
-          return Array.from(
+          let uriList = Array.from(
             uri.enumerate(Ci.nsISupportsString),
             supportStr => supportStr.data
           );
+          // CLIQZ-SPECIAL: DB-2490, in case of there is a freshtab url in uriList,
+          // we need to replace it with about:newtab so AboutNewTabService will catch it
+          // up later on.
+          let defaultArgsIndex = (CliqzResources.isCliqzPage(defaultArgs)
+            || defaultArgs === "about:home") ? uriList.indexOf(defaultArgs) : -1;
+
+          if (defaultArgsIndex !== -1) {
+            uriList[defaultArgsIndex] = "about:newtab";
+          }
+          return uriList;
         } else if (uri instanceof Ci.nsISupportsString) {
           return uri.data;
         }
@@ -2414,7 +2548,9 @@ var gBrowserInit = {
 
     FullScreen.uninit();
 
+#ifdef MOZ_SERVICES_SYNC
     gSync.uninit();
+#endif
 
     gExtensionsNotifications.uninit();
 
@@ -2460,7 +2596,9 @@ var gBrowserInit = {
       Services.prefs.removeObserver(ctrlTab.prefName, ctrlTab);
       ctrlTab.uninit();
       gBrowserThumbnails.uninit();
+#if 0
       gProtectionsHandler.uninit();
+#endif
       FullZoom.destroy();
 
       Services.obs.removeObserver(gIdentityHandler, "perm-changed");
@@ -2830,7 +2968,7 @@ function BrowserHome(aEvent) {
       // If we're going to load an initial page in the current tab as the
       // home page, we set initialPageLoadedFromURLBar so that the URL
       // bar is cleared properly (even during a remoteness flip).
-      if (isInitialPage(homePage)) {
+      if (CliqzResources.isInitialPage(homePage)) {
         gBrowser.selectedBrowser.initialPageLoadedFromUserAction = homePage;
       }
       loadOneOrMoreURIs(
@@ -4158,6 +4296,9 @@ const BrowserSearch = {
    *                      use the default placeholder.
    */
   _setURLBarPlaceholder(name) {
+    // Cliqz. We do not need to change text in URL bar. Allowing do all other
+    // related stuff when user change search engine, except this part.
+    return;
     let placeholder;
     if (name) {
       placeholder = gBrowserBundle.formatStringFromName("urlbar.placeholder", [
@@ -4219,6 +4360,7 @@ const BrowserSearch = {
    * has search engines.
    */
   updateOpenSearchBadge() {
+#ifdef 0
     BrowserPageActions.addSearchEngine.updateEngines();
 
     var searchBar = this.searchBar;
@@ -4232,6 +4374,7 @@ const BrowserSearch = {
     } else {
       searchBar.removeAttribute("addengines");
     }
+#endif
   },
 
   /**
@@ -4741,6 +4884,8 @@ function OpenBrowserWindow(options) {
     );
   }
 
+// Cliqz. Not used
+#if 0
   win.addEventListener(
     "MozAfterPaint",
     () => {
@@ -4757,7 +4902,7 @@ function OpenBrowserWindow(options) {
     },
     { once: true }
   );
-
+#endif
   return win;
 }
 
@@ -5170,7 +5315,10 @@ var XULBrowserWindow = {
     const nsIWebProgressListener = Ci.nsIWebProgressListener;
 
     let browser = gBrowser.selectedBrowser;
+
+#if 0
     gProtectionsHandler.onStateChange(aWebProgress, aStateFlags);
+#endif
 
     if (
       aStateFlags & nsIWebProgressListener.STATE_START &&
@@ -5262,7 +5410,8 @@ var XULBrowserWindow = {
     if (aWebProgress.isTopLevel) {
       if (
         (location == "about:blank" &&
-          BrowserUtils.checkEmptyPageOrigin(gBrowser.selectedBrowser)) ||
+          BrowserUtils.checkEmptyPageOrigin(gBrowser.selectedBrowser,
+            void 0, CliqzResources.isCliqzPage)) ||
         location == ""
       ) {
         // Second condition is for new tabs, otherwise
@@ -5282,7 +5431,9 @@ var XULBrowserWindow = {
 
       gIdentityHandler.onLocationChange();
 
+#if 0
       gProtectionsHandler.onLocationChange();
+#endif
 
       BrowserPageActions.onLocationChange();
 
@@ -5312,7 +5463,9 @@ var XULBrowserWindow = {
         gCustomizeMode.exit();
       }
 
+#ifdef MOZ_ACTIVITY_STREAM
       CFRPageActions.updatePageActions(gBrowser.selectedBrowser);
+#endif
     }
     Services.obs.notifyObservers(null, "touchbar-location-change", location);
     UpdateBackForwardCommands(gBrowser.webNavigation);
@@ -5399,6 +5552,8 @@ var XULBrowserWindow = {
   _event: null,
   _lastLocationForEvent: null,
 
+#if 0
+  // CLIQZ-MERGE: check errors in console
   // This is called in multiple ways:
   //  1. Due to the nsIWebProgressListener.onContentBlockingEvent notification.
   //  2. Called by tabbrowser.xml when updating the current browser.
@@ -5437,6 +5592,7 @@ var XULBrowserWindow = {
     // event after onContentBlockingEvent is called.
     this._event = aEvent;
   },
+#endif
 
   // This is called in multiple ways:
   //  1. Due to the nsIWebProgressListener.onSecurityChange notification.
@@ -7256,11 +7412,14 @@ var ToolbarContextMenu = {
     let id = this._getExtensionId(popup);
     let addon = id && (await AddonManager.getAddonByID(id));
 
+    // CLIQZ-SPECIAL: hide manage, report and remove extensions for cliqz toolbar icons
+    let node = this._getUnwrappedTriggerNode(popup);
+    let isCliqzButton = node && node.hasAttribute("data-extensionid") && (node.getAttribute("data-extensionid") == "cliqz@cliqz.com");
     for (let element of [removeExtension, manageExtension, separator]) {
-      element.hidden = !addon;
+      element.hidden = !addon || isCliqzButton;
     }
 
-    reportExtension.hidden = !addon || !gAddonAbuseReportEnabled;
+    reportExtension.hidden = !addon || !gAddonAbuseReportEnabled || isCliqzButton;
 
     if (addon) {
       removeExtension.disabled = !(

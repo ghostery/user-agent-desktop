@@ -11,13 +11,16 @@ var { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
 var { AppConstants } = ChromeUtils.import(
   "resource://gre/modules/AppConstants.jsm"
 );
+var { AddonManager } = ChromeUtils.import(
+  "resource://gre/modules/AddonManager.jsm"
+);
 
 async function init(aEvent) {
   if (aEvent.target != document) {
     return;
   }
 
-  var distroId = Services.prefs.getCharPref("distribution.id", "");
+  var distroId = Services.prefs.getCharPref("distribution.about", "");
   if (distroId) {
     var distroString = distroId;
 
@@ -30,14 +33,33 @@ async function init(aEvent) {
     distroIdField.value = distroString;
     distroIdField.style.display = "block";
 
+    // DB-1148: Add platform and extension version to About dialog.
+    const cliqzAddon = await AddonManager.getAddonByID("cliqz@cliqz.com");
+    let componentsVersion = Services.appinfo.platformVersion;
+    if (cliqzAddon) {
+      componentsVersion += `+${cliqzAddon.version}`;
+    }
+    distroIdField.value += ` (${componentsVersion})`;
+
+    // Append "(32-bit)" or "(64-bit)" build architecture to the version number:
+    let archResource = Services.appinfo.is64Bit
+                        ? "aboutDialog-architecture-sixtyFourBit"
+                        : "aboutDialog-architecture-thirtyTwoBit";
+    let [arch] = await document.l10n.formatValues([{id: archResource}]);
+    distroIdField.value += ` (${arch})`;
+
+#if 0
     var distroAbout = Services.prefs.getStringPref("distribution.about", "");
     if (distroAbout) {
       var distroField = document.getElementById("distribution");
       distroField.value = distroAbout;
       distroField.style.display = "block";
     }
+#endif
   }
 
+// Cliqz. We don't use "version" element in Cliqz browser at all
+#if 0
   // Include the build ID and display warning if this is an "a#" (nightly or aurora) build
   let versionId = "aboutDialog-version";
   let versionAttributes = {
@@ -64,7 +86,7 @@ async function init(aEvent) {
   document.l10n.setAttributes(versionField, versionId, versionAttributes);
 
   await document.l10n.translateElements([versionField]);
-
+#endif
   // Show a release notes link if we have a URL.
   let relNotesLink = document.getElementById("releasenotes");
   let relNotesPrefType = Services.prefs.getPrefType("app.releaseNotesURL");

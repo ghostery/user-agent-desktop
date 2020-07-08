@@ -91,7 +91,7 @@ template <>
 ShouldHookFunc* const GetWindowInfoFH::mShouldHook =
     &CheckQuirks<QUIRK_FLASH_HOOK_GETWINDOWINFO>;
 
-static const wchar_t* kMozillaWindowClass = L"MozillaWindowClass";
+static const wchar_t* kMozillaWindowClass = L"CliqzWindowClass";
 static HWND sBrowserHwnd = nullptr;
 
 BOOL WINAPI GetWindowInfoHook(HWND hWnd, PWINDOWINFO pwi) {

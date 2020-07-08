@@ -1201,6 +1201,24 @@ toolbarpaletteitem[dragover] {
   display: -moz-box;
 }
 
+/* Hidden in Cliqz */
+
+#customization-lwtheme-menu-recommended, #customization-lwtheme-menu-footer {
+  display: none !important;
+}
+
+#customization-lwtheme-menu .customization-lwtheme-menu-theme[image="resource:///chrome/browser/content/browser/defaultthemes/light.icon.svg"] {
+  display: initial !important;
+}
+
+#customization-lwtheme-menu .customization-lwtheme-menu-theme[image="resource:///chrome/browser/content/browser/defaultthemes/dark.icon.svg"] {
+  display: initial !important;
+}
+
+#customization-lwtheme-button {
+  display: initial !important;
+}
+
 toolbarpaletteitem[place="palette"] {
   -moz-box-orient: vertical;
   width: 7em;
@@ -1369,6 +1387,18 @@ toolbarpaletteitem > toolbaritem {
 
 toolbar[keyNav=true]:not([collapsed=true]):not([customizing=true]) toolbartabstop {
   -moz-user-focus: normal;
+}
+
+/* Cliqz - Hide https everywhere toolbar button */
+#https-everywhere_cliqz_com-browser-action, #https-everywhere_cliqz_com-browser-action * {
+  visibility: hidden;
+  height: 0px !important;
+  width: 0px !important;
+  padding: 0px !important;
+}
+
+#wrapper-https-everywhere_cliqz_com-browser-action {
+  display: none;
 }
 
 /* Frame used for rendering the DevTools inspector highlighters */

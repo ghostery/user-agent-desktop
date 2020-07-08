@@ -160,10 +160,12 @@
                               type="checkbox"
                               key="key_gotoHistory"
                               oncommand="SidebarUI.toggle('viewHistorySidebar');" data-l10n-id="menu-view-history-button"/>
+#ifdef MOZ_SERVICES_SYNC
                     <menuitem id="menu_tabsSidebar"
                               type="checkbox"
                               class="sync-ui-item"
                               oncommand="SidebarUI.toggle('viewTabsSidebar');" data-l10n-id="menu-view-synced-tabs-sidebar"/>
+#endif
                   </menupopup>
                 </menu>
                 <menuseparator/>
@@ -260,9 +262,11 @@
                           key="key_sanitize"
                           command="Tools:Sanitize" data-l10n-id="menu-history-clear-recent-history"/>
                 <menuseparator id="sanitizeSeparator"/>
+#ifdef MOZ_SERVICES_SYNC
                 <menuitem id="sync-tabs-menuitem"
                           oncommand="gSync.openSyncedTabsPanel();"
                           hidden="true" data-l10n-id="menu-history-synced-tabs"/>
+#endif
                 <menuitem id="historyRestoreLastSession"
                           command="Browser:RestoreLastSession" data-l10n-id="menu-history-restore-last-session"/>
                 <menuitem id="hiddenTabsMenu"
@@ -379,6 +383,7 @@
                         key="key_openAddons"
                         command="Tools:Addons" data-l10n-id="menu-tools-addons"/>
 
+#ifdef MOZ_SERVICES_SYNC
               <!-- only one of sync-setup, sync-enable, sync-unverifieditem, sync-syncnowitem or sync-reauthitem will be showing at once -->
               <menuitem id="sync-setup"
                         class="sync-ui-item"
@@ -400,6 +405,7 @@
                         class="sync-ui-item"
                         hidden="true"
                         oncommand="gSync.openSignInAgainPage('menubar');" data-l10n-id="menu-tools-fxa-re-auth"/>
+#endif
               <menuseparator id="devToolsSeparator"/>
               <menu id="webDeveloperMenu" data-l10n-id="menu-tools-web-developer">
                 <menupopup id="menuWebDeveloperPopup">
@@ -464,8 +470,10 @@
 #else
                           />
 #endif
+#if 0
                 <menuitem id="menu_openTour"
                           oncommand="openTourPage();" data-l10n-id="menu-help-show-tour"/>
+#endif
                 <menuitem id="help_importFromAnotherBrowser"
                           command="cmd_help_importFromAnotherBrowser" data-l10n-id="menu-help-import-from-another-browser"/>
                 <menuitem id="menu_keyboardShortcuts"
@@ -474,9 +482,11 @@
                 <menuitem id="troubleShooting"
                           oncommand="openTroubleshootingPage()"
                           onclick="checkForMiddleClick(this, event);" data-l10n-id="menu-help-troubleshooting-info"/>
+#if 0
                 <menuitem id="feedbackPage"
                           oncommand="openFeedbackPage()"
                           onclick="checkForMiddleClick(this, event);" data-l10n-id="menu-help-feedback-page"/>
+#endif
                 <menuitem id="helpSafeMode"
                           oncommand="safeModeRestart();" data-l10n-id="menu-help-safe-mode-without-addons"/>
                 <menuitem id="menu_HelpPopup_reportPhishingtoolmenu"

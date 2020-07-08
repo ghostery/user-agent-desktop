@@ -53,8 +53,11 @@ SOURCES += [
     'HashStore.cpp',
 ]
 
-EXTRA_JS_MODULES += [
+EXTRA_PP_JS_MODULES += [
     'SafeBrowsing.jsm',
+]
+
+EXTRA_JS_MODULES += [
     'UrlClassifierHashCompleter.jsm',
     'UrlClassifierLib.jsm',
     'UrlClassifierListManager.jsm',

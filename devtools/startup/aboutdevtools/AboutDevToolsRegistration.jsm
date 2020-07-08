@@ -29,7 +29,8 @@ AboutDevtools.prototype = {
   },
 
   getURIFlags: function(uri) {
-    return nsIAboutModule.ALLOW_SCRIPT;
+    return nsIAboutModule.ALLOW_SCRIPT |
+           nsIAboutModule.HIDE_FROM_ABOUTABOUT;
   },
 };
 

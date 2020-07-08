@@ -48,6 +48,16 @@ const MOZSEARCH_NS_10 = "http://www.mozilla.org/2006/browser/search/";
 const MOZSEARCH_LOCALNAME = "SearchPlugin";
 
 const USER_DEFINED = "searchTerms";
+// CLIQZ-SPECIAL:
+// DB-2213:
+// We use this special key to form a search url for Cliqz Search Engine.
+// Unfortunately, it is not possible to do that FF normal way since
+// Cliqz Search Engine url does not receive any GET parameters;
+// Instead using a query prepended with a hash sign.
+// The key placeholder is used in
+// browser/components/search/extensions/cliqz/_locales/<LOCALE>/messages.json
+// json files to configure Cliqz Search Engine urls.
+const CLIQZ_SEARCH_TERMS_KEY = 'cliqzSearchTermsKey';
 
 // Custom search parameters
 const MOZ_PARAM_LOCALE = "moz:locale";
@@ -667,6 +677,9 @@ EngineURL.prototype = {
       if (dataString) {
         if (url.includes("?")) {
           url = `${url}&${dataString}`;
+        } else if (dataString.includes(`{${CLIQZ_SEARCH_TERMS_KEY}}`)) {
+          dataString = dataString.replace(`{${CLIQZ_SEARCH_TERMS_KEY}}=`, "");
+          url = `${url}#${dataString}`;
         } else {
           url = `${url}?${dataString}`;
         }

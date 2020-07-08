@@ -37,6 +37,10 @@ with Files("test/unit/test_LaterRun.js"):
 with Files("test/unit/test_SitePermissions.js"):
     BUG_COMPONENT = ("Firefox", "Site Permissions")
 
+# CLIQZ-SPECIAL: after merge with Firefox 76.0b7
+# we need to use AboutNewTab.jsm module for getting
+# our newTabURL from our Cliqz extension and react
+# to about:newtab and about:home urls.
 with Files("AboutNewTab.jsm"):
     BUG_COMPONENT = ("Firefox", "New Tab Page")
 
@@ -128,7 +132,6 @@ BROWSER_CHROME_MANIFESTS += [
 XPCSHELL_TESTS_MANIFESTS += ['test/unit/xpcshell.ini']
 
 EXTRA_JS_MODULES += [
-    'AboutNewTab.jsm',
     'AppUpdater.jsm',
     'AsyncTabSwitcher.jsm',
     'BrowserUsageTelemetry.jsm',
@@ -145,7 +148,6 @@ EXTRA_JS_MODULES += [
     'LiveBookmarkMigrator.jsm',
     'NewTabPagePreloading.jsm',
     'OpenInTabsUtils.jsm',
-    'PageActions.jsm',
     'PermissionUI.jsm',
     'PingCentre.jsm',
     'ProcessHangMonitor.jsm',
@@ -160,6 +162,11 @@ EXTRA_JS_MODULES += [
     'TransientPrefs.jsm',
     'webrtcUI.jsm',
     'ZoomUI.jsm',
+]
+
+EXTRA_PP_JS_MODULES += [
+    'AboutNewTab.jsm',
+    'PageActions.jsm',
 ]
 
 if CONFIG['MOZ_ASAN_REPORTER']:

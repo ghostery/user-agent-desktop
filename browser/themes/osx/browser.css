@@ -61,7 +61,7 @@
   display: -moz-box;
   -moz-appearance: toolbox;
   height: 1px;
-  margin-top: -1px;
+  /* margin-top: -1px;  CLIQZ-SPECIAL: to tackele border in toolbar and dropdown*/
   opacity: 0.001;
 }
 
@@ -134,7 +134,7 @@
 :root:-moz-any([sizemode="fullscreen"],[customizing]) #nav-bar:not([tabs-hidden="true"]),
 :root:not([tabsintitlebar]) #nav-bar:not([tabs-hidden="true"]),
 #nav-bar:not([tabs-hidden="true"]):-moz-lwtheme {
-  box-shadow: 0 calc(-1 * var(--tabs-navbar-shadow-size)) 0 var(--tabs-border-color);
+  box-shadow: calc(-1 * var(--tabs-navbar-shadow-size)) 0 var(--tabs-border-color);
 }
 
 /* Always draw a border on Yosemite to ensure the border is well-defined there
@@ -148,7 +148,7 @@
   }
 
   :root[tabsintitlebar] #nav-bar:not([tabs-hidden="true"]):not(:-moz-lwtheme) {
-    box-shadow: 0 calc(-1 * var(--tabs-navbar-shadow-size)) 0 var(--tabs-border-color);
+    box-shadow: calc(-1 * var(--tabs-navbar-shadow-size)) 0 var(--tabs-border-color);
   }
 }
 
@@ -805,4 +805,12 @@ menulist.translate-infobar-element > .menulist-dropmarker {
 .webextension-popup-browser,
 .webextension-popup-stack {
   border-radius: inherit;
+}
+
+#customization-uidensity-button {
+  /*
+    Cliqz
+    Disable "Density" menu on OSX
+   */
+  display: none!important;
 }
