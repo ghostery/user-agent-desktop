@@ -1,0 +1,12 @@
+{
+    "configure-args": "--enable-rust-simd",
+    "optimize": true,
+    "env": {
+        "JSTESTS_EXTRA_ARGS": "--jitflags=jstests"
+    },
+    "conditional-env": {
+        "linux64": {
+            "JITTEST_EXTRA_ARGS": "--run-binast"
+        }
+    }
+}

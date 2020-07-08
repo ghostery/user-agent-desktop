@@ -1,0 +1,106 @@
+/* -*- Mode: C++; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+include protocol PDNSRequest;
+include protocol PSocketProcessBridge;
+include protocol PProfiler;
+include protocol PWebrtcTCPSocket;
+include protocol PHttpTransaction;
+include protocol PHttpConnectionMgr;
+include protocol PFileDescriptorSet;
+include protocol PChildToParentStream;
+include protocol PParentToChildStream;
+include protocol PInputChannelThrottleQueue;
+include protocol PBackground;
+include protocol PAltService;
+include protocol PAltSvcTransaction;
+
+include MemoryReportTypes;
+include NeckoChannelParams;
+include PBrowserOrId;
+include PrefsTypes;
+
+using mozilla::dom::NativeThreadId from "mozilla/dom/TabMessageUtils.h";
+using mozilla::Telemetry::HistogramAccumulation from "mozilla/TelemetryComms.h";
+using mozilla::Telemetry::KeyedHistogramAccumulation from "mozilla/TelemetryComms.h";
+using mozilla::Telemetry::ScalarAction from "mozilla/TelemetryComms.h";
+using mozilla::Telemetry::KeyedScalarAction from "mozilla/TelemetryComms.h";
+using mozilla::Telemetry::ChildEventData from "mozilla/TelemetryComms.h";
+using mozilla::Telemetry::DiscardedData from "mozilla/TelemetryComms.h";
+using base::ProcessId from "base/process.h";
+using mozilla::OriginAttributes from "mozilla/ipc/BackgroundUtils.h";
+using PRTime from "prtime.h";
+
+namespace mozilla {
+namespace net {
+
+protocol PSocketProcess
+{
+  manages PDNSRequest;
+  manages PWebrtcTCPSocket;
+  manages PFileDescriptorSet;
+  manages PHttpTransaction;
+  manages PHttpConnectionMgr;
+  manages PChildToParentStream;
+  manages PParentToChildStream;
+  manages PInputChannelThrottleQueue;
+  manages PAltService;
+  manages PAltSvcTransaction;
+
+parent:
+  async InitCrashReporter(Shmem shmem, NativeThreadId threadId);
+  async AddMemoryReport(MemoryReport aReport);
+  async FinishMemoryReport(uint32_t aGeneration);
+  // Messages for sending telemetry to parent process.
+  async AccumulateChildHistograms(HistogramAccumulation[] accumulations);
+  async AccumulateChildKeyedHistograms(KeyedHistogramAccumulation[] accumulations);
+  async UpdateChildScalars(ScalarAction[] actions);
+  async UpdateChildKeyedScalars(KeyedScalarAction[] actions);
+  async RecordChildEvents(ChildEventData[] events);
+  async RecordDiscardedData(DiscardedData data);
+
+  /* tabId is only required for web-proxy support, which isn't always needed */
+  async PWebrtcTCPSocket(TabId? tabId);
+  async PDNSRequest(nsCString hostName, nsCString trrServer, uint16_t type,
+                    OriginAttributes originAttributes, uint32_t flags);
+  async PChildToParentStream();
+  async ObserveHttpActivity(HttpActivityArgs aActivityArgs,
+                            uint32_t aActivityType,
+                            uint32_t aActivitySubtype,
+                            PRTime   aTimestamp,
+                            uint64_t aExtraSizeData,
+                            nsCString aExtraStringData);
+  async InitBackground(Endpoint<PBackgroundParent> aEndpoint);
+  async PAltService();
+
+child:
+  async PreferenceUpdate(Pref pref);
+  async RequestMemoryReport(uint32_t generation,
+                            bool anonymize,
+                            bool minimizeMemoryUsage,
+                            FileDescriptor? DMDFile);
+  async SetOffline(bool offline);
+  async InitLinuxSandbox(FileDescriptor? sandboxBroker);
+  async InitSocketProcessBridgeParent(ProcessId processId, Endpoint<PSocketProcessBridgeParent> endpoint);
+  async InitProfiler(Endpoint<PProfilerChild> aEndpoint);
+  // test-only
+  async SocketProcessTelemetryPing();
+
+  async PHttpTransaction();
+  async PParentToChildStream();
+  async PHttpConnectionMgr();
+
+  async OnHttpActivityDistributorActivated(bool aIsActivated);
+  async PInputChannelThrottleQueue(uint32_t meanBytesPerSecond,
+                                   uint32_t maxBytesPerSecond);
+  async PAltSvcTransaction(HttpConnectionInfoCloneArgs aConnInfo,
+                           uint32_t aCaps);
+
+both:
+  async PFileDescriptorSet(FileDescriptor fd);
+};
+
+} // namespace net
+} // namespace mozilla

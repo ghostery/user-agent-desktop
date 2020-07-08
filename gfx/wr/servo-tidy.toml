@@ -1,0 +1,39 @@
+[configs]
+skip-check-length = false
+skip-check-licenses = false
+check-alphabetical-order = false
+
+[ignore]
+# Ignored packages with duplicated versions
+packages = [
+    "autocfg",
+    "core-graphics",
+    "core-text",
+    "gl_generator",
+    "percent-encoding",
+    "rand",
+    "rand_core",
+    "winapi",
+    "yaml-rust",
+    # old versions of cgl depends on an old version of gleam
+    "gleam",
+
+    # These are tracked in bug 1587468, see there for pending work.
+    "proc-macro2",
+    "quote",
+    "syn",
+    "unicode-xid",
+]
+
+# Files that are ignored for all tidy and lint checks.
+files = [
+    "./wrench/src/egl.rs",  # Copied from glutin
+]
+
+# Many directories are currently ignored while we tidy things up
+# gradually.
+directories = [
+   # Generated and upstream code combined with our own. Could use cleanup
+  "./target",
+  "./webrender/src",
+]

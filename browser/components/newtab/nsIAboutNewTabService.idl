@@ -1,0 +1,24 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+#include "nsISupports.idl"
+
+/**
+ * Allows to override about:newtab to point to a different location
+ * than the one specified within AboutRedirector.cpp
+ */
+
+[scriptable, uuid(dfcd2adc-7867-4d3a-ba70-17501f208142)]
+interface nsIAboutNewTabService : nsISupports
+{
+  /**
+   * Returns the default URL (local or activity stream depending on pref)
+   */
+  readonly attribute ACString defaultURL;
+
+  /**
+   * Returns the about:welcome URL.
+   */
+  readonly attribute ACString welcomeURL;
+};

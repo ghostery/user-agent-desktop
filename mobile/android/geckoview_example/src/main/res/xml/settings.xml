@@ -1,0 +1,21 @@
+<PreferenceScreen
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <SwitchPreferenceCompat
+        app:key="@string/key_tracking_protection"
+        app:title="Enable Tracking Protection"/>
+    <SwitchPreferenceCompat
+        app:key="@string/key_autoplay"
+        app:title="Allow Autoplay"/>
+    <SwitchPreferenceCompat
+        app:key="@string/key_remote_debugging"
+        app:title="Remote Debugging"/>
+    <ListPreference
+        app:key="@string/key_preferred_color_scheme"
+        app:title="Preferred Color Scheme"
+        app:summary="%s"
+        app:entries="@array/pref_preferred_color_scheme_display_names"
+        app:entryValues="@array/pref_preferred_color_scheme_values">
+    </ListPreference>
+
+</PreferenceScreen>

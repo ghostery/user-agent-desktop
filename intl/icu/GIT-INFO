@@ -1,0 +1,7 @@
+commit 5f681ecbc75898a6484217b322f3883b6d1b2049
+Author: Jeff Genovy <29107334+jefgen@users.noreply.github.com>
+Date:   Mon Mar 9 17:38:44 2020 -0700
+
+    ICU-20965 Remove VS2015 from CI builds, no longer supported by Azure Pipelines
+    
+    (cherry-picked from f411b4197db5c86fb52cbd788c0646e513303828)
