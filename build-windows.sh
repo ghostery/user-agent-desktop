@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 ROOT=`pwd`
 # copy resources from mozilla source which we need for docker build
@@ -22,21 +23,26 @@ cd ../
 # prepare vfat drive for case insensitive Win10 SDK volume
 if [ ! -f /tmp/vfat ]; then
   truncate -s 2G /tmp/vfat
-  LOOP=/dev/loop8
+  LOOP=/dev/loop7
+  if [ ! -b $LOOP ]; then
+    sudo mknod $LOOP -m0660 b 7 9
+  fi
   sudo losetup $LOOP /tmp/vfat
   sudo mkfs.vfat $LOOP
-  sudo mkdir -p /mnt/vfat
-  sudo mount -o uid=$UID /dev/loop0 /mnt/vfat
+  sudo mkdir /mnt/vfat
+  sudo mount -t vfat -o rw,uid=$UID $LOOP /mnt/vfat
 fi
 
+# extract vs2017 to vfat drive
 if [ ! -d /mnt/vfat/vs2017_15.8.4 ]; then
   cp docker/vs2017_15.8.4.zip /mnt/vfat/
   cd /mnt/vfat/
-  unzip docker/vs2017_15.8.4.zip
+  unzip vs2017_15.8.4.zip
   rm vs2017_15.8.4.zip
 fi
 
 cd $ROOT
 
-# docker run -it mozbuild:win64 /bin/bash
+# launches docker image with workspace and Win10 SDK mounted as volumes.
+# to build do ./mach build at this prompt
 docker run -v $ROOT/mozilla-release:/builds/worker/workspace -v /mnt/vfat/vs2017_15.8.4/:/builds/worker/fetches/vs2017_15.8.4 -it mozbuild:win64 /bin/bash

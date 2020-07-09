@@ -6,8 +6,6 @@ ENV TOOLTOOL_MANIFEST=browser/config/tooltool-manifests/win64/releng.manifest \
     GECKO_PATH=/builds/worker/workspace \
     WORKSPACE=/builds/worker/workspace
 
-# ADD resources /builds/worker/resources
-# RUN mv /builds/worker/resources/* /builds/worker/fetches/
 RUN chown -R worker:worker /builds/worker/fetches
 
 USER worker
@@ -68,23 +66,10 @@ RUN wget -O /builds/worker/fetches/wine.tar.xz https://firefox-ci-tc.services.mo
     cd /builds/worker/fetches/ && \
     tar -xf wine.tar.xz && \
     rm wine.tar.xz
-# RUN wget -O /builds/worker/fetches/liblowercase.tar.xz https://firefox-ci-tc.services.mozilla.com/api/index/v1/task/gecko.cache.level-3.toolchains.v3.linux64-liblowercase.latest/artifacts/public/build/liblowercase.tar.xz && \
-#     cd /builds/worker/fetches/ && \
-#     tar -xf liblowercase.tar.xz && \
-#     rm liblowercase.tar.xz
 RUN wget -O /builds/worker/fetches/winchecksec.tar.bz2 https://firefox-ci-tc.services.mozilla.com/api/index/v1/task/gecko.cache.level-3.toolchains.v3.linux64-winchecksec.latest/artifacts/public/build/winchecksec.tar.bz2 && \
     cd /builds/worker/fetches/ && \
     tar -xf winchecksec.tar.bz2 && \
     rm winchecksec.tar.bz2
-# RUN wget -O /builds/worker/fetches/winchecksec.tar.bz2 https://firefox-ci-tc.services.mozilla.com/api/index/v1/task/gecko.cache.level-3.toolchains.v3.win64-dump-syms.latest/artifacts/public/build/dump_syms.tar.bz2 && \
-# RUN cd /builds/worker/fetches/ && \
-#     tar -xf dump_syms.tar.bz2 && \
-#     rm dump_syms.tar.bz2
-# RUN cd /builds/worker/fetches/ && \
-#     tar -xf pdbstr.tar.bz2 && \
-#     rm pdbstr.tar.bz2
-# RUN mkdir /builds/worker/fetches/pdbstr && \
-#     touch /builds/worker/fetches/pdbstr/pdbstr.exe
 
 ENV TOOLTOOL_DIR=/builds/worker/fetches/ \
     RUSTC=/builds/worker/fetches/rustc/bin/rustc \
@@ -92,11 +77,6 @@ ENV TOOLTOOL_DIR=/builds/worker/fetches/ \
     RUSTFMT=/builds/worker/fetches/rustc/bin/rustfmt \
     CBINDGEN=/builds/worker/fetches/cbindgen/cbindgen
 
-ADD vs2017_15.8.4.zip /builds/worker/fetches/
-RUN cd /builds/worker/fetches/ && unzip vs2017_15.8.4.zip && rm vs2017_15.8.4.zip
-# RUN cd /builds/worker/fetches/vs2017_15.8.4/SDK/ && \
-#     mv Lib lib && mv Include include
-# RUN rename 'y/A-Z/a-z/' /builds/worker/fetches/vs2017_15.8.4/SDK
 ADD --chown=worker:worker makecab.exe /builds/worker/fetches/
 
 ENV VSPATH=/builds/worker/fetches/vs2017_15.8.4 \
@@ -107,3 +87,5 @@ ENV VSPATH=/builds/worker/fetches/vs2017_15.8.4 \
     MAKECAB=/builds/worker/fetches/makecab.exe
 
 ADD windows.mozconfig /builds/worker/
+
+WORKDIR $WORKSPACE
