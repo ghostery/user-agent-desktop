@@ -89,7 +89,7 @@ RUN apt-get install -y \
       libxt-dev:$ARCH \
       # extras
       wine64 wine upx-ucl nodejs \
-      python3-pip zstd
+      python3-pip zstd autoconf2.13
 # custom
 RUN pip3 install zstandard
 ADD fetch-content /builds/worker/bin/fetch-content

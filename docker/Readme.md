@@ -13,3 +13,5 @@ You will need to install the Windows 10 SDK at version `10.0.17134.0`. Then run 
 
 This is copied from a windows install at `C:\Windows\System32\makecab.exe`.
 
+### pdbstr.exe
+
