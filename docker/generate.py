@@ -1,11 +1,19 @@
 import yaml
+import argparse
 from os import listdir
 
-JOB_KEY = 'win64/opt'
+parser = argparse.ArgumentParser(description='Generate Dockerfile based on taskcluster config')
+parser.add_argument('config', help='config file name')
+parser.add_argument('job', help='job name')
+
+args = parser.parse_args()
+
+CONFIG = args.config
+JOB_KEY = args.job
 MOZ_FETCHES_DIR = '/builds/worker/fetches/'
 TOOLCHAIN_PATH = '../mozilla-release/taskcluster/ci/toolchain/'
 
-with open('../mozilla-release/taskcluster/ci/build/windows.yml') as fp:
+with open(f'../mozilla-release/taskcluster/ci/build/{CONFIG}.yml') as fp:
     builds = yaml.load(fp)
     job = builds.get(JOB_KEY)
 
@@ -49,8 +57,9 @@ env = '\\\n    '.join([f'{k}={v}' for k, v in job['worker']['env'].items()])
 statements.append('ENV ' + env)
 statements.append('')
 
-for key in job['fetches']['fetch']:
-    statements.append(generate_fetch(key))
+if 'fetch' in job['fetches']:
+    for key in job['fetches']['fetch']:
+        statements.append(generate_fetch(key))
 
 for key in job['fetches']['toolchain']:
     if 'toolchain-artifact' in toolchains[key]['run']:
@@ -61,7 +70,7 @@ for key in job['fetches']['toolchain']:
     cd {MOZ_FETCHES_DIR} && \\
     tar -xf {filename} && \\
     rm {filename}''')
-    
+
 statements.append(f'''ENV TOOLTOOL_DIR={MOZ_FETCHES_DIR} \\
     RUSTC={MOZ_FETCHES_DIR}rustc/bin/rustc \\
     CARGO={MOZ_FETCHES_DIR}rustc/bin/cargo \\
@@ -69,11 +78,14 @@ statements.append(f'''ENV TOOLTOOL_DIR={MOZ_FETCHES_DIR} \\
     CBINDGEN={MOZ_FETCHES_DIR}cbindgen/cbindgen
 ''')
 
-statements.append(f'ADD vs2017_15.8.4.zip {MOZ_FETCHES_DIR}')
-statements.append(f'RUN cd {MOZ_FETCHES_DIR} && unzip vs2017_15.8.4.zip && rm vs2017_15.8.4.zip')
+if CONFIG == 'windows':
+    statements.append(f'ADD vs2017_15.8.4.zip {MOZ_FETCHES_DIR}')
+    statements.append(f'RUN cd {MOZ_FETCHES_DIR} && unzip vs2017_15.8.4.zip && rm vs2017_15.8.4.zip')
 
-extra_env = '\\\n    '.join([f'{k}={v}' for k, v in job['run']['extra-config']['env'].items()])
-statements.append(f'ENV {extra_env}')
+if 'extra-config' in job['run']:
+    extra_env = '\\\n    '.join([f'{k}={v}' for k, v in job['run']['extra-config']['env'].items()])
+    statements.append(f'ENV {extra_env}')
+
 statements.append('''ENV MOZ_FETCHES_DIR=/builds/worker/fetches/ \\
     MOZCONFIG=/builds/worker/workspace/.mozconfig''')
 statements.append('USER worker')
