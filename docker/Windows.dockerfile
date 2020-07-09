@@ -9,24 +9,8 @@ ENV TOOLTOOL_MANIFEST=browser/config/tooltool-manifests/win64/releng.manifest \
 # ADD resources /builds/worker/resources
 # RUN mv /builds/worker/resources/* /builds/worker/fetches/
 RUN chown -R worker:worker /builds/worker/fetches
-# RUN apt-get install -y rename
-USER worker
 
-# rust for liblowercase
-RUN wget -O /builds/worker/fetches/rustc.tar.zst https://firefox-ci-tc.services.mozilla.com/api/index/v1/task/gecko.cache.level-3.toolchains.v3.linux64-rust-1.43.latest/artifacts/public/build/rustc.tar.zst && \
-    cd /builds/worker/fetches/ && \
-    tar -xf rustc.tar.zst && \
-    rm rustc.tar.zst
-# compile liblowercase
-RUN mkdir -p $WORKSPACE/build
-ADD liblowercase $WORKSPACE/build/liblowercase
-RUN UPLOAD_DIR=/builds/worker/fetches/ \
-    $WORKSPACE/build/liblowercase/build-liblowercase.sh
-# unpack liblowercase and remove rustc
-RUN cd /builds/worker/fetches/ && \
-    tar -xf liblowercase.tar.xz && \
-    rm liblowercase.tar.xz && \
-    rm -rf rustc
+USER worker
 
 RUN /builds/worker/bin/fetch-content static-url \
    --sha256 daa17556c8690a34fb13af25c87ced89c79a36a935bf6126253a9d9a5226367c \
@@ -108,22 +92,18 @@ ENV TOOLTOOL_DIR=/builds/worker/fetches/ \
     RUSTFMT=/builds/worker/fetches/rustc/bin/rustfmt \
     CBINDGEN=/builds/worker/fetches/cbindgen/cbindgen
 
-# Windows 10 SDK
 ADD vs2017_15.8.4.zip /builds/worker/fetches/
 RUN cd /builds/worker/fetches/ && unzip vs2017_15.8.4.zip && rm vs2017_15.8.4.zip
-
 # RUN cd /builds/worker/fetches/vs2017_15.8.4/SDK/ && \
 #     mv Lib lib && mv Include include
 # RUN rename 'y/A-Z/a-z/' /builds/worker/fetches/vs2017_15.8.4/SDK
 ADD --chown=worker:worker makecab.exe /builds/worker/fetches/
 
-ENV VSPATH=/builds/worker/checkouts/vs2017_15.8.4 \
+ENV VSPATH=/builds/worker/fetches/vs2017_15.8.4 \
     MOZCONFIG=/builds/worker/windows.mozconfig \
     PATH=/builds/worker/fetches/clang/bin:/builds/worker/fetches/nsis-3.01:/builds/worker/fetches/vs2017_15.8.4/VC/bin/Hostx64/x64:/builds/worker/fetches/dump_syms:$PATH \
     MOZHARNESS_SCRIPT=mozharness/scripts/fx_desktop_build.py \
     MOZHARNESS_CONFIG="builds/releng_base_firefox.py builds/releng_base_linux_64_builds.py" \
-    MAKECAB=/builds/worker/fetches/makecab.exe \
-    LD_PRELOAD=/builds/worker/fetches/liblowercase/liblowercase.so \
-    LOWERCASE_DIRS="/builds/worker/fetches/vs2017_15.8.4"
+    MAKECAB=/builds/worker/fetches/makecab.exe
 
 ADD windows.mozconfig /builds/worker/
