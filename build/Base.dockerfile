@@ -87,6 +87,7 @@ RUN apt-get install -y \
       libpulse-dev:$ARCH \
       libx11-xcb-dev:$ARCH \
       libxt-dev:$ARCH \
+      libglib2.0-dev \
       # extras
       wine64 wine upx-ucl nodejs \
       python3-pip zstd autoconf2.13

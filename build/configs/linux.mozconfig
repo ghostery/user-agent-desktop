@@ -1,11 +1,22 @@
-NASM="${MOZ_FETCHES_DIR}/nasm/nasm"
-export NODEJS=$MOZ_FETCHES_DIR/node/bin/node
-RUSTC="${MOZ_FETCHES_DIR}/rustc/bin/rustc"
+export LLVM_CONFIG="${MOZ_FETCHES_DIR}/clang/bin/llvm-config"
+
+export WASM_SANDBOXED_LIBRARIES=graphite,ogg
+export LUCETC="${MOZ_FETCHES_DIR}/lucetc/lucetc"
+export WASI_SYSROOT="${MOZ_FETCHES_DIR}/wasi-sysroot/share/wasi-sysroot"
+export WASM_CC="${MOZ_FETCHES_DIR}/clang/bin/clang --target=wasm32-wasi"
+export WASM_CXX="${MOZ_FETCHES_DIR}/clang/bin/clang++ --target=wasm32-wasi"
+
 CARGO="${MOZ_FETCHES_DIR}/rustc/bin/cargo"
+RUSTC="${MOZ_FETCHES_DIR}/rustc/bin/rustc"
 RUSTDOC="${MOZ_FETCHES_DIR}/rustc/bin/rustdoc"
 RUSTFMT="${MOZ_FETCHES_DIR}/rustc/bin/rustfmt"
 CBINDGEN="${MOZ_FETCHES_DIR}/cbindgen/cbindgen"
-MOZ_PACKAGE_JSSHELL=1
+
+export NODEJS="${MOZ_FETCHES_DIR}/node/bin/node"
+NASM="${MOZ_FETCHES_DIR}/nasm/nasm"
+
+CC="${MOZ_FETCHES_DIR}/clang/bin/clang"
+CXX="${MOZ_FETCHES_DIR}/clang/bin/clang++"
 
 if test -d "$MOZ_FETCHES_DIR/clang/bin"; then
     CLANG_DIR=`cd "$MOZ_FETCHES_DIR/clang/bin" ; pwd`
@@ -15,9 +26,6 @@ if test -d "$MOZ_FETCHES_DIR/clang/bin"; then
         export LIB="$(cd $MOZ_FETCHES_DIR/clang/lib/clang/* && cd lib/windows && pwd)"
     fi
 fi
-
-CC="$MOZ_FETCHES_DIR/clang/bin/clang"
-CXX="$MOZ_FETCHES_DIR/clang/bin/clang++"
 
 export MOZ_STDCXX_COMPAT=1
 
