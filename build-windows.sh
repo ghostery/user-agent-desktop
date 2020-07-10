@@ -56,4 +56,8 @@ cd $ROOT
 
 # launches docker image with workspace and Win10 SDK mounted as volumes.
 # to build do ./mach build at this prompt
-docker run -v $ROOT/mozilla-release:/builds/worker/workspace -v /mnt/vfat/vs2017_15.8.4/:/builds/worker/fetches/vs2017_15.8.4 -it ua-build-win /bin/bash
+docker run -v $ROOT/mozilla-release:/builds/worker/workspace \
+  -v /mnt/vfat/vs2017_15.8.4/:/builds/worker/fetches/vs2017_15.8.4 \
+  --env MOZCONFIG=/builds/worker/configs/win64.mozconfig \
+  -it ua-build-win \
+  /bin/bash

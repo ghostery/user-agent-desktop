@@ -67,12 +67,11 @@ RUN wget -O /builds/worker/fetches/winchecksec.tar.bz2 https://firefox-ci-tc.ser
 
 ADD --chown=worker:worker makecab.exe /builds/worker/fetches/
 
-ENV MOZCONFIG=/builds/worker/mozconfig \
-    MOZ_FETCHES_DIR=/builds/worker/fetches/ \
+ENV MOZ_FETCHES_DIR=/builds/worker/fetches/ \
     GECKO_PATH=/builds/worker/workspace \
     WORKSPACE=/builds/worker/workspace \
     TOOLTOOL_DIR=/builds/worker/fetches/
 
-COPY configs/windows.mozconfig /builds/worker/mozconfig
+COPY configs /builds/worker/configs
 
 WORKDIR $WORKSPACE

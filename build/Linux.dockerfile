@@ -44,12 +44,11 @@ RUN wget -O /builds/worker/fetches/wasi-sysroot.tar.xz https://firefox-ci-tc.ser
     tar -xf wasi-sysroot.tar.xz && \
     rm wasi-sysroot.tar.xz
 
-ENV MOZCONFIG=/builds/worker/mozconfig \
-    MOZ_FETCHES_DIR=/builds/worker/fetches/ \
+ENV MOZ_FETCHES_DIR=/builds/worker/fetches/ \
     GECKO_PATH=/builds/worker/workspace \
     WORKSPACE=/builds/worker/workspace \
     TOOLTOOL_DIR=/builds/worker/fetches/
 
-COPY configs/linux.mozconfig /builds/worker/mozconfig
+COPY configs /builds/worker/configs
 
 WORKDIR $WORKSPACE
