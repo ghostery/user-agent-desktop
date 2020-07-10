@@ -1,10 +1,4 @@
-FROM mozbuild:base
-
-ENV TOOLTOOL_MANIFEST=browser/config/tooltool-manifests/win64/releng.manifest \
-    MOZ_AUTOMATION_PACKAGE_TESTS=1 \
-    MOZ_FETCHES_DIR=/builds/worker/fetches/ \
-    GECKO_PATH=/builds/worker/workspace \
-    WORKSPACE=/builds/worker/workspace
+FROM ua-build-base
 
 RUN chown -R worker:worker /builds/worker/fetches
 
@@ -71,20 +65,13 @@ RUN wget -O /builds/worker/fetches/winchecksec.tar.bz2 https://firefox-ci-tc.ser
     tar -xf winchecksec.tar.bz2 && \
     rm winchecksec.tar.bz2
 
-ENV TOOLTOOL_DIR=/builds/worker/fetches/ \
-    RUSTC=/builds/worker/fetches/rustc/bin/rustc \
-    CARGO=/builds/worker/fetches/rustc/bin/cargo \
-    RUSTFMT=/builds/worker/fetches/rustc/bin/rustfmt \
-    CBINDGEN=/builds/worker/fetches/cbindgen/cbindgen
-
 ADD --chown=worker:worker makecab.exe /builds/worker/fetches/
 
-ENV VSPATH=/builds/worker/fetches/vs2017_15.8.4 \
-    MOZCONFIG=/builds/worker/windows.mozconfig \
-    PATH=/builds/worker/fetches/clang/bin:/builds/worker/fetches/nsis-3.01:/builds/worker/fetches/vs2017_15.8.4/VC/bin/Hostx64/x64:/builds/worker/fetches/dump_syms:$PATH \
-    MOZHARNESS_SCRIPT=mozharness/scripts/fx_desktop_build.py \
-    MOZHARNESS_CONFIG="builds/releng_base_firefox.py builds/releng_base_linux_64_builds.py" \
-    MAKECAB=/builds/worker/fetches/makecab.exe
+ENV MOZCONFIG=/builds/worker/windows.mozconfig \
+    MOZ_FETCHES_DIR=/builds/worker/fetches/ \
+    GECKO_PATH=/builds/worker/workspace \
+    WORKSPACE=/builds/worker/workspace \
+    TOOLTOOL_DIR=/builds/worker/fetches/
 
 ADD windows.mozconfig /builds/worker/
 

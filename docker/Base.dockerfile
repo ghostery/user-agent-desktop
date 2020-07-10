@@ -96,4 +96,3 @@ ADD fetch-content /builds/worker/bin/fetch-content
 RUN chown -R worker:worker /builds/worker/bin && chmod 755 /builds/worker/bin/*
 # fetches
 RUN mkdir -p /builds/worker/fetches/
-ENV MOZ_FETCHES_DIR=/builds/worker/fetches/

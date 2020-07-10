@@ -1,4 +1,5 @@
 
+VSPATH=/builds/worker/fetches/vs2017_15.8.4
 export LLVM_CONFIG="${MOZ_FETCHES_DIR}/clang/bin/llvm-config"
 
 . $topsrcdir/build/mozconfig.win-common
@@ -86,7 +87,6 @@ ac_add_options --enable-jemalloc
 
 LINKER=lld-link
 MOZ_PACKAGE_JSSHELL=1
-#LIB=/builds/worker/fetches/clang/lib/clang/9.0.1/lib/windows
 
 export CC=clang-cl
 export CXX=clang-cl
