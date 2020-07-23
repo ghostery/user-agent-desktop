@@ -28,9 +28,10 @@ node('docker') {
         docker.build('ua-build-linux', '-f build/Linux.dockerfile ./build')
     }
 
-    linux_image.inside("-v ${pwd}/mozilla-release:/builds/worker/workspace --env MOZCONFIG=/builds/worker/configs/linux.mozconfig") {
+    linux_image.inside("--env MOZCONFIG=/builds/worker/configs/linux.mozconfig") {
         stage('mach build') {
-            sh './mach build'
+            sh 'ln -s `pwd`/mozilla-release /builds/worker/workspace '
+            sh 'cd mozilla-release && ./mach build'
         }
     }
 }
