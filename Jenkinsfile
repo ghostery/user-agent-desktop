@@ -25,7 +25,7 @@ node('docker') {
     }
 
     linux_image = stage('docker build linux') {
-        docker.build('ua-build-linux', '-f build/Linux.dockerfile ./build')
+        docker.build('ua-build-linux', '-f build/Linux.dockerfile ./build --build-arg user=`whoami` --build-arg UID=`id -u` --build-arg GID=`id -g`')
     }
 
     linux_image.inside("--env MOZCONFIG=/builds/worker/configs/linux.mozconfig") {
