@@ -131,21 +131,6 @@ RUN sed -i.bkp -e \
 
 SHELL ["/bin/bash", "-l", "-c"]
 
-# Download Mozilla source tree
-ENV FIREFOX_RELEASE=78.0.1
-
-# Download firefox source code if needed
-ENV ARCHIVE_NAME="firefox-${FIREFOX_RELEASE}.source.tar.xz"
-ENV ARCHIVE_URL="https://archive.mozilla.org/pub/firefox/releases/${FIREFOX_RELEASE}/source/${ARCHIVE_NAME}"
-ENV ARCHIVE_ASC="${ARCHIVE_URL}.asc"
-
-RUN wget ${ARCHIVE_URL} -O ${ARCHIVE_NAME} \
- && tar -xf ${ARCHIVE_NAME} -C ./ \
- && mv firefox-${FIREFOX_RELEASE} /mozilla-release \
- && rm -fr ${ARCHIVE_NAME} \
- && chown -R $user /mozilla-release \
- && chgrp -R $user /mozilla-release
-
 # RUN cd /home/$user \
 #  && hg clone https://hg.mozilla.org/projects/nspr \
 #  && hg clone https://hg.mozilla.org/projects/nss \
