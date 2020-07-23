@@ -16,7 +16,7 @@ node('docker') {
     }
 
     stage('docker build base') {
-        docker.build('ua-build-base', '-f build/Base.dockerfile ./build/')
+        docker.build('ua-build-base', '-f build/Base.dockerfile ./build/ --build-arg user=`whoami` --build-arg UID=`id -u` --build-arg GID=`id -g`')
     }
 
     linux_image = stage('docker build linux') {
@@ -24,6 +24,8 @@ node('docker') {
     }
 
     linux_image.inside("-v ${pwd}/mozilla-release:/builds/worker/workspace --env MOZCONFIG=/builds/worker/configs/linux.mozconfig") {
-        sh './mach build'
+        stage('mach build') {
+            sh './mach build'
+        }
     }
 }

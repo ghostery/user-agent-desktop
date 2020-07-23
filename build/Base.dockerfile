@@ -8,11 +8,14 @@ ENV HOME=/builds/worker \
     LOGNAME=worker \
     HOSTNAME=taskcluster-worker
 ENV ARCH=amd64
+ARG UID
+ARG GID
+ARG user
 
 ### Add worker user and setup its workspace.
 RUN mkdir /builds && \
-    groupadd -g 1000 worker && \
-    useradd -u 1000 -g 1000 -d /builds/worker -s /bin/bash -m worker && \
+    groupadd -g $GID worker && \
+    useradd -u $UID -g $GID -d /builds/worker -s /bin/bash -m worker && \
     mkdir -p /builds/worker/workspace && \
     chown -R worker:worker /builds
 
