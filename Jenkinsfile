@@ -9,10 +9,15 @@ node('docker') {
         sh './fern.sh import-patches'
     }
 
-    stage('prepare SDKs') {
-        sh 'wget -O ./build/makecab.exe ftp://cliqznas/cliqz-browser-build-artifacts/makecab.exe '
-        sh 'wget -O ./build/vs2017_15.8.4.zip ftp://cliqznas/cliqz-browser-build-artifacts/vs2017_15.8.4.zip'
-        sh 'cd build && unzip vs2017_15.8.4'
+    stage('prepare build env') {
+        if (!fileExists('./build/makecab.exe')) {
+            sh 'wget -O ./build/makecab.exe ftp://cliqznas/cliqz-browser-build-artifacts/makecab.exe '
+        }
+        if (!fileExists('./build/vs2017_15.8.4.zip')) {
+            sh 'wget -O ./build/vs2017_15.8.4.zip ftp://cliqznas/cliqz-browser-build-artifacts/vs2017_15.8.4.zip'
+            sh 'cd build && unzip vs2017_15.8.4'
+        }
+        sh 'cp ./mozilla-release/taskcluster/scripts/misc/fetch-content ./build/'
     }
 
     stage('docker build base') {
