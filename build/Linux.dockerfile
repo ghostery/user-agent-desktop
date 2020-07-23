@@ -156,7 +156,14 @@ RUN wget -qO- https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add
  && apt-get update \
  && apt-get install --yes nodejs
 
-USER ubuntu
+RUN getent group $GID || groupadd $user --gid $GID && \
+    useradd  $user --gid $GID -d /builds/worker && \
+    mkdir -p /builds/worker/workspace
+RUN chown -R $user /builds/worker/
+USER $user
+RUN id -u
+RUN id -g
+RUN whoami
 ENV MOZ_FETCHES_DIR=/builds/worker/fetches/ \
     GECKO_PATH=/builds/worker/workspace \
     WORKSPACE=/builds/worker/workspace \
