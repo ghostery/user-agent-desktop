@@ -74,7 +74,7 @@ RUN apt-get install -y \
       xvfb \
       yasm \
       zip \
-      linux-libc-dev:$ARCH \
+      libc6-dev \
       pkg-config \
       dpkg-dev \
       libstdc++-8-dev \
