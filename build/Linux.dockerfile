@@ -8,7 +8,7 @@ RUN wget -O /builds/worker/fetches/binutils.tar.xz https://firefox-ci-tc.service
     tar -xf binutils.tar.xz && \
     rm binutils.tar.xz
 RUN wget -O /builds/worker/fetches/clang.tar.zst https://firefox-ci-tc.services.mozilla.com/api/index/v1/task/gecko.cache.level-3.toolchains.v3.linux64-clang-9.latest/artifacts/public/build/clang.tar.zst && \
-    cd /builds/worker/fetches/
+    cd /builds/worker/fetches/ && \
     tar -I zstd -xf clang.tar.zst && \
     rm clang.tar.zst
 RUN wget -O /builds/worker/fetches/rustc.tar.zst https://firefox-ci-tc.services.mozilla.com/api/index/v1/task/gecko.cache.level-3.toolchains.v3.linux64-rust-1.43.latest/artifacts/public/build/rustc.tar.zst && \
