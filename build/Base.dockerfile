@@ -1,4 +1,4 @@
-FROM debian:10
+FROM debian:buster-20200422
 ENV DEBIAN_FRONTEND=noninteractive
 ENV XZ_OPT=-T0
 
