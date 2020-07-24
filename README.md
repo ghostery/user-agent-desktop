@@ -1,14 +1,3 @@
-
-# Building in Linux
-
-
-```sh
-$ docker build -t hw:linux -f Dockerfile.linux --build-arg uid=1000 --build-arg gid=1000 --build-arg user=jenkins .
-$ docker run -v `pwd`:/workspace -it --rm hw:linux
-$ MOZCONFIG=/workspace/mozconfig.linux ./mach build
-$ MOZCONFIG=/workspace/mozconfig.linux ./mach package
-```
-
 # Fern
 
 The `fern.sh` script (soon to be rewritten in Node.js ;)), gives a taste of how a patch-based workflow would look like.
@@ -20,3 +9,19 @@ $ ./fern.sh export-patches # Check 'patches' folder
 $ ./fern.sh reset # reset 'mozilla-release' folder
 $ ./fern.sh import-patches # Check 'mozilla-release' folder again!
 ```
+# Building on windows
+
+## Prerequisites
+
+### VS2017 Redist
+
+This can be built on windows after setting up a build environment as per [these instructions](https://firefox-source-docs.mozilla.org/setup/windows_build.html#building-firefox-on-windows).
+You will need to install the Windows 10 SDK at version `10.0.17134.0`. Then run the following to create `vs2017_15.8.4.zip`:
+
+```bash
+./mach python build/windows_toolchain.py create-zip vs2017_15.8.4
+```
+
+### Makecab.exe
+
+This is copied from a windows install at `C:\Windows\System32\makecab.exe`.
