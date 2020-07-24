@@ -5,7 +5,9 @@ node('docker') {
     }
 
     stage('prepare mozilla-release') {
-        sh './fern.sh use 78.0.1'
+        FIREFOX_VERSION = readFile '.workspace'
+        sh "./fern.sh use ${FIREFOX_VERSION}"
+        sh "./fern.sh reset ${FIREFOX_VERSION}"
         sh './fern.sh import-patches'
     }
 
@@ -29,9 +31,15 @@ node('docker') {
     }
 
     linux_image.inside("--env MOZCONFIG=/builds/worker/configs/linux.mozconfig") {
-        stage('mach build') {
-            sh 'ln -s `pwd`/mozilla-release /builds/worker/workspace'
-            sh 'cd mozilla-release && ./mach build'
+        dir('mozilla-release') {
+            stage('mach build') {
+                sh 'ln -s `pwd`/mozilla-release /builds/worker/workspace'
+                sh './mach build'
+            }
+
+            stage('mach release') {
+                sh './mach release'
+            }
         }
     }
 }
