@@ -30,7 +30,7 @@ node('docker') {
 
     linux_image.inside("--env MOZCONFIG=/builds/worker/configs/linux.mozconfig") {
         stage('mach build') {
-            // sh 'ln -s `pwd`/mozilla-release /builds/worker/workspace'
+            sh 'ln -s `pwd`/mozilla-release /builds/worker/workspace'
             sh 'cd mozilla-release && ./mach build'
         }
     }
