@@ -35,7 +35,7 @@ node('docker') {
     }
 
     if (params.Linux) {
-        linux_image = stage('docker build') {
+        linux_image = stage('linux: docker build') {
             docker.build("ua-build-linux", "-f build/Linux.dockerfile ./build")
         }
 
@@ -49,11 +49,11 @@ node('docker') {
                     sh './mach build'
                 }
 
-                stage('mach package') {
+                stage('linux: mach package') {
                     sh './mach package'
                 }
 
-                stage('publish artifacts') {
+                stage('linux: publish artifacts') {
                     archiveArtifacts artifacts: 'obj-x86_64-pc-linux-gnu/dist/firefox-*'
                 }
             }
@@ -61,23 +61,23 @@ node('docker') {
     }
 
     if (params.Windows) {
-        windows_image = stage('docker build') {
+        windows_image = stage('windows: docker build') {
             docker.build("ua-build-windows", "-f build/Windows.dockerfile ./build")
         }
 
         windows_image.inside("--env MOZCONFIG=/builds/worker/configs/win64.mozconfig -v /mnt/vfat/vs2017_15.8.4/:/builds/worker/fetches/vs2017_15.8.4") {
             dir('mozilla-release') {
-                stage('mach build') {
+                stage('windows: mach build') {
                     sh 'ln -s `pwd`/mozilla-release /builds/worker/workspace'
                     sh './mach build'
                 }
 
-                stage('mach package') {
+                stage('windows: mach package') {
                     sh './mach package'
                 }
 
-                stage('publish artifacts') {
-                    archiveArtifacts artifacts: 'obj-x86_64-pc-linux-gnu/dist/firefox-*'
+                stage('windows: publish artifacts') {
+                    sh 'ls -la obj*'
                 }
             }
         }
