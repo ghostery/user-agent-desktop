@@ -77,7 +77,7 @@ node('docker') {
                 }
 
                 stage('windows: publish artifacts') {
-                    sh 'ls -la obj*'
+                    archiveArtifacts artifacts: 'obj-x86_64-pc-mingw32/dist/install/**/*'
                 }
             }
         }
