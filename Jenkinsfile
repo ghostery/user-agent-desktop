@@ -37,8 +37,12 @@ node('docker') {
                 sh './mach build'
             }
 
-            stage('mach release') {
-                sh './mach release'
+            stage('mach package') {
+                sh './mach package'
+            }
+
+            stage('publish artifacts') {
+                archiveArtifacts artifacts: 'obj-x86_64-pc-linux-gnu/dist/firefox-*'
             }
         }
     }
