@@ -32,8 +32,10 @@ def configureWorkspace() {
 }
 
 if (params.Linux64) {
-    matrix['Linux64'] = {
+    def name = 'Linux64'
+    matrix[name] = {
         node('docker') {
+            currentBuild.description = name
             configureWorkspace()()
 
             linux_image = stage('docker build') {
@@ -43,7 +45,7 @@ if (params.Linux64) {
 
             linux_image.inside("--env MOZCONFIG=/builds/worker/configs/linux.mozconfig") {
                 dir('mozilla-release') {
-                    stage('linux: mach build') {
+                    stage("${name}: mach build") {
                         sh 'ln -s `pwd`/mozilla-release /builds/worker/workspace'
                         if (params.Clobber) {
                             sh './mach clobber'
@@ -51,11 +53,11 @@ if (params.Linux64) {
                         sh './mach build'
                     }
 
-                    stage('linux: mach package') {
+                    stage("${name}: mach package") {
                         sh './mach package'
                     }
 
-                    stage('linux: publish artifacts') {
+                    stage("${name}: publish artifacts") {
                         archiveArtifacts artifacts: 'obj-x86_64-pc-linux-gnu/dist/firefox-*'
                     }
                 }
@@ -65,8 +67,10 @@ if (params.Linux64) {
 }
 
 if (params.Windows64) {
-    matrix['Windows64'] = {
+    def name = 'Windows64'
+    matrix[name] = {
         node('docker') {
+            currentBuild.description = name
             configureWorkspace()()
 
             windows_image = stage('docker build') {
@@ -76,7 +80,7 @@ if (params.Windows64) {
 
             windows_image.inside("--env MOZCONFIG=/builds/worker/configs/win64.mozconfig -v /mnt/vfat/vs2017_15.8.4/:/builds/worker/fetches/vs2017_15.8.4") {
                 dir('mozilla-release') {
-                    stage('windows: mach build') {
+                    stage("${name}: mach build") {
                         sh 'ln -s `pwd`/mozilla-release /builds/worker/workspace'
                         if (params.Clobber) {
                             sh './mach clobber'
@@ -84,11 +88,11 @@ if (params.Windows64) {
                         sh './mach build'
                     }
 
-                    stage('windows: mach package') {
+                    stage("${name}: mach package") {
                         sh './mach package'
                     }
 
-                    stage('windows: publish artifacts') {
+                    stage("${name}: publish artifacts") {
                         archiveArtifacts artifacts: 'obj-x86_64-pc-mingw32/dist/install/**/*'
                     }
                 }
