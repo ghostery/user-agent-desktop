@@ -1,4 +1,11 @@
 
+properties([
+    parameters([
+        choice(name: 'Platform', choices: ['Linux', 'Windows'], description: ''),
+        string(name: 'Mozconfig', defaultValue: 'linux.mozconfig', description: '')
+    ]),
+])
+
 node('docker') {
     stage('checkout') {
         checkout scm
@@ -26,11 +33,11 @@ node('docker') {
         docker.build('ua-build-base', '-f build/Base.dockerfile ./build/ --build-arg user=`whoami` --build-arg UID=`id -u` --build-arg GID=`id -g`')
     }
 
-    linux_image = stage('docker build linux') {
-        docker.build('ua-build-linux', '-f build/Linux.dockerfile ./build --build-arg user=`whoami` --build-arg UID=`id -u` --build-arg GID=`id -g`')
+    image = stage('docker build') {
+        docker.build("ua-build-${params.Platform.toLowerCase()}", "-f build/${params.Platform}.dockerfile ./build")
     }
 
-    linux_image.inside("--env MOZCONFIG=/builds/worker/configs/linux.mozconfig") {
+    image.inside("--env MOZCONFIG=/builds/worker/configs/${params.Mozconfig}") {
         dir('mozilla-release') {
             stage('mach build') {
                 sh 'ln -s `pwd`/mozilla-release /builds/worker/workspace'

@@ -26,11 +26,11 @@ RUN wget -O /builds/worker/fetches/binutils.tar.xz https://firefox-ci-tc.service
     rm binutils.tar.xz
 RUN wget -O /builds/worker/fetches/clang.tar.zst https://firefox-ci-tc.services.mozilla.com/api/index/v1/task/gecko.cache.level-3.toolchains.v3.linux64-clang-9-win-cross.latest/artifacts/public/build/clang.tar.zst && \
     cd /builds/worker/fetches/ && \
-    tar -xf clang.tar.zst && \
+    tar -I zstd -xf clang.tar.zst && \
     rm clang.tar.zst
 RUN wget -O /builds/worker/fetches/rustc.tar.zst https://firefox-ci-tc.services.mozilla.com/api/index/v1/task/gecko.cache.level-3.toolchains.v3.linux64-rust-cross-1.43.latest/artifacts/public/build/rustc.tar.zst && \
     cd /builds/worker/fetches/ && \
-    tar -xf rustc.tar.zst && \
+    tar -I zstd -xf rustc.tar.zst && \
     rm rustc.tar.zst
 RUN wget -O /builds/worker/fetches/rust-size.tar.xz https://firefox-ci-tc.services.mozilla.com/api/index/v1/task/gecko.cache.level-3.toolchains.v3.linux64-rust-size.latest/artifacts/public/build/rust-size.tar.xz && \
     cd /builds/worker/fetches/ && \
