@@ -1,8 +1,7 @@
 
 properties([
     parameters([
-        choice(name: 'Platform', choices: ['Linux', 'Windows'], description: ''),
-        string(name: 'Mozconfig', defaultValue: 'linux.mozconfig', description: '')
+        booleanParam(name: 'Clobber', defaultValue: false, description: 'run mach clobber'),
     ]),
 ])
 
@@ -33,23 +32,52 @@ node('docker') {
         docker.build('ua-build-base', '-f build/Base.dockerfile ./build/ --build-arg user=`whoami` --build-arg UID=`id -u` --build-arg GID=`id -g`')
     }
 
-    image = stage('docker build') {
-        docker.build("ua-build-${params.Platform.toLowerCase()}", "-f build/${params.Platform}.dockerfile ./build")
-    }
-
-    image.inside("--env MOZCONFIG=/builds/worker/configs/${params.Mozconfig}") {
-        dir('mozilla-release') {
-            stage('mach build') {
-                sh 'ln -s `pwd`/mozilla-release /builds/worker/workspace'
-                sh './mach build'
+    parallel linux: {
+        if (!fileExists('obj-x86_64-pc-linux-gnu/dist/bin/firefox') || params.Clobber) {
+            linux_image = stage('docker build') {
+                docker.build("ua-build-linux", "-f build/Linux.dockerfile ./build")
             }
 
-            stage('mach package') {
-                sh './mach package'
-            }
+            linux_image.inside("--env MOZCONFIG=/builds/worker/configs/linux.mozconfig") {
+                dir('mozilla-release') {
+                    stage('mach build') {
+                        sh 'ln -s `pwd`/mozilla-release /builds/worker/workspace'
+                        if (params.Clobber) {
+                            sh './mach clobber'
+                        }
+                        sh './mach build'
+                    }
 
-            stage('publish artifacts') {
-                archiveArtifacts artifacts: 'obj-x86_64-pc-linux-gnu/dist/firefox-*'
+                    stage('mach package') {
+                        sh './mach package'
+                    }
+
+                    stage('publish artifacts') {
+                        archiveArtifacts artifacts: 'obj-x86_64-pc-linux-gnu/dist/firefox-*'
+                    }
+                }
+            }
+        }
+    },
+    windows: {
+        windows_image = stage('docker build') {
+            docker.build("ua-build-windows", "-f build/Windows.dockerfile ./build")
+        }
+
+        windows_image.inside("--env MOZCONFIG=/builds/worker/configs/win64.mozconfig -v /mnt/vfat/vs2017_15.8.4/:/builds/worker/fetches/vs2017_15.8.4") {
+            dir('mozilla-release') {
+                stage('mach build') {
+                    sh 'ln -s `pwd`/mozilla-release /builds/worker/workspace'
+                    sh './mach build'
+                }
+
+                stage('mach package') {
+                    sh './mach package'
+                }
+
+                stage('publish artifacts') {
+                    archiveArtifacts artifacts: 'obj-x86_64-pc-linux-gnu/dist/firefox-*'
+                }
             }
         }
     }
