@@ -1,4 +1,4 @@
-FROM debian:10
+FROM debian:9
 ENV DEBIAN_FRONTEND=noninteractive
 ENV XZ_OPT=-T0
 
@@ -77,8 +77,8 @@ RUN apt-get install -y \
       linux-libc-dev:$ARCH \
       pkg-config \
       dpkg-dev \
-      libstdc++-8-dev \
-      libstdc++-8-dev:$ARCH \
+      libstdc++-6-dev \
+      libstdc++-6-dev:$ARCH \
       libdbus-glib-1-dev:$ARCH \
       libdrm-dev:$ARCH \
       libfontconfig1-dev:$ARCH \
