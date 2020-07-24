@@ -69,7 +69,8 @@ if (params.Linux64) {
 if (params.Windows64) {
     def name = 'Windows64'
     matrix[name] = {
-        node('docker') {
+        // we have to run windows builds on magrathea because that is where the vssdk mount is.
+        node('docker && magrathea') {
             currentBuild.description = name
             configureWorkspace()()
 
