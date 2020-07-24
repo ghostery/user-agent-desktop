@@ -1,4 +1,5 @@
-FROM debian:buster-20200422
+ARG DOCKER_BASE_IMAGE
+FROM $DOCKER_BASE_IMAGE
 ENV DEBIAN_FRONTEND=noninteractive
 ENV XZ_OPT=-T0
 
@@ -29,7 +30,15 @@ VOLUME /builds/worker/tooltool-cache
 RUN dpkg --add-architecture $ARCH
 RUN apt-get update
 RUN apt-get dist-upgrade -y
-RUN apt-get install -y \
+RUN if grep -q ^8\\. /etc/debian_version; then \
+      LIBSTDCXX=libstdc++-4.9-dev; \
+    elif grep -q ^9\\. /etc/debian_version; then \
+      LIBSTDCXX=libstdc++-6-dev; \
+    elif grep -q ^10\\. /etc/debian_version; then \
+      libstdcxx=libstdc++-8-dev; \
+      LIBSTDCXX="$libstdcxx $libstdcxx:$ARCH"; \
+    fi && \
+    apt-get install -y \
       # from debian-raw
       apt-transport-https \
       ca-certificates \
@@ -74,11 +83,11 @@ RUN apt-get install -y \
       xvfb \
       yasm \
       zip \
-      libc6-dev \
+      linux-libc-dev \
+      linux-libc-dev:$ARCH \
       pkg-config \
       dpkg-dev \
-      libstdc++-8-dev \
-      libstdc++-8-dev:$ARCH \
+      $LIBSTDCXX \
       libdbus-glib-1-dev:$ARCH \
       libdrm-dev:$ARCH \
       libfontconfig1-dev:$ARCH \
