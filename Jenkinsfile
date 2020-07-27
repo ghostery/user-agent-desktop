@@ -25,10 +25,10 @@ def configureWorkspace() {
 
         stage('prepare build env') {
             if (!fileExists('./build/makecab.exe')) {
-                sh 'wget -O ./build/makecab.exe ftp://cliqznas/cliqz-browser-build-artifacts/makecab.exe '
+                sh 'wget -O ./build/makecab.exe ftp://cliqznas.cliqz/cliqz-browser-build-artifacts/makecab.exe '
             }
             if (!fileExists('./build/MacOSX10.11.sdk.tar.bz2')) {
-                sh 'wget -O ./build/MacOSX10.11.sdk.tar.bz2 ftp://cliqznas/cliqz-browser-build-artifacts/MacOSX10.11.sdk.tar.bz2'
+                sh 'wget -O ./build/MacOSX10.11.sdk.tar.bz2 ftp://cliqznas.cliqz/cliqz-browser-build-artifacts/MacOSX10.11.sdk.tar.bz2'
             }
             sh 'cp ./mozilla-release/taskcluster/scripts/misc/fetch-content ./build/'
         }
