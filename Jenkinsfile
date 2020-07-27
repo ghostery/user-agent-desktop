@@ -39,7 +39,6 @@ if (params.Linux64) {
     def name = 'Linux64'
     matrix[name] = {
         node('docker') {
-            currentBuild.description = name
             configureWorkspace()()
 
             linux_image = stage('docker build') {
