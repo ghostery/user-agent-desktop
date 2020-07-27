@@ -133,7 +133,7 @@ if (params.MacOSX64) {
                     }
 
                     stage("${name}: publish artifacts") {
-                        archiveArtifacts artifacts: 'obj-x86_64-apple-darwin/dist/**/*'
+                        archiveArtifacts artifacts: 'obj-x86_64-apple-darwin/dist/**/firefox-*'
                     }
                 }
             }
