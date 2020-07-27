@@ -21,7 +21,7 @@ cp ./mozilla-release/taskcluster/scripts/misc/fetch-content ./build/
 
 # build base image
 cd build
-docker build -f Base.dockerfile -t ua-build-base ./
+docker build -f Base.dockerfile -t ua-build-base:debian10 ./ --build-arg user=`whoami` --build-arg UID=`id -u` --build-arg GID=`id -g` --build-arg DOCKER_BASE_IMAGE=debian:10
 
 # fetch windows build resources
 # TODO vs2017_15.8.4.zip

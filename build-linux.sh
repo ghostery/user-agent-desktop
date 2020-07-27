@@ -6,7 +6,7 @@ ROOT=`pwd`
 cp ./mozilla-release/taskcluster/scripts/misc/fetch-content ./build/
 
 cd build
-docker build -f Base.dockerfile -t ua-build-base ./
+docker build -f Base.dockerfile -t ua-build-base:debian9 ./ --build-arg user=`whoami` --build-arg UID=`id -u` --build-arg GID=`id -g` --build-arg DOCKER_BASE_IMAGE=debian:9
 docker build -f Linux.dockerfile -t ua-build-linux ./
 
 cd ../
