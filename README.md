@@ -21,6 +21,8 @@ cd gecko-dev
 
 Now you should be able use `./mach build` in this project.
 
+Alternatively, the `build-*` scripts in this repo will prepare docker images with a prepared build environment for each platform. The scripts will drop you to a command prompt in a docker container where you can run `./mach build` directly.
+
 # Building on windows
 
 ## Prerequisites
