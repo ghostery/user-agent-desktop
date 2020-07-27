@@ -4,6 +4,7 @@ properties([
         booleanParam(name: 'Clobber', defaultValue: false, description: 'run mach clobber'),
         booleanParam(name: 'Linux64', defaultValue: true, description: ''),
         booleanParam(name: 'Windows64', defaultValue: true, description: ''),
+        booleanParam(name: 'MacOSX64', defaultValue: true, description: ''),
     ]),
 ])
 
@@ -80,6 +81,40 @@ if (params.Windows64) {
             }
 
             windows_image.inside("--env MOZCONFIG=/builds/worker/configs/win64.mozconfig -v /mnt/vfat/vs2017_15.8.4/:/builds/worker/fetches/vs2017_15.8.4") {
+                dir('mozilla-release') {
+                    stage("${name}: mach build") {
+                        sh 'ln -s `pwd`/mozilla-release /builds/worker/workspace'
+                        if (params.Clobber) {
+                            sh './mach clobber'
+                        }
+                        sh './mach build'
+                    }
+
+                    stage("${name}: mach package") {
+                        sh './mach package'
+                    }
+
+                    stage("${name}: publish artifacts") {
+                        archiveArtifacts artifacts: 'obj-x86_64-pc-mingw32/dist/install/**/*'
+                    }
+                }
+            }
+        }
+    }
+}
+
+if (params.MacOSX64) {
+    def name = 'MacOSX64'
+    matrix[name] = {
+        node('docker') {
+            configureWorkspace()()
+
+            mac_image = stage('docker build') {
+                docker.build('ua-build-base:debian10', '-f build/Base.dockerfile ./build/ --build-arg user=`whoami` --build-arg UID=`id -u` --build-arg GID=`id -g` --build-arg DOCKER_BASE_IMAGE=debian:10')
+                docker.build("ua-build-mac", "-f build/MacOSX.dockerfile ./build")
+            }
+
+            mac_image.inside("--env MOZCONFIG=/builds/worker/configs/macosx.mozconfig") {
                 dir('mozilla-release') {
                     stage("${name}: mach build") {
                         sh 'ln -s `pwd`/mozilla-release /builds/worker/workspace'
