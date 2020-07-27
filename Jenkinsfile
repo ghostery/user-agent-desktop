@@ -27,6 +27,9 @@ def configureWorkspace() {
             if (!fileExists('./build/makecab.exe')) {
                 sh 'wget -O ./build/makecab.exe ftp://cliqznas/cliqz-browser-build-artifacts/makecab.exe '
             }
+            if (!fileExists('./build/MacOSX10.11.sdk.tar.bz2')) {
+                sh 'wget -O ./build/MacOSX10.11.sdk.tar.bz2 ftp://cliqznas/cliqz-browser-build-artifacts/MacOSX10.11.sdk.tar.bz2'
+            }
             sh 'cp ./mozilla-release/taskcluster/scripts/misc/fetch-content ./build/'
         }
     }
@@ -118,6 +121,7 @@ if (params.MacOSX64) {
                 dir('mozilla-release') {
                     stage("${name}: mach build") {
                         sh 'ln -s `pwd`/mozilla-release /builds/worker/workspace'
+                        sh 'ln -s /builds/worker/fetches/MacOSX10.11.sdk /builds/worker/workspace/MacOSX10.11.sdk'
                         if (params.Clobber) {
                             sh './mach clobber'
                         }
@@ -129,7 +133,7 @@ if (params.MacOSX64) {
                     }
 
                     stage("${name}: publish artifacts") {
-                        archiveArtifacts artifacts: 'obj-x86_64-pc-mingw32/dist/install/**/*'
+                        archiveArtifacts artifacts: 'obj-x86_64-apple-darwin/dist/**/*'
                     }
                 }
             }

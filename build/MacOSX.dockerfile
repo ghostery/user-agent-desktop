@@ -66,6 +66,10 @@ ENV MOZ_FETCHES_DIR=/builds/worker/fetches/ \
     WORKSPACE=/builds/worker/workspace \
     TOOLTOOL_DIR=/builds/worker/fetches/
 
+COPY MacOSX10.11.sdk.tar.bz2 /builds/worker/fetches/
+RUN cd /builds/worker/fetches/ && \
+    tar -xf MacOSX10.11.sdk.tar.bz2 && \
+    rm MacOSX10.11.sdk.tar.bz2
 COPY configs /builds/worker/configs
 
 WORKDIR $WORKSPACE
