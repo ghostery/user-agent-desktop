@@ -12,7 +12,7 @@ $ ./fern.sh import-patches # Check 'mozilla-release' folder again!
 
 ## Setting up a dev environment
 
-Use the gecko-dev repo to setup your build environment:
+`./mach bootstrap` requires a VC checkout of the gecko source to run properly. Use the gecko-dev repo to run `mach bootstrap` and setup your local build environment:
 ```bash
 git clone https://github.com/mozilla/gecko-dev.git
 cd gecko-dev
