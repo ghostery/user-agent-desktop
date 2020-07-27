@@ -15,7 +15,8 @@ ARG user
 
 ### Add worker user and setup its workspace.
 RUN mkdir /builds && \
-    groupadd -g $GID worker && \
+    (getent group $GID || groupadd -g $GID worker) && \
+    groupmod -n worker `getent group $GID | cut -d: -f1` && \
     useradd -u $UID -g $GID -d /builds/worker -s /bin/bash -m worker && \
     mkdir -p /builds/worker/workspace && \
     chown -R worker:worker /builds
