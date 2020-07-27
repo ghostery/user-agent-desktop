@@ -9,6 +9,20 @@ $ ./fern.sh export-patches # Check 'patches' folder
 $ ./fern.sh reset # reset 'mozilla-release' folder
 $ ./fern.sh import-patches # Check 'mozilla-release' folder again!
 ```
+
+## Setting up a dev environment
+
+`./mach bootstrap` requires a VC checkout of the gecko source to run properly. Use the gecko-dev repo to run `mach bootstrap` and setup your local build environment:
+```bash
+git clone https://github.com/mozilla/gecko-dev.git
+cd gecko-dev
+./mach bootstrap
+```
+
+Now you should be able use `./mach build` in this project.
+
+Alternatively, the `build-*` scripts in this repo will prepare docker images with a prepared build environment for each platform. The scripts will drop you to a command prompt in a docker container where you can run `./mach build` directly.
+
 # Building on windows
 
 ## Prerequisites
