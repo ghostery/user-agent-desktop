@@ -82,7 +82,20 @@ reset_firefox_git() {
 symlink_workspace() {
   FIREFOX_RELEASE="$1"
   FIREFOX_CACHED_FOLDER="$2"
-  ln -sf "${FIREFOX_CACHED_FOLDER}" mozilla-release
+
+  if [ -L "mozilla-release" ] ; then
+    echo "Symlink exists, overriding..."
+    rm mozilla-release # Delete existing symlink
+  fi
+
+  if [ -d "mozilla-release" ] ; then
+    echo
+    echo "Existing 'mozilla-release' directory: Cannot be overriden!"
+    echo "Please remove this directory or move it somewhere else so that 'fern.sh' can proceed."
+    exit 1
+  fi
+
+  ln -s "${FIREFOX_CACHED_FOLDER}" mozilla-release
   echo "Folder 'mozilla-release' now tracks ${FIREFOX_RELEASE}"
 }
 
