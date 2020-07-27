@@ -121,7 +121,7 @@ if (params.MacOSX64) {
                 dir('mozilla-release') {
                     stage("${name}: mach build") {
                         sh 'ln -s `pwd`/mozilla-release /builds/worker/workspace'
-                        sh 'ln -s /builds/worker/fetches/MacOSX10.11.sdk /builds/worker/workspace/MacOSX10.11.sdk'
+                        sh 'ln -s /builds/worker/fetches/MacOSX10.11.sdk `pwd`/MacOSX10.11.sdk'
                         if (params.Clobber) {
                             sh './mach clobber'
                         }
