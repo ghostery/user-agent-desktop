@@ -15,22 +15,12 @@ fi
 
 # copy resources from mozilla source which we need for docker build
 cp ./mozilla-release/taskcluster/scripts/misc/fetch-content ./build/
-# mkdir -p docker/liblowercase
-# cp -r mozilla-release/build/liblowercase/* docker/liblowercase
-# cp mozilla-release/taskcluster/scripts/misc/build-liblowercase.sh docker/liblowercase
 
-# build base image
-cd build
-docker build -f Base.dockerfile -t ua-build-base ./
+( cd build &&
+  docker build -f Base.dockerfile -t ua-build-base:debian10 ./ --build-arg user=`whoami` --build-arg UID=`id -u` --build-arg GID=`id -g` --build-arg DOCKER_BASE_IMAGE=debian:10 &&
+  docker build -f Windows.dockerfile -t ua-build-win ./
+)
 
-# fetch windows build resources
-# TODO vs2017_15.8.4.zip
-# TODO makecab.exe
-
-# build windows image
-docker build -f Windows.dockerfile -t ua-build-win ./
-
-cd ../
 # prepare vfat drive for case insensitive Win10 SDK volume
 if [ ! -f /tmp/vfat ]; then
   truncate -s 2G /tmp/vfat
@@ -47,12 +37,12 @@ fi
 # extract vs2017 to vfat drive
 if [ ! -d /mnt/vfat/vs2017_15.8.4 ]; then
   cp build/vs2017_15.8.4.zip /mnt/vfat/
-  cd /mnt/vfat/
-  unzip vs2017_15.8.4.zip
-  rm vs2017_15.8.4.zip
+  ( cd /mnt/vfat/;
+    unzip vs2017_15.8.4.zip;
+    rm vs2017_15.8.4.zip
+  )
 fi
 
-cd $ROOT
 
 # launches docker image with workspace and Win10 SDK mounted as volumes.
 # to build do ./mach build at this prompt
