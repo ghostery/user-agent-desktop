@@ -5,5 +5,9 @@
 <!ENTITY  brandShorterName      "Cliqz">
 <!ENTITY  brandShortName        "Cliqz">
 <!ENTITY  brandFullName         "Cliqz">
+<!-- LOCALIZATION NOTE (brandProductName):
+   This brand name can be used in messages where the product name needs to
+   remain unchanged across different versions (Nightly, Beta, etc.). -->
+<!ENTITY  brandProductName      "Cliqz">
 <!ENTITY  vendorShortName       "Cliqz GmbH">
 <!ENTITY  trademarkInfo.part1   "Cliqz and the Cliqz logos are trademarks of the Cliqz GmbH.">

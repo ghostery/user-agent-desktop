@@ -20,6 +20,9 @@
 ; Beta since they share the same branding when building with other branches that
 ; set the update channel to beta.
 !define OFFICIAL
+!define URLStubDownloadX86 "https://download.mozilla.org/?os=win&lang=${AB_CD}&product=firefox-latest"
+!define URLStubDownloadAMD64 "https://download.mozilla.org/?os=win64&lang=${AB_CD}&product=firefox-latest"
+!define URLStubDownloadAArch64 "https://download.mozilla.org/?os=win64-aarch64&lang=${AB_CD}&product=firefox-latest"
 !define URLStubDownload32 "https://cdn.cliqz.com/browser-f/download/clean/cliqz.${AB_CD}.win32.installer.exe"
 !define URLStubDownload64 "https://cdn.cliqz.com/browser-f/download/clean/cliqz.${AB_CD}.win64.installer.exe"
 ; Cliqz. URLManualDownload not used. Instead get an URL from localization file (MINIINSTALLER_ERROR_SUPPORT_PAGE)
