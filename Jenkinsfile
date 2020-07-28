@@ -47,6 +47,7 @@ if (params.Linux64) {
             }
 
             linux_image.inside('--env MOZCONFIG=/builds/worker/configs/linux.mozconfig') {
+                sh 'rm -r mozilla-release/browser/branding/ghostery && cp -r branding/ghostery mozilla-release/browser/branding/'
                 dir('mozilla-release') {
                     stage("${name}: mach build") {
                         if (params.Clobber) {
@@ -81,7 +82,7 @@ if (params.Windows64) {
             }
 
             windows_image.inside('--env MOZCONFIG=/builds/worker/configs/win64.mozconfig -v /mnt/vfat/vs2017_15.8.4/:/builds/worker/fetches/vs2017_15.8.4') {
-                sh 'rm mozilla-release/browser/branding/ghostery && cp -r branding/ghostery mozilla-release/browser/branding/'
+                sh 'rm -r mozilla-release/browser/branding/ghostery && cp -r branding/ghostery mozilla-release/browser/branding/'
                 dir('mozilla-release') {
                     stage("${name}: mach build") {
                         if (params.Clobber) {
@@ -115,6 +116,7 @@ if (params.MacOSX64) {
             }
 
             mac_image.inside('--env MOZCONFIG=/builds/worker/configs/macosx.mozconfig') {
+                sh 'rm -r mozilla-release/browser/branding/ghostery && cp -r branding/ghostery mozilla-release/browser/branding/'
                 dir('mozilla-release') {
                     stage("${name}: mach build") {
                         sh 'ln -s /builds/worker/fetches/MacOSX10.11.sdk `pwd`/MacOSX10.11.sdk'
