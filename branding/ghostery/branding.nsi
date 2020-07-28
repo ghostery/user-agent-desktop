@@ -8,13 +8,13 @@
 
 # BrandFullNameInternal is used for some registry and file system values
 # instead of BrandFullName and typically should not be modified.
-!define BrandFullNameInternal "Cliqz"
-!define BrandFullName         "Cliqz"
-!define BrandShortcutName     "Cliqz Internet"
-!define CompanyName           "Cliqz GmbH"
-!define URLInfoAbout          "https://www.cliqz.com"
-!define URLUpdateInfo         "https://www.cliqz.com?version=${AppVersion}"
-!define HelpLink              "https://cliqz.com/support"
+!define BrandFullNameInternal "Ghostery"
+!define BrandFullName         "Ghostery"
+!define BrandShortcutName     "Ghostery Internet"
+!define CompanyName           "Ghostery Inc"
+!define URLInfoAbout          "https://www.ghostery.com"
+!define URLUpdateInfo         "https://www.ghostery.com?version=${AppVersion}"
+!define HelpLink              "https://www.ghostery.com/support/"
 
 ; The OFFICIAL define is a workaround to support different urls for Release and
 ; Beta since they share the same branding when building with other branches that

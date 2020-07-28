@@ -12,11 +12,11 @@
 ##
 ## Reference: https://www.mozilla.org/styleguide/communications/translation/
 
--brand-shorter-name = Cliqz
--brand-short-name = Cliqz
--brand-full-name = Cliqz
+-brand-shorter-name = Ghostery
+-brand-short-name = Ghostery
+-brand-full-name = Ghostery
 # This brand name can be used in messages where the product name needs to
 # remain unchanged across different versions (Nightly, Beta, etc.).
--brand-product-name = Cliqz
--vendor-short-name = Cliqz GmbH
-trademarkInfo = Cliqz and the Cliqz logos are trademarks of the Cliqz GmbH.
+-brand-product-name = Ghostery
+-vendor-short-name = Ghostery Inc
+trademarkInfo = Ghostery and the Ghostery logos are trademarks of the Ghostery Inc.
