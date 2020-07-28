@@ -74,7 +74,6 @@ if (params.Windows64) {
     matrix[name] = {
         // we have to run windows builds on magrathea because that is where the vssdk mount is.
         node('docker && magrathea') {
-            currentBuild.description = name
             configureWorkspace()()
 
             windows_image = stage('docker build') {
