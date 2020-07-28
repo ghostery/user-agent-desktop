@@ -66,4 +66,4 @@ unset MOZ_STDCXX_COMPAT
 
 . $topsrcdir/build/mozconfig.wasm-sandboxing
 
-. ghostery.mozconfig
+. /builds/worker/configs/ghostery.mozconfig
