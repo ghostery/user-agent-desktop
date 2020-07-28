@@ -8,6 +8,4 @@
 <!-- LOCALIZATION NOTE (brandProductName):
    This brand name can be used in messages where the product name needs to
    remain unchanged across different versions (Nightly, Beta, etc.). -->
-<!ENTITY  brandProductName      "Ghostery">
-<!ENTITY  vendorShortName       "Ghostery Inc">
-<!ENTITY  trademarkInfo.part1   "Ghostery and the Ghostery logos are trademarks of the Ghostery Inc.">
+<!ENTITY  brandProductName      "Firefox">

@@ -2,20 +2,15 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-// CLIQZ-SPECIAL:
-// DB-2064: startup.homepage_override_url should be assigned a url address leading to Cliqz
-// actual What's new page.
-pref("startup.homepage_override_url","https://www.ghostery.com/desktop/whatsnew/?version=%VERSION%&oldversion=%OLD_VERSION%");
-pref("startup.homepage_welcome_url","");
-pref("startup.homepage_welcome_url.additional", "");
+// This file contains branding-specific prefs.
 
-// Interval: Time between checks for a new version (in seconds)
-pref("app.update.interval", 43200); // 12 hours
-// The time interval between the downloading of mar file chunks in the
-// background (in seconds)
-pref("app.update.download.backgroundInterval", 60);
-// Give the user x seconds to react before showing the big UI. default=48 hours
-pref("app.update.promptWaitTime", 172800);
+pref("startup.homepage_override_url", "");
+pref("startup.homepage_welcome_url", "");
+pref("startup.homepage_welcome_url.additional", "");
+// The time interval between checks for a new version (in seconds)
+pref("app.update.interval", 86400); // 24 hours
+// Give the user x seconds to react before showing the big UI. default=24 hours
+pref("app.update.promptWaitTime", 86400);
 // URL user can browse to manually if for some reason all update installation
 // attempts fail.
 pref("app.update.url.manual", "https://www.ghostery.com/download/");
@@ -28,15 +23,10 @@ pref("app.update.url.details", "https://www.ghostery.com/%LOCALE%/browser/notes"
 // app.update.checkInstallTime is true.
 pref("app.update.checkInstallTime.days", 63);
 
-// Number of usages of the web console or scratchpad.
-// If this is less than 5, then pasting code into the web console or scratchpad is disabled
-pref("devtools.selfxss.count", 0);
+// Give the user x seconds to reboot before showing a badge on the hamburger
+// button. default=immediately
+pref("app.update.badgeWaitTime", 0);
 
-// turn off special startpage on windows 10
-pref("browser.usedOnWindows10", true);
-pref("browser.usedOnWindows10.introURL", "about:blank");
-
-// url for support page about how to set browser as default in Windows 10
-pref("app.support.default_in_win10.URL", "https://cliqz.com/support/cliqz-als-standardbrowser-in-windows-10");
-
-pref("browser.aboutHomeSnippets.updateUrl", "https://www.cliqz.com/");
+// Number of usages of the web console.
+// If this is less than 5, then pasting code into the web console is disabled
+pref("devtools.selfxss.count", 5);
