@@ -3,7 +3,7 @@ set -e
 
 ROOT=`pwd`
 
-if [ ! -f ./build/MacOSX10.11.sdk.tar.bz2 ]l then
+if [ ! -f ./build/MacOSX10.11.sdk.tar.bz2 ]; then
   echo 'MacOSX SDK must be available at build/MacOSX10.11.sdk.tar.bz2'
   exit 1
 fi
