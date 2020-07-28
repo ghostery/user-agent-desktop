@@ -81,6 +81,7 @@ if (params.Windows64) {
             }
 
             windows_image.inside("--env MOZCONFIG=/builds/worker/configs/win64.mozconfig -v /mnt/vfat/vs2017_15.8.4/:/builds/worker/fetches/vs2017_15.8.4 -v `pwd`/mozilla-release:/builds/worker/workspace") {
+                sh 'rm mozilla-release/browser/branding/ghostery && cp -r branding/ghostery mozilla-release/browser/branding/'
                 dir('mozilla-release') {
                     stage("${name}: mach build") {
                         if (params.Clobber) {
