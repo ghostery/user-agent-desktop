@@ -5,7 +5,7 @@
 // CLIQZ-SPECIAL:
 // DB-2064: startup.homepage_override_url should be assigned a url address leading to Cliqz
 // actual What's new page.
-pref("startup.homepage_override_url","https://cliqz.com/desktop/whatsnew/?version=%VERSION%&oldversion=%OLD_VERSION%");
+pref("startup.homepage_override_url","https://www.ghostery.com/desktop/whatsnew/?version=%VERSION%&oldversion=%OLD_VERSION%");
 pref("startup.homepage_welcome_url","");
 pref("startup.homepage_welcome_url.additional", "");
 
@@ -18,10 +18,10 @@ pref("app.update.download.backgroundInterval", 60);
 pref("app.update.promptWaitTime", 172800);
 // URL user can browse to manually if for some reason all update installation
 // attempts fail.
-pref("app.update.url.manual", "https://www.cliqz.com/download/");
+pref("app.update.url.manual", "https://www.ghostery.com/download/");
 // A default value for the "More information about this update" link
 // supplied in the "An update is available" page of the update wizard.
-pref("app.update.url.details", "https://www.cliqz.com/%LOCALE%/browser/notes");
+pref("app.update.url.details", "https://www.ghostery.com/%LOCALE%/browser/notes");
 
 // The number of days a binary is permitted to be old
 // without checking for an update.  This assumes that
@@ -40,8 +40,3 @@ pref("browser.usedOnWindows10.introURL", "about:blank");
 pref("app.support.default_in_win10.URL", "https://cliqz.com/support/cliqz-als-standardbrowser-in-windows-10");
 
 pref("browser.aboutHomeSnippets.updateUrl", "https://www.cliqz.com/");
-
-// Cliqz distribution settings
-pref("app.distributor", "cliqz");
-pref("mozilla.partner.id", "cliqz");
-pref("browser.cliqz.integrated", "cliqz@cliqz.com, dat@cliqz.com, https-everywhere@eff.org, gdprtool@cliqz.com, myoffrz@cliqz.com");
