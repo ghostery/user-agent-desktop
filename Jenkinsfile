@@ -61,7 +61,7 @@ if (params.Linux64) {
                     }
 
                     stage("${name}: publish artifacts") {
-                        archiveArtifacts artifacts: 'obj-x86_64-pc-linux-gnu/dist/firefox-*'
+                        archiveArtifacts artifacts: 'obj-x86_64-pc-linux-gnu/dist/Ghostery-*'
                     }
                 }
             }
@@ -131,7 +131,7 @@ if (params.MacOSX64) {
                     }
 
                     stage("${name}: publish artifacts") {
-                        archiveArtifacts artifacts: 'obj-x86_64-apple-darwin/dist/firefox-*'
+                        archiveArtifacts artifacts: 'obj-x86_64-apple-darwin/dist/Ghostery-*'
                     }
                 }
             }
