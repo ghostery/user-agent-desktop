@@ -105,7 +105,7 @@ RUN if grep -q ^8\\. /etc/debian_version; then \
       wine64 wine upx-ucl nodejs \
       python3-pip zstd autoconf2.13
 # custom
-RUN pip3 install zstandard
+RUN pip3 install zstandard importlib_metadata
 ADD fetch-content /builds/worker/bin/fetch-content
 RUN chown -R worker:worker /builds/worker/bin && chmod 755 /builds/worker/bin/*
 # fetches
