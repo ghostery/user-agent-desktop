@@ -1,6 +1,7 @@
 
 properties([
     parameters([
+        booleanParam(name: 'Reset', defaultValue: false, description: 'clean workspace files'),
         booleanParam(name: 'Clobber', defaultValue: false, description: 'run mach clobber'),
         booleanParam(name: 'Linux64', defaultValue: true, description: ''),
         booleanParam(name: 'Windows64', defaultValue: true, description: ''),
@@ -17,6 +18,9 @@ def configureWorkspace() {
         }
 
         stage('prepare mozilla-release') {
+            if (params.Reset) {
+                sh 'rm -rf .cache'
+            }
             FIREFOX_VERSION = readFile '.workspace'
             sh "./fern.sh use ${FIREFOX_VERSION}"
             sh "./fern.sh reset ${FIREFOX_VERSION}"
