@@ -1,0 +1,25 @@
+From 04dee9c6fb77864d0166f3abc74f63a11b9512cf Mon Sep 17 00:00:00 2001
+From: Sam Macbeth <sam@cliqz.com>
+Date: Wed, 29 Jul 2020 14:27:40 +0200
+Subject: [PATCH] Fix Mac packaging when using a non-firefox app-name
+
+---
+ browser/app/macbuild/Contents/MacOS-files.in | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/browser/app/macbuild/Contents/MacOS-files.in b/browser/app/macbuild/Contents/MacOS-files.in
+index a0cac14ef7..bd7f919922 100644
+--- a/browser/app/macbuild/Contents/MacOS-files.in
++++ b/browser/app/macbuild/Contents/MacOS-files.in
+@@ -2,7 +2,7 @@
+ # to the .app/Contents/MacOS directory.
+ /*.app/***
+ /certutil
+-/firefox-bin
++/*-bin
+ #if defined(MOZ_GECKODRIVER)
+ /geckodriver
+ #endif
+-- 
+2.25.1
+
