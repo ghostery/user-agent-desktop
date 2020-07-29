@@ -42,7 +42,7 @@ if (params.Linux64) {
             configureWorkspace()()
 
             linux_image = stage('docker build') {
-                docker.build('ua-build-base:debian10', '-f build/Base.dockerfile ./build/ --build-arg user=`whoami` --build-arg UID=`id -u` --build-arg GID=`id -g` --build-arg DOCKER_BASE_IMAGE=debian:10')
+                docker.build('ua-build-base:debian9', '-f build/Base.dockerfile ./build/ --build-arg user=`whoami` --build-arg UID=`id -u` --build-arg GID=`id -g` --build-arg DOCKER_BASE_IMAGE=debian:9')
                 docker.build("ua-build-linux", "-f build/Linux.dockerfile ./build")
             }
 

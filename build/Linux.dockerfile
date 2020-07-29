@@ -1,4 +1,4 @@
-FROM ua-build-base:debian10
+FROM ua-build-base:debian9
 
 RUN chown -R worker:worker /builds/worker/fetches
 USER worker
