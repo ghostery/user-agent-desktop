@@ -4,5 +4,3 @@
 
 MOZ_APP_DISPLAYNAME=Ghostery
 MOZ_MACBUNDLE_ID=ghostery
-# TODO: Find the proper value for this
-XPI_ROOT_APPID=ghostery
