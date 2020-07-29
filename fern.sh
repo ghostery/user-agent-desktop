@@ -98,7 +98,8 @@ symlink_workspace() {
   ln -s "${FIREFOX_CACHED_FOLDER}" mozilla-release
   # symlink branding into mozilla-release
   if [ ! -L "${FIREFOX_CACHED_FOLDER}/browser/branding/ghostery" ] ; then
-    ln -s `pwd`/branding/ghostery "${FIREFOX_CACHED_FOLDER}/browser/branding/ghostery"
+    echo "Linking branding dirs into mozilla-release"
+    ln -s `pwd`/branding/* "${FIREFOX_CACHED_FOLDER}/browser/branding/"
   fi
   echo "Folder 'mozilla-release' now tracks ${FIREFOX_RELEASE}"
 }
