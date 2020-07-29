@@ -1,6 +1,5 @@
 
 ac_add_options --with-app-name=Ghostery
-ac_add_options --enable-official-branding
 ac_add_options --with-branding=browser/branding/ghostery
 
 export MOZ_APP_PROFILE=Ghostery
