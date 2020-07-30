@@ -50,7 +50,7 @@ if (params.Linux64) {
                 docker.build("ua-build-linux", "-f build/Linux.dockerfile ./build")
             }
 
-            linux_image.inside('--env MOZCONFIG=/builds/worker/configs/linux.mozconfig --env LANG=\'en-US\'') {
+            linux_image.inside('--env MOZCONFIG=/builds/worker/configs/linux.mozconfig') {
                 dir('mozilla-release') {
                     stage("${name}: mach build") {
                         if (params.Clobber) {
@@ -84,7 +84,7 @@ if (params.Windows64) {
                 docker.build("ua-build-windows", "-f build/Windows.dockerfile ./build")
             }
 
-            windows_image.inside('--env MOZCONFIG=/builds/worker/configs/win64.mozconfig --env LANG=\'en-US\' -v /mnt/vfat/vs2017_15.8.4/:/builds/worker/fetches/vs2017_15.8.4') {
+            windows_image.inside('--env MOZCONFIG=/builds/worker/configs/win64.mozconfig -v /mnt/vfat/vs2017_15.8.4/:/builds/worker/fetches/vs2017_15.8.4') {
                 dir('mozilla-release') {
                     stage("${name}: mach build") {
                         if (params.Clobber) {
@@ -117,7 +117,7 @@ if (params.MacOSX64) {
                 docker.build("ua-build-mac", "-f build/MacOSX.dockerfile ./build")
             }
 
-            mac_image.inside('--env MOZCONFIG=/builds/worker/configs/macosx.mozconfig --env LANG=\'en-US\'') {
+            mac_image.inside('--env MOZCONFIG=/builds/worker/configs/macosx.mozconfig') {
                 dir('mozilla-release') {
                     stage("${name}: mach build") {
                         sh 'ln -s /builds/worker/fetches/MacOSX10.11.sdk `pwd`/MacOSX10.11.sdk'

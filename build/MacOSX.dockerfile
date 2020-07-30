@@ -64,7 +64,8 @@ RUN wget -O /builds/worker/fetches/wasi-sysroot.tar.xz https://firefox-ci-tc.ser
 ENV MOZ_FETCHES_DIR=/builds/worker/fetches/ \
     GECKO_PATH=/builds/worker/workspace \
     WORKSPACE=/builds/worker/workspace \
-    TOOLTOOL_DIR=/builds/worker/fetches/
+    TOOLTOOL_DIR=/builds/worker/fetches/ \
+    LANG=en-US
 
 COPY MacOSX10.11.sdk.tar.bz2 /builds/worker/fetches/
 RUN cd /builds/worker/fetches/ && \

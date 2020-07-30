@@ -70,7 +70,8 @@ ADD --chown=worker:worker makecab.exe /builds/worker/fetches/
 ENV MOZ_FETCHES_DIR=/builds/worker/fetches/ \
     GECKO_PATH=/builds/worker/workspace \
     WORKSPACE=/builds/worker/workspace \
-    TOOLTOOL_DIR=/builds/worker/fetches/
+    TOOLTOOL_DIR=/builds/worker/fetches/ \
+    LANG=en-US
 
 COPY configs /builds/worker/configs
 
