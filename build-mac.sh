@@ -17,6 +17,7 @@ cp ./mozilla-release/taskcluster/scripts/misc/fetch-content ./build/
 )
 
 docker run -v $ROOT/mozilla-release:/builds/worker/workspace \
+  -v $ROOT:$ROOT \
   --env MOZCONFIG=/builds/worker/configs/macosx.mozconfig \
   -it ua-build-mac \
   /bin/bash

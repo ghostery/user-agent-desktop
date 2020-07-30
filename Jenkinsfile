@@ -1,6 +1,7 @@
 
 properties([
     parameters([
+        booleanParam(name: 'Reset', defaultValue: false, description: 'clean workspace files'),
         booleanParam(name: 'Clobber', defaultValue: false, description: 'run mach clobber'),
         booleanParam(name: 'Linux64', defaultValue: true, description: ''),
         booleanParam(name: 'Windows64', defaultValue: true, description: ''),
@@ -17,6 +18,9 @@ def configureWorkspace() {
         }
 
         stage('prepare mozilla-release') {
+            if (params.Reset) {
+                sh 'rm -rf .cache'
+            }
             FIREFOX_VERSION = readFile '.workspace'
             sh "./fern.sh use ${FIREFOX_VERSION}"
             sh "./fern.sh reset ${FIREFOX_VERSION}"
@@ -46,10 +50,9 @@ if (params.Linux64) {
                 docker.build("ua-build-linux", "-f build/Linux.dockerfile ./build")
             }
 
-            linux_image.inside("--env MOZCONFIG=/builds/worker/configs/linux.mozconfig") {
+            linux_image.inside('--env MOZCONFIG=/builds/worker/configs/linux.mozconfig') {
                 dir('mozilla-release') {
                     stage("${name}: mach build") {
-                        sh 'ln -s `pwd`/mozilla-release /builds/worker/workspace'
                         if (params.Clobber) {
                             sh './mach clobber'
                         }
@@ -61,7 +64,7 @@ if (params.Linux64) {
                     }
 
                     stage("${name}: publish artifacts") {
-                        archiveArtifacts artifacts: 'obj-x86_64-pc-linux-gnu/dist/firefox-*'
+                        archiveArtifacts artifacts: 'obj-x86_64-pc-linux-gnu/dist/Ghostery-*'
                     }
                 }
             }
@@ -74,7 +77,6 @@ if (params.Windows64) {
     matrix[name] = {
         // we have to run windows builds on magrathea because that is where the vssdk mount is.
         node('docker && magrathea') {
-            currentBuild.description = name
             configureWorkspace()()
 
             windows_image = stage('docker build') {
@@ -82,10 +84,9 @@ if (params.Windows64) {
                 docker.build("ua-build-windows", "-f build/Windows.dockerfile ./build")
             }
 
-            windows_image.inside("--env MOZCONFIG=/builds/worker/configs/win64.mozconfig -v /mnt/vfat/vs2017_15.8.4/:/builds/worker/fetches/vs2017_15.8.4") {
+            windows_image.inside('--env MOZCONFIG=/builds/worker/configs/win64.mozconfig -v /mnt/vfat/vs2017_15.8.4/:/builds/worker/fetches/vs2017_15.8.4') {
                 dir('mozilla-release') {
                     stage("${name}: mach build") {
-                        sh 'ln -s `pwd`/mozilla-release /builds/worker/workspace'
                         if (params.Clobber) {
                             sh './mach clobber'
                         }
@@ -116,10 +117,9 @@ if (params.MacOSX64) {
                 docker.build("ua-build-mac", "-f build/MacOSX.dockerfile ./build")
             }
 
-            mac_image.inside("--env MOZCONFIG=/builds/worker/configs/macosx.mozconfig") {
+            mac_image.inside('--env MOZCONFIG=/builds/worker/configs/macosx.mozconfig') {
                 dir('mozilla-release') {
                     stage("${name}: mach build") {
-                        sh 'ln -s `pwd`/mozilla-release /builds/worker/workspace'
                         sh 'ln -s /builds/worker/fetches/MacOSX10.11.sdk `pwd`/MacOSX10.11.sdk'
                         if (params.Clobber) {
                             sh './mach clobber'
@@ -132,7 +132,7 @@ if (params.MacOSX64) {
                     }
 
                     stage("${name}: publish artifacts") {
-                        archiveArtifacts artifacts: 'obj-x86_64-apple-darwin/dist/firefox-*'
+                        archiveArtifacts artifacts: 'obj-x86_64-apple-darwin/dist/Ghostery-*'
                     }
                 }
             }

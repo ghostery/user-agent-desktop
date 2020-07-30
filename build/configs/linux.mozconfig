@@ -93,3 +93,5 @@ export MOZ_REQUIRE_SIGNING=1
 ac_add_options --enable-crashreporter
 ac_add_options --disable-updater
 ac_add_options --disable-tests
+
+. /builds/worker/configs/ghostery.mozconfig
