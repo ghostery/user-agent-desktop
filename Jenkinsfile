@@ -42,7 +42,7 @@ def configureWorkspace() {
 if (params.Linux64) {
     def name = 'Linux64'
     matrix[name] = {
-        node('docker') {
+        node('docker && !magrathea') {
             configureWorkspace()()
 
             linux_image = stage('docker build') {
@@ -109,7 +109,7 @@ if (params.Windows64) {
 if (params.MacOSX64) {
     def name = 'MacOSX64'
     matrix[name] = {
-        node('docker') {
+        node('docker && !magrathea') {
             configureWorkspace()()
 
             mac_image = stage('docker build') {
