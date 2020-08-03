@@ -103,7 +103,9 @@ RUN if grep -q ^8\\. /etc/debian_version; then \
       libglib2.0-dev \
       # extras
       wine64 wine upx-ucl nodejs \
-      python3-pip zstd autoconf2.13
+      python3-pip zstd \
+      libasound2-dev libcurl4-openssl-dev \
+      locales
 # custom
 RUN pip3 install zstandard importlib_metadata
 ADD fetch-content /builds/worker/bin/fetch-content
