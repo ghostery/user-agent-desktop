@@ -48,7 +48,7 @@ RUN if grep -q ^8\\. /etc/debian_version; then \
       less \
       make \
       patch \
-      python3.5 \
+      python3 \
       python3-distutils-extra \
       python3-minimal \
       vim-tiny \
