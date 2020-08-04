@@ -39,16 +39,20 @@ def configureWorkspace() {
     }
 }
 
+def buildDockerImage(imageName, dockerFile) {
+    return stage('docker build') {
+        docker.build('ua-build-base', '-f build/Base.dockerfile ./build/ --build-arg user=`whoami` --build-arg UID=`id -u` --build-arg GID=`id -g`')
+        docker.build(imageName, "-f ${dockerFile} ./build")
+    }
+}
+
 if (params.Linux64) {
     def name = 'Linux64'
     matrix[name] = {
         node('docker && !magrathea') {
             configureWorkspace()()
 
-            linux_image = stage('docker build') {
-                docker.build('ua-build-base:debian10', '-f build/Base.dockerfile ./build/ --build-arg user=`whoami` --build-arg UID=`id -u` --build-arg GID=`id -g` --build-arg DOCKER_BASE_IMAGE=debian:10')
-                docker.build("ua-build-linux", "-f build/Linux.dockerfile ./build")
-            }
+            linux_image = buildDockerImage('ua-build-linux', 'build/Linux.dockerfile')
 
             linux_image.inside('--env MOZCONFIG=/builds/worker/configs/linux.mozconfig') {
                 dir('mozilla-release') {
@@ -79,10 +83,7 @@ if (params.Windows64) {
         node('docker && magrathea') {
             configureWorkspace()()
 
-            windows_image = stage('docker build') {
-                docker.build('ua-build-base:debian10', '-f build/Base.dockerfile ./build/ --build-arg user=`whoami` --build-arg UID=`id -u` --build-arg GID=`id -g` --build-arg DOCKER_BASE_IMAGE=debian:10')
-                docker.build("ua-build-windows", "-f build/Windows.dockerfile ./build")
-            }
+            windows_image = buildDockerImage('ua-build-windows', 'build/Windows.dockerfile')
 
             windows_image.inside('--env MOZCONFIG=/builds/worker/configs/win64.mozconfig -v /mnt/vfat/vs2017_15.8.4/:/builds/worker/fetches/vs2017_15.8.4') {
                 dir('mozilla-release') {
@@ -112,10 +113,7 @@ if (params.MacOSX64) {
         node('docker && !magrathea') {
             configureWorkspace()()
 
-            mac_image = stage('docker build') {
-                docker.build('ua-build-base:debian10', '-f build/Base.dockerfile ./build/ --build-arg user=`whoami` --build-arg UID=`id -u` --build-arg GID=`id -g` --build-arg DOCKER_BASE_IMAGE=debian:10')
-                docker.build("ua-build-mac", "-f build/MacOSX.dockerfile ./build")
-            }
+            mac_image = buildDockerImage('ua-build-mac', 'build/MacOSX.dockerfile')
 
             mac_image.inside('--env MOZCONFIG=/builds/worker/configs/macosx.mozconfig') {
                 dir('mozilla-release') {

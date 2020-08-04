@@ -1,5 +1,4 @@
-ARG DOCKER_BASE_IMAGE
-FROM $DOCKER_BASE_IMAGE
+FROM debian:10
 ENV DEBIAN_FRONTEND=noninteractive
 ENV XZ_OPT=-T0
 
@@ -29,16 +28,8 @@ VOLUME /builds/worker/workspace
 VOLUME /builds/worker/tooltool-cache
 
 RUN dpkg --add-architecture $ARCH
-RUN apt-get update
-RUN apt-get dist-upgrade -y
-RUN if grep -q ^8\\. /etc/debian_version; then \
-      LIBSTDCXX=libstdc++-4.9-dev; \
-    elif grep -q ^9\\. /etc/debian_version; then \
-      LIBSTDCXX=libstdc++-6-dev; \
-    elif grep -q ^10\\. /etc/debian_version; then \
-      libstdcxx=libstdc++-8-dev; \
-      LIBSTDCXX="$libstdcxx $libstdcxx:$ARCH"; \
-    fi && \
+RUN apt-get update && \
+    apt-get dist-upgrade -y  && \
     apt-get install -y \
       # from debian-raw
       apt-transport-https \
@@ -88,7 +79,8 @@ RUN if grep -q ^8\\. /etc/debian_version; then \
       linux-libc-dev:$ARCH \
       pkg-config \
       dpkg-dev \
-      $LIBSTDCXX \
+      libstdc++-8-dev \
+      libstdc++-8-dev:$ARCH \
       libdbus-glib-1-dev:$ARCH \
       libdrm-dev:$ARCH \
       libfontconfig1-dev:$ARCH \
