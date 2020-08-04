@@ -1,4 +1,4 @@
-FROM ua-build-base:debian9
+FROM ua-build-base
 
 RUN chown -R worker:worker /builds/worker/fetches
 USER worker
@@ -48,7 +48,8 @@ ENV MOZ_FETCHES_DIR=/builds/worker/fetches/ \
     GECKO_PATH=/builds/worker/workspace \
     WORKSPACE=/builds/worker/workspace \
     TOOLTOOL_DIR=/builds/worker/fetches/ \
-    LANG=en-US
+    LANG=en_US.UTF-8 \
+    LANGUAGE=en_US:en
 
 COPY configs /builds/worker/configs
 

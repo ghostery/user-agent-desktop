@@ -91,4 +91,7 @@ export CC=clang-cl
 export CXX=clang-cl
 export ENABLE_CLANG_PLUGIN=1
 
+# disable tests for this build
+ac_add_options --disable-tests
+
 . /builds/worker/configs/ghostery.mozconfig

@@ -1,97 +1,42 @@
-export LLVM_CONFIG="${MOZ_FETCHES_DIR}/clang/bin/llvm-config"
+. $topsrcdir/browser/config/mozconfigs/linux64/plain-opt
 
-export WASM_SANDBOXED_LIBRARIES=graphite,ogg
-export LUCETC="${MOZ_FETCHES_DIR}/lucetc/lucetc"
-export WASI_SYSROOT="${MOZ_FETCHES_DIR}/wasi-sysroot/share/wasi-sysroot"
-export WASM_CC="${MOZ_FETCHES_DIR}/clang/bin/clang --target=wasm32-wasi"
-export WASM_CXX="${MOZ_FETCHES_DIR}/clang/bin/clang++ --target=wasm32-wasi"
+# browser/config/mozconfig/linux64/common-opt
+  . $topsrcdir/build/mozconfig.stylo
+  . $topsrcdir/build/mozconfig.wasm-sandboxing
 
-CARGO="${MOZ_FETCHES_DIR}/rustc/bin/cargo"
-RUSTC="${MOZ_FETCHES_DIR}/rustc/bin/rustc"
-RUSTDOC="${MOZ_FETCHES_DIR}/rustc/bin/rustdoc"
-RUSTFMT="${MOZ_FETCHES_DIR}/rustc/bin/rustfmt"
-CBINDGEN="${MOZ_FETCHES_DIR}/cbindgen/cbindgen"
+  # ac_add_options --enable-update-channel=${MOZ_UPDATE_CHANNEL}
+  # ac_add_options --with-google-location-service-api-keyfile=/builds/gls-gapi.data
+  # ac_add_options --with-google-safebrowsing-api-keyfile=/builds/sb-gapi.data
+  # ac_add_options --with-mozilla-api-keyfile=/builds/mozilla-desktop-geoloc-api.key
 
-export NODEJS="${MOZ_FETCHES_DIR}/node/bin/node"
-NASM="${MOZ_FETCHES_DIR}/nasm/nasm"
+  #. $topsrcdir/build/unix/mozconfig.linux
 
-CC="${MOZ_FETCHES_DIR}/clang/bin/clang"
-CXX="${MOZ_FETCHES_DIR}/clang/bin/clang++"
+    #. "$topsrcdir/build/unix/mozconfig.unix"
 
-if test -d "$MOZ_FETCHES_DIR/clang/bin"; then
-    CLANG_DIR=`cd "$MOZ_FETCHES_DIR/clang/bin" ; pwd`
-    export PATH="${CLANG_DIR}:${PATH}"
+      #. "$topsrcdir/build/mozconfig.common"
 
-    if $(cd $MOZ_FETCHES_DIR/clang/lib/clang/* && test -d lib/windows); then
-        export LIB="$(cd $MOZ_FETCHES_DIR/clang/lib/clang/* && cd lib/windows && pwd)"
-    fi
-fi
+      mk_add_options AUTOCLOBBER=1
+      ac_add_options --enable-crashreporter
+      ac_add_options --enable-js-shell
+      . "$topsrcdir/build/mozconfig.nasm"
+      . "$topsrcdir/build/mozconfig.node"
+      . "$topsrcdir/build/mozconfig.rust"
 
-export MOZ_STDCXX_COMPAT=1
+      #// "$topsrcdir/build/mozconfig.common"
 
-TOOLTOOL_DIR=${TOOLTOOL_DIR:-$topsrcdir}
+    mk_add_options "export PATH=$MOZ_FETCHES_DIR/binutils/bin:$PATH"
+    #. "$topsrcdir/build/unix/mozconfig.stdcxx"
 
-# Depending whether GCC was built on a RedHat-based or a Debian-based system,
-# the directory containing 32-bits libraries can be either (respectively)
-# lib or lib32. The directory for 64-bits libraries is always lib64.
-if [ -f "$MOZ_FETCHES_DIR/gcc/lib64/libstdc++.so" ]; then
-  # We put both 32-bits and 64-bits library path in LD_LIBRARY_PATH: ld.so
-  # will prefer the files in the 32-bits path when loading 32-bits executables,
-  # and the files in the 64-bits path when loading 64-bits executables.
-  # We also put both possible 32-bits library paths.
-  LD_LIBRARY_PATH=${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}$MOZ_FETCHES_DIR/gcc/lib64:$MOZ_FETCHES_DIR/gcc/lib32:$MOZ_FETCHES_DIR/gcc/lib
-elif [ -f "$MOZ_FETCHES_DIR/clang/lib/libstdc++.so" ]; then
-  LD_LIBRARY_PATH=${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}$MOZ_FETCHES_DIR/clang/lib:$MOZ_FETCHES_DIR/clang/lib32
-fi
+    #// "$topsrcdir/build/unix/mozconfig.unix"
 
-mk_add_options "export LD_LIBRARY_PATH=$LD_LIBRARY_PATH"
+    ac_add_options --enable-default-toolkit=cairo-gtk3-wayland
 
-# ac_add_options --enable-signmar
-ac_add_options --enable-js-shell
-ac_add_options --enable-release
-ac_add_options --enable-hardening
-ac_add_options --enable-rust-simd
-ac_add_options --enable-optimize
+  #// $topsrcdir/build/unix/mozconfig.linux
 
-# ac_add_options --with-mozilla-api-keyfile=$ROOT_PATH/mozilla-desktop-geoloc-api.key
-# ac_add_options --with-google-safebrowsing-api-keyfile=$ROOT_PATH/google-desktop-api.key
-#
-# export MOZ_APP_PROFILE=CLIQZ
+# Package js shell.
+export MOZ_PACKAGE_JSSHELL=1
 
-ac_add_options --enable-application=browser
-
-ac_add_options --prefix=/usr
-
-# Branding
-# ac_add_options --with-branding=browser/branding/cliqz
-# ac_add_options --with-app-name=cliqz # name for binaries
-ac_add_options --enable-official-branding
-ac_add_options --enable-update-channel=release
-# ac_add_options --enable-update-channel=${MOZ_UPDATE_CHANNEL}
-#
-
-# ac_add_options --with-distribution-id=org.archlinux
-# ac_add_options --with-unsigned-addon-scopes=app,system
-# ac_add_options --allow-addon-sideload
-# export MOZILLA_OFFICIAL=1
-# export MOZ_APP_REMOTINGNAME=${pkgname//-/}
-export MOZ_TELEMETRY_REPORTING=1
-export MOZ_REQUIRE_SIGNING=1
-
-# Keys
-# ac_add_options --with-google-location-service-api-keyfile=${PWD@Q}/google-api-key
-# ac_add_options --with-google-safebrowsing-api-keyfile=${PWD@Q}/google-api-key
-# ac_add_options --with-mozilla-api-keyfile=${PWD@Q}/mozilla-api-key
-
-# System libraries
-# ac_add_options --with-system-nspr
-# ac_add_options --with-system-nss
-
-# Features
-# ac_add_options --enable-alsa
-# ac_add_options --enable-jack
-ac_add_options --enable-crashreporter
-ac_add_options --disable-updater
+# disable tests for this build
 ac_add_options --disable-tests
 
 . /builds/worker/configs/ghostery.mozconfig

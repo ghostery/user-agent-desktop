@@ -1,4 +1,4 @@
-FROM ua-build-base:debian10
+FROM ua-build-base
 
 RUN chown -R worker:worker /builds/worker/fetches
 
@@ -65,7 +65,8 @@ ENV MOZ_FETCHES_DIR=/builds/worker/fetches/ \
     GECKO_PATH=/builds/worker/workspace \
     WORKSPACE=/builds/worker/workspace \
     TOOLTOOL_DIR=/builds/worker/fetches/ \
-    LANG=en-US
+    LANG=en_US.UTF-8 \
+    LANGUAGE=en_US:en
 
 COPY MacOSX10.11.sdk.tar.bz2 /builds/worker/fetches/
 RUN cd /builds/worker/fetches/ && \
