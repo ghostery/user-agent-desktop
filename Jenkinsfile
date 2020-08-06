@@ -25,6 +25,7 @@ def configureWorkspace() {
             sh "./fern.sh use ${FIREFOX_VERSION}"
             sh "./fern.sh reset ${FIREFOX_VERSION}"
             sh './fern.sh import-patches'
+            sh './bootstrap_extension.sh'
         }
 
         stage('prepare build env') {
