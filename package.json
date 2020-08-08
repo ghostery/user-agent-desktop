@@ -1,0 +1,30 @@
+{
+  "name": "user-agent-desktop",
+  "version": "1.0.0",
+  "description": "User agent desktop project",
+  "main": "fern.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/human-web/user-agent-desktop.git"
+  },
+  "author": "",
+  "license": "MPL-2.0",
+  "bugs": {
+    "url": "https://github.com/human-web/user-agent-desktop/issues"
+  },
+  "homepage": "https://github.com/human-web/user-agent-desktop#readme",
+  "devDependencies": {
+    "colors": "^1.4.0",
+    "commander": "^6.0.0",
+    "eslint": "^7.6.0",
+    "execa": "^4.0.3",
+    "got": "^11.5.2",
+    "js-yaml": "^3.14.0",
+    "listr": "^0.14.3",
+    "recursive-readdir": "^2.2.2",
+    "rimraf": "^3.0.2"
+  }
+}
