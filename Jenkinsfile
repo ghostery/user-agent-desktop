@@ -21,9 +21,8 @@ def configureWorkspace() {
             if (params.Reset) {
                 sh 'rm -rf .cache'
             }
-            FIREFOX_VERSION = readFile '.workspace'
-            sh "./fern.js use ${FIREFOX_VERSION}"
-            sh "./fern.js reset ${FIREFOX_VERSION}"
+            sh "./fern.js use"
+            sh "./fern.js reset"
             sh './fern.js import-patches'
         }
 
