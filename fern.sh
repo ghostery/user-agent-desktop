@@ -1,5 +1,7 @@
 #!/usr/bin/env sh
 
+set -e
+
 CACHE_FOLDER=".cache"
 
 usage() {
@@ -137,11 +139,10 @@ case "${COMMAND}" in
     touch "${PATCHES_INDEX}"
 
     ( cd mozilla-release; \
-      for sha1 in $(git log "${FIREFOX_RELEASE}"..workspace --oneline | cut -d' ' -f 1-1) ; do
-        PATCH="$(git format-patch -1 ${sha1})"
-        mv -v "${PATCH}" "${PATCHES_FOLDER}"
-        echo "${PATCH}" >> "${PATCHES_INDEX}"
-      done
+      # git format-patch "${FIREFOX_RELEASE}"
+      git format-patch --signoff --find-copies --break-rewrites --find-renames --minimal "${FIREFOX_RELEASE}"
+      ls *.patch > "${PATCHES_INDEX}"
+      mv -v *.patch "${PATCHES_FOLDER}"
     )
     exit 0
     ;;
@@ -151,11 +152,11 @@ case "${COMMAND}" in
     PATCHES_INDEX="${PATCHES_FOLDER}/.index"
 
     if [ -d "${PATCHES_FOLDER}" ] ; then
-      for patch in $(tac "${PATCHES_INDEX}") ; do
+      for patch in $(cat "${PATCHES_INDEX}") ; do
         ( cd mozilla-release; \
           git apply --stat "${PATCHES_FOLDER}/${patch}"; \
-          git apply --check "${PATCHES_FOLDER}/${patch}"; \
-          git am --signoff < "${PATCHES_FOLDER}/${patch}"; \
+          git apply --whitespace=fix --check "${PATCHES_FOLDER}/${patch}"; \
+          git am < "${PATCHES_FOLDER}/${patch}"; \
         )
       done
     fi
