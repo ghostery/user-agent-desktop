@@ -13,9 +13,6 @@ if [ ! -f ./build/makecab.exe ]; then
   exit 1
 fi
 
-# copy resources from mozilla source which we need for docker build
-cp ./mozilla-release/taskcluster/scripts/misc/fetch-content ./build/
-
 ( cd build &&
   docker build -f Base.dockerfile ./ --build-arg user=`whoami` --build-arg UID=`id -u` --build-arg GID=`id -g` &&
   docker build -f Windows.dockerfile -t ua-build-win ./

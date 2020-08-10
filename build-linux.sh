@@ -2,8 +2,6 @@
 set -e
 
 ROOT=`pwd`
-# copy resources from mozilla source which we need for docker build
-cp ./mozilla-release/taskcluster/scripts/misc/fetch-content ./build/
 
 ( cd build &&
   docker build -f Base.dockerfile -t ua-build-base ./ --build-arg user=`whoami` --build-arg UID=`id -u` --build-arg GID=`id -g` &&

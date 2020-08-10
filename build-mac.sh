@@ -8,9 +8,6 @@ if [ ! -f ./build/MacOSX10.11.sdk.tar.bz2 ]; then
   exit 1
 fi
 
-# copy resources from mozilla source which we need for docker build
-cp ./mozilla-release/taskcluster/scripts/misc/fetch-content ./build/
-
 ( cd build &&
   docker build -f Base.dockerfile -t ua-build-base ./ --build-arg user=`whoami` --build-arg UID=`id -u` --build-arg GID=`id -g` &&
   docker build -f MacOSX.dockerfile -t ua-build-mac ./
