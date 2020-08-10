@@ -7,6 +7,7 @@ const got = require("got");
 const execa = require("execa");
 const Listr = require("listr");
 const rimraf = require("rimraf");
+const fsExtra = require("fs-extra");
 
 const { setup: setupGit, reset: resetGit } = require("./git.js");
 const { getRoot } = require("./workspace.js");
@@ -66,6 +67,28 @@ async function use(version) {
 
         // Create symlink!
         await fs.promises.symlink(folder, "mozilla-release");
+      },
+    },
+    {
+      title: "Branding",
+      task: async () => {
+        const ghosteryBranding = path.join(
+          root,
+          "mozilla-release",
+          "browser",
+          "branding",
+          "ghostery"
+        );
+
+        // Clean-up existing branding folder
+        if (await folderExists(ghosteryBranding)) {
+          rimraf.sync(ghosteryBranding);
+        }
+
+        await fsExtra.copy(
+          path.join(root, "branding", "ghostery"),
+          ghosteryBranding
+        );
       },
     },
     {
