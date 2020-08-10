@@ -32,14 +32,18 @@ pref("app.update.badgeWaitTime", 0);
 pref("devtools.selfxss.count", 5);
 
 /** Anti-tracking settings */
-// tracker storage partitioning
+// tracker storage partitioning - currently undocumented setting to partition browser storage for trackers in 3rd party contexts.
+// See https://bugzilla.mozilla.org/show_bug.cgi?id=1549587
 pref("network.cookie.cookieBehavior", 5);
-// origin trimming
+// origin trimming - controls how much referrer to send across origins, 2 = only send the origin
+// https://wiki.mozilla.org/Security/Referrer
 pref("network.http.referer.XOriginTrimmingPolicy", 2);
-// samesite cookies
+// samesite cookies - lax by default. Protects against CSRF attacks
+// https://hacks.mozilla.org/2020/08/changes-to-samesite-cookie-behavior/
 pref("network.cookie.sameSite.laxByDefault", true);
 pref("network.cookie.sameSite.noneRequiresSecure", true);
-// redirect tracking protection (https://developer.mozilla.org/en-US/docs/Mozilla/Firefox/Privacy/Redirect_Tracking_Protection)
+// redirect tracking protection - purges tracker cookies for domains with no first-party interactions.
+// https://developer.mozilla.org/en-US/docs/Mozilla/Firefox/Privacy/Redirect_Tracking_Protection
 pref("privacy.purge_trackers.enabled", true)
 
 /* 0320: disable about:addons' Recommendations pane (uses Google Analytics) ***/
