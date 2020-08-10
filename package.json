@@ -19,8 +19,10 @@
   "devDependencies": {
     "colors": "^1.4.0",
     "commander": "^6.0.0",
+    "dockerode": "^3.2.1",
     "eslint": "^7.6.0",
     "execa": "^4.0.3",
+    "fs-extra": "^9.0.1",
     "got": "^11.5.2",
     "js-yaml": "^3.14.0",
     "listr": "^0.14.3",
