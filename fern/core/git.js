@@ -7,11 +7,31 @@ const rimraf = require("rimraf");
 
 const { withCwd, folderExists, fileExists } = require("./utils.js");
 
+async function setupIdentity() {
+  // Set 'user.name' if needed
+  try {
+    await execa("git", ["config", "--get", "user.name"]);
+  } catch (ex) {
+    await execa("git", ["config", "user.name", "Jenkins"])
+  }
+
+  // Set 'user.email' if needed
+  try {
+    await execa("git", ["config", "--get", "user.email"]);
+  } catch (ex) {
+    await execa("git", ["config", "user.email", "jenkins@magrathea"])
+  }
+}
+
 async function setup(version, folder) {
   return new Listr([
     {
       title: "init",
       task: () => withCwd(folder, () => execa("git", ["init"])),
+    },
+    {
+      title: "identity",
+      task: () => withCwd(folder, () => setupIdentity()),
     },
     {
       title: "orphan",
