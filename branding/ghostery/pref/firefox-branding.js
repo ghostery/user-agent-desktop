@@ -30,3 +30,67 @@ pref("app.update.badgeWaitTime", 0);
 // Number of usages of the web console.
 // If this is less than 5, then pasting code into the web console is disabled
 pref("devtools.selfxss.count", 5);
+
+/** Anti-tracking settings */
+// tracker storage partitioning - currently undocumented setting to partition browser storage for trackers in 3rd party contexts.
+// See https://bugzilla.mozilla.org/show_bug.cgi?id=1549587
+pref("network.cookie.cookieBehavior", 5);
+// origin trimming - controls how much referrer to send across origins, 2 = only send the origin
+// https://wiki.mozilla.org/Security/Referrer
+pref("network.http.referer.XOriginTrimmingPolicy", 2);
+// samesite cookies - lax by default. Protects against CSRF attacks
+// https://hacks.mozilla.org/2020/08/changes-to-samesite-cookie-behavior/
+pref("network.cookie.sameSite.laxByDefault", true);
+pref("network.cookie.sameSite.noneRequiresSecure", true);
+// redirect tracking protection - purges tracker cookies for domains with no first-party interactions.
+// https://developer.mozilla.org/en-US/docs/Mozilla/Firefox/Privacy/Redirect_Tracking_Protection
+pref("privacy.purge_trackers.enabled", true)
+
+/* 0320: disable about:addons' Recommendations pane (uses Google Analytics) ***/
+pref("extensions.getAddons.showPane", false); // [HIDDEN PREF]
+
+/* 0330: disable telemetry
+ * the pref (.unified) affects the behaviour of the pref (.enabled)
+ * IF unified=false then .enabled controls the telemetry module
+ * IF unified=true then .enabled ONLY controls whether to record extended data
+ * so make sure to have both set as false
+ * [NOTE] FF58+ 'toolkit.telemetry.enabled' is now LOCKED to reflect prerelease
+ * or release builds (true and false respectively), see [2]
+ * [1] https://firefox-source-docs.mozilla.org/toolkit/components/telemetry/telemetry/internals/preferences.html
+ * [2] https://medium.com/georg-fritzsche/data-preference-changes-in-firefox-58-2d5df9c428b5 ***/
+pref("toolkit.telemetry.unified", false);
+pref("toolkit.telemetry.enabled", false); // see [NOTE] above FF58+
+pref("toolkit.telemetry.server", "data:,");
+pref("toolkit.telemetry.archive.enabled", false);
+pref("toolkit.telemetry.newProfilePing.enabled", false); // [FF55+]
+pref("toolkit.telemetry.shutdownPingSender.enabled", false); // [FF55+]
+pref("toolkit.telemetry.updatePing.enabled", false); // [FF56+]
+pref("toolkit.telemetry.bhrPing.enabled", false); // [FF57+] Background Hang Reporter
+pref("toolkit.telemetry.firstShutdownPing.enabled", false); // [FF57+]
+ /* 0331: disable Telemetry Coverage
+  * [1] https://blog.mozilla.org/data/2018/08/20/effectively-measuring-search-in-firefox/ ***/
+pref("toolkit.telemetry.coverage.opt-out", true); // [HIDDEN PREF]
+pref("toolkit.coverage.opt-out", true); // [FF64+] [HIDDEN PREF]
+pref("toolkit.coverage.endpoint.base", "");
+ /* 0340: disable Health Reports
+  * [SETTING] Privacy & Security>Firefox Data Collection & Use>Allow Firefox to send technical... data ***/
+pref("datareporting.healthreport.uploadEnabled", false);
+ /* 0341: disable new data submission, master kill switch [FF41+]
+  * If disabled, no policy is shown or upload takes place, ever
+  * [1] https://bugzilla.mozilla.org/1195552 ***/
+pref("datareporting.policy.dataSubmissionEnabled", false);
+ /* 0342: disable Studies (see 0503)
+  * [SETTING] Privacy & Security>Firefox Data Collection & Use>Allow Firefox to install and run studies ***/
+pref("app.shield.optoutstudies.enabled", false);
+ /* 0343: disable personalized Extension Recommendations in about:addons and AMO [FF65+]
+  * [NOTE] This pref has no effect when Health Reports (0340) are disabled
+  * [SETTING] Privacy & Security>Firefox Data Collection & Use>Allow Firefox to make personalized extension recommendations
+  * [1] https://support.mozilla.org/kb/personalized-extension-recommendations ***/
+pref("browser.discovery.enabled", false);
+ /* 0350: disable Crash Reports ***/
+pref("breakpad.reportURL", "");
+pref("browser.tabs.crashReporting.sendReport", false); // [FF44+]
+pref("browser.crashReports.unsubmittedCheck.enabled", false); // [FF51+]
+ /* 0351: disable backlogged Crash Reports
+  * [SETTING] Privacy & Security>Firefox Data Collection & Use>Allow Firefox to send backlogged crash reports  ***/
+pref("browser.crashReports.unsubmittedCheck.autoSubmit2", false); // [FF58+]
