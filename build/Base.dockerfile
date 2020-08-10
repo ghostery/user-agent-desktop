@@ -94,7 +94,7 @@ RUN apt-get update && \
       libxt-dev:$ARCH \
       libglib2.0-dev \
       # extras
-      wine64 wine upx-ucl nodejs \
+      wine64 wine upx-ucl nodejs npm \
       python3-pip zstd \
       libasound2-dev libcurl4-openssl-dev \
       locales
