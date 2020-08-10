@@ -103,4 +103,7 @@ RUN pip3 install zstandard importlib_metadata
 ADD fetch-content /builds/worker/bin/fetch-content
 RUN chown -R worker:worker /builds/worker/bin && chmod 755 /builds/worker/bin/*
 # fetches
-RUN mkdir -p /builds/worker/fetches/
+RUN mkdir -p /builds/worker/fetches/ && \
+    chown -R worker:worker /builds/worker/fetches
+
+USER worker

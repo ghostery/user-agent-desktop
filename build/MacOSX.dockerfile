@@ -1,6 +1,4 @@
-FROM mozbuild:base
-
-
+FROM ua-build-base
 
 ENV TOOLTOOL_MANIFEST=browser/config/tooltool-manifests/macosx64/cross-releng.manifest
 
@@ -76,12 +74,19 @@ RUN wget -O /builds/worker/fetches/wasi-sysroot.tar.xz https://firefox-ci-tc.ser
     tar -xf wasi-sysroot.tar.xz && \
     rm wasi-sysroot.tar.xz
 
-ENV TOOLTOOL_DIR=/builds/worker/fetches/ RUSTC=/builds/worker/fetches/rustc/bin/rustc CARGO=/builds/worker/fetches/rustc/bin/cargo RUSTFMT=/builds/worker/fetches/rustc/bin/rustfmt CBINDGEN=/builds/worker/fetches/cbindgen/cbindgen
+COPY MacOSX10.11.sdk.tar.bz2 /builds/worker/fetches/
 
-ADD vs2017_15.8.4.zip /builds/worker/fetches/
+RUN cd /builds/worker/fetches/ && \
+    tar -xf MacOSX10.11.sdk.tar.bz2 && \
+    rm MacOSX10.11.sdk.tar.bz2
 
-RUN cd /builds/worker/fetches/ && unzip vs2017_15.8.4.zip && rm vs2017_15.8.4.zip
+ENV MOZ_FETCHES_DIR=/builds/worker/fetches/ \
+    GECKO_PATH=/builds/worker/workspace \
+    WORKSPACE=/builds/worker/workspace \
+    TOOLTOOL_DIR=/builds/worker/fetches/ \
+    LANG=en_US.UTF-8 \
+    LANGUAGE=en_US:en
 
-ENV MOZ_FETCHES_DIR=/builds/worker/fetches/ MOZCONFIG=/builds/worker/workspace/.mozconfig
+COPY configs /builds/worker/configs
 
-USER worker
+WORKDIR $WORKSPACE

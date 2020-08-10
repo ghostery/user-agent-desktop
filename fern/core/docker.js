@@ -82,7 +82,7 @@ function generateFetch(fetches, key) {
       `cd ${MOZ_FETCHES_DIR} &&`,
       `unzip ${filename} &&`,
       `rm ${filename}`,
-    ].join(" \\\n   ");
+    ].join(" \\\n    ");
   }
 }
 
@@ -91,10 +91,10 @@ async function generateDockerFile({ key, buildPath, fetches, toolchains }) {
 
   const job = builds[key];
 
-  const statements = ["FROM mozbuild:base", ""];
+  const statements = ["FROM ua-build-base"];
   const env = Object.entries(job.worker.env)
     .map(([k, v]) => `${k}=${v}`)
-    .join("\\n    ");
+    .join(" \\\n    ");
   statements.push(`ENV ${env}`);
   statements.push("");
 
@@ -118,30 +118,31 @@ async function generateDockerFile({ key, buildPath, fetches, toolchains }) {
     }
   }
 
+  if (key.startsWith('win')) {
+    statements.push('ADD --chown=worker:worker makecab.exe /builds/worker/fetches/')
+  }
+  if (key.startsWith('mac')) {
+    statements.push('COPY MacOSX10.11.sdk.tar.bz2 /builds/worker/fetches/')
+    statements.push([
+      'RUN cd /builds/worker/fetches/ &&',
+      'tar -xf MacOSX10.11.sdk.tar.bz2 &&',
+      'rm MacOSX10.11.sdk.tar.bz2',
+    ].join(" \\\n    "))
+  }
+
   statements.push(
     [
-      `ENV TOOLTOOL_DIR=${MOZ_FETCHES_DIR}`,
-      `RUSTC=${MOZ_FETCHES_DIR}rustc/bin/rustc`,
-      `CARGO=${MOZ_FETCHES_DIR}rustc/bin/cargo`,
-      `RUSTFMT=${MOZ_FETCHES_DIR}rustc/bin/rustfmt`,
-      `CBINDGEN=${MOZ_FETCHES_DIR}cbindgen/cbindgen`,
-    ].join(" ")
+      'ENV MOZ_FETCHES_DIR=/builds/worker/fetches/',
+      'GECKO_PATH=/builds/worker/workspace',
+      'WORKSPACE=/builds/worker/workspace',
+      'TOOLTOOL_DIR=/builds/worker/fetches/',
+      'LANG=en_US.UTF-8',
+      'LANGUAGE=en_US:en',
+    ].join(" \\\n    ")
   );
+  statements.push('COPY configs /builds/worker/configs')
+  statements.push('WORKDIR $WORKSPACE')
 
-  statements.push(`ADD vs2017_15.8.4.zip ${MOZ_FETCHES_DIR}`);
-  statements.push(
-    `RUN cd ${MOZ_FETCHES_DIR} && unzip vs2017_15.8.4.zip && rm vs2017_15.8.4.zip`
-  );
-
-  // extra_env = '\\\n    '.join([f'{k}={v}' for k, v in job['run']['extra-config']['env'].items()])
-  // statements.append(f'ENV {extra_env}')
-  statements.push(
-    [
-      `ENV MOZ_FETCHES_DIR=/builds/worker/fetches/`,
-      `MOZCONFIG=/builds/worker/workspace/.mozconfig`,
-    ].join(" ")
-  );
-  statements.push("USER worker");
   return statements.join("\n\n");
 }
 
