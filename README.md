@@ -1,13 +1,13 @@
 # Fern
 
-The `fern.sh` script (soon to be rewritten in Node.js ;)), gives a taste of how a patch-based workflow would look like.
+The `fern.js` script (soon to be rewritten in Node.js ;)), gives a taste of how a patch-based workflow would look like.
 
 ```sh
-$ ./fern.sh use 78.0.1
+$ ./fern.js use --firefox 78.0.1
 $ cd mozilla-release # Do some stuff... and commit your changes
-$ ./fern.sh export-patches # Check 'patches' folder
-$ ./fern.sh reset # reset 'mozilla-release' folder
-$ ./fern.sh import-patches # Check 'mozilla-release' folder again!
+$ ./fern.js export-patches # Check 'patches' folder
+$ ./fern.js reset # reset 'mozilla-release' folder
+$ ./fern.js import-patches # Check 'mozilla-release' folder again!
 ```
 
 ## Setting up a dev environment
