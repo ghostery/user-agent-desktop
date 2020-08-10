@@ -68,6 +68,15 @@ async function use(version) {
         await fs.promises.symlink(folder, "mozilla-release");
       },
     },
+    {
+      title: "Populate Build Folder",
+      task: async () => {
+        await fs.promises.copyFile(
+          path.join(folder, "taskcluster/scripts/misc/fetch-content"),
+          path.join(root, "build", "fetch-content")
+        );
+      },
+    },
   ]);
 }
 
@@ -75,11 +84,10 @@ function reset(version) {
   return new Listr([
     {
       title: "Git",
-      task: () => resetGit(version, 'mozilla-release'),
+      task: () => resetGit(version, "mozilla-release"),
     },
   ]);
 }
-
 
 module.exports = {
   use,
