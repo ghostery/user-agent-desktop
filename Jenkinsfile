@@ -44,7 +44,7 @@ def build(name, dockerFile, mozconfig, artifactGlob) {
 
             dir('mozilla-release') {
                 stage("${name}: mach build") {
-                    sh 'ln -s /builds/worker/fetches/MacOSX10.11.sdk `pwd`/MacOSX10.11.sdk'
+                    sh 'rm -f `pwd`/MacOSX10.11.sdk; ln -s /builds/worker/fetches/MacOSX10.11.sdk `pwd`/MacOSX10.11.sdk'
                     if (params.Clobber) {
                         sh './mach clobber'
                     }
