@@ -10,3 +10,11 @@ trim_trailing_whitespace = true
 [*.{es,js,json,jsm,jsx,ts,yml}]
 indent_style = space
 indent_size = 2
+
+[Jenkinsfile]
+indent_style = space
+indent_size = 4
+
+[*.dockerfile]
+indent_style = space
+indent_size = 2
