@@ -42,20 +42,22 @@ def build(name, dockerFile, mozconfig, artifactGlob) {
                 sh './fern.js import-patches'
             }
 
-            stage("${name}: mach build") {
-                sh 'ln -s /builds/worker/fetches/MacOSX10.11.sdk `pwd`/MacOSX10.11.sdk'
-                if (params.Clobber) {
-                    sh './mach clobber'
+            dir('mozilla-release') {
+                stage("${name}: mach build") {
+                    sh 'ln -s /builds/worker/fetches/MacOSX10.11.sdk `pwd`/MacOSX10.11.sdk'
+                    if (params.Clobber) {
+                        sh './mach clobber'
+                    }
+                    sh './mach build'
                 }
-                sh './mach build'
-            }
 
-            stage("${name}: mach package") {
-                sh './mach package'
-            }
+                stage("${name}: mach package") {
+                    sh './mach package'
+                }
 
-            stage("${name}: publish artifacts") {
-                archiveArtifacts artifacts: artifactGlob
+                stage("${name}: publish artifacts") {
+                    archiveArtifacts artifacts: artifactGlob
+                }
             }
         }
     }
