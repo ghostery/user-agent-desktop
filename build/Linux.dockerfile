@@ -1,8 +1,5 @@
 FROM ua-build-base
 
-RUN chown -R worker:worker /builds/worker/fetches
-USER worker
-
 RUN wget -O /builds/worker/fetches/binutils.tar.xz https://firefox-ci-tc.services.mozilla.com/api/index/v1/task/gecko.cache.level-3.toolchains.v3.linux64-binutils.latest/artifacts/public/build/binutils.tar.xz && \
     cd /builds/worker/fetches/ && \
     tar -xf binutils.tar.xz && \

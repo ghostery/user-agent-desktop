@@ -1,28 +1,27 @@
-FROM mozbuild:base
+FROM ua-build-base
 
-
-
-ENV TOOLTOOL_MANIFEST=browser/config/tooltool-manifests/win64/releng.manifest\n    MOZ_AUTOMATION_PACKAGE_TESTS=1
+ENV TOOLTOOL_MANIFEST=browser/config/tooltool-manifests/win64/releng.manifest \
+    MOZ_AUTOMATION_PACKAGE_TESTS=1
 
 
 
 RUN /builds/worker/bin/fetch-content static-url \
-   --sha256 daa17556c8690a34fb13af25c87ced89c79a36a935bf6126253a9d9a5226367c \
-   --size 2505205 \
-   https://hg.mozilla.org/mozilla-build/raw-file/3b8c537ca3c879551956ad47ca9f089583f647c5/nsis-3.01.zip \
-   /builds/worker/fetches/nsis-3.01.zip && \
-   cd /builds/worker/fetches/ && \
-   unzip nsis-3.01.zip && \
-   rm nsis-3.01.zip
+    --sha256 daa17556c8690a34fb13af25c87ced89c79a36a935bf6126253a9d9a5226367c \
+    --size 2505205 \
+    https://hg.mozilla.org/mozilla-build/raw-file/3b8c537ca3c879551956ad47ca9f089583f647c5/nsis-3.01.zip \
+    /builds/worker/fetches/nsis-3.01.zip && \
+    cd /builds/worker/fetches/ && \
+    unzip nsis-3.01.zip && \
+    rm nsis-3.01.zip
 
 RUN /builds/worker/bin/fetch-content static-url \
-   --sha256 5c076f87ba64d82f11513f4af0ceb07246a3540aa3c72ca3ffc2d53971fa56e3 \
-   --size 462820 \
-   https://hg.mozilla.org/mozilla-build/raw-file/3b8c537ca3c879551956ad47ca9f089583f647c5/upx-3.95-win64.zip \
-   /builds/worker/fetches/upx-3.95-win64.zip && \
-   cd /builds/worker/fetches/ && \
-   unzip upx-3.95-win64.zip && \
-   rm upx-3.95-win64.zip
+    --sha256 5c076f87ba64d82f11513f4af0ceb07246a3540aa3c72ca3ffc2d53971fa56e3 \
+    --size 462820 \
+    https://hg.mozilla.org/mozilla-build/raw-file/3b8c537ca3c879551956ad47ca9f089583f647c5/upx-3.95-win64.zip \
+    /builds/worker/fetches/upx-3.95-win64.zip && \
+    cd /builds/worker/fetches/ && \
+    unzip upx-3.95-win64.zip && \
+    rm upx-3.95-win64.zip
 
 RUN wget -O /builds/worker/fetches/binutils.tar.xz https://firefox-ci-tc.services.mozilla.com/api/index/v1/task/gecko.cache.level-3.toolchains.v3.linux64-binutils.latest/artifacts/public/build/binutils.tar.xz && \
     cd /builds/worker/fetches/ && \
@@ -84,12 +83,15 @@ RUN wget -O /builds/worker/fetches/winchecksec.tar.bz2 https://firefox-ci-tc.ser
     tar -xf winchecksec.tar.bz2 && \
     rm winchecksec.tar.bz2
 
-ENV TOOLTOOL_DIR=/builds/worker/fetches/ RUSTC=/builds/worker/fetches/rustc/bin/rustc CARGO=/builds/worker/fetches/rustc/bin/cargo RUSTFMT=/builds/worker/fetches/rustc/bin/rustfmt CBINDGEN=/builds/worker/fetches/cbindgen/cbindgen
+ADD --chown=worker:worker makecab.exe /builds/worker/fetches/
 
-ADD vs2017_15.8.4.zip /builds/worker/fetches/
+ENV MOZ_FETCHES_DIR=/builds/worker/fetches/ \
+    GECKO_PATH=/builds/worker/workspace \
+    WORKSPACE=/builds/worker/workspace \
+    TOOLTOOL_DIR=/builds/worker/fetches/ \
+    LANG=en_US.UTF-8 \
+    LANGUAGE=en_US:en
 
-RUN cd /builds/worker/fetches/ && unzip vs2017_15.8.4.zip && rm vs2017_15.8.4.zip
+COPY configs /builds/worker/configs
 
-ENV MOZ_FETCHES_DIR=/builds/worker/fetches/ MOZCONFIG=/builds/worker/workspace/.mozconfig
-
-USER worker
+WORKDIR $WORKSPACE
