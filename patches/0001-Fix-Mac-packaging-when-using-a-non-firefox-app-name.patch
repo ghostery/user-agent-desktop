@@ -1,7 +1,6 @@
-From 04dee9c6fb77864d0166f3abc74f63a11b9512cf Mon Sep 17 00:00:00 2001
 From: Sam Macbeth <sam@cliqz.com>
-Date: Wed, 29 Jul 2020 14:27:40 +0200
-Subject: [PATCH] Fix Mac packaging when using a non-firefox app-name
+Date: Fri, 21 Aug 2020 13:35:37 +0200
+Subject: Fix Mac packaging when using a non-firefox app-name
 
 ---
  browser/app/macbuild/Contents/MacOS-files.in | 2 +-
@@ -21,5 +20,5 @@ index a0cac14ef7..bd7f919922 100644
  /geckodriver
  #endif
 -- 
-2.25.1
+2.28.0
 

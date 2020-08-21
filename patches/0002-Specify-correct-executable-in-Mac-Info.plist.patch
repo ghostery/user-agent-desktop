@@ -1,14 +1,13 @@
-From 0adcc9f88ef55c0132fee03ad4405649e1cc5056 Mon Sep 17 00:00:00 2001
 From: Sam Macbeth <sam@cliqz.com>
-Date: Thu, 30 Jul 2020 15:20:14 +0200
-Subject: [PATCH] Specify correct executable in Mac Info.plist
+Date: Fri, 21 Aug 2020 13:35:37 +0200
+Subject: Specify correct executable in Mac Info.plist
 
 ---
  browser/app/macbuild/Contents/Info.plist.in | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/browser/app/macbuild/Contents/Info.plist.in b/browser/app/macbuild/Contents/Info.plist.in
-index f6791ea481..ca2b40eec9 100644
+index 27969d6051..8da3c61768 100644
 --- a/browser/app/macbuild/Contents/Info.plist.in
 +++ b/browser/app/macbuild/Contents/Info.plist.in
 @@ -163,7 +163,7 @@
@@ -21,5 +20,5 @@ index f6791ea481..ca2b40eec9 100644
  	<string>%MAC_APP_NAME% %APP_VERSION%</string>
  	<key>CFBundleIconFile</key>
 -- 
-2.27.0
+2.28.0
 

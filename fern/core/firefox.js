@@ -11,24 +11,16 @@ const fsExtra = require("fs-extra");
 
 const { setup: setupGit, reset: resetGit } = require("./git.js");
 const { getRoot } = require("./workspace.js");
-const caching = require("./caching.js");
-const {
-  fileExists,
-  folderExists,
-  symlinkExists,
-  ensureFolderExists,
-} = require("./utils.js");
+const { getCacheDir } = require("./caching.js");
+const { fileExists, folderExists, symlinkExists } = require("./utils.js");
 
 async function use(version) {
-  // TODO - use 'caching.js' for that instead!
   const root = await getRoot();
-  const cache = path.join(root, ".cache", "firefox", `${version}`);
+  const cache = await getCacheDir("firefox", `${version}`);
   const folder = path.join(cache, `firefox-${version}`);
   const archive = path.join(cache, `firefox-${version}.source.tar.xz`);
   const git = path.join(folder, ".git");
   const url = `https://archive.mozilla.org/pub/firefox/releases/${version}/source/firefox-${version}.source.tar.xz`;
-
-  await ensureFolderExists(cache); // TODO - use 'caching.js' instead!
 
   return new Listr([
     {
