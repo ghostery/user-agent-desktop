@@ -1,7 +1,6 @@
-From b0df65ebf331443025608b16ebd9f7c617ec1b1f Mon Sep 17 00:00:00 2001
 From: Sam Macbeth <sam@cliqz.com>
-Date: Mon, 10 Aug 2020 15:50:56 +0200
-Subject: [PATCH 3/3] Include ghostery extension in browser bundle
+Date: Fri, 21 Aug 2020 13:35:37 +0200
+Subject: Include ghostery extension in browser bundle
 
 ---
  browser/extensions/moz.build | 3 ++-

@@ -8,25 +8,21 @@ const execa = require("execa");
 const Listr = require("listr");
 const rimraf = require("rimraf");
 const readdir = require("recursive-readdir");
+const fsExtra = require("fs-extra");
 
-const { getRoot } = require("./workspace.js");
-const caching = require("./caching.js");
+const { getRoot } = require('./workspace.js');
+const { getCacheDir } = require("./caching.js");
 const {
   fileExists,
   folderExists,
-  symlinkExists,
   ensureFolderExists,
 } = require("./utils.js");
 
 async function use(version) {
-  // TODO - use 'caching.js' for that instead!
-  const root = await getRoot();
-  const cache = path.join(root, ".cache", "ghostery", `${version}`);
+  const cache = await getCacheDir("ghostery", `${version}`);
   const folder = path.join(cache, `ghostery-firefox-${version}`);
   const archive = path.join(cache, `ghostery-firefox-${version}.zip`);
   const url = `https://github.com/ghostery/ghostery-extension/releases/download/${version}/ghostery-firefox-${version}.zip`;
-
-  await ensureFolderExists(cache); // TODO - use 'caching.js' instead!
 
   return new Listr([
     {
@@ -80,24 +76,27 @@ async function use(version) {
       },
     },
     {
-      title: "Link",
+      title: "Install Ghostery into mozilla-release",
       task: async () => {
-        const symlink = "mozilla-release/browser/extensions/ghostery";
+        const root = await getRoot();
+        const ghosteryExtension = path.join(
+          root,
+          "mozilla-release",
+          "browser",
+          "extensions",
+          "ghostery"
+        );
 
-        // Clean-up existing symlink
-        if (await symlinkExists(symlink)) {
-          rimraf.sync(symlink);
+        // Clean-up existing extension folder
+        if (await folderExists(ghosteryExtension)) {
+          rimraf.sync(ghosteryExtension);
         }
 
-        // Make sure there is no folder with same name
-        if (await folderExists(symlink)) {
-          throw new Error(
-            `Existing "${symlink}" path: Cannot be overriden safely!`
-          );
-        }
-
-        // Create symlink!
-        await fs.promises.symlink(folder, symlink);
+        // Copy extension
+        await fsExtra.copy(
+          folder,
+          ghosteryExtension,
+        );
       },
     },
   ]);

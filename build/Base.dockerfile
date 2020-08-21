@@ -97,9 +97,11 @@ RUN apt-get update && \
       wine64 wine upx-ucl nodejs npm \
       python3-pip zstd \
       libasound2-dev libcurl4-openssl-dev \
-      locales
+      locales \
+      liblzma-dev
+
 # custom
-RUN pip3 install zstandard importlib_metadata
+RUN pip3 install zstandard importlib_metadata mar
 ADD fetch-content /builds/worker/bin/fetch-content
 RUN chown -R worker:worker /builds/worker/bin && chmod 755 /builds/worker/bin/*
 # fetches

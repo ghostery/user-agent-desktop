@@ -12,14 +12,14 @@ async function setupIdentity() {
   try {
     await execa("git", ["config", "--get", "user.name"]);
   } catch (ex) {
-    await execa("git", ["config", "user.name", "Jenkins"])
+    await execa("git", ["config", "user.name", "Jenkins"]);
   }
 
   // Set 'user.email' if needed
   try {
     await execa("git", ["config", "--get", "user.email"]);
   } catch (ex) {
-    await execa("git", ["config", "user.email", "jenkins@magrathea"])
+    await execa("git", ["config", "user.email", "jenkins@magrathea"]);
   }
 }
 
@@ -97,16 +97,35 @@ function exportPatches(root, version) {
           await execa("git", [
             "format-patch",
             `${version}`,
+            "--minimal", // Spend extra time to make sure the smallest possible diff is produced.
+            "--no-numbered", // Name output in [PATCH] format.
+            "--keep-subject", // Do not strip/add [PATCH] from the first line of the commit log message.
             "--output-directory",
             patchesFolder,
           ]);
 
+          // Get list of patches
+          const patches = (await fs.promises.readdir(patchesFolder))
+            .filter((filename) => filename.endsWith(".patch"))
+            .sort();
+
+          // Normalize patches by removing the first line
+          await Promise.all(
+            patches.map(async (patchName) => {
+              const patchPath = path.join(patchesFolder, patchName);
+              const patch = await fs.promises.readFile(patchPath, "utf-8");
+              await fs.promises.writeFile(
+                patchPath,
+                patch.slice(patch.indexOf("\n") + 1),
+                "utf-8"
+              );
+            })
+          );
+
+          // Generate .index
           await fs.promises.writeFile(
             path.join(patchesFolder, ".index"),
-            (await fs.promises.readdir(patchesFolder))
-              .filter((filename) => filename.endsWith(".patch"))
-              .sort()
-              .join("\n"),
+            patches.join("\n"),
             "utf-8"
           );
         }),

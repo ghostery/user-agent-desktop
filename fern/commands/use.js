@@ -12,8 +12,14 @@ module.exports = (program) => {
   program
     .command("use")
     .description("Setup workspace with specified Firefox and Ghostery versions")
-    .option("-f, --firefox", "Specify which version of Firefox to use")
-    .option("-g, --ghostery", "Specify which version of Ghostery to use")
+    .option(
+      "-f, --firefox <FIREFOX>",
+      "Specify which version of Firefox to use"
+    )
+    .option(
+      "-g, --ghostery <GHOSTERY>",
+      "Specify which version of Ghostery to use"
+    )
     .action(
       async ({
         firefox: firefoxVersionOverride,
