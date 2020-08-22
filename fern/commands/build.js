@@ -2,10 +2,13 @@ const path = require("path");
 const fs = require("fs");
 const process = require("process");
 
+const execa = require("execa");
 const Listr = require("listr");
 const Docker = require("dockerode");
+const fsExtra = require("fs-extra");
 
 const { getRoot } = require("../core/workspace.js");
+const { sudo, withCwd, fileExists, folderExists } = require("../core/utils.js");
 
 async function buildDocker({ docker, cwd, dockerfile, name, out }) {
   const stream = await docker.buildImage(
@@ -38,15 +41,17 @@ async function buildDocker({ docker, cwd, dockerfile, name, out }) {
 }
 
 async function runDocker({
+  cmd = "build",
   docker,
   image,
   mozconfig,
   out,
   registerCleanupTask,
+  Binds = [],
 }) {
   const container = await docker.createContainer({
     Image: image,
-    Cmd: ["./mach", "build"],
+    Cmd: ["./mach", cmd],
     Env: [`MOZCONFIG=/builds/worker/configs/${mozconfig}`],
     Tty: true,
     HostConfig: {
@@ -55,6 +60,7 @@ async function runDocker({
           await getRoot(),
           "mozilla-release"
         )}:/builds/worker/workspace`,
+        ...Binds,
       ],
     },
   });
@@ -65,7 +71,17 @@ async function runDocker({
     (err, stream) => {
       stream.pipe(out);
       cleanupStream = () => {
-        stream.unpipe(out);
+        try {
+          stream.end();
+        } catch (ex) {
+          /* Ignore */
+        }
+
+        try {
+          stream.unpipe(out);
+        } catch (ex) {
+          /* Ignore */
+        }
       };
     }
   );
@@ -77,20 +93,25 @@ async function runDocker({
     }
     cleanupOngoing = true;
 
-    if (cleanupStream !== undefined) {
-      cleanupStream();
+    try {
+      if (cleanupStream !== undefined) {
+        cleanupStream();
+      }
+    } catch (ex) {
+      console.log("????", ex);
+      /* Ignore */
     }
 
     try {
       console.log("Attempting to stop container...");
-      await container.stop({ t: 1 });
+      await container.stop({ t: 0 });
     } catch (ex) {
       /* Ignore */
     }
 
     try {
       console.log("Attempting to remove container...");
-      await container.remove();
+      await container.remove({ force: true });
     } catch (ex) {
       /* Ignore */
     }
@@ -100,7 +121,15 @@ async function runDocker({
   await container.wait();
 
   try {
-    await container.remove();
+    if (cleanupStream !== undefined) {
+      cleanupStream();
+    }
+  } catch (ex) {
+    /* Ignore */
+  }
+
+  try {
+    await container.remove({ force: true });
   } catch (ex) {
     /* NOTE: this might fail if we intercepted CTRL-c */
   }
@@ -115,9 +144,9 @@ module.exports = (program) => {
     )
     .description("Build Firefox in docker")
     .action(async ({ target }) => {
-      if (target !== "linux" && target !== "mac") {
+      if (target !== "linux" && target !== "mac" && target !== "windows") {
         console.error(
-          "Only following targets are currently supported: linux, mac."
+          "Only following targets are currently supported: linux, mac and windows."
         );
         process.exit(1);
       }
@@ -201,6 +230,24 @@ module.exports = (program) => {
               }),
           },
           {
+            title: "Check MacOSX10.11.sdk.tar.bz2 exists",
+            task: async () => {
+              const sdk = "MacOSX10.11.sdk.tar.bz2";
+              if ((await fileExists(path.join(buildFolder, sdk))) === false) {
+                throw new Error(`${sdk} must be available at build/${sdk}`);
+              }
+            },
+          },
+          {
+            title: "Extract MacOSX10.11.sdk.tar.bz2",
+            skip: () => folderExists(path.join(buildFolder, "MacOSX10.11.sdk")),
+            task: async () => {
+              await withCwd(buildFolder, () =>
+                execa("tar", ["-xjvf", "MacOSX10.11.sdk.tar.bz2"])
+              );
+            },
+          },
+          {
             title: "Building User Agent in Docker (MacOSX)",
             task: () =>
               runDocker({
@@ -209,6 +256,95 @@ module.exports = (program) => {
                 mozconfig: "macosx.mozconfig",
                 out: logWriter,
                 registerCleanupTask,
+                Binds: [
+                  `${path.join(
+                    buildFolder,
+                    "MacOSX10.11.sdk"
+                  )}:/builds/worker/workspace/MacOSX10.11.sdk`,
+                ],
+              }),
+          }
+        );
+      } else if (target === "windows") {
+        tasks.push(
+          {
+            title: "Building Docker Windows Image",
+            task: () =>
+              buildDocker({
+                docker,
+                cwd: buildFolder,
+                dockerfile: "Windows.dockerfile",
+                name: "ua-build-win",
+                out: logWriter,
+                registerCleanupTask,
+              }),
+          },
+          {
+            title: "Check Windows 10 SDK exists",
+            task: async () => {
+              const sdk = "vs2017_15.8.4.zip";
+              if ((await fileExists(path.join(buildFolder, sdk))) === false) {
+                throw new Error(
+                  `Windows 10 SDK must be available at build/${sdk}`
+                );
+              }
+            },
+          },
+          {
+            title: "Check makecab.exe exists",
+            task: async () => {
+              const makecab = "makecab.exe";
+              if (
+                (await fileExists(path.join(buildFolder, makecab))) === false
+              ) {
+                throw new Error(
+                  `${makecab} must be available at build/${makecab}`
+                );
+              }
+            },
+          },
+          {
+            title: "Setup VFAT Drive",
+            skip: () => folderExists("/mnt/vfat/"),
+            task: async () => {
+              const fatFile = path.join(root, "fat.fs");
+              await execa("truncate", ["-s", "2G", fatFile]);
+              await execa("mkfs.vfat", [fatFile]);
+              await sudo("mkdir /mnt/vfat");
+              await sudo(`mount -t vfat -o rw,uid=1000 ${fatFile} /mnt/vfat`);
+            },
+          },
+          {
+            title: "Extract Windows 10 SDK to VFAT Drive",
+            skip: () => folderExists("/mnt/vfat/vs2017_15.8.4"),
+            task: async () => {
+              const vs2017 = "vs2017_15.8.4.zip";
+              await fsExtra.copy(
+                path.join(buildFolder, vs2017),
+                `/mnt/vfat/${vs2017}`
+              );
+              await withCwd("/mnt/vfat", async () => {
+                await execa("unzip", [vs2017]);
+                await execa("rm", [vs2017]);
+              });
+            },
+          },
+          {
+            title: "Building User Agent in Docker (Windows)",
+            task: () =>
+              runDocker({
+                docker,
+                image: "ua-build-win",
+                mozconfig: "win64.mozconfig",
+                out: logWriter,
+                registerCleanupTask,
+                Binds: [
+                  "/mnt/vfat/vs2017_15.8.4/:/builds/worker/fetches/vs2017_15.8.4",
+                  `${path.join(
+                    buildFolder,
+                    "makecab.exe"
+                  )}:/builds/worker/fetches/makecab.exe`,
+                ],
               }),
           }
         );

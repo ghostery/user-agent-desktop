@@ -1,5 +1,6 @@
-const fs = require('fs');
-const process = require('process');
+const fs = require("fs");
+const process = require("process");
+const sudo = require("sudo-prompt");
 
 async function symlinkExists(path) {
   try {
@@ -26,11 +27,13 @@ async function ensureFolderExists(path) {
   await fs.promises.mkdir(path, { recursive: true });
 }
 
-async function withCwd(path, fn, {
-  createIfMissing,
-} = {
-  createIfMissing: false,
-}) {
+async function withCwd(
+  path,
+  fn,
+  { createIfMissing } = {
+    createIfMissing: false,
+  }
+) {
   const cwd = process.cwd();
 
   // Optionally create path if missing.
@@ -46,7 +49,7 @@ async function withCwd(path, fn, {
   // Move to directory and run callback there.
   try {
     process.chdir(path);
-    return (await fn());
+    return await fn();
   } catch (ex) {
     console.error(ex);
   } finally {
@@ -56,10 +59,23 @@ async function withCwd(path, fn, {
   return undefined;
 }
 
+function sudoExec(cmd) {
+  return new Promise((resolve, reject) => {
+    sudo.exec(cmd, (error) => {
+      if (error) {
+        reject(error);
+      } else {
+        resolve();
+      }
+    });
+  });
+}
+
 module.exports = {
   symlinkExists,
   folderExists,
   fileExists,
   withCwd,
   ensureFolderExists,
+  sudo: sudoExec,
 };
