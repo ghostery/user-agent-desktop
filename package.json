@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/human-web/user-agent-desktop#readme",
   "devDependencies": {
+    "appdmg": "^0.6.0",
     "colors": "^1.4.0",
     "commander": "^6.0.0",
     "dockerode": "^3.2.1",

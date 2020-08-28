@@ -1,0 +1,10 @@
+{
+  "title": "Ghostery",
+  "background": "../branding/ghostery/background.png",
+  "icon": "../branding/ghostery/disk.icns",
+  "icon-size": 80,
+  "contents": [
+    { "x": 418, "y": 180, "type": "link", "path": "/Applications" },
+    { "x": 110, "y": 180, "type": "file", "path": "pkg/Ghostery.app" }
+  ]
+}
