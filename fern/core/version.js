@@ -8,14 +8,14 @@ async function set(version) {
     "--short",
     "HEAD",
   ]);
-  const versionString = `${version} (${commitHash})`;
+  const versionWithHash = `${version} (${commitHash})`;
   await fse.writeFile(
     path.join("mozilla-release", "browser", "config", "version.txt"),
-    versionString
+    version
   );
   await fse.writeFile(
     path.join("mozilla-release", "browser", "config", "version_display.txt"),
-    versionString
+    versionWithHash
   );
 }
 
