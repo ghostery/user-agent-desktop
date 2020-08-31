@@ -111,6 +111,38 @@ def mac_signing(name, artifactGlob) {
     }
 }
 
+def win_signing(name, artifactGlob) {
+    return {
+        node('master') {
+            stage('checkout') {
+                checkout scm
+            }
+            def helpers = load "release/build-helpers.groovy"
+            helpers.withVagrant("release/win.Vagrantfile", "c:\\jenkins", 1, 2000, 7000, false) { nodeId ->
+                node(nodeId) {
+                    stage("Checkout") {
+                        checkout scm
+                    }
+                    stage('Prepare') {
+                        unstash name
+                    }
+                    stage('Sign') {
+                        withCredentials([
+                            [$class: 'FileBinding', credentialsId: "6d44ddad-5592-4a89-89aa-7f934268113b", variable: 'WIN_CERT'],
+                            [$class: 'StringBinding', credentialsId: "c891117f-e3db-41d6-846b-bcdcd1664dfd", variable: 'WIN_CERT_PASS']
+                        ]) {
+                            bat 'release/sign_win.bat'
+                        }
+                    }
+                    stage('Publish') {
+                        archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
+                    }
+                }
+            }
+        }
+    }
+}
+
 def buildmatrix = [:]
 def signmatrix = [:]
 
@@ -133,12 +165,14 @@ if (params.Windows64) {
     buildmatrix[name] = {
         // we have to run windows builds on magrathea because that is where the vssdk mount is.
         node('docker && magrathea') {
-            build(name, 'Windows.dockerfile', 'win64.mozconfig', artifactGlob)()
-            stage("${name}: publish artifacts") {
-                archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
+            // build(name, 'Windows.dockerfile', 'win64.mozconfig', artifactGlob)()
+            stage("${name}: stash artifacts") {
+                // archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
+                stash name: name, includes: "mozilla-release/${artifactGlob},mozilla-release/browser/config/version.txt,mozilla-release/other-licenses/7zstub/firefox/*,mozilla-release/browser/installer/windows/*"
             }
         }
     }
+    signmatrix["Sign ${name}"] = win_signing(name, artifactGlob)
 }
 
 if (params.MacOSX64) {
@@ -146,14 +180,15 @@ if (params.MacOSX64) {
     def artifactGlob = 'obj-x86_64-apple-darwin/dist/Ghostery-*'
     buildmatrix[name] = {
         node('docker && !magrathea') {
-            // build(name, 'MacOSX.dockerfile', 'macosx.mozconfig', 'obj-x86_64-apple-darwin/dist/Ghostery-*')()
+            build(name, 'MacOSX.dockerfile', 'macosx.mozconfig', 'obj-x86_64-apple-darwin/dist/Ghostery-*')()
             stage("${name}: stash artifacts") {
                 // files needed for packaging
                 stash includes: "mozilla-release/${artifactGlob},mozilla-release/build/package/mac_osx/unpack-diskimage,mozilla-release/security/mac/hardenedruntime/*", name: name
             }
         }
     }
-    signmatrix["Sign MacOSX64"] = mac_signing(name, artifactGlob)
+    // TODO: Put this only in release builds
+    // signmatrix["Sign MacOSX64"] = mac_signing(name, artifactGlob)
 }
 
 parallel buildmatrix
