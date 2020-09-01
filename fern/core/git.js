@@ -1,13 +1,27 @@
 const fs = require("fs");
 const path = require("path");
 
-const execa = require("execa");
 const Listr = require("listr");
+const chalk = require("chalk");
+const execa = require("execa");
 const rimraf = require("rimraf");
 
-const workspace = require('./workspace.js');
+const workspace = require("./workspace.js");
 const { withCwd, folderExists, fileExists } = require("./utils.js");
-const { patches: managedPatches, applyManagedPatches } = require("./managed-patches.js");
+const {
+  patches: managedPatches,
+  applyManagedPatches,
+} = require("./managed-patches.js");
+
+async function abortPendingGitOperations() {
+  for (const op of ["am", "rebase", "merge"]) {
+    try {
+      await execa("git", [op, "--abort"]);
+    } catch (ex) {
+      /* Fails if none ongoing. */
+    }
+  }
+}
 
 async function setupIdentity() {
   // Set 'user.name' if needed
@@ -63,6 +77,14 @@ async function setup(version, folder) {
 
 async function reset(version, folder) {
   return new Listr([
+    {
+      title: "abort pending (if any)",
+      skip: async () =>
+        (await folderExists(
+          path.join("mozilla-release", ".git", "rebase-apply")
+        )) === false,
+      task: () => withCwd(folder, abortPendingGitOperations),
+    },
     {
       title: `checkout ${version}`,
       task: () =>
@@ -168,12 +190,38 @@ function importPatches(root) {
             .split("\n")
             .map((filename) => path.join(patchesFolder, filename));
 
-          await execa("git", [
-            "am",
-            "--ignore-space-change",
-            "--ignore-whitespace",
-            ...patches,
-          ]);
+          try {
+            await execa("git", [
+              "am",
+              "--ignore-space-change",
+              "--ignore-whitespace",
+              ...patches,
+            ]);
+          } catch (ex) {
+            // Catch error and raw exception with more details.
+            const { stdout: details } = await execa("git", [
+              "am",
+              "--show-current-patch=raw",
+            ]);
+
+            console.error();
+            console.error(chalk.bold(chalk.red("Error while importing patches...")));
+            console.error(ex.shortMessage);
+
+            const stdout = ex.stdout.trim();
+            if (stdout) {
+              console.error(chalk.bold(chalk.magenta("STDOUT")), ex.stdout.trim());
+            }
+
+            const stderr = ex.stderr.trim();
+            if (stderr) {
+              console.error(chalk.bold(chalk.red("STDERR")), ex.stderr.trim());
+            }
+
+            console.error(chalk.bold(chalk.yellow("PATCH:")), details.trim());
+
+            throw ex;
+          }
         }),
     },
   ]);
