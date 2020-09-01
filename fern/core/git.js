@@ -5,7 +5,9 @@ const execa = require("execa");
 const Listr = require("listr");
 const rimraf = require("rimraf");
 
+const workspace = require('./workspace.js');
 const { withCwd, folderExists, fileExists } = require("./utils.js");
+const { patches: managedPatches, applyManagedPatches } = require("./managed-patches.js");
 
 async function setupIdentity() {
   // Set 'user.name' if needed
@@ -100,9 +102,10 @@ function exportPatches(root, version) {
             "--count",
             `${version}..HEAD`,
           ]);
+
           await execa("git", [
             "format-patch",
-            `HEAD~${parseInt(commitCount) - 1}`,
+            `HEAD~${parseInt(commitCount) - managedPatches.length}`,
             "--minimal", // Spend extra time to make sure the smallest possible diff is produced.
             "--no-numbered", // Name output in [PATCH] format.
             "--keep-subject", // Do not strip/add [PATCH] from the first line of the commit log message.
@@ -145,7 +148,11 @@ function importPatches(root) {
 
   return new Listr([
     {
-      title: "Import patches",
+      title: "Import patches managed by fern",
+      task: async () => applyManagedPatches(await workspace.load()),
+    },
+    {
+      title: "Import patches managed by minions",
       task: () =>
         withCwd("mozilla-release", async () => {
           if ((await folderExists(patchesFolder)) === false) {

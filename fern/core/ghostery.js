@@ -6,21 +6,23 @@ const fs = require("fs");
 const got = require("got");
 const execa = require("execa");
 const Listr = require("listr");
-const rimraf = require("rimraf");
 const readdir = require("recursive-readdir");
-const fsExtra = require("fs-extra");
 
-const { getRoot } = require('./workspace.js');
 const { getCacheDir } = require("./caching.js");
-const {
-  fileExists,
-  folderExists,
-  ensureFolderExists,
-} = require("./utils.js");
+const { fileExists, folderExists, ensureFolderExists } = require("./utils.js");
+
+async function getPathToGhosteryCache(version) {
+  return getCacheDir("ghostery", `${version}`);
+}
+
+async function getPathToCachedGhosteryExtension(version) {
+  const cache = await getPathToGhosteryCache(version);
+  return path.join(cache, `ghostery-firefox-${version}`);
+}
 
 async function use(version) {
-  const cache = await getCacheDir("ghostery", `${version}`);
-  const folder = path.join(cache, `ghostery-firefox-${version}`);
+  const cache = await getPathToGhosteryCache(version);
+  const folder = await getPathToCachedGhosteryExtension(version);
   const archive = path.join(cache, `ghostery-firefox-${version}.zip`);
   const url = `https://github.com/ghostery/ghostery-extension/releases/download/${version}/ghostery-firefox-${version}.zip`;
 
@@ -75,33 +77,10 @@ async function use(version) {
         );
       },
     },
-    {
-      title: "Install Ghostery into mozilla-release",
-      task: async () => {
-        const root = await getRoot();
-        const ghosteryExtension = path.join(
-          root,
-          "mozilla-release",
-          "browser",
-          "extensions",
-          "ghostery"
-        );
-
-        // Clean-up existing extension folder
-        if (await folderExists(ghosteryExtension)) {
-          rimraf.sync(ghosteryExtension);
-        }
-
-        // Copy extension
-        await fsExtra.copy(
-          folder,
-          ghosteryExtension,
-        );
-      },
-    },
   ]);
 }
 
 module.exports = {
+  getPathToCachedGhosteryExtension,
   use,
 };

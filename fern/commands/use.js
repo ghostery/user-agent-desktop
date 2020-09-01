@@ -7,7 +7,6 @@ const {
 } = require("../core/workspace.js");
 const ghostery = require("../core/ghostery.js");
 const firefox = require("../core/firefox.js");
-const version = require("../core/version.js");
 
 module.exports = (program) => {
   program
@@ -87,10 +86,6 @@ module.exports = (program) => {
             task: () => ghostery.use(workspace.ghostery),
           },
           {
-            title: `Set app version to ${workspace.app}`,
-            task: () => version.set(workspace.app),
-          },
-          {
             title: "Persist Workspace",
             task: () => saveWorkspace(workspace),
           },
@@ -100,6 +95,7 @@ module.exports = (program) => {
           await tasks.run();
         } catch (ex) {
           /* Handled by `tasks` */
+          process.exit(1);
         }
       }
     );

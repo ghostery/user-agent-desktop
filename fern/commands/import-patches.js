@@ -1,3 +1,5 @@
+const process = require('process');
+
 const workspace = require("../core/workspace.js");
 const { importPatches } = require("../core/git.js");
 
@@ -13,6 +15,7 @@ module.exports = (program) => {
         await tasks.run();
       } catch (ex) {
         /* Handled by `tasks` */
+        process.exit(1);
       }
     });
 };
