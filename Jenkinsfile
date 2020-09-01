@@ -39,7 +39,9 @@ if (params.Windows64) {
         }
     }
     // TODO: Put this only in release builds
-    // signmatrix["Sign ${name}"] = helpers.windows_signing(name, artifactGlob)
+    if (env.BRANCH_NAME == 'master') {
+        signmatrix["Sign ${name}"] = helpers.windows_signing(name, artifactGlob)
+    }
 }
 
 if (params.MacOSX64) {
@@ -55,8 +57,9 @@ if (params.MacOSX64) {
             }
         }
     }
-    // TODO: Put this only in release builds
-    // signmatrix["Sign MacOSX64"] = helpers.mac_signing(name, artifactGlob)
+    if (env.BRANCH_NAME == 'master') {
+        signmatrix["Sign MacOSX64"] = helpers.mac_signing(name, artifactGlob)
+    }
 }
 
 parallel buildmatrix
