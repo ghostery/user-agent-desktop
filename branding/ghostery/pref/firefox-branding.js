@@ -94,3 +94,8 @@ pref("browser.crashReports.unsubmittedCheck.enabled", false); // [FF51+]
  /* 0351: disable backlogged Crash Reports
   * [SETTING] Privacy & Security>Firefox Data Collection & Use>Allow Firefox to send backlogged crash reports  ***/
 pref("browser.crashReports.unsubmittedCheck.autoSubmit2", false); // [FF58+]
+
+/* Disable Firefox-specifc menus: Pocket, Sync, What's new */
+pref("browser.messaging-system.whatsNewPanel.enabled", false); // What's New [FF69+]
+pref("extensions.pocket.enabled", false); // Pocket Account [FF46+]
+pref("identity.fxaccounts.enabled", false); // Firefox Accounts & Sync [FF60+] [RESTART]

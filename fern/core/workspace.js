@@ -45,6 +45,7 @@ async function load() {
   }
 
   return {
+    app: undefined,
     firefox: undefined,
     ghostery: undefined,
   };

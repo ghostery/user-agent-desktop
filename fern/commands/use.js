@@ -7,6 +7,7 @@ const {
 } = require("../core/workspace.js");
 const ghostery = require("../core/ghostery.js");
 const firefox = require("../core/firefox.js");
+const version = require("../core/version.js");
 
 module.exports = (program) => {
   program
@@ -20,8 +21,13 @@ module.exports = (program) => {
       "-g, --ghostery <GHOSTERY>",
       "Specify which version of Ghostery to use"
     )
+    .option(
+      "-a, --app <APP>",
+      "Specify the app version"
+    )
     .action(
       async ({
+        app: appVersionOverride,
         firefox: firefoxVersionOverride,
         ghostery: ghosteryVersionOverride,
       }) => {
@@ -63,6 +69,14 @@ module.exports = (program) => {
           workspace.ghostery = ghosteryVersionOverride;
         }
 
+        // Setup app version in workspace
+        if (
+          appVersionOverride !== undefined &&
+          appVersionOverride !== workspace.app
+        ) {
+          workspace.app = appVersionOverride;
+        }
+
         const tasks = new Listr([
           {
             title: `Setup Firefox ${workspace.firefox}`,
@@ -71,6 +85,10 @@ module.exports = (program) => {
           {
             title: `Setup Ghostery ${workspace.ghostery}`,
             task: () => ghostery.use(workspace.ghostery),
+          },
+          {
+            title: `Set app version to ${workspace.app}`,
+            task: () => version.set(workspace.app),
           },
           {
             title: "Persist Workspace",

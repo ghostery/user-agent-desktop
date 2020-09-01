@@ -94,9 +94,15 @@ function exportPatches(root, version) {
       title: "Export patches",
       task: () =>
         withCwd("mozilla-release", async () => {
+          // count number of back commits to the initial code dump. We use this to exclude a fixed number of commits that we added after the initial commit
+          const { stdout: commitCount } = await execa("git", [
+            "rev-list",
+            "--count",
+            `${version}..HEAD`,
+          ]);
           await execa("git", [
             "format-patch",
-            `${version}`,
+            `HEAD~${parseInt(commitCount) - 1}`,
             "--minimal", // Spend extra time to make sure the smallest possible diff is produced.
             "--no-numbered", // Name output in [PATCH] format.
             "--keep-subject", // Do not strip/add [PATCH] from the first line of the commit log message.
