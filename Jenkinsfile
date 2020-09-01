@@ -172,7 +172,8 @@ if (params.Windows64) {
             }
         }
     }
-    signmatrix["Sign ${name}"] = win_signing(name, artifactGlob)
+    // TODO: Put this only in release builds
+    // signmatrix["Sign ${name}"] = win_signing(name, artifactGlob)
 }
 
 if (params.MacOSX64) {
