@@ -10,14 +10,13 @@ diff --git a/browser/extensions/moz.build b/browser/extensions/moz.build
 index 4c9fa789d1..ee2cfa1919 100644
 --- a/browser/extensions/moz.build
 +++ b/browser/extensions/moz.build
-@@ -10,5 +10,6 @@ DIRS += [
-     'pdfjs',
+@@ -10,4 +10,5 @@ DIRS += [
      'screenshots',
      'webcompat',
 -    'report-site-issue'
 +    'report-site-issue',
 +    'ghostery'
  ]
--- 
+--
 2.28.0
 
