@@ -44,7 +44,7 @@ pref("network.cookie.sameSite.laxByDefault", true);
 pref("network.cookie.sameSite.noneRequiresSecure", true);
 // redirect tracking protection - purges tracker cookies for domains with no first-party interactions.
 // https://developer.mozilla.org/en-US/docs/Mozilla/Firefox/Privacy/Redirect_Tracking_Protection
-pref("privacy.purge_trackers.enabled", true)
+pref("privacy.purge_trackers.enabled", true);
 
 /* 0320: disable about:addons' Recommendations pane (uses Google Analytics) ***/
 pref("extensions.getAddons.showPane", false); // [HIDDEN PREF]
