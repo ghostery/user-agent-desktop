@@ -1,0 +1,38 @@
+node('docker') {
+    checkout scm
+
+    def VERSION_NAME = sh(returnStdout: true, script: 'date +%Y-%m-%d').trim() + "nightly"
+
+    sh "git tag $VERSION_NAME || true"
+
+    withCredentials([
+        usernamePassword(
+            credentialsId: 'd60e38ae-4a5a-4eeb-ab64-32fd1fad4a28',
+            passwordVariable: 'GITHUB_TOKEN',
+            usernameVariable: 'GITHUB_USERNAME'
+        )
+    ]) {
+       sh "git push https://$GITHUB_TOKEN@github.com/human-web/user-agent-desktop.git --tags"
+    }
+
+    docker.image('golang').inside("-u root") {
+        sh 'go get github.com/human-web/github-release'
+
+        withCredentials([
+            usernamePassword(
+                credentialsId: 'd60e38ae-4a5a-4eeb-ab64-32fd1fad4a28',
+                passwordVariable: 'GITHUB_TOKEN',
+                usernameVariable: 'GITHUB_USERNAME'
+            )
+        ]) {
+            sh """
+                github-release release \
+                  --user human-web \
+                  --repo user-agent-desktop \
+                  --tag $VERSION_NAME \
+                  --name $VERSION_NAME \
+                  --pre-release
+            """
+        }
+    }
+}
