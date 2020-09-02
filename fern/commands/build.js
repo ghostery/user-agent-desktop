@@ -356,6 +356,7 @@ module.exports = (program) => {
         await listr.run();
       } catch (ex) {
         /* Handled by `tasks` */
+        process.exit(1);
       } finally {
         logWriter.close();
       }
