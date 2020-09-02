@@ -1,3 +1,5 @@
+const process = require('process');
+
 const Listr = require("listr");
 
 const docker = require("../core/docker.js");
@@ -19,6 +21,7 @@ module.exports = (program) => {
         await tasks.run();
       } catch (ex) {
         /* Handled by `tasks` */
+        process.exit(1);
       }
     });
 };

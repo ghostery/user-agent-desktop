@@ -50,13 +50,9 @@ async function withCwd(
   try {
     process.chdir(path);
     return await fn();
-  } catch (ex) {
-    console.error(ex);
   } finally {
     process.chdir(cwd);
   }
-
-  return undefined;
 }
 
 function sudoExec(cmd) {

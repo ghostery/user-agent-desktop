@@ -7,11 +7,11 @@ Subject: Include ghostery extension in browser bundle
  1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/browser/extensions/moz.build b/browser/extensions/moz.build
-index 4c9fa789d1..ee2cfa1919 100644
+index f71ece63c4..974c48c612 100644
 --- a/browser/extensions/moz.build
 +++ b/browser/extensions/moz.build
-@@ -10,5 +10,6 @@ DIRS += [
-     'pdfjs',
+@@ -9,5 +9,6 @@ DIRS += [
+     'formautofill',
      'screenshots',
      'webcompat',
 -    'report-site-issue'
