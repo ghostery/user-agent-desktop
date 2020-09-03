@@ -1,8 +1,7 @@
 node('docker') {
     checkout scm
 
-    def VERSION_NAME = sh(returnStdout: true, script: 'date +%Y-%m-%d').trim() + "nightly"
-
+    def VERSION_NAME = sh(returnStdout: true, script: 'date +%Y-%m-%d').trim() + '.' + env.BUILD_NUMBER
     sh "git tag $VERSION_NAME || true"
 
     withCredentials([
@@ -35,4 +34,13 @@ node('docker') {
             """
         }
     }
+
+    build job: 'user-agent/desktop/nightly', parameters: [
+        booleanParam(name: 'Reset', value: false),
+        booleanParam(name: 'Clobber', value: false),
+        booleanParam(name: 'ReleaseName', value: VERSION_NAME),
+        booleanParam(name: 'Linux64', value: true),
+        booleanParam(name: 'Windows64', value: false),
+        booleanParam(name: 'MacOSX64', value: false),
+    ], propagate: false, wait: false
 }
