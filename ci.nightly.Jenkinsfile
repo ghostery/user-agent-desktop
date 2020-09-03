@@ -2,7 +2,7 @@ def VERSION_NAME
 def helpers
 
 node() {
-    VERSION_NAME = sh(returnStdout: true, script: 'date +%Y-%m-%d').trim() + '.' + env.BUILD_NUMBER
+    VERSION_NAME = sh(returnStdout: true, script: 'date +%Y-%m-%d').trim()
 
     checkout scm
 
@@ -32,11 +32,11 @@ helpers.withGithubRelease() {
     """
 }
 
-build job: 'user-agent/desktop/PR-95', parameters: [
+build job: 'user-agent/desktop/master', parameters: [
     booleanParam(name: 'Reset', value: false),
     booleanParam(name: 'Clobber', value: false),
     string(name: 'ReleaseName', value: VERSION_NAME),
     booleanParam(name: 'Linux64', value: true),
-    booleanParam(name: 'Windows64', value: false),
-    booleanParam(name: 'MacOSX64', value: false),
+    booleanParam(name: 'Windows64', value: true),
+    booleanParam(name: 'MacOSX64', value: true),
 ], propagate: false, wait: false
