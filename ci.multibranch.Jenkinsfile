@@ -11,11 +11,12 @@ properties([
 
 def buildmatrix = [:]
 def signmatrix = [:]
-def releasematrix = [:]
+def helpers
 
 node('master') {
     checkout scm
-    def helpers = load "release/build-helpers.groovy"
+
+    helpers = load "release/build-helpers.groovy"
 
     if (params.Linux64) {
         def name = 'Linux64'
@@ -25,32 +26,6 @@ node('master') {
                 helpers.build(name, 'Linux.dockerfile', 'linux.mozconfig', 'obj-x86_64-pc-linux-gnu/dist/Ghostery-*', params)()
                 stage("${name}: publish artifacts") {
                     archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
-                }
-            }
-        }
-
-        if (params.ReleaseName?.trim()) {
-            releasematrix['Release Linux64'] = {
-                helpers.withGithubRelease() {
-                    sh 'rm -rf artifacts'
-
-                    unarchive mapping: ["mozilla-release/obj-x86_64-pc-linux-gnu/dist/" : "artifacts"]
-
-                    def artifacts = sh(returnStdout: true, script: 'find artifacts -type f').trim().split("\\r?\\n")
-
-                    for(String artifactPath in artifacts) {
-                        def artifactName = artifactPath.split('/').last()
-                        sh """
-                            github-release upload \
-                                --user human-web \
-                                --repo user-agent-desktop \
-                                --tag "${params.ReleaseName}" \
-                                --name "${artifactName}" \
-                                --file "${artifactPath}"
-                        """
-                    }
-
-                    sh 'rm -rf artifacts'
                 }
             }
         }
@@ -96,4 +71,27 @@ node('master') {
 
 parallel buildmatrix
 parallel signmatrix
-parallel releasematrix
+
+if (params.ReleaseName?.trim()) {
+    helpers.withGithubRelease() {
+        sh 'rm -rf artifacts'
+
+        unarchive mapping: ["mozilla-release/" : "artifacts"]
+
+        def artifacts = sh(returnStdout: true, script: 'find artifacts -type f').trim().split("\\r?\\n")
+
+        for(String artifactPath in artifacts) {
+            def artifactName = artifactPath.split('/').last()
+            sh """
+                github-release upload \
+                    --user human-web \
+                    --repo user-agent-desktop \
+                    --tag "${params.ReleaseName}" \
+                    --name "${artifactName}" \
+                    --file "${artifactPath}"
+            """
+        }
+
+        sh 'rm -rf artifacts'
+    }
+}
