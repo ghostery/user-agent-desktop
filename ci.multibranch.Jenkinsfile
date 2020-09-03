@@ -36,11 +36,20 @@ node('master') {
         archiveArtifacts artifacts: releaseFile
 
         releasematrix['Relase Linux64'] = {
-            node() {
+            helpers.withGithubRelease() {
                 unarchive mapping: ["$releaseFile" : "dir/releaseFile"]
                 sh 'ls'
                 echo "test"
                 sh 'ls dir'
+
+                sh """
+                    github-release upload \
+                        --user human-web \
+                        --repo user-agent-desktop \
+                        --tag "${params.ReleaseName}" \
+                        --name testFile \
+                        --file dir/releaseFile
+                """
             }
         }
     }

@@ -198,4 +198,22 @@ def mac_signing(name, artifactGlob) {
     }
 }
 
+def withGithubRelease(Closure body) {
+    node('docker') {
+        docker.image('golang').inside("-u root") {
+            sh 'go get github.com/human-web/github-release'
+            echo "state1"
+            withCredentials([
+                usernamePassword(
+                    credentialsId: 'd60e38ae-4a5a-4eeb-ab64-32fd1fad4a28',
+                    passwordVariable: 'GITHUB_TOKEN',
+                    usernameVariable: 'GITHUB_USERNAME'
+                )
+            ]) {
+                body()
+            }
+        }
+    }
+}
+
 return this
