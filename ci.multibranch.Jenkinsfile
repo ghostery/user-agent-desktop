@@ -20,36 +20,38 @@ node('master') {
     if (params.Linux64) {
         def name = 'Linux64'
         def artifactGlob = 'obj-x86_64-pc-linux-gnu/dist/Ghostery-*'
-        // buildmatrix[name] = {
-        //     node('docker && !magrathea') {
-        //         helpers.build(name, 'Linux.dockerfile', 'linux.mozconfig', 'obj-x86_64-pc-linux-gnu/dist/Ghostery-*', params)()
-        //         stage("${name}: publish artifacts") {
-        //             archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
-        //         }
-        //     }
-        // }
-        def releaseFile = "release$name"
-        sh """
-            touch $releaseFile
-            echo $ReleaseName > $releaseFile
-        """
-        archiveArtifacts artifacts: releaseFile
+        buildmatrix[name] = {
+            node('docker && !magrathea') {
+                helpers.build(name, 'Linux.dockerfile', 'linux.mozconfig', 'obj-x86_64-pc-linux-gnu/dist/Ghostery-*', params)()
+                stage("${name}: publish artifacts") {
+                    archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
+                }
+            }
+        }
 
-        releasematrix['Relase Linux64'] = {
-            helpers.withGithubRelease() {
-                unarchive mapping: ["$releaseFile" : "dir/releaseFile"]
-                sh 'ls'
-                echo "test"
-                sh 'ls dir'
+        if (params.ReleaseName?.trim()) {
+            releasematrix['Release Linux64'] = {
+                helpers.withGithubRelease() {
+                    sh 'rm -rf artifacts'
 
-                sh """
-                    github-release upload \
-                        --user human-web \
-                        --repo user-agent-desktop \
-                        --tag "${params.ReleaseName}" \
-                        --name testFile \
-                        --file dir/releaseFile
-                """
+                    unarchive mapping: ["mozilla-release/obj-x86_64-pc-linux-gnu/dist/" : "artifacts"]
+
+                    def artifacts = sh(returnStdout: true, script: 'find artifacts -type f').trim().split("\\r?\\n")
+
+                    for(String artifactPath in artifacts) {
+                        def artifactName = artifactPath.split('/').last()
+                        sh """
+                            github-release upload \
+                                --user human-web \
+                                --repo user-agent-desktop \
+                                --tag "${params.ReleaseName}" \
+                                --name "${artifactName}" \
+                                --file "${artifactPath}"
+                        """
+                    }
+
+                    sh 'rm -rf artifacts'
+                }
             }
         }
     }
@@ -68,7 +70,7 @@ node('master') {
             }
         }
         // TODO: Put this only in release builds
-        if (env.BRANCH_NAME == 'master' || ReleaseName?.trim()) {
+        if (env.BRANCH_NAME == 'master' || params.ReleaseName?.trim()) {
             signmatrix["Sign ${name}"] = helpers.windows_signing(name, artifactGlob)
         }
     }
@@ -86,7 +88,7 @@ node('master') {
                 }
             }
         }
-        if (env.BRANCH_NAME == 'master' || ReleaseName?.trim()) {
+        if (env.BRANCH_NAME == 'master' || params.ReleaseName?.trim()) {
             signmatrix["Sign MacOSX64"] = helpers.mac_signing(name, artifactGlob)
         }
     }
