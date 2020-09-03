@@ -31,12 +31,12 @@ module.exports = {
   skip: async ({ app: version }) =>
     (await fs.readFile(getPathToVersion(), "utf-8")) === version &&
     (await fs.readFile(getPathToVersionDisplay(), "utf-8")) ===
-      (await getVersionDisplay()),
+      (await getVersionDisplay(version)),
   apply: async ({ app: version }) => {
     await fs.writeFile(getPathToVersion(), version, "utf-8");
     await fs.writeFile(
       getPathToVersionDisplay(),
-      await getVersionDisplay(),
+      await getVersionDisplay(version),
       "utf-8"
     );
   },

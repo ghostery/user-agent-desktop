@@ -41,7 +41,7 @@ async function buildDocker({ docker, cwd, dockerfile, name, out }) {
 }
 
 async function runDocker({
-  cmd = "build",
+  commands = ["build"],
   docker,
   image,
   mozconfig,
@@ -49,89 +49,91 @@ async function runDocker({
   registerCleanupTask,
   Binds = [],
 }) {
-  const container = await docker.createContainer({
-    Image: image,
-    Cmd: ["./mach", cmd],
-    Env: [`MOZCONFIG=/builds/worker/configs/${mozconfig}`],
-    Tty: true,
-    HostConfig: {
-      Binds: [
-        `${path.join(
-          await getRoot(),
-          "mozilla-release"
-        )}:/builds/worker/workspace`,
-        ...Binds,
-      ],
-    },
-  });
+  for (const cmd of commands) {
+    const container = await docker.createContainer({
+      Image: image,
+      Cmd: ["./mach", cmd],
+      Env: [`MOZCONFIG=/builds/worker/configs/${mozconfig}`],
+      Tty: true,
+      HostConfig: {
+        Binds: [
+          `${path.join(
+            await getRoot(),
+            "mozilla-release"
+          )}:/builds/worker/workspace`,
+          ...Binds,
+        ],
+      },
+    });
 
-  let cleanupStream = undefined;
-  container.attach(
-    { stream: true, stdout: true, stderr: true },
-    (err, stream) => {
-      stream.pipe(out);
-      cleanupStream = () => {
-        try {
-          stream.end();
-        } catch (ex) {
-          /* Ignore */
+    let cleanupStream = undefined;
+    container.attach(
+      { stream: true, stdout: true, stderr: true },
+      (err, stream) => {
+        stream.pipe(out);
+        cleanupStream = () => {
+          try {
+            stream.end();
+          } catch (ex) {
+            /* Ignore */
+          }
+
+          try {
+            stream.unpipe(out);
+          } catch (ex) {
+            /* Ignore */
+          }
+        };
+      }
+    );
+
+    let cleanupOngoing = false;
+    registerCleanupTask(async () => {
+      if (cleanupOngoing === true) {
+        return;
+      }
+      cleanupOngoing = true;
+
+      try {
+        if (cleanupStream !== undefined) {
+          cleanupStream();
         }
+      } catch (ex) {
+        console.log("????", ex);
+        /* Ignore */
+      }
 
-        try {
-          stream.unpipe(out);
-        } catch (ex) {
-          /* Ignore */
-        }
-      };
-    }
-  );
+      try {
+        console.log("Attempting to stop container...");
+        await container.stop({ t: 0 });
+      } catch (ex) {
+        /* Ignore */
+      }
 
-  let cleanupOngoing = false;
-  registerCleanupTask(async () => {
-    if (cleanupOngoing === true) {
-      return;
-    }
-    cleanupOngoing = true;
+      try {
+        console.log("Attempting to remove container...");
+        await container.remove({ force: true });
+      } catch (ex) {
+        /* Ignore */
+      }
+    });
+
+    await container.start();
+    await container.wait();
 
     try {
       if (cleanupStream !== undefined) {
         cleanupStream();
       }
     } catch (ex) {
-      console.log("????", ex);
       /* Ignore */
     }
 
     try {
-      console.log("Attempting to stop container...");
-      await container.stop({ t: 0 });
-    } catch (ex) {
-      /* Ignore */
-    }
-
-    try {
-      console.log("Attempting to remove container...");
       await container.remove({ force: true });
     } catch (ex) {
-      /* Ignore */
+      /* NOTE: this might fail if we intercepted CTRL-c */
     }
-  });
-
-  await container.start();
-  await container.wait();
-
-  try {
-    if (cleanupStream !== undefined) {
-      cleanupStream();
-    }
-  } catch (ex) {
-    /* Ignore */
-  }
-
-  try {
-    await container.remove({ force: true });
-  } catch (ex) {
-    /* NOTE: this might fail if we intercepted CTRL-c */
   }
 }
 
@@ -207,6 +209,7 @@ module.exports = (program) => {
             title: "Building User Agent in Docker (Linux)",
             task: () =>
               runDocker({
+                commands: ["build", "package"],
                 docker,
                 image: "ua-build-linux",
                 mozconfig: "linux.mozconfig",
@@ -251,6 +254,7 @@ module.exports = (program) => {
             title: "Building User Agent in Docker (MacOSX)",
             task: () =>
               runDocker({
+                commands: ["build", "package"],
                 docker,
                 image: "ua-build-mac",
                 mozconfig: "macosx.mozconfig",
@@ -333,6 +337,7 @@ module.exports = (program) => {
             title: "Building User Agent in Docker (Windows)",
             task: () =>
               runDocker({
+                commands: ["build", "package"],
                 docker,
                 image: "ua-build-win",
                 mozconfig: "win64.mozconfig",
