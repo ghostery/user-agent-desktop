@@ -3,9 +3,9 @@ properties([
         booleanParam(name: 'Reset', defaultValue: false, description: 'clean workspace files'),
         booleanParam(name: 'Clobber', defaultValue: false, description: 'run mach clobber'),
         booleanParam(name: 'Linux64', defaultValue: true, description: ''),
-        booleanParam(name: 'Windows64', defaultValue: true, description: ''),
-        booleanParam(name: 'MacOSX64', defaultValue: true, description: ''),
-        stringParam(name: 'ReleaseName', defaultValue: '', description: ''),
+        booleanParam(name: 'Windows64', defaultValue: false, description: ''),
+        booleanParam(name: 'MacOSX64', defaultValue: false, description: ''),
+        string(name: 'ReleaseName', defaultValue: '', description: ''),
     ]),
 ])
 
@@ -15,29 +15,33 @@ def releasematrix = [:]
 
 node('master') {
     checkout scm
-    def helpers = load "jenkins/build-helpers.groovy"
+    def helpers = load "release/build-helpers.groovy"
 
     if (params.Linux64) {
         def name = 'Linux64'
         def artifactGlob = 'obj-x86_64-pc-linux-gnu/dist/Ghostery-*'
-        buildmatrix[name] = {
-            node('docker && !magrathea') {
-                def releaseFile = "release$name"
-                sh """
-                    touch $releaseFile
-                    echo $ReleaseName > $releaseFile
-                """
-                archiveArtifacts artifacts: "releaseFile"
-                // helpers.build(name, 'Linux.dockerfile', 'linux.mozconfig', 'obj-x86_64-pc-linux-gnu/dist/Ghostery-*', params)()
-                // stage("${name}: publish artifacts") {
-                //     archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
-                // }
-            }
-        }
+        // buildmatrix[name] = {
+        //     node('docker && !magrathea') {
+        //         helpers.build(name, 'Linux.dockerfile', 'linux.mozconfig', 'obj-x86_64-pc-linux-gnu/dist/Ghostery-*', params)()
+        //         stage("${name}: publish artifacts") {
+        //             archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
+        //         }
+        //     }
+        // }
+        def releaseFile = "release$name"
+        sh """
+            touch $releaseFile
+            echo $ReleaseName > $releaseFile
+        """
+        archiveArtifacts artifacts: releaseFile
 
         releasematrix['Relase Linux64'] = {
-            unarchive unarchive mapping: ["$releaseFile" : releaseFile]
-            sh 'ls'
+            node() {
+                unarchive mapping: ["$releaseFile" : "dir/releaseFile"]
+                sh 'ls'
+                echo "test"
+                sh 'ls dir'
+            }
         }
     }
 
