@@ -63,7 +63,7 @@ def withVagrant(String vagrantFilePath, String jenkinsFolderPath, Integer cpu, I
     }
 }
 
-def build(name, dockerFile, mozconfig, distDir, params) {
+def build(name, dockerFile, mozconfig, objDir, params) {
     return {
         stage('checkout') {
             checkout scm
@@ -89,6 +89,7 @@ def build(name, dockerFile, mozconfig, distDir, params) {
                 if (params.Reset) {
                     sh 'rm -rf .cache'
                 }
+                sh 'rm -rf mozilla-release'
                 sh "./fern.js use"
                 sh "./fern.js reset"
                 sh './fern.js import-patches'
@@ -108,7 +109,7 @@ def build(name, dockerFile, mozconfig, distDir, params) {
                 }
 
                 stage("${name}: make update-packaging") {
-                    dir(distDir) {
+                    dir(objDir) {
                         withEnv([
                             "ACCEPTED_MAR_CHANNEL_IDS=firefox-ghostery-release",
                             "MAR_CHANNEL_ID=firefox-ghostery-release",
@@ -116,13 +117,63 @@ def build(name, dockerFile, mozconfig, distDir, params) {
                             sh 'make update-packaging'
                         }
                     }
+
+                    signmar(objDir)
                 }
+            }
+            archiveArtifacts artifacts: "mozilla-release/$objDir/dist/update/*.mar"
+        }
+    }
+}
+
+def signmar(objDir) {
+    def mars = sh(returnStdout: true, script: "find '$objDir/dist/update' -type f -name '*.mar'").trim().split("\\r?\\n")
+    def pwd = sh(returnStdout: true, script: 'pwd').trim()
+
+    withEnv(['CERT_DB_PATH=/tmp/certs']) {
+        def error
+
+        try {
+            withCredentials([
+                file(credentialsId: 'd9d6021f-40c3-4515-a222-fa3882cbc4ce', variable: 'MAR_CERT'),
+                string(credentialsId: '95d95f56-c16e-416e-ac40-ed57eb99fcca', variable: 'MAR_CERT_PASS'),
+            ]) {
+                dir("$objDir/dist/bin") {
+                    sh '''#!/bin/bash
+                        set -x
+                        set -e
+                        mkdir -p $CERT_DB_PATH
+                        ./certutil -N -d $CERT_DB_PATH --empty-password
+                        ./pk12util -i $MAR_CERT -W $MAR_CERT_PASS -d $CERT_DB_PATH
+                        ./certutil -L -d $CERT_DB_PATH
+                    '''
+
+                    for (String mar in mars) {
+                        def marPath = "${pwd}/${mar}"
+                        sh """#!/bin/bash
+                            set -x
+                            set -e
+                            ./signmar -d \$CERT_DB_PATH \
+                                -n 'Release Cliqz MAR signing key' \
+                                -s "${marPath}" "${marPath}.signed"
+                            rm "${marPath}"
+                            mv "${marPath}.signed" "${marPath}"
+                        """
+                    }
+                }
+            }
+        } catch (err) {
+            error = err
+        } finally {
+            sh 'rm -rf $CERT_DB_PATH || true'
+            if (error) {
+                throw error
             }
         }
     }
 }
 
-def windows_signing(name, artifactGlob) {
+def windows_signing(name, objDir, artifactGlob) {
     return {
         node('master') {
             stage('checkout') {
@@ -139,8 +190,8 @@ def windows_signing(name, artifactGlob) {
                     }
                     stage('Sign') {
                         withCredentials([
-                            [$class: 'FileBinding', credentialsId: "6d44ddad-5592-4a89-89aa-7f934268113b", variable: 'WIN_CERT'],
-                            [$class: 'StringBinding', credentialsId: "c891117f-e3db-41d6-846b-bcdcd1664dfd", variable: 'WIN_CERT_PASS']
+                            file(credentialsId: "6d44ddad-5592-4a89-89aa-7f934268113b", variable: 'WIN_CERT'),
+                            string(credentialsId: "c891117f-e3db-41d6-846b-bcdcd1664dfd", variable: 'WIN_CERT_PASS'),
                         ]) {
                             bat 'release/sign_win.bat'
                         }
@@ -154,7 +205,30 @@ def windows_signing(name, artifactGlob) {
     }
 }
 
-def mac_signing(name, artifactGlob) {
+def linux_signing(name, objDir, artifactGlob) {
+    return {
+        node('docker') {
+            stage('checkout') {
+                checkout scm
+            }
+            stage('prepare') {
+                // keep empty stage for symmetry
+            }
+            stage('unstash') {
+                sh 'rm -rf mozilla-release'
+                unstash name
+            }
+            stage('sign') {
+
+            }
+            stage('publish artifacts') {
+                archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
+            }
+        }
+    }
+}
+
+def mac_signing(name, objDir, artifactGlob, shouldRelease) {
     return {
         node('gideon') {
             stage('checkout') {
@@ -169,12 +243,13 @@ def mac_signing(name, artifactGlob) {
             }
             stage('sign') {
                 withCredentials([
-                [$class: 'FileBinding', credentialsId: 'd9169b03-c7f5-4da2-bae3-56347ae1829c', variable: 'MAC_CERT'],
-                [$class: 'StringBinding', credentialsId: 'd29da4e0-cf0a-41df-8446-44078bdca137', variable: 'MAC_CERT_PASS'],
-                [$class: 'UsernamePasswordMultiBinding',
-                    credentialsId: '840e974f-f733-4f02-809f-54dc68f5fa46',
-                    passwordVariable: 'MAC_NOTARY_PASS',
-                    usernameVariable: 'MAC_NOTARY_USER']
+                    file(credentialsId: 'd9169b03-c7f5-4da2-bae3-56347ae1829c', variable: 'MAC_CERT'),
+                    string(credentialsId: 'd29da4e0-cf0a-41df-8446-44078bdca137', variable: 'MAC_CERT_PASS'),
+                    usernamePassword(
+                        credentialsId: '840e974f-f733-4f02-809f-54dc68f5fa46',
+                        passwordVariable: 'MAC_NOTARY_PASS',
+                        usernameVariable: 'MAC_NOTARY_USER'
+                    ),
                 ]) {
                     try {
                         // create temporary keychain and make it a default one
@@ -189,8 +264,11 @@ def mac_signing(name, artifactGlob) {
                             security import $MAC_CERT -P $MAC_CERT_PASS -k cliqz -A
                             security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k cliqz cliqz
                         '''
-                        withEnv(["MAC_CERT_NAME=2UYYSSHVUH", "APP_NAME=Ghostery", "ARTIFACT_GLOB=${artifactGlob}"]){
-                            sh "./release/sign_mac.sh"
+                        // Do Notarization only for release builds
+                        if (shouldRelease) {
+                             withEnv(["MAC_CERT_NAME=2UYYSSHVUH", "APP_NAME=Ghostery", "ARTIFACT_GLOB=${artifactGlob}"]){
+                                sh "./release/sign_mac.sh"
+                            }
                         }
                     } finally {
                         sh '''#!/bin/bash -l -x
