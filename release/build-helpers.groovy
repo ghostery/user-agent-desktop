@@ -45,7 +45,7 @@ def withVagrant(String vagrantFilePath, String jenkinsFolderPath, Integer cpu, I
             "NODE_VNC_PORT=${vnc_port}",
             "NODE_SECRET=${nodeSecret}",
             "NODE_ID=${nodeId}",
-            ]) {
+        ]) {
 
             sh 'vagrant halt --force'
             if (rebuild) {
@@ -63,7 +63,7 @@ def withVagrant(String vagrantFilePath, String jenkinsFolderPath, Integer cpu, I
     }
 }
 
-def build(name, dockerFile, mozconfig, artifactGlob, params) {
+def build(name, dockerFile, mozconfig, distDir, params) {
     return {
         stage('checkout') {
             checkout scm
@@ -105,6 +105,17 @@ def build(name, dockerFile, mozconfig, artifactGlob, params) {
 
                 stage("${name}: mach package") {
                     sh './mach package'
+                }
+
+                stage("${name}: make update-packaging") {
+                    dir(distDir) {
+                        withEnv([
+                            "ACCEPTED_MAR_CHANNEL_IDS=firefox-ghostery-release",
+                            "MAR_CHANNEL_ID=firefox-ghostery-release",
+                        ]) {
+                            sh 'make update-packaging'
+                        }
+                    }
                 }
             }
         }
