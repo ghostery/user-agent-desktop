@@ -33,7 +33,7 @@ helpers.withGithubRelease() {
 }
 
 build job: 'user-agent/desktop/master', parameters: [
-    booleanParam(name: 'Reset', value: false),
+    booleanParam(name: 'Reset', value: true),
     booleanParam(name: 'Clobber', value: false),
     string(name: 'ReleaseName', value: VERSION_NAME),
     booleanParam(name: 'Linux64', value: true),
