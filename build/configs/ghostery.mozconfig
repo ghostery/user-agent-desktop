@@ -2,5 +2,8 @@
 ac_add_options --with-app-name=Ghostery
 ac_add_options --enable-official-branding
 ac_add_options --with-branding=browser/branding/ghostery
+ac_add_options --enable-update-channel=release
 
 export MOZ_APP_PROFILE=Ghostery
+export ACCEPTED_MAR_CHANNEL_IDS=firefox-ghostery-release
+export MAR_CHANNEL_ID=firefox-ghostery-release
