@@ -115,7 +115,7 @@ stage('release') {
             sh 'rm -rf artifacts'
         }
     }
-
+    /*
     node('docker') {
         docker.image('mozilla/balrog').inside() {
             sh 'rm -rf artifacts'
@@ -129,4 +129,5 @@ stage('release') {
             sh 'rm -rf artifacts'
         }
     }
+    */
 }
