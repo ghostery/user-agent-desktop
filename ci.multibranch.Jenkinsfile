@@ -29,11 +29,15 @@ if (params.Linux64) {
         node('docker && !magrathea') {
             helpers.build(name, 'Linux.dockerfile', 'linux.mozconfig', objDir, params)()
 
+            archiveArtifacts artifacts: "mozilla-release/$objDir/dist/update/*.mar"
             archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
 
             stash name: name, includes: [
                 "mozilla-release/${artifactGlob}",
                 "mozilla-release/$objDir/dist/update/*.mar",
+                "mozilla-release/$objDir/dist/bin/signmar",
+                "mozilla-release/$objDir/dist/bin/certutil",
+                "mozilla-release/$objDir/dist/bin/pk12util",
             ].join(',')
         }
     }
@@ -51,6 +55,7 @@ if (params.Windows64) {
         node('docker && magrathea') {
             helpers.build(name, 'Windows.dockerfile', 'win64.mozconfig', objDir, params)()
 
+            archiveArtifacts artifacts: "mozilla-release/$objDir/dist/update/*.mar"
             archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
 
             stash name: name, includes: [
@@ -59,6 +64,9 @@ if (params.Windows64) {
                 "mozilla-release/browser/config/version.txt",
                 "mozilla-release/other-licenses/7zstub/firefox/*",
                 "mozilla-release/browser/installer/windows/*",
+                "mozilla-release/$objDir/dist/bin/signmar.exe",
+                "mozilla-release/$objDir/dist/bin/certutil.exe",
+                "mozilla-release/$objDir/dist/bin/pk12util.exe",
             ].join(',')
         }
     }
@@ -74,6 +82,7 @@ if (params.MacOSX64) {
         node('docker && !magrathea') {
             helpers.build(name, 'MacOSX.dockerfile', 'macosx.mozconfig', objDir, params)()
 
+            archiveArtifacts artifacts: "mozilla-release/$objDir/dist/update/*.mar"
             archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
 
             stash name: name, includes: [
@@ -81,6 +90,9 @@ if (params.MacOSX64) {
                 "mozilla-release/$objDir/dist/update/*.mar",
                 "mozilla-release/build/package/mac_osx/unpack-diskimage",
                 "mozilla-release/security/mac/hardenedruntime/*",
+                "mozilla-release/$objDir/dist/bin/signmar",
+                "mozilla-release/$objDir/dist/bin/certutil",
+                "mozilla-release/$objDir/dist/bin/pk12util",
             ].join(',')
         }
     }

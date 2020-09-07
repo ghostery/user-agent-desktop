@@ -117,11 +117,8 @@ def build(name, dockerFile, mozconfig, objDir, params) {
                             sh 'make update-packaging'
                         }
                     }
-
-                    signmar(objDir)
                 }
             }
-            archiveArtifacts artifacts: "mozilla-release/$objDir/dist/update/*.mar"
         }
     }
 }
@@ -197,6 +194,7 @@ def windows_signing(name, objDir, artifactGlob) {
                         }
                     }
                     stage('Publish') {
+                        archiveArtifacts artifacts: "mozilla-release/$objDir/dist/update/*.mar"
                         archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
                     }
                 }
@@ -219,9 +217,10 @@ def linux_signing(name, objDir, artifactGlob) {
                 unstash name
             }
             stage('sign') {
-
+                // signmar(objDir)
             }
             stage('publish artifacts') {
+                archiveArtifacts artifacts: "mozilla-release/$objDir/dist/update/*.mar"
                 archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
             }
         }
@@ -266,7 +265,11 @@ def mac_signing(name, objDir, artifactGlob, shouldRelease) {
                         '''
                         // Do Notarization only for release builds
                         if (shouldRelease) {
-                             withEnv(["MAC_CERT_NAME=2UYYSSHVUH", "APP_NAME=Ghostery", "ARTIFACT_GLOB=${artifactGlob}"]){
+                            withEnv([
+                                "MAC_CERT_NAME=2UYYSSHVUH",
+                                "APP_NAME=Ghostery",
+                                "ARTIFACT_GLOB=${artifactGlob}"
+                            ]){
                                 sh "./release/sign_mac.sh"
                             }
                         }
@@ -281,6 +284,7 @@ def mac_signing(name, objDir, artifactGlob, shouldRelease) {
                 }
             }
             stage('publish artifacts') {
+                archiveArtifacts artifacts: "mozilla-release/$objDir/dist/update/*.mar"
                 archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
             }
         }
