@@ -183,9 +183,12 @@ def windows_signing(name, objDir, artifactGlob) {
                         checkout scm
                     }
                     stage('Prepare') {
+                        bat 'rmdir /q /s mozilla-release'
                         unstash name
                     }
                     stage('Sign') {
+                        signmar(objDir)
+
                         withCredentials([
                             file(credentialsId: "6d44ddad-5592-4a89-89aa-7f934268113b", variable: 'WIN_CERT'),
                             string(credentialsId: "c891117f-e3db-41d6-846b-bcdcd1664dfd", variable: 'WIN_CERT_PASS'),
@@ -217,7 +220,7 @@ def linux_signing(name, objDir, artifactGlob) {
                 unstash name
             }
             stage('sign') {
-                // signmar(objDir)
+                signmar(objDir)
             }
             stage('publish artifacts') {
                 archiveArtifacts artifacts: "mozilla-release/$objDir/dist/update/*.mar"
@@ -241,6 +244,8 @@ def mac_signing(name, objDir, artifactGlob, shouldRelease) {
                 unstash name
             }
             stage('sign') {
+                signmar(objDir)
+
                 withCredentials([
                     file(credentialsId: 'd9169b03-c7f5-4da2-bae3-56347ae1829c', variable: 'MAC_CERT'),
                     string(credentialsId: 'd29da4e0-cf0a-41df-8446-44078bdca137', variable: 'MAC_CERT_PASS'),
