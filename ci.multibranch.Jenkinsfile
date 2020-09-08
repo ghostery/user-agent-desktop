@@ -17,7 +17,7 @@ def helpers
 node('master') {
     checkout scm
 
-    helpers = load "release/build-helpers.groovy"
+    helpers = load "ci/build-helpers.groovy"
 }
 
 if (params.Linux64) {

@@ -177,7 +177,7 @@ def windows_signing(name, objDir, artifactGlob) {
                 checkout scm
             }
 
-            withVagrant("release/win.Vagrantfile", "c:\\jenkins", 1, 2000, 7000, false) { nodeId ->
+            withVagrant("ci/win.Vagrantfile", "c:\\jenkins", 1, 2000, 7000, false) { nodeId ->
                 node(nodeId) {
                     stage("Checkout") {
                         checkout scm
@@ -190,7 +190,7 @@ def windows_signing(name, objDir, artifactGlob) {
                             file(credentialsId: "6d44ddad-5592-4a89-89aa-7f934268113b", variable: 'WIN_CERT'),
                             string(credentialsId: "c891117f-e3db-41d6-846b-bcdcd1664dfd", variable: 'WIN_CERT_PASS'),
                         ]) {
-                            bat 'release/sign_win.bat'
+                            bat 'ci/sign_win.bat'
                         }
                     }
                     stage('Publish') {
@@ -270,7 +270,7 @@ def mac_signing(name, objDir, artifactGlob, shouldRelease) {
                                 "APP_NAME=Ghostery",
                                 "ARTIFACT_GLOB=${artifactGlob}"
                             ]){
-                                sh "./release/sign_mac.sh"
+                                sh "./ci/sign_mac.sh"
                             }
                         }
                     } finally {
