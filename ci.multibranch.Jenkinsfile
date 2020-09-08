@@ -108,8 +108,8 @@ if (params.MacOSX64) {
 parallel buildmatrix
 parallel signmatrix
 
-stage('release') {
-    if (shouldRelease) {
+if (shouldRelease) {
+    stage('publish to github') {
         helpers.withGithubRelease() {
             sh 'rm -rf artifacts'
 
@@ -131,7 +131,9 @@ stage('release') {
 
             sh 'rm -rf artifacts'
         }
+    }
 
+    stage('publish to balrog') {
         node('docker && magrathea') {
             docker.image('ua-build-base').inside('--dns 1.1.1.1') {
                 sh 'rm -rf artifacts'
