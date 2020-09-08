@@ -6,7 +6,7 @@ SET BUILD_SHELL=c:\mozilla-build\start-shell.bat
 SET APP_NAME=Ghostery
 SET lang=en-US
 
-ECHO cd $CQZ_WORKSPACE ^^^&^^^& ./release/bootstrap_windows.sh | call %BUILD_SHELL%
+ECHO cd $CQZ_WORKSPACE ^^^&^^^& ./ci/bootstrap_windows.sh | call %BUILD_SHELL%
 cd %CQZ_WORKSPACE%\mozilla-release\obj-x86_64-pc-mingw32\
 
 set ff_version=''

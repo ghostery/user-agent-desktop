@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PKG_DIR=release/pkg
+PKG_DIR=ci/pkg
 
 ASC_USERNAME="$1"
 ASC_PASSWORD="$2"

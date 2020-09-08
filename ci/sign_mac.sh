@@ -5,7 +5,7 @@ set -x
 
 echo "***** MAC SIGNING AND NOTARY *****"
 
-PKG_DIR=release/pkg
+PKG_DIR=ci/pkg
 
 for DMG in mozilla-release/$ARTIFACT_GLOB.dmg
 do
@@ -64,7 +64,7 @@ do
   # Validate
   codesign -vvv --deep --strict "${BUNDLE}"
 
-  /bin/bash release/notarize_mac_app.sh $MAC_NOTARY_USER $MAC_NOTARY_PASS
+  /bin/bash ci/notarize_mac_app.sh $MAC_NOTARY_USER $MAC_NOTARY_PASS
 
   # copy back to dist folder a signed app (for generating an update package(s) later), it will be transferred as stashed artifacts
 
@@ -74,5 +74,5 @@ do
       rm $SIGNED_DMG
   fi
 
-  node_modules/.bin/appdmg -v release/$APP_NAME-dmg.json $SIGNED_DMG
+  node_modules/.bin/appdmg -v ci/$APP_NAME-dmg.json $SIGNED_DMG
 done
