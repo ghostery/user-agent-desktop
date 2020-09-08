@@ -131,8 +131,8 @@ stage('release') {
             sh 'rm -rf artifacts'
         }
 
-        node('docker') {
-            docker.image('ua-build-base').inside() {
+        node('docker && magrathea') {
+            docker.image('ua-build-base').inside('--dns 1.1.1.1') {
                 sh 'rm -rf artifacts'
 
                 unarchive mapping: ["mozilla-release/" : "artifacts"]
