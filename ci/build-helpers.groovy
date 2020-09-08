@@ -63,7 +63,7 @@ def withVagrant(String vagrantFilePath, String jenkinsFolderPath, Integer cpu, I
     }
 }
 
-def build(name, dockerFile, mozconfig, objDir, params) {
+def build(name, dockerFile, mozconfig, objDir, params, buildId) {
     return {
         stage('checkout') {
             checkout scm
@@ -83,7 +83,7 @@ def build(name, dockerFile, mozconfig, objDir, params) {
             docker.build("ua-build-${name.toLowerCase()}", "-f build/${dockerFile} ./build")
         }
 
-        image.inside("--env MOZCONFIG=/builds/worker/configs/${mozconfig} -v /mnt/vfat/vs2017_15.8.4/:/builds/worker/fetches/vs2017_15.8.4") {
+        image.inside("--env MOZCONFIG=/builds/worker/configs/${mozconfig} --env MOZ_BUILD_DATE=${buildId} -v /mnt/vfat/vs2017_15.8.4/:/builds/worker/fetches/vs2017_15.8.4") {
             stage('prepare mozilla-release') {
                 sh 'npm ci'
                 if (params.Reset) {

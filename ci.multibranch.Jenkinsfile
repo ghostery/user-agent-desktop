@@ -13,6 +13,7 @@ def buildmatrix = [:]
 def signmatrix = [:]
 def shouldRelease = params.ReleaseName?.trim()
 def helpers
+def buildId = new Date().format('yyyyMMddHHmmss')
 
 node('master') {
     checkout scm
@@ -27,7 +28,7 @@ if (params.Linux64) {
 
     buildmatrix[name] = {
         node('docker && !magrathea') {
-            helpers.build(name, 'Linux.dockerfile', 'linux.mozconfig', objDir, params)()
+            helpers.build(name, 'Linux.dockerfile', 'linux.mozconfig', objDir, params, buildId)()
 
             archiveArtifacts artifacts: "mozilla-release/$objDir/dist/update/*.mar"
             archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
@@ -54,7 +55,7 @@ if (params.Windows64) {
     buildmatrix[name] = {
         // we have to run windows builds on magrathea because that is where the vssdk mount is.
         node('docker && magrathea') {
-            helpers.build(name, 'Windows.dockerfile', 'win64.mozconfig', objDir, params)()
+            helpers.build(name, 'Windows.dockerfile', 'win64.mozconfig', objDir, params, buildId)()
 
             archiveArtifacts artifacts: "mozilla-release/$objDir/dist/update/*.mar"
             archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
@@ -82,7 +83,7 @@ if (params.MacOSX64) {
     def artifactGlob = "$objDir/dist/Ghostery-*"
     buildmatrix[name] = {
         node('docker && !magrathea') {
-            helpers.build(name, 'MacOSX.dockerfile', 'macosx.mozconfig', objDir, params)()
+            helpers.build(name, 'MacOSX.dockerfile', 'macosx.mozconfig', objDir, params, buildId)()
 
             archiveArtifacts artifacts: "mozilla-release/$objDir/dist/update/*.mar"
             archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
@@ -153,7 +154,7 @@ stage('release') {
                     for(String artifactPath in artifacts) {
                         sh """
                             python3 ci/submitter.py build --tag "${params.ReleaseName}" \
-                                --bid "${env.BUILD_NUMBER}" \
+                                --bid "${buildId}" \
                                 --mar "${artifactPath}" \
                                 --client-id "$AUTH0_M2M_CLIENT_ID" \
                                 --client-secret "$AUTH0_M2M_CLIENT_SECRET"
