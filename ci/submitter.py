@@ -28,7 +28,7 @@ auth0_secrets = {
 
 product_name = "Ghostery"
 name = f"{product_name}-{'nightly' if args.nightly else args.tag}"
-archive_dir = 'artifacts/'
+archive_dir = 'artifacts'
 release_channels = ["release"]
 platforms = ['mac', 'win64', 'linux-x86_64']
 platform_to_build_target = {
@@ -38,10 +38,10 @@ platform_to_build_target = {
 }
 locales = ['en-US']
 
-app_version = open(os.path.join(archive_dir, 'browser',
+app_version = open(os.path.join(archive_dir, 'mozilla-release', 'browser',
                                 'config', 'version.txt'), 'r').read()
 display_version = open(os.path.join(
-    archive_dir, 'browser', 'config', 'version_display.txt'), 'r').read()
+    archive_dir, 'mozilla-release', 'browser', 'config', 'version_display.txt'), 'r').read()
 
 fileUrls = {}
 for channel in release_channels + ['*']:

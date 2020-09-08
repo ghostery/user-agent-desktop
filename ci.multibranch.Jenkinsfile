@@ -32,7 +32,7 @@ if (params.Linux64) {
 
             archiveArtifacts artifacts: "mozilla-release/$objDir/dist/update/*.mar"
             archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
-            archiveArtifacts artifacts: "mozilla-release/browser/config/*"
+            archiveArtifacts artifacts: "mozilla-release/browser/config/version*"
 
             stash name: name, includes: [
                 "mozilla-release/${artifactGlob}",
@@ -59,7 +59,7 @@ if (params.Windows64) {
 
             archiveArtifacts artifacts: "mozilla-release/$objDir/dist/update/*.mar"
             archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
-            archiveArtifacts artifacts: "mozilla-release/browser/config/*"
+            archiveArtifacts artifacts: "mozilla-release/browser/config/version*"
 
             stash name: name, includes: [
                 "mozilla-release/${artifactGlob}",
@@ -87,7 +87,7 @@ if (params.MacOSX64) {
 
             archiveArtifacts artifacts: "mozilla-release/$objDir/dist/update/*.mar"
             archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
-            archiveArtifacts artifacts: "mozilla-release/browser/config/*"
+            archiveArtifacts artifacts: "mozilla-release/browser/config/version*"
 
             stash name: name, includes: [
                 "mozilla-release/${artifactGlob}",
@@ -139,11 +139,11 @@ stage('release') {
 
                 def artifacts = sh(returnStdout: true, script: 'find artifacts -type f -name *.mar').trim().split("\\r?\\n")
 
-                withCredentials(usernamePassword(
+                withCredentials([usernamePassword(
                     credentialsId: 'dd3e97c0-5a9c-4ba9-bf34-f0071f6c3afa',
                     passwordVariable: 'AUTH0_M2M_CLIENT_SECRET',
                     usernameVariable: 'AUTH0_M2M_CLIENT_ID'
-                )) {
+                )]) {
                     // create release on balrog
                     sh """
                         python3 ci/submitter.py release --tag "${params.ReleaseName}" \
