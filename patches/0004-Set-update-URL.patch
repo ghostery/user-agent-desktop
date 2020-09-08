@@ -1,0 +1,24 @@
+From: Sam Macbeth <sam@cliqz.com>
+Date: Tue, 8 Sep 2020 16:04:13 +0200
+Subject: Set update URL
+
+---
+ build/moz.build | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/build/moz.build b/build/moz.build
+index 43b2537227..ad3b9766e4 100644
+--- a/build/moz.build
++++ b/build/moz.build
+@@ -76,7 +76,7 @@ if CONFIG['MOZ_APP_BASENAME']:
+         if CONFIG[var]:
+             appini_defines[var] = True
+ 
+-    appini_defines['MOZ_APPUPDATE_HOST'] = 'aus5.mozilla.org'
++    appini_defines['MOZ_APPUPDATE_HOST'] = 'update.ghosterybrowser.com'
+     if CONFIG['MOZ_APPUPDATE_HOST']:
+         appini_defines['MOZ_APPUPDATE_HOST'] = CONFIG['MOZ_APPUPDATE_HOST']
+ 
+-- 
+2.28.0
+
