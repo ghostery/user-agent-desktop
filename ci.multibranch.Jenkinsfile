@@ -31,6 +31,7 @@ if (params.Linux64) {
 
             archiveArtifacts artifacts: "mozilla-release/$objDir/dist/update/*.mar"
             archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
+            archiveArtifacts artifacts: "mozilla-release/browser/config/*"
 
             stash name: name, includes: [
                 "mozilla-release/${artifactGlob}",
@@ -57,6 +58,7 @@ if (params.Windows64) {
 
             archiveArtifacts artifacts: "mozilla-release/$objDir/dist/update/*.mar"
             archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
+            archiveArtifacts artifacts: "mozilla-release/browser/config/*"
 
             stash name: name, includes: [
                 "mozilla-release/${artifactGlob}",
@@ -84,6 +86,7 @@ if (params.MacOSX64) {
 
             archiveArtifacts artifacts: "mozilla-release/$objDir/dist/update/*.mar"
             archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
+            archiveArtifacts artifacts: "mozilla-release/browser/config/*"
 
             stash name: name, includes: [
                 "mozilla-release/${artifactGlob}",
@@ -126,20 +129,40 @@ stage('release') {
 
             sh 'rm -rf artifacts'
         }
-    }
-    /*
-    node('docker') {
-        docker.image('mozilla/balrog').inside() {
-            sh 'rm -rf artifacts'
 
-            unarchive mapping: ["mozilla-release/" : "artifacts"]
+        node('docker') {
+            docker.image('ua-build-base').inside() {
+                sh 'rm -rf artifacts'
 
-            def artifacts = sh(returnStdout: true, script: 'find artifacts -type f').trim().split("\\r?\\n")
+                unarchive mapping: ["mozilla-release/" : "artifacts"]
 
-            // TODO: Publish .mar files to Balrog
+                def artifacts = sh(returnStdout: true, script: 'find artifacts -type f -name *.mar').trim().split("\\r?\\n")
 
-            sh 'rm -rf artifacts'
+                withCredentials(usernamePassword(
+                    credentialsId: 'dd3e97c0-5a9c-4ba9-bf34-f0071f6c3afa',
+                    passwordVariable: 'AUTH0_M2M_CLIENT_SECRET',
+                    usernameVariable: 'AUTH0_M2M_CLIENT_ID'
+                )) {
+                    // create release on balrog
+                    sh """
+                        python3 ci/submitter.py release --tag "${params.ReleaseName}" \
+                            --client-id "$AUTH0_M2M_CLIENT_ID" \
+                            --client-secret "$AUTH0_M2M_CLIENT_SECRET"
+                    """
+                    // publish builds
+                    for(String artifactPath in artifacts) {
+                        sh """
+                            python3 ci/submitter.py build --tag "${params.ReleaseName}" \
+                                --bid "${env.BUILD_NUMBER}" \
+                                --mar "${artifactPath}" \
+                                --client-id "$AUTH0_M2M_CLIENT_ID" \
+                                --client-secret "$AUTH0_M2M_CLIENT_SECRET"
+                        """
+                    }
+
+                    sh 'rm -rf artifacts'
+                }
+            }
         }
     }
-    */
 }
