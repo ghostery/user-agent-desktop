@@ -6,6 +6,7 @@ properties([
         booleanParam(name: 'Windows64', defaultValue: true, description: ''),
         booleanParam(name: 'MacOSX64', defaultValue: true, description: ''),
         string(name: 'ReleaseName', defaultValue: '', description: ''),
+        booleanParam(name: 'Nightly', defaultValue: false, description: 'Push release to nightly'),
     ]),
 ])
 
@@ -13,6 +14,7 @@ def buildmatrix = [:]
 def signmatrix = [:]
 def shouldRelease = params.ReleaseName?.trim()
 def helpers
+def buildId = new Date().format('yyyyMMddHHmmss')
 
 node('master') {
     checkout scm
@@ -27,10 +29,11 @@ if (params.Linux64) {
 
     buildmatrix[name] = {
         node('docker && !magrathea') {
-            helpers.build(name, 'Linux.dockerfile', 'linux.mozconfig', objDir, params)()
+            helpers.build(name, 'Linux.dockerfile', 'linux.mozconfig', objDir, params, buildId)()
 
             archiveArtifacts artifacts: "mozilla-release/$objDir/dist/update/*.mar"
             archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
+            archiveArtifacts artifacts: "mozilla-release/browser/config/version*"
 
             stash name: name, includes: [
                 "mozilla-release/${artifactGlob}",
@@ -53,10 +56,11 @@ if (params.Windows64) {
     buildmatrix[name] = {
         // we have to run windows builds on magrathea because that is where the vssdk mount is.
         node('docker && magrathea') {
-            helpers.build(name, 'Windows.dockerfile', 'win64.mozconfig', objDir, params)()
+            helpers.build(name, 'Windows.dockerfile', 'win64.mozconfig', objDir, params, buildId)()
 
             archiveArtifacts artifacts: "mozilla-release/$objDir/dist/update/*.mar"
             archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
+            archiveArtifacts artifacts: "mozilla-release/browser/config/version*"
 
             stash name: name, includes: [
                 "mozilla-release/${artifactGlob}",
@@ -80,10 +84,11 @@ if (params.MacOSX64) {
     def artifactGlob = "$objDir/dist/Ghostery-*"
     buildmatrix[name] = {
         node('docker && !magrathea') {
-            helpers.build(name, 'MacOSX.dockerfile', 'macosx.mozconfig', objDir, params)()
+            helpers.build(name, 'MacOSX.dockerfile', 'macosx.mozconfig', objDir, params, buildId)()
 
             archiveArtifacts artifacts: "mozilla-release/$objDir/dist/update/*.mar"
             archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
+            archiveArtifacts artifacts: "mozilla-release/browser/config/version*"
 
             stash name: name, includes: [
                 "mozilla-release/${artifactGlob}",
@@ -103,8 +108,8 @@ if (params.MacOSX64) {
 parallel buildmatrix
 parallel signmatrix
 
-stage('release') {
-    if (shouldRelease) {
+if (shouldRelease) {
+    stage('publish to github') {
         helpers.withGithubRelease() {
             sh 'rm -rf artifacts'
 
@@ -127,19 +132,53 @@ stage('release') {
             sh 'rm -rf artifacts'
         }
     }
-    /*
-    node('docker') {
-        docker.image('mozilla/balrog').inside() {
-            sh 'rm -rf artifacts'
 
-            unarchive mapping: ["mozilla-release/" : "artifacts"]
+    stage('publish to balrog') {
+        node('docker && magrathea') {
+            docker.image('ua-build-base').inside('--dns 1.1.1.1') {
+                sh 'rm -rf artifacts'
 
-            def artifacts = sh(returnStdout: true, script: 'find artifacts -type f').trim().split("\\r?\\n")
+                unarchive mapping: ["mozilla-release/" : "artifacts"]
 
-            // TODO: Publish .mar files to Balrog
+                def artifacts = sh(returnStdout: true, script: 'find artifacts -type f -name *.mar').trim().split("\\r?\\n")
 
-            sh 'rm -rf artifacts'
+                withCredentials([usernamePassword(
+                    credentialsId: 'dd3e97c0-5a9c-4ba9-bf34-f0071f6c3afa',
+                    passwordVariable: 'AUTH0_M2M_CLIENT_SECRET',
+                    usernameVariable: 'AUTH0_M2M_CLIENT_ID'
+                )]) {
+                    // create release on balrog
+                    sh """
+                        python3 ci/submitter.py release --tag "${params.ReleaseName}" \
+                            --moz-root artifacts/mozilla-release \
+                            --client-id "$AUTH0_M2M_CLIENT_ID" \
+                            --client-secret "$AUTH0_M2M_CLIENT_SECRET"
+                    """
+                    // publish builds
+                    for(String artifactPath in artifacts) {
+                        sh """
+                            python3 ci/submitter.py build --tag "${params.ReleaseName}" \
+                                --bid "${buildId}" \
+                                --mar "${artifactPath}" \
+                                --moz-root artifacts/mozilla-release \
+                                --client-id "$AUTH0_M2M_CLIENT_ID" \
+                                --client-secret "$AUTH0_M2M_CLIENT_SECRET"
+                        """
+                    }
+
+                    if (params.Nightly) {
+                        // copy this release to nightly
+                        sh """
+                            python3 ci/submitter.py nightly --tag "${params.ReleaseName}" \
+                                --moz-root artifacts/mozilla-release \
+                                --client-id "$AUTH0_M2M_CLIENT_ID" \
+                                --client-secret "$AUTH0_M2M_CLIENT_SECRET"
+                        """
+                    }
+
+                    sh 'rm -rf artifacts'
+                }
+            }
         }
     }
-    */
 }

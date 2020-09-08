@@ -39,4 +39,5 @@ build job: 'user-agent/desktop/master', parameters: [
     booleanParam(name: 'Linux64', value: true),
     booleanParam(name: 'Windows64', value: true),
     booleanParam(name: 'MacOSX64', value: true),
+    booleanParam(name: 'Nightly', value: true),
 ], propagate: false, wait: false
