@@ -5,13 +5,13 @@ import subprocess
 from balrogclient import Release, SingleLocale
 
 parser = argparse.ArgumentParser()
-parser.add_argument("action", help="'release' or 'build'")
+parser.add_argument("action", help="'release', 'build', or 'nightly")
 parser.add_argument("--tag", help="Tag name for this release")
 parser.add_argument("--bid", help="CI buildId")
-parser.add_argument("--nightly", help="CI buildId", action="store_true")
 parser.add_argument("--client-id", help="M2M Client ID for auth")
 parser.add_argument("--client-secret", help="M2M Client secret for auth")
 parser.add_argument("--mar", help="Mar file for this build")
+parser.add_argument('--moz-root', help="Path to mozilla-release")
 args = parser.parse_args()
 
 
@@ -25,23 +25,21 @@ auth0_secrets = {
     'audience': 'ghostery-balrog',
     'domain': 'ghostery-balrog.eu.auth0.com'
 }
+api_root = 'http://balrogadmin.ghosterydev.com/api'
 
 product_name = "Ghostery"
-name = f"{product_name}-{'nightly' if args.nightly else args.tag}"
-archive_dir = 'artifacts'
+name = f"{product_name}-{args.tag}"
 release_channels = ["release"]
-platforms = ['mac', 'win64', 'linux-x86_64']
 platform_to_build_target = {
     'mac': "Darwin_x86_64-gcc3",
     'win64': 'WINNT_x86_64-msvc',
     'linux-x86_64': 'Linux_x86_64-gcc3',
 }
-locales = ['en-US']
 
-app_version = open(os.path.join(archive_dir, 'mozilla-release', 'browser',
+app_version = open(os.path.join(args.moz_root, 'browser',
                                 'config', 'version.txt'), 'r').read()
 display_version = open(os.path.join(
-    archive_dir, 'mozilla-release', 'browser', 'config', 'version_display.txt'), 'r').read()
+    args.moz_root, 'browser', 'config', 'version_display.txt'), 'r').read()
 
 fileUrls = {}
 for channel in release_channels + ['*']:
@@ -75,7 +73,7 @@ if args.action == "release":
     print(json.dumps(release_data, indent=2))
     api = Release(name=name,
                   auth0_secrets=auth0_secrets,
-                  api_root='http://balrogadmin.ghosterydev.com/api')
+                  api_root=api_root)
     api.update_release(product=product_name, hashFunction='sha512',
                        releaseData=json.dumps(release_data), schemaVersion=9)
 
@@ -87,7 +85,7 @@ elif args.action == 'build':
                        build_target=platform_to_build_target[platform],
                        locale=locale,
                        auth0_secrets=auth0_secrets,
-                       api_root='http://balrogadmin.ghosterydev.com/api')
+                       api_root=api_root)
     url = get_update_url(args.tag, product_name,
                          app_version, locale, platform)
 
@@ -109,3 +107,21 @@ elif args.action == 'build':
                      hashFunction='sha512',
                      buildData=json.dumps(build_data),
                      schemaVersion=9)
+
+elif args.action == 'nightly':
+    # copy the state of the tagged release to nightly
+    current = Release(name=name,
+                      auth0_secrets=auth0_secrets,
+                      api_root=api_root)
+    data = current.get_data()[0]
+    nightly = Release(name=f"{product_name}-nightly",
+                      auth0_secrets=auth0_secrets,
+                      api_root=api_root)
+    nightly_data = nightly.get_data()[0]
+    data["name"] = nightly.name
+    print(json.dumps(data, indent=2))
+    if data == nightly_data:
+        print(f"Nightly already points at {current.name}")
+    else:
+        nightly.update_release(product=product_name, hashFunction='sha512',
+                               releaseData=json.dumps(data), schemaVersion=9)

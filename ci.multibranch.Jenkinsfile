@@ -6,6 +6,7 @@ properties([
         booleanParam(name: 'Windows64', defaultValue: true, description: ''),
         booleanParam(name: 'MacOSX64', defaultValue: true, description: ''),
         string(name: 'ReleaseName', defaultValue: '', description: ''),
+        booleanParam(name: 'Nightly', defaultValue: false, description: 'Push release to nightly'),
     ]),
 ])
 
@@ -147,6 +148,7 @@ stage('release') {
                     // create release on balrog
                     sh """
                         python3 ci/submitter.py release --tag "${params.ReleaseName}" \
+                            --moz-root artifacts/mozilla-release \
                             --client-id "$AUTH0_M2M_CLIENT_ID" \
                             --client-secret "$AUTH0_M2M_CLIENT_SECRET"
                     """
@@ -156,6 +158,17 @@ stage('release') {
                             python3 ci/submitter.py build --tag "${params.ReleaseName}" \
                                 --bid "${buildId}" \
                                 --mar "${artifactPath}" \
+                                --moz-root artifacts/mozilla-release \
+                                --client-id "$AUTH0_M2M_CLIENT_ID" \
+                                --client-secret "$AUTH0_M2M_CLIENT_SECRET"
+                        """
+                    }
+
+                    if (params.Nightly) {
+                        // copy this release to nightly
+                        sh """
+                            python3 ci/submitter.py nightly --tag "${params.ReleaseName}" \
+                                --moz-root artifacts/mozilla-release \
                                 --client-id "$AUTH0_M2M_CLIENT_ID" \
                                 --client-secret "$AUTH0_M2M_CLIENT_SECRET"
                         """
