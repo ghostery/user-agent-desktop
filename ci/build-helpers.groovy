@@ -184,7 +184,6 @@ def windows_signing(name, objDir, artifactGlob) {
                         checkout scm
                     }
                     stage('Prepare') {
-                        bat 'rmdir /q /s mozilla-release'
                         unstash name
                     }
                     stage('Sign') {
@@ -226,7 +225,7 @@ def linux_signing(name, objDir, artifactGlob) {
     }
 }
 
-def mac_signing(name, objDir, artifactGlob, shouldRelease) {
+def mac_signing(name, objDir, artifactGlob) {
     return {
         node('gideon') {
             stage('checkout') {
@@ -262,15 +261,13 @@ def mac_signing(name, objDir, artifactGlob, shouldRelease) {
                             security import $MAC_CERT -P $MAC_CERT_PASS -k cliqz -A
                             security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k cliqz cliqz
                         '''
-                        // Do Notarization only for release builds
-                        if (shouldRelease) {
-                            withEnv([
-                                "MAC_CERT_NAME=2UYYSSHVUH",
-                                "APP_NAME=Ghostery",
-                                "ARTIFACT_GLOB=${artifactGlob}"
-                            ]){
-                                sh "./ci/sign_mac.sh"
-                            }
+
+                        withEnv([
+                            "MAC_CERT_NAME=2UYYSSHVUH",
+                            "APP_NAME=Ghostery",
+                            "ARTIFACT_GLOB=${artifactGlob}"
+                        ]){
+                            sh "./ci/sign_mac.sh"
                         }
                     } finally {
                         sh '''#!/bin/bash -l -x
