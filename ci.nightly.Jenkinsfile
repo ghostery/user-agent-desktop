@@ -6,7 +6,7 @@ node() {
 
     checkout scm
 
-    helpers = load "release/build-helpers.groovy"
+    helpers = load "ci/build-helpers.groovy"
 
     sh "git tag $VERSION_NAME || true"
 
