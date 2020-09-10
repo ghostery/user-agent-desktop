@@ -6,4 +6,3 @@ MOZ_APP_VENDOR=Ghostery
 MOZ_APP_BASENAME=Ghostery
 MOZ_APP_DISPLAYNAME=Ghostery
 MOZ_MACBUNDLE_ID=ghostery
-MOZ_SOURCE_REPO=https://github.com/ghostery/user-agent-desktop/
