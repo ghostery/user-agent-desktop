@@ -21,7 +21,7 @@ node() {
                 usernameVariable: 'GITHUB_USERNAME'
             )
         ]) {
-        sh "git push https://$GITHUB_TOKEN@github.com/ghostery/user-agent-desktop.git --tags"
+            sh "git push https://$GITHUB_TOKEN@github.com/ghostery/user-agent-desktop.git $VERSION_NAME"
         }
     }
 }
