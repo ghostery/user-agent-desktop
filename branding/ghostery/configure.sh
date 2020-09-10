@@ -2,5 +2,8 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+MOZ_APP_VENDOR=Ghostery
+MOZ_APP_BASENAME=Ghostery
 MOZ_APP_DISPLAYNAME=Ghostery
 MOZ_MACBUNDLE_ID=ghostery
+MOZ_SOURCE_REPO=https://github.com/ghostery/user-agent-desktop/
