@@ -2,3 +2,4 @@
 0002-Specify-correct-executable-in-Mac-Info.plist.patch
 0003-Include-ghostery-extension-in-browser-bundle.patch
 0004-Set-update-URL.patch
+0005-Remove-bundled-mozilla-extensions.patch
