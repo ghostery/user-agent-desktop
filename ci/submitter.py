@@ -31,8 +31,8 @@ product_name = "Ghostery"
 name = f"{product_name}-{args.tag}"
 release_channels = ["release"]
 platform_to_build_target = {
-    'mac': "Darwin_x86_64-gcc3",
-    'win64': 'WINNT_x86_64-msvc',
+    'mac': 'Darwin_x86_64-gcc3',
+    'win64': 'WINNT_x86_64-msvc-x64',
     'linux-x86_64': 'Linux_x86_64-gcc3',
 }
 
