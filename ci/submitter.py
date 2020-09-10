@@ -16,7 +16,7 @@ args = parser.parse_args()
 
 
 def get_update_url(release_name, product_name, app_version, locale='%LOCALE%', platform='%OS_BOUNCER%'):
-    return f"https://github.com/human-web/user-agent-desktop/releases/download/{release_name}/{product_name}-{app_version}.{locale}.{platform}.complete.mar"
+    return f"https://github.com/ghostery/user-agent-desktop/releases/download/{release_name}/{product_name}-{app_version}.{locale}.{platform}.complete.mar"
 
 
 auth0_secrets = {
