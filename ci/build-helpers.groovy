@@ -5,6 +5,7 @@ import hudson.slaves.*
 @NonCPS
 def createNode(nodeId, jenkinsFolderPath) {
     def launcher = new JNLPLauncher()
+
     def node = new DumbSlave(
         nodeId,
         jenkinsFolderPath,
@@ -123,8 +124,8 @@ def build(name, dockerFile, mozconfig, objDir, params, buildId) {
     }
 }
 
-def signmar(objDir) {
-    def mars = sh(returnStdout: true, script: "find '$objDir/dist/update' -type f -name '*.mar'").trim().split("\\r?\\n")
+def signmar() {
+    def mars = sh(returnStdout: true, script: "find . -type f -name '*.mar' | grep dist").trim().split("\\r?\\n")
     def pwd = sh(returnStdout: true, script: 'pwd').trim()
 
     withEnv(['CERT_DB_PATH=/tmp/certs']) {
@@ -135,29 +136,29 @@ def signmar(objDir) {
                 file(credentialsId: 'd9d6021f-40c3-4515-a222-fa3882cbc4ce', variable: 'MAR_CERT'),
                 string(credentialsId: '95d95f56-c16e-416e-ac40-ed57eb99fcca', variable: 'MAR_CERT_PASS'),
             ]) {
-                dir("$objDir/dist/bin") {
-                    sh '''#!/bin/bash
-                        set -x
-                        set -e
-                        mkdir -p $CERT_DB_PATH
-                        ./certutil -N -d $CERT_DB_PATH --empty-password
-                        ./pk12util -i $MAR_CERT -W $MAR_CERT_PASS -d $CERT_DB_PATH
-                        ./certutil -L -d $CERT_DB_PATH
-                    '''
+                sh '''#!/bin/bash
+                    set -x
+                    set -e
+                    mkdir -p $CERT_DB_PATH
+                    certutil -N -d $CERT_DB_PATH --empty-password
+                    pk12util -i $MAR_CERT -W $MAR_CERT_PASS -d $CERT_DB_PATH
+                    certutil -L -d $CERT_DB_PATH
+                '''
+            }
 
-                    for (String mar in mars) {
-                        def marPath = "${pwd}/${mar}"
-                        sh """#!/bin/bash
-                            set -x
-                            set -e
-                            ./signmar -d \$CERT_DB_PATH \
-                                -n 'Release Cliqz MAR signing key' \
-                                -s "${marPath}" "${marPath}.signed"
-                            rm "${marPath}"
-                            mv "${marPath}.signed" "${marPath}"
-                        """
-                    }
-                }
+            echo "MARs to sign: \n" + mars.join('\n')
+
+            for (String mar in mars) {
+                def marPath = "${pwd}/${mar}"
+                sh """#!/bin/bash
+                    set -x
+                    set -e
+                    ${pwd}/signmar -d \$CERT_DB_PATH \
+                        -n 'Release Cliqz MAR signing key' \
+                        -s "${marPath}" "${marPath}.signed"
+                    rm "${marPath}"
+                    mv "${marPath}.signed" "${marPath}"
+                """
             }
         } catch (err) {
             error = err
@@ -194,7 +195,6 @@ def windows_signing(name, objDir, artifactGlob) {
                         }
                     }
                     stage('Publish') {
-                        archiveArtifacts artifacts: "mozilla-release/$objDir/dist/update/*.mar"
                         archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
                     }
                 }
@@ -217,17 +217,15 @@ def linux_signing(name, objDir, artifactGlob) {
                 unstash name
             }
             stage('sign') {
-                // signmar(objDir)
             }
             stage('publish artifacts') {
-                archiveArtifacts artifacts: "mozilla-release/$objDir/dist/update/*.mar"
                 archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
             }
         }
     }
 }
 
-def mac_signing(name, objDir, artifactGlob, shouldRelease) {
+def mac_signing(name, objDir, artifactGlob) {
     return {
         node('gideon') {
             stage('checkout') {
@@ -263,15 +261,13 @@ def mac_signing(name, objDir, artifactGlob, shouldRelease) {
                             security import $MAC_CERT -P $MAC_CERT_PASS -k cliqz -A
                             security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k cliqz cliqz
                         '''
-                        // Do Notarization only for release builds
-                        if (shouldRelease) {
-                            withEnv([
-                                "MAC_CERT_NAME=2UYYSSHVUH",
-                                "APP_NAME=Ghostery",
-                                "ARTIFACT_GLOB=${artifactGlob}"
-                            ]){
-                                sh "./ci/sign_mac.sh"
-                            }
+
+                        withEnv([
+                            "MAC_CERT_NAME=2UYYSSHVUH",
+                            "APP_NAME=Ghostery",
+                            "ARTIFACT_GLOB=${artifactGlob}"
+                        ]){
+                            sh "./ci/sign_mac.sh"
                         }
                     } finally {
                         sh '''#!/bin/bash -l -x
@@ -284,7 +280,6 @@ def mac_signing(name, objDir, artifactGlob, shouldRelease) {
                 }
             }
             stage('publish artifacts') {
-                archiveArtifacts artifacts: "mozilla-release/$objDir/dist/update/*.mar"
                 archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
             }
         }

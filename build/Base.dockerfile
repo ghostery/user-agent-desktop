@@ -97,7 +97,7 @@ RUN apt-get update && \
       wine64 wine upx-ucl nodejs npm \
       python3-pip zstd \
       libasound2-dev libcurl4-openssl-dev \
-      libnspr4 libnss3 \
+      libnss3-tools \
       locales \
       liblzma-dev
 

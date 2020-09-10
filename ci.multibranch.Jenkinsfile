@@ -37,15 +37,15 @@ if (params.Linux64) {
 
             stash name: name, includes: [
                 "mozilla-release/${artifactGlob}",
-                "mozilla-release/$objDir/dist/update/*.mar",
-                "mozilla-release/$objDir/dist/bin/signmar",
-                "mozilla-release/$objDir/dist/bin/certutil",
-                "mozilla-release/$objDir/dist/bin/pk12util",
             ].join(',')
+
+            sh "rm -rf mozilla-release/$objDir/dist/update"
         }
     }
 
-    signmatrix["Sign ${name}"] = helpers.linux_signing(name, objDir, artifactGlob)
+    if (shouldRelease) {
+        signmatrix["Sign ${name}"] = helpers.linux_signing(name, objDir, artifactGlob)
+    }
 }
 
 if (params.Windows64) {
@@ -64,18 +64,18 @@ if (params.Windows64) {
 
             stash name: name, includes: [
                 "mozilla-release/${artifactGlob}",
-                "mozilla-release/$objDir/dist/update/*.mar",
                 "mozilla-release/browser/config/version.txt",
                 "mozilla-release/other-licenses/7zstub/firefox/*",
                 "mozilla-release/browser/installer/windows/*",
-                "mozilla-release/$objDir/dist/bin/signmar.exe",
-                "mozilla-release/$objDir/dist/bin/certutil.exe",
-                "mozilla-release/$objDir/dist/bin/pk12util.exe",
             ].join(',')
+
+            sh "rm -rf mozilla-release/$objDir/dist/update"
         }
     }
 
-    signmatrix["Sign ${name}"] = helpers.windows_signing(name, objDir, artifactGlob)
+    if (shouldRelease) {
+        signmatrix["Sign ${name}"] = helpers.windows_signing(name, objDir, artifactGlob)
+    }
 }
 
 if (params.MacOSX64) {
@@ -92,24 +92,53 @@ if (params.MacOSX64) {
 
             stash name: name, includes: [
                 "mozilla-release/${artifactGlob}",
-                "mozilla-release/$objDir/dist/update/*.mar",
                 "mozilla-release/build/package/mac_osx/unpack-diskimage",
                 "mozilla-release/security/mac/hardenedruntime/*",
-                "mozilla-release/$objDir/dist/bin/signmar",
-                "mozilla-release/$objDir/dist/bin/certutil",
-                "mozilla-release/$objDir/dist/bin/pk12util",
             ].join(',')
+
+            sh "rm -rf mozilla-release/$objDir/dist/update"
         }
     }
 
-    signmatrix["Sign MacOSX64"] = helpers.mac_signing(name, objDir, artifactGlob, shouldRelease)
+    if (shouldRelease) {
+        signmatrix["Sign MacOSX64"] = helpers.mac_signing(name, objDir, artifactGlob)
+    }
 }
 
 parallel buildmatrix
 parallel signmatrix
 
-if (shouldRelease) {
-    stage('publish to github') {
+stage('Sign MAR') {
+    if (shouldRelease) {
+        node('docker') {
+            checkout scm
+
+            docker.build('ua-build-base', '-f build/Base.dockerfile ./build/ --build-arg user=`whoami` --build-arg UID=`id -u` --build-arg GID=`id -g`')
+
+            docker.image('ua-build-base').inside() {
+                if (!fileExists('./signmar')) {
+                    sh 'wget -O ./signmar ftp://cliqznas.cliqz/cliqz-browser-build-artifacts/mar/signmar'
+                    sh 'chmod a+x signmar'
+                }
+                if (!fileExists('./libmozsqlite3.so')) { sh 'wget -O ./libmozsqlite3.so ftp://cliqznas.cliqz/cliqz-browser-build-artifacts/mar/libmozsqlite3.so' }
+                if (!fileExists('./libnss3.so')) { sh 'wget -O ./libnss3.so ftp://cliqznas.cliqz/cliqz-browser-build-artifacts/mar/libnss3.so' }
+                if (!fileExists('./libnspr4.so')) { sh 'wget -O ./libnspr4.so ftp://cliqznas.cliqz/cliqz-browser-build-artifacts/mar/libnspr4.so' }
+                if (!fileExists('./libfreeblpriv3.so')) { sh 'wget -O ./libfreeblpriv3.so ftp://cliqznas.cliqz/cliqz-browser-build-artifacts/mar/libfreeblpriv3.so' }
+                if (!fileExists('./libsoftokn3.so')) { sh 'wget -O ./libsoftokn3.so ftp://cliqznas.cliqz/cliqz-browser-build-artifacts/mar/libsoftokn3.so' }
+
+                unarchive mapping: ["mozilla-release/" : "."]
+
+                helpers.signmar()
+
+                archiveArtifacts artifacts: "mozilla-release/obj*/dist/update/*.mar"
+            }
+        }
+    }
+}
+
+
+stage('publish to github') {
+    if (shouldRelease) {
         helpers.withGithubRelease() {
             sh 'rm -rf artifacts'
 
@@ -132,8 +161,10 @@ if (shouldRelease) {
             sh 'rm -rf artifacts'
         }
     }
+}
 
-    stage('publish to balrog') {
+stage('publish to balrog') {
+    if (shouldRelease) {
         node('docker && magrathea') {
             docker.image('ua-build-base').inside('--dns 1.1.1.1') {
                 sh 'rm -rf artifacts'
