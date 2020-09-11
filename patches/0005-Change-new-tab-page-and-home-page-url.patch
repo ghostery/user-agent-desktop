@@ -6,8 +6,22 @@ Subject: Change new tab page and home page url
  browser/base/content/browser.js | 1 +
  browser/modules/AboutNewTab.jsm | 2 +-
  browser/modules/HomePage.jsm    | 2 +-
- 3 files changed, 3 insertions(+), 2 deletions(-)
+ browser/app/profile/firefox.js | 2 +-
+ 4 files changed, 4 insertions(+), 3 deletions(-)
 
+diff --git a/browser/app/profile/firefox.js b/browser/app/profile/firefox.js
+index c73cf7982c..0dc87628be 100644
+--- a/browser/app/profile/firefox.js
++++ b/browser/app/profile/firefox.js
+@@ -243,7 +243,7 @@ pref("browser.defaultbrowser.notificationbar", false);
+ // 0 = blank, 1 = home (browser.startup.homepage), 2 = last visited page, 3 = resume previous browser session
+ // The behavior of option 3 is detailed at: http://wiki.mozilla.org/Session_Restore
+ pref("browser.startup.page",                1);
+-pref("browser.startup.homepage",            "about:home");
++pref("browser.startup.homepage",            "https://www.ghostery.com/");
+ pref("browser.startup.homepage.abouthome_cache.enabled", false);
+
+ // Whether we should skip the homepage when opening the first-run page
 diff --git a/browser/base/content/browser.js b/browser/base/content/browser.js
 index 8ddb9e5a28..76ba9b4025 100644
 --- a/browser/base/content/browser.js
@@ -18,7 +32,7 @@ index 8ddb9e5a28..76ba9b4025 100644
    "about:newinstall",
 +  "https://www.ghostery.com/",
  ];
- 
+
  function isInitialPage(url) {
 diff --git a/browser/modules/AboutNewTab.jsm b/browser/modules/AboutNewTab.jsm
 index e7d4491840..c3326a8cbd 100644
@@ -27,7 +41,7 @@ index e7d4491840..c3326a8cbd 100644
 @@ -19,7 +19,7 @@ XPCOMUtils.defineLazyModuleGetters(this, {
      "resource://gre/modules/remotepagemanager/RemotePageManagerParent.jsm",
  });
- 
+
 -const ABOUT_URL = "about:newtab";
 +const ABOUT_URL = "https://www.ghostery.com/";
  const PREF_ACTIVITY_STREAM_DEBUG = "browser.newtabpage.activity-stream.debug";
@@ -39,13 +53,13 @@ index c903787fde..52b5b61ee5 100644
 +++ b/browser/modules/HomePage.jsm
 @@ -20,7 +20,7 @@ XPCOMUtils.defineLazyModuleGetters(this, {
  });
- 
+
  const kPrefName = "browser.startup.homepage";
 -const kDefaultHomePage = "about:home";
 +const kDefaultHomePage = "https://ghostery.com/";
  const kExtensionControllerPref =
    "browser.startup.homepage_override.extensionControlled";
  const kHomePageIgnoreListId = "homepage-urls";
--- 
+--
 2.28.0
 
