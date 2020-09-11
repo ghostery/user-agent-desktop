@@ -100,5 +100,5 @@ pref("browser.messaging-system.whatsNewPanel.enabled", false); // What's New [FF
 pref("extensions.pocket.enabled", false); // Pocket Account [FF46+]
 pref("identity.fxaccounts.enabled", false); // Firefox Accounts & Sync [FF60+] [RESTART]
 
-// UA compat mode - Adds Firefox/VER to the UA string in addition to the APP_NAME.
+// UA compat mode - Adds Firefox/VER to the UA string in addition to the APP_NAME. (https://github.com/ghostery/user-agent-desktop/issues/114)
 pref("general.useragent.compatMode.firefox", true)
