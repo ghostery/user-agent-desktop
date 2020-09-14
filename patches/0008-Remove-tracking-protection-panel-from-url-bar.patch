@@ -3,31 +3,14 @@ Date: Fri, 11 Sep 2020 15:34:04 +0200
 Subject: Remove tracking protection panel from url bar
 
 ---
- browser/base/content/browser.js    | 30 +++++++++++++++---------------
+ browser/base/content/browser.js    | 20 ++++++++++----------
  browser/base/content/browser.xhtml |  6 ++++--
- 2 files changed, 19 insertions(+), 17 deletions(-)
+ 2 files changed, 14 insertions(+), 12 deletions(-)
 
 diff --git a/browser/base/content/browser.js b/browser/base/content/browser.js
-index 76ba9b4025..9ed5e5da8b 100644
+index 76ba9b4025..f041c7265e 100644
 --- a/browser/base/content/browser.js
 +++ b/browser/base/content/browser.js
-@@ -165,11 +165,11 @@ XPCOMUtils.defineLazyScriptGetter(
-   "gIdentityHandler",
-   "chrome://browser/content/browser-siteIdentity.js"
- );
--XPCOMUtils.defineLazyScriptGetter(
--  this,
--  "gProtectionsHandler",
--  "chrome://browser/content/browser-siteProtections.js"
--);
-+// XPCOMUtils.defineLazyScriptGetter(
-+//   this,
-+//   "gProtectionsHandler",
-+//   "chrome://browser/content/browser-siteProtections.js"
-+// );
- XPCOMUtils.defineLazyScriptGetter(
-   this,
-   ["gGestureSupport", "gHistorySwipeAnimation"],
 @@ -1985,7 +1985,7 @@ var gBrowserInit = {
      BookmarkingUI.init();
      BrowserSearch.delayedStartupInit();
