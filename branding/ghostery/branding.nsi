@@ -22,7 +22,7 @@
 !define Channel "ghostery"
 
 # The installer's certificate name and issuer expected by the stub installer
-!define CertNameDownload   "Ghostery Inc."
+!define CertNameDownload   "Ghostery, Inc."
 !define CertIssuerDownload "DigiCert SHA2 Assured ID Code Signing CA"
 
 # Dialog units are used so the UI displays correctly with the system's DPI
