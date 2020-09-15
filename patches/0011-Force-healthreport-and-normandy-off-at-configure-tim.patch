@@ -1,0 +1,29 @@
+From: Jenkins <jenkins@magrathea>
+Date: Wed, 16 Sep 2020 17:33:07 +0200
+Subject: Force healthreport and normandy off at configure-time
+
+---
+ browser/moz.configure | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/browser/moz.configure b/browser/moz.configure
+index a251050feb..5aada7532e 100644
+--- a/browser/moz.configure
++++ b/browser/moz.configure
+@@ -5,11 +5,11 @@
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ 
+ imply_option('MOZ_PLACES', True)
+-imply_option('MOZ_SERVICES_HEALTHREPORT', True)
++imply_option('MOZ_SERVICES_HEALTHREPORT', False)
+ imply_option('MOZ_SERVICES_SYNC', True)
+ imply_option('MOZ_DEDICATED_PROFILES', True)
+ imply_option('MOZ_BLOCK_PROFILE_DOWNGRADE', True)
+-imply_option('MOZ_NORMANDY', True)
++imply_option('MOZ_NORMANDY', False)
+ 
+ with only_when(target_is_linux & compile_environment):
+     option(env='MOZ_NO_PIE_COMPAT',
+-- 
+2.25.1
+
