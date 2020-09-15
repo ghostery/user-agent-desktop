@@ -46,6 +46,15 @@ pref("network.cookie.sameSite.noneRequiresSecure", true);
 // https://developer.mozilla.org/en-US/docs/Mozilla/Firefox/Privacy/Redirect_Tracking_Protection
 pref("privacy.purge_trackers.enabled", true);
 
+// disable tracking protection blocking
+pref("browser.contentblocking.category", "custom");
+pref("privacy.trackingprotection.enabled", false);
+pref("privacy.trackingprotection.pbmode.enabled", false);
+pref("privacy.trackingprotection.cryptomining.enabled", false);
+pref("privacy.trackingprotection.fingerprinting.enabled", false);
+pref("privacy.trackingprotection.socialtracking.enabled", false);
+pref("privacy.socialtracking.block_cookies.enabled", false);
+
 /* 0320: disable about:addons' Recommendations pane (uses Google Analytics) ***/
 pref("extensions.getAddons.showPane", false); // [HIDDEN PREF]
 
