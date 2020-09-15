@@ -1,7 +1,7 @@
 {
   "title": "Ghostery",
-  "background": "../branding/ghostery/background.png",
-  "icon": "../branding/ghostery/disk.icns",
+  "background": "../brands/ghostery/branding/background.png",
+  "icon": "../brands/ghostery/branding/disk.icns",
   "icon-size": 80,
   "contents": [
     { "x": 418, "y": 180, "type": "link", "path": "/Applications" },

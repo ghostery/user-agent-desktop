@@ -3,3 +3,5 @@ mozilla-release
 node_modules
 logs
 .DS_Store
+build/configs/mozconfig
+/mozconfig

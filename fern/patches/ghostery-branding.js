@@ -7,7 +7,7 @@ const { folderExists } = require("../core/utils.js");
 
 async function getPathToSourceBranding() {
   const root = await getRoot();
-  return path.join(root, "branding", "ghostery");
+  return path.join(root, "brands", "ghostery", "branding");
 }
 
 async function getPathToGhosteryBranding() {

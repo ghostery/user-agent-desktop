@@ -69,4 +69,4 @@ unset MOZ_STDCXX_COMPAT
 # disable tests for this build
 ac_add_options --disable-tests
 
-. /builds/worker/configs/ghostery.mozconfig
+. /builds/worker/configs/mozconfig
