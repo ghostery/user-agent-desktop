@@ -85,7 +85,7 @@ def build(name, dockerFile, mozconfig, objDir, params, buildId) {
             docker.build('ua-build-base', '-f build/Base.dockerfile ./build/ --build-arg user=`whoami` --build-arg UID=`id -u` --build-arg GID=`id -g`')
             docker.build("ua-build-${name.toLowerCase()}", "-f build/${dockerFile} ./build")
         }
-        
+
         image.inside("--env MOZCONFIG=/builds/worker/configs/${mozconfig} --env MOZ_BUILD_DATE=${buildId} -v /mnt/vfat/vs2017_15.8.4/:/builds/worker/fetches/vs2017_15.8.4") {
             stage('prepare mozilla-release') {
                 sh 'npm ci'
