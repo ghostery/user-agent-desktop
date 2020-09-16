@@ -39,4 +39,4 @@ export MOZ_PACKAGE_JSSHELL=1
 # disable tests for this build
 ac_add_options --disable-tests
 
-. /builds/worker/configs/ghostery.mozconfig
+. /builds/worker/configs/mozconfig

@@ -1,5 +1,6 @@
 const Listr = require("listr");
 const process = require("process");
+const fs = require("fs");
 
 const {
   load: loadWorkspace,
@@ -77,6 +78,10 @@ module.exports = (program) => {
         }
 
         const tasks = new Listr([
+          {
+            title: 'Copy mozconfig',
+            task: () => fs.copyFileSync('brands/ghostery/mozconfig', 'build/configs/mozconfig')
+          },
           {
             title: `Setup Firefox ${workspace.firefox}`,
             task: async () => await firefox.use(workspace.firefox),
