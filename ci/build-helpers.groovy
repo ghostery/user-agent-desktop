@@ -92,6 +92,7 @@ def build(name, dockerFile, mozconfig, objDir, params, buildId) {
                 }
                 sh 'rm -rf mozilla-release'
                 sh "./fern.js use"
+                sh 'cp brands/ghostery/mozconfig /build/workers/config'
                 sh "./fern.js reset"
                 sh './fern.js import-patches'
             }
