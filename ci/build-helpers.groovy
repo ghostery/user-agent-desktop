@@ -240,8 +240,8 @@ def mac_signing(name, objDir, artifactGlob) {
             }
             stage('sign') {
                 withCredentials([
-                    file(credentialsId: 'd9169b03-c7f5-4da2-bae3-56347ae1829c', variable: 'MAC_CERT'),
-                    string(credentialsId: 'd29da4e0-cf0a-41df-8446-44078bdca137', variable: 'MAC_CERT_PASS'),
+                    file(credentialsId: '5f834aab-07ff-4c3f-9848-c2ac02b3b532', variable: 'MAC_CERT'),
+                    string(credentialsId: 'b21cbf0b-c5e1-4c0f-9df7-20bb8ba61a2c', variable: 'MAC_CERT_PASS'),
                     usernamePassword(
                         credentialsId: '840e974f-f733-4f02-809f-54dc68f5fa46',
                         passwordVariable: 'MAC_NOTARY_PASS',
