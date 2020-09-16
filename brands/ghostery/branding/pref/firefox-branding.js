@@ -60,6 +60,8 @@ pref("privacy.socialtracking.block_cookies.enabled", false);
 
 /* 0320: disable about:addons' Recommendations pane (uses Google Analytics) ***/
 pref("extensions.getAddons.showPane", false); // [HIDDEN PREF]
+// Recommendations in about:addons' addons pane.
+pref("extensions.htmlaboutaddons.recommendations.enabled", false);
 
 /* 0330: disable telemetry
  * the pref (.unified) affects the behaviour of the pref (.enabled)
