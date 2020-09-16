@@ -18,6 +18,9 @@ pref("app.update.url.manual", "https://www.ghostery.com/download/");
 // supplied in the "An update is available" page of the update wizard.
 pref("app.update.url.details", "https://www.ghostery.com/%LOCALE%/browser/notes");
 
+// Disable System Addon updates
+pref("extensions.systemAddon.update.url", "");
+
 // The number of days a binary is permitted to be old
 // without checking for an update.  This assumes that
 // app.update.checkInstallTime is true.
