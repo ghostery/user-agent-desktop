@@ -77,10 +77,10 @@ def build(name, dockerFile, mozconfig, objDir, params, buildId) {
             if (!fileExists('./build/MacOSX10.11.sdk.tar.bz2')) {
                 sh 'wget -O ./build/MacOSX10.11.sdk.tar.bz2 ftp://cliqznas.cliqz/cliqz-browser-build-artifacts/MacOSX10.11.sdk.tar.bz2'
             }
-            
+
             sh 'cp brands/ghostery/mozconfig build/configs/'
         }
-        
+
         image = stage('docker build base') {
             docker.build('ua-build-base', '-f build/Base.dockerfile ./build/ --build-arg user=`whoami` --build-arg UID=`id -u` --build-arg GID=`id -g`')
             docker.build("ua-build-${name.toLowerCase()}", "-f build/${dockerFile} ./build")
