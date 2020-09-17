@@ -189,8 +189,8 @@ def windows_signing(name, objDir, artifactGlob) {
                     }
                     stage('Sign') {
                         withCredentials([
-                            file(credentialsId: "7da7d2de-5a10-45e6-9ffd-4e49f83753a8", variable: 'WIN_CERT'),
-                            string(credentialsId: "33b3705c-1c2e-4462-9354-56a76bbb164c", variable: 'WIN_CERT_PASS'),
+                            file(credentialsId: "6d44ddad-5592-4a89-89aa-7f934268113b", variable: 'WIN_CERT'),
+                            string(credentialsId: "c891117f-e3db-41d6-846b-bcdcd1664dfd", variable: 'WIN_CERT_PASS'),
                         ]) {
                             bat 'ci/sign_win.bat'
                         }
