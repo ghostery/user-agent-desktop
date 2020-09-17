@@ -264,7 +264,7 @@ def mac_signing(name, objDir, artifactGlob) {
                         '''
 
                         withEnv([
-                            "MAC_CERT_NAME=2UYYSSHVUH",
+                            "MAC_CERT_NAME=HPY23A294X",
                             "APP_NAME=Ghostery",
                             "ARTIFACT_GLOB=${artifactGlob}"
                         ]){
