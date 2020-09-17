@@ -8,6 +8,7 @@ const colors = require('colors');
 // register sub-commands
 require('./fern/commands/use')(program);
 require('./fern/commands/reset')(program);
+require('./fern/commands/config')(program);
 require('./fern/commands/generate')(program);
 require('./fern/commands/build')(program);
 require('./fern/commands/export-patches')(program);

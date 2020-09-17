@@ -48,6 +48,4 @@ ENV MOZ_FETCHES_DIR=/builds/worker/fetches/ \
     LANG=en_US.UTF-8 \
     LANGUAGE=en_US:en
 
-COPY configs /builds/worker/configs
-
 WORKDIR $WORKSPACE
