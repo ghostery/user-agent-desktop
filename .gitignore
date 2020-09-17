@@ -5,3 +5,4 @@ logs
 .DS_Store
 build/configs/mozconfig
 /mozconfig
+/local.mozconfig

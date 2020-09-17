@@ -64,7 +64,7 @@ def withVagrant(String vagrantFilePath, String jenkinsFolderPath, Integer cpu, I
     }
 }
 
-def build(name, dockerFile, mozconfig, objDir, params, buildId) {
+def build(name, dockerFile, targetPlatform, objDir, params, buildId) {
     return {
         stage('checkout') {
             checkout scm
@@ -77,7 +77,6 @@ def build(name, dockerFile, mozconfig, objDir, params, buildId) {
             if (!fileExists('./build/MacOSX10.11.sdk.tar.bz2')) {
                 sh 'wget -O ./build/MacOSX10.11.sdk.tar.bz2 ftp://cliqznas.cliqz/cliqz-browser-build-artifacts/MacOSX10.11.sdk.tar.bz2'
             }
-            sh 'cp brands/ghostery/mozconfig build/configs/'
         }
 
         image = stage('docker build base') {
@@ -85,7 +84,7 @@ def build(name, dockerFile, mozconfig, objDir, params, buildId) {
             docker.build("ua-build-${name.toLowerCase()}", "-f build/${dockerFile} ./build")
         }
 
-        image.inside("--env MOZCONFIG=/builds/worker/configs/${mozconfig} --env MOZ_BUILD_DATE=${buildId} -v /mnt/vfat/vs2017_15.8.4/:/builds/worker/fetches/vs2017_15.8.4") {
+        image.inside("--env MOZCONFIG=${env.WORKSPACE}/mozconfig --env MOZ_BUILD_DATE=${buildId} -v /mnt/vfat/vs2017_15.8.4/:/builds/worker/fetches/vs2017_15.8.4") {
             stage('prepare mozilla-release') {
                 sh 'npm ci'
                 if (params.Reset) {
@@ -93,6 +92,7 @@ def build(name, dockerFile, mozconfig, objDir, params, buildId) {
                 }
                 sh 'rm -rf mozilla-release'
                 sh "./fern.js use"
+                sh "./fern.js config --print --force --platform ${targetPlatform} --brand ghostery"
                 sh "./fern.js reset"
                 sh './fern.js import-patches'
             }

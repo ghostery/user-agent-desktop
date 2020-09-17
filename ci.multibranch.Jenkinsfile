@@ -29,7 +29,7 @@ if (params.Linux64) {
 
     buildmatrix[name] = {
         node('docker && !magrathea') {
-            helpers.build(name, 'Linux.dockerfile', 'linux.mozconfig', objDir, params, buildId)()
+            helpers.build(name, 'Linux.dockerfile', 'linux', objDir, params, buildId)()
 
             archiveArtifacts artifacts: "mozilla-release/$objDir/dist/update/*.mar"
             archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
@@ -56,7 +56,7 @@ if (params.Windows64) {
     buildmatrix[name] = {
         // we have to run windows builds on magrathea because that is where the vssdk mount is.
         node('docker && magrathea') {
-            helpers.build(name, 'Windows.dockerfile', 'win64.mozconfig', objDir, params, buildId)()
+            helpers.build(name, 'Windows.dockerfile', 'win64', objDir, params, buildId)()
 
             archiveArtifacts artifacts: "mozilla-release/$objDir/dist/update/*.mar"
             archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
@@ -84,7 +84,7 @@ if (params.MacOSX64) {
     def artifactGlob = "$objDir/dist/Ghostery-*"
     buildmatrix[name] = {
         node('docker && !magrathea') {
-            helpers.build(name, 'MacOSX.dockerfile', 'macosx.mozconfig', objDir, params, buildId)()
+            helpers.build(name, 'MacOSX.dockerfile', 'macosx', objDir, params, buildId)()
 
             archiveArtifacts artifacts: "mozilla-release/$objDir/dist/update/*.mar"
             archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
