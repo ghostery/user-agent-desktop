@@ -86,13 +86,30 @@ def build(name, dockerFile, targetPlatform, objDir, params, buildId) {
 
         image.inside("--env MOZCONFIG=${env.WORKSPACE}/mozconfig --env MOZ_BUILD_DATE=${buildId} -v /mnt/vfat/vs2017_15.8.4/:/builds/worker/fetches/vs2017_15.8.4") {
             stage('prepare mozilla-release') {
+                withCredentials([
+                    string(
+                        credentialsId: '228cf6ba-b6ce-4e36-b4d5-47062bb56421',
+                        variable: 'CQZ_GOOGLE_API_KEY'
+                    ),
+                    string(
+                        credentialsId: '3e57ee4e-4ca7-4d07-aeb6-96422b66b3e8',
+                        variable: 'MOZ_MOZILLA_API_KEY'
+                    ),
+                ]) {
+                    writeFile file: "mozilla-desktop-geoloc-api.key", text: env.MOZ_MOZILLA_API_KEY
+                    writeFile file: "gls-gapi.data", text: env.CQZ_GOOGLE_API_KEY
+                }
+                writeFile file: 'local.mozconfig', text: """
+                    ac_add_options --with-google-location-service-api-keyfile=${env.WORKSPACE}/gls-gapi.data
+                    ac_add_options --with-mozilla-api-keyfile=${env.WORKSPACE}/mozilla-desktop-geoloc-api.key
+                """
                 sh 'npm ci'
                 if (params.Reset) {
                     sh 'rm -rf .cache'
                 }
                 sh 'rm -rf mozilla-release'
                 sh "./fern.js use"
-                sh "./fern.js config --print --force --platform ${targetPlatform} --brand ghostery"
+                sh "./fern.js config --print --force --local --platform ${targetPlatform} --brand ghostery"
                 sh "./fern.js reset"
                 sh './fern.js import-patches'
             }
