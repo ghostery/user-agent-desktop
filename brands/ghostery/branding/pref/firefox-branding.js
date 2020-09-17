@@ -116,3 +116,7 @@ pref("identity.fxaccounts.enabled", false); // Firefox Accounts & Sync [FF60+] [
 
 // UA compat mode - Adds Firefox/VER to the UA string in addition to the APP_NAME. (https://github.com/ghostery/user-agent-desktop/issues/114)
 pref("general.useragent.compatMode.firefox", true);
+
+// Recommend extensions/features as you browse
+pref("browser.newtabpage.activity-stream.asrouter.userprefs.cfr.features", false);
+pref("browser.newtabpage.activity-stream.asrouter.userprefs.cfr.addons", false);

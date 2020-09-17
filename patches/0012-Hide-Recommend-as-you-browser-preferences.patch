@@ -1,0 +1,33 @@
+From: Sam Macbeth <sam@cliqz.com>
+Date: Thu, 17 Sep 2020 16:08:42 +0200
+Subject: Hide "Recommend as you browser" preferences
+
+---
+ browser/components/preferences/main.inc.xhtml | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/browser/components/preferences/main.inc.xhtml b/browser/components/preferences/main.inc.xhtml
+index d907cbfe6f..a733bec5c7 100644
+--- a/browser/components/preferences/main.inc.xhtml
++++ b/browser/components/preferences/main.inc.xhtml
+@@ -642,7 +642,7 @@
+             preference="media.videocontrols.picture-in-picture.video-toggle.enabled"/>
+     <label id="pictureInPictureLearnMore" class="learnMore" data-l10n-id="browsing-picture-in-picture-learn-more" is="text-link"/>
+   </hbox>
+-  <hbox align="center" data-subcategory="cfraddons">
++  <!--<hbox align="center" data-subcategory="cfraddons">
+     <checkbox id="cfrRecommendations"
+             class="tail-with-learn-more"
+             data-l10n-id="browsing-cfr-recommendations"
+@@ -655,7 +655,7 @@
+             data-l10n-id="browsing-cfr-features"
+             preference="browser.newtabpage.activity-stream.asrouter.userprefs.cfr.features"/>
+     <label id="cfrFeaturesLearnMore" class="learnMore" data-l10n-id="browsing-cfr-recommendations-learn-more" is="text-link"/>
+-  </hbox>
++  </hbox>-->
+ </groupbox>
+ 
+ <hbox id="networkProxyCategory"
+-- 
+2.28.0
+
