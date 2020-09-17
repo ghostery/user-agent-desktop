@@ -3,10 +3,30 @@ Date: Fri, 11 Sep 2020 15:34:04 +0200
 Subject: Remove tracking protection panel from url bar
 
 ---
- browser/base/content/browser.js    | 20 ++++++++++----------
- browser/base/content/browser.xhtml |  6 ++++--
- 2 files changed, 14 insertions(+), 12 deletions(-)
+ browser/base/content/browser-siteIdentity.js |  8 ++++----
+ browser/base/content/browser.js              | 20 ++++++++++----------
+ browser/base/content/browser.xhtml           |  6 ++++--
+ 3 files changed, 18 insertions(+), 16 deletions(-)
 
+diff --git a/browser/base/content/browser-siteIdentity.js b/browser/base/content/browser-siteIdentity.js
+index 017aac1fc6..7054a75ac6 100644
+--- a/browser/base/content/browser-siteIdentity.js
++++ b/browser/base/content/browser-siteIdentity.js
+@@ -897,10 +897,10 @@ var gIdentityHandler = {
+     this._refreshPermissionIcons();
+ 
+     // Hide the shield icon if it is a chrome page.
+-    gProtectionsHandler._trackingProtectionIconContainer.classList.toggle(
+-      "chromeUI",
+-      this._isSecureInternalUI
+-    );
++    // gProtectionsHandler._trackingProtectionIconContainer.classList.toggle(
++    //   "chromeUI",
++    //   this._isSecureInternalUI
++    // );
+   },
+ 
+   /**
 diff --git a/browser/base/content/browser.js b/browser/base/content/browser.js
 index 76ba9b4025..f041c7265e 100644
 --- a/browser/base/content/browser.js
