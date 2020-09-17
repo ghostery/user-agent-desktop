@@ -28,7 +28,7 @@ async function getPathToWindowsInstallerIcon() {
 
 module.exports = {
   name: "Setup Ghostery branding",
-  paths: ["browser/branding/ghostery"],
+  paths: ["browser/branding/ghostery", "other-licenses"],
   skip: async () => folderExists(await getPathToGhosteryBranding()),
   apply: async () => {
     await fsExtra.copy(
