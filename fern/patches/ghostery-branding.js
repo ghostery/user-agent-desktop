@@ -3,11 +3,15 @@ const path = require("path");
 const fsExtra = require("fs-extra");
 
 const { getRoot } = require("../core/workspace.js");
-const { folderExists } = require("../core/utils.js");
 
 async function getPathToSourceBranding() {
   const root = await getRoot();
   return path.join(root, "brands", "ghostery", "branding");
+}
+
+async function getPathToSourceWindowsInstallerIcon() {
+  const root = await getRoot();
+  return path.join(root, "brands", "ghostery", "windows-installer", "setup.ico");
 }
 
 async function getPathToGhosteryBranding() {
@@ -15,21 +19,25 @@ async function getPathToGhosteryBranding() {
   return path.join(root, "mozilla-release", "browser", "branding", "ghostery");
 }
 
+const windowsInstallerIconPathComponents = [
+  "other-licenses",
+  "7zstub",
+  "firefox",
+  "setup.ico",
+];
+
 async function getPathToWindowsInstallerIcon() {
   return path.join(
     await getRoot(),
     "mozilla-release",
-    "other-licenses",
-    "7zstub",
-    "firefox",
-    "setup.ico"
+    ...windowsInstallerIconPathComponents
   );
 }
 
 module.exports = {
   name: "Setup Ghostery branding",
-  paths: ["browser/branding/ghostery"],
-  skip: async () => folderExists(await getPathToGhosteryBranding()),
+  paths: ["browser/branding/ghostery", path.join(...windowsInstallerIconPathComponents)],
+  skip: async () => false,
   apply: async () => {
     await fsExtra.copy(
       await getPathToSourceBranding(),
@@ -37,7 +45,7 @@ module.exports = {
     );
     // copy installer icon
     return fsExtra.copy(
-      path.join(await getPathToGhosteryBranding(), "setup.ico"),
+      await getPathToSourceWindowsInstallerIcon(),
       await getPathToWindowsInstallerIcon()
     );
   },
