@@ -20,7 +20,7 @@ trap finish EXIT
 
 zip -r "$BUNDLE_PKG" $PKG_DIR/$APP_NAME.app
 # submit app for notarization
-if xcrun altool --notarize-app --primary-bundle-id "$BUNDLE_ID" --username "$ASC_USERNAME" --password "$ASC_PASSWORD" -f "$BUNDLE_PKG" > "$NOTARIZE_APP_LOG" 2>&1; then
+if xcrun altool --notarize-app --primary-bundle-id "$BUNDLE_ID" --username "$ASC_USERNAME" --password "$ASC_PASSWORD" --asc-provider EvidonInc -f "$BUNDLE_PKG" > "$NOTARIZE_APP_LOG" 2>&1; then
 	cat "$NOTARIZE_APP_LOG"
 	RequestUUID=$(awk -F ' = ' '/RequestUUID/ {print $2}' "$NOTARIZE_APP_LOG")
 
