@@ -15,7 +15,7 @@ module.exports = (program) => {
     )
     .option(
       "-p, --platform <platform>",
-      "Specify which platform to use"
+      "Specify which platform to use (e.g. win64, linux, macosx)"
     )
     .option(
       "-f, --force",
