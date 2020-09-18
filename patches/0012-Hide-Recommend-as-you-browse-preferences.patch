@@ -1,0 +1,59 @@
+From: Sam Macbeth <sam@cliqz.com>
+Date: Thu, 17 Sep 2020 16:08:42 +0200
+Subject: Hide "Recommend as you browse" preferences
+
+---
+ browser/components/preferences/main.inc.xhtml |  4 ++--
+ browser/components/preferences/main.js        | 14 +++++++-------
+ 2 files changed, 9 insertions(+), 9 deletions(-)
+
+diff --git a/browser/components/preferences/main.inc.xhtml b/browser/components/preferences/main.inc.xhtml
+index d907cbfe6f..a733bec5c7 100644
+--- a/browser/components/preferences/main.inc.xhtml
++++ b/browser/components/preferences/main.inc.xhtml
+@@ -642,7 +642,7 @@
+             preference="media.videocontrols.picture-in-picture.video-toggle.enabled"/>
+     <label id="pictureInPictureLearnMore" class="learnMore" data-l10n-id="browsing-picture-in-picture-learn-more" is="text-link"/>
+   </hbox>
+-  <hbox align="center" data-subcategory="cfraddons">
++  <!--<hbox align="center" data-subcategory="cfraddons">
+     <checkbox id="cfrRecommendations"
+             class="tail-with-learn-more"
+             data-l10n-id="browsing-cfr-recommendations"
+@@ -655,7 +655,7 @@
+             data-l10n-id="browsing-cfr-features"
+             preference="browser.newtabpage.activity-stream.asrouter.userprefs.cfr.features"/>
+     <label id="cfrFeaturesLearnMore" class="learnMore" data-l10n-id="browsing-cfr-recommendations-learn-more" is="text-link"/>
+-  </hbox>
++  </hbox>-->
+ </groupbox>
+ 
+ <hbox id="networkProxyCategory"
+diff --git a/browser/components/preferences/main.js b/browser/components/preferences/main.js
+index 955386a737..f4f434e850 100644
+--- a/browser/components/preferences/main.js
++++ b/browser/components/preferences/main.js
+@@ -380,13 +380,13 @@ var gMainPane = {
+     // listener for future menu changes.
+     gMainPane.initDefaultZoomValues();
+ 
+-    let cfrLearnMoreUrl =
+-      Services.urlFormatter.formatURLPref("app.support.baseURL") +
+-      "extensionrecommendations";
+-    for (const id of ["cfrLearnMore", "cfrFeaturesLearnMore"]) {
+-      let link = document.getElementById(id);
+-      link.setAttribute("href", cfrLearnMoreUrl);
+-    }
++    // let cfrLearnMoreUrl =
++    //   Services.urlFormatter.formatURLPref("app.support.baseURL") +
++    //   "extensionrecommendations";
++    // for (const id of ["cfrLearnMore", "cfrFeaturesLearnMore"]) {
++    //   let link = document.getElementById(id);
++    //   link.setAttribute("href", cfrLearnMoreUrl);
++    // }
+ 
+     if (
+       Services.prefs.getBoolPref(
+-- 
+2.28.0
+
