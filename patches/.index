@@ -10,3 +10,4 @@
 0010-Remove-Tracking-Protection-Settings-from-preferences.patch
 0011-Force-healthreport-and-normandy-off-at-configure-tim.patch
 0012-Hide-Recommend-as-you-browse-preferences.patch
+0013-Override-UA-for-addons.mozilla.org.patch
