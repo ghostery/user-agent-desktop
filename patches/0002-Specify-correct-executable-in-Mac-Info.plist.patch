@@ -7,7 +7,7 @@ Subject: Specify correct executable in Mac Info.plist
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/browser/app/macbuild/Contents/Info.plist.in b/browser/app/macbuild/Contents/Info.plist.in
-index 27969d6051..8da3c61768 100644
+index 27969d6051..18ebfcf63b 100644
 --- a/browser/app/macbuild/Contents/Info.plist.in
 +++ b/browser/app/macbuild/Contents/Info.plist.in
 @@ -163,7 +163,7 @@
@@ -15,7 +15,7 @@ index 27969d6051..8da3c61768 100644
  	</array>
  	<key>CFBundleExecutable</key>
 -	<string>firefox</string>
-+	<string>%MAC_APP_NAME%</string>
++	<string>Ghostery</string>
  	<key>CFBundleGetInfoString</key>
  	<string>%MAC_APP_NAME% %APP_VERSION%</string>
  	<key>CFBundleIconFile</key>
