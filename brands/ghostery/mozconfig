@@ -7,6 +7,6 @@ ac_add_options --disable-verify-mar
 ac_add_options --disable-crashreporter
 ac_add_options MOZ_TELEMETRY_REPORTING=
 
-export MOZ_APP_PROFILE=Ghostery
+export MOZ_APP_PROFILE="Ghostery Browser"
 export ACCEPTED_MAR_CHANNEL_IDS=firefox-ghostery-release
 export MAR_CHANNEL_ID=firefox-ghostery-release
