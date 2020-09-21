@@ -1,0 +1,60 @@
+From: Sam Macbeth <sam@cliqz.com>
+Date: Mon, 21 Sep 2020 11:04:57 +0200
+Subject: Update default bookmarks to Ghostery-specific ones
+
+---
+ browser/locales/en-US/profile/bookmarks.inc      | 16 ++++++++++++++++
+ .../locales/generic/profile/bookmarks.html.in    | 10 ++++------
+ 2 files changed, 20 insertions(+), 6 deletions(-)
+
+diff --git a/browser/locales/en-US/profile/bookmarks.inc b/browser/locales/en-US/profile/bookmarks.inc
+index fbc69250bf..bc2b64c015 100644
+--- a/browser/locales/en-US/profile/bookmarks.inc
++++ b/browser/locales/en-US/profile/bookmarks.inc
+@@ -65,4 +65,20 @@
+ # Nightly builds only, link title for https://planet.mozilla.org/
+ #define planet Planet Mozilla
+ 
++# LOCALIZATION NOTE (ghostery_heading):
++# Ghostery links folder name
++#define ghostery_heading Ghostery
++
++# LOCALIZATION NOTE (ghostery_help):
++# link title for https://www.ghostery.com/support/
++#define ghostery_help Help
++
++# LOCALIZATION NOTE (ghostery_plans):
++# link title for https://www.ghostery.com/pricing/
++#define ghostery_plans Ghostery Plans
++
++# LOCALIZATION NOTE (ghostery_about_us):
++# link title for https://www.ghostery.com/about-ghostery/
++#define ghostery_about_us About Us
++
+ #unfilter emptyLines
+diff --git a/browser/locales/generic/profile/bookmarks.html.in b/browser/locales/generic/profile/bookmarks.html.in
+index 2d3c7b40f5..a0fc520c86 100644
+--- a/browser/locales/generic/profile/bookmarks.html.in
++++ b/browser/locales/generic/profile/bookmarks.html.in
+@@ -23,14 +23,12 @@
+     <dd>@bookmarks_toolbarfolder_description@
+ #ifndef NIGHTLY_BUILD
+         <dl>
+-            <p><dt><a href="https://www.mozilla.org/@AB_CD@/firefox/central/" icon="@firefox_icon@">@getting_started@</a></dt>
+         </dl>
+-    <p><dt><h3>@firefox_heading@</h3></dt>
++    <p><dt><h3>@ghostery_heading@</h3></dt>
+         <dl><p>
+-            <dt><a href="https://support.mozilla.org/@AB_CD@/products/firefox" icon="@firefox_icon@">@firefox_help@</a>
+-            <dt><a href="https://support.mozilla.org/@AB_CD@/kb/customize-firefox-controls-buttons-and-toolbars?utm_source=firefox-browser&utm_medium=default-bookmarks&utm_campaign=customize" icon="@firefox_icon@">@firefox_customize@</a>
+-            <dt><a href="https://www.mozilla.org/@AB_CD@/contribute/" icon="@mozilla_icon@">@firefox_community@</a>
+-            <dt><a href="https://www.mozilla.org/@AB_CD@/about/" icon="@mozilla_icon@">@firefox_about@</a>
++            <dt><a href="https://www.ghostery.com/support/">@ghostery_help@</a>
++            <dt><a href="https://www.ghostery.com/pricing/">@ghostery_plans@</a>
++            <dt><a href="https://www.ghostery.com/about-ghostery/">@ghostery_about_us@</a>
+         </dl>
+ #else
+         <dl>
+-- 
+2.28.0
+
