@@ -16,7 +16,7 @@ do
 
   security unlock-keychain -p cliqz cliqz
 
-  BUNDLE=$PKG_DIR/$APP_NAME.app
+  BUNDLE=$PKG_DIR/$PKG_NAME.app
   IDENTITY=$MAC_CERT_NAME
   BROWSER_ENTITLEMENTS_FILE=mozilla-release/security/mac/hardenedruntime/browser.production.entitlements.xml
   PLUGINCONTAINER_ENTITLEMENTS_FILE=mozilla-release/security/mac/hardenedruntime/plugin-container.production.entitlements.xml

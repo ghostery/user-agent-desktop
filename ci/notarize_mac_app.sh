@@ -5,7 +5,7 @@ PKG_DIR=ci/pkg
 ASC_USERNAME="$1"
 ASC_PASSWORD="$2"
 BUNDLE_ID="com.cliqz.desktopbrowser"
-BUNDLE_PKG="$APP_NAME.zip"
+BUNDLE_PKG="$PKG_NAME.zip"
 
 # create temporary files
 NOTARIZE_APP_LOG=$(mktemp -t notarize-app)
@@ -18,7 +18,7 @@ function finish {
 }
 trap finish EXIT
 
-zip -r "$BUNDLE_PKG" $PKG_DIR/$APP_NAME.app
+zip -r "$BUNDLE_PKG" "$PKG_DIR/$PKG_NAME.app"
 # submit app for notarization
 if xcrun altool --notarize-app --primary-bundle-id "$BUNDLE_ID" --username "$ASC_USERNAME" --password "$ASC_PASSWORD" --asc-provider EvidonInc -f "$BUNDLE_PKG" > "$NOTARIZE_APP_LOG" 2>&1; then
 	cat "$NOTARIZE_APP_LOG"
@@ -32,7 +32,7 @@ if xcrun altool --notarize-app --primary-bundle-id "$BUNDLE_ID" --username "$ASC
 
 			# once notarization is complete, run stapler and exit
 			if ! grep -q "Status: in progress" "$NOTARIZE_INFO_LOG"; then
-				xcrun stapler staple $PKG_DIR/$APP_NAME.app
+				xcrun stapler staple "$PKG_DIR/$PKG_NAME.app"
 				exit $?
 			fi
 		else
