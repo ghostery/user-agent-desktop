@@ -3,7 +3,7 @@
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 -brand-shorter-name = Ghostery
--brand-short-name = Ghostery Browser
+-brand-short-name = Ghostery
 -brand-full-name = Ghostery Browser
 -brand-product-name = Ghostery
 -vendor-short-name = Ghostery Inc

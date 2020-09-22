@@ -1,0 +1,23 @@
+From: Sam Macbeth <sam@cliqz.com>
+Date: Tue, 22 Sep 2020 11:50:13 +0200
+Subject: Hide 'Learn More' links in preferences
+
+---
+ browser/themes/shared/preferences/preferences.inc.css | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/browser/themes/shared/preferences/preferences.inc.css b/browser/themes/shared/preferences/preferences.inc.css
+index 5cf885eb30..4ab6cad1a4 100644
+--- a/browser/themes/shared/preferences/preferences.inc.css
++++ b/browser/themes/shared/preferences/preferences.inc.css
+@@ -135,6 +135,7 @@ button > hbox > label {
+ }
+ 
+ .learnMore {
++  display: none;
+   margin-inline-start: 0;
+   font-weight: normal;
+   white-space: nowrap;
+-- 
+2.28.0
+
