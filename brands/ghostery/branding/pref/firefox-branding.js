@@ -128,3 +128,5 @@ pref("extensions.webextensions.restrictedDomains", "accounts-static.cdn.mozilla.
 pref("app.support.baseURL", "https://get.ghosterybrowser.com/support/");
 pref("app.feedback.baseURL", "https://www.ghostery.com/support/");
 
+// Override settings server to our own one
+pref("services.settings.server", "https://get.ghosterybrowser.com/settings/v1");
