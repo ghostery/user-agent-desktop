@@ -125,5 +125,6 @@ pref("browser.newtabpage.activity-stream.asrouter.userprefs.cfr.addons", false);
 pref("extensions.webextensions.restrictedDomains", "accounts-static.cdn.mozilla.net,accounts.firefox.com,addons.cdn.mozilla.net,api.accounts.firefox.com,content.cdn.mozilla.net,discovery.addons.mozilla.org,install.mozilla.org,oauth.accounts.firefox.com,profile.accounts.firefox.com,support.mozilla.org,sync.services.mozilla.com");
 
 // Support and feedback URLs
-pref("app.support.baseURL", "https://www.ghostery.com/support/");
+pref("app.support.baseURL", "https://get.ghosterybrowser.com/support/");
 pref("app.feedback.baseURL", "https://www.ghostery.com/support/");
+
