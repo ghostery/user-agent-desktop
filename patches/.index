@@ -19,3 +19,4 @@
 0019-Fix-installer-trademark-info.patch
 0020-Allow-setting-service-url-to-be-overrided-by-prefs.patch
 0021-Manual-override-of-search-engine-list.patch
+0022-Firefox-profile-import.patch
