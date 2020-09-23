@@ -17,3 +17,4 @@
 0017-Update-uninstaller-survey-URL.patch
 0018-Update-strings-for-windows-module-manifest.patch
 0019-Fix-installer-trademark-info.patch
+0020-Allow-setting-service-url-to-be-overrided-by-prefs.patch
