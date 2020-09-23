@@ -1,0 +1,24 @@
+From: Sam Macbeth <sam@cliqz.com>
+Date: Wed, 23 Sep 2020 13:57:14 +0200
+Subject: Fix installer trademark info
+
+---
+ browser/installer/windows/nsis/defines.nsi.in | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/browser/installer/windows/nsis/defines.nsi.in b/browser/installer/windows/nsis/defines.nsi.in
+index 4c7fb2671e..2cb441cd19 100644
+--- a/browser/installer/windows/nsis/defines.nsi.in
++++ b/browser/installer/windows/nsis/defines.nsi.in
+@@ -146,7 +146,7 @@ VIProductVersion "1.0.0.0"
+ VIAddVersionKey "ProductName"     "${BrandShortName}"
+ VIAddVersionKey "CompanyName"     "${CompanyName}"
+ #ifdef MOZ_OFFICIAL_BRANDING
+-VIAddVersionKey "LegalTrademarks" "${BrandShortName} is a Trademark of The Mozilla Foundation."
++VIAddVersionKey "LegalTrademarks" "${BrandShortName} is a Trademark of ${CompanyName}."
+ #endif
+ VIAddVersionKey "LegalCopyright"  "${CompanyName}"
+ VIAddVersionKey "FileVersion"     "${AppVersion}"
+-- 
+2.28.0
+
