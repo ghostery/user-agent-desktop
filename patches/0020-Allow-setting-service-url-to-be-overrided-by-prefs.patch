@@ -1,0 +1,26 @@
+From: Sam Macbeth <sam@cliqz.com>
+Date: Wed, 23 Sep 2020 17:02:37 +0200
+Subject: Allow setting service url to be overrided by prefs
+
+---
+ services/settings/Utils.jsm | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
+
+diff --git a/services/settings/Utils.jsm b/services/settings/Utils.jsm
+index 66df850904..6156ed7694 100644
+--- a/services/settings/Utils.jsm
++++ b/services/settings/Utils.jsm
+@@ -59,9 +59,7 @@ var Utils = {
+       Ci.nsIEnvironment
+     );
+     const isXpcshell = env.exists("XPCSHELL_TEST_PROFILE_DIR");
+-    return AppConstants.RELEASE_OR_BETA && !Cu.isInAutomation && !isXpcshell
+-      ? "https://firefox.settings.services.mozilla.com/v1"
+-      : gServerURL;
++    return gServerURL;
+   },
+ 
+   CHANGES_PATH: "/buckets/monitor/collections/changes/records",
+-- 
+2.28.0
+
