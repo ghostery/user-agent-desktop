@@ -10,7 +10,7 @@
 # instead of BrandFullName and typically should not be modified.
 !define BrandFullNameInternal "Ghostery Browser"
 !define BrandFullName         "Ghostery Browser"
-!define CompanyName           "ghostery.com"
+!define CompanyName           "Ghostery Inc"
 !define URLInfoAbout          "https://www.ghostery.com"
 !define HelpLink              "https://www.ghostery.com/support/"
 
