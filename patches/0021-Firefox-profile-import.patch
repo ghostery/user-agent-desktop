@@ -3,12 +3,12 @@ Date: Thu, 17 Sep 2020 15:36:45 +0200
 Subject: Firefox profile import
 
 ---
- .../migration/FirefoxProfileMigrator.jsm      | 324 +++++++++++++++++-
+ .../migration/FirefoxProfileMigrator.jsm      | 335 +++++++++++++++++-
  browser/components/migration/moz.build        |   5 +-
- 2 files changed, 312 insertions(+), 17 deletions(-)
+ 2 files changed, 323 insertions(+), 17 deletions(-)
 
 diff --git a/browser/components/migration/FirefoxProfileMigrator.jsm b/browser/components/migration/FirefoxProfileMigrator.jsm
-index bba617374f..bf9dbda351 100644
+index bba617374f..eddecbe584 100644
 --- a/browser/components/migration/FirefoxProfileMigrator.jsm
 +++ b/browser/components/migration/FirefoxProfileMigrator.jsm
 @@ -17,6 +17,7 @@ const { MigrationUtils, MigratorPrototype } = ChromeUtils.import(
@@ -170,7 +170,7 @@ index bba617374f..bf9dbda351 100644
  
    // Surely data cannot be imported from the current profile.
    if (sourceProfileDir.equals(currentProfileDir)) {
-@@ -153,6 +252,199 @@ FirefoxProfileMigrator.prototype._getResourcesInternal = function(
+@@ -153,6 +252,210 @@ FirefoxProfileMigrator.prototype._getResourcesInternal = function(
      Services.prefs.savePrefFile(newPrefsFile);
    }
  
@@ -288,9 +288,19 @@ index bba617374f..bf9dbda351 100644
 +          let rows = await db.execute(`SELECT name, value,
 +                                              host, path,
 +                                              expiry, isSecure,
-+                                              isHttpOnly
++                                              isHttpOnly,
++                                              schemeMap
 +                                        FROM moz_cookies`);
 +          for(let row of rows) {
++            let schemeType = Ci.nsICookie.SCHEME_UNSET;
++            switch (row.getResultByName("schemeMap")) {
++              case 1:
++                schemeType = Ci.nsICookie.SCHEME_HTTP;
++                break;
++              case 2:
++                schemeType = Ci.nsICookie.SCHEME_HTTPS;
++                break;
++            }
 +            Services.cookies.add(row.getResultByName("host"),
 +                                  row.getResultByName("path"),
 +                                  row.getResultByName("name"),
@@ -300,7 +310,8 @@ index bba617374f..bf9dbda351 100644
 +                                  false,
 +                                  row.getResultByName("expiry"),
 +                                  {},
-+                                  Ci.nsICookie.SAMESITE_UNSET);
++                                  Ci.nsICookie.SAMESITE_UNSET,
++                                  schemeType);
 +          }
 +        } catch(e) {
 +          Cu.reportError(e);
@@ -370,7 +381,7 @@ index bba617374f..bf9dbda351 100644
    let types = MigrationUtils.resourceTypes;
    let places = getFileResource(types.HISTORY, [
      "places.sqlite",
-@@ -370,7 +662,7 @@ FirefoxProfileMigrator.prototype._getResourcesInternal = function(
+@@ -370,7 +673,7 @@ FirefoxProfileMigrator.prototype._getResourcesInternal = function(
  };
  
  Object.defineProperty(FirefoxProfileMigrator.prototype, "startupOnlyMigrator", {
