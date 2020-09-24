@@ -130,3 +130,16 @@ pref("app.feedback.baseURL", "https://www.ghostery.com/support/");
 
 // Override settings server to our own one
 pref("services.settings.server", "https://get.ghosterybrowser.com/settings/v1");
+
+// Disable extension abuse reporting (#186)
+pref("extensions.abuseReport.enabled", false);
+
+// Disable about:welcome page
+pref("browser.aboutwelcome.enabled", false);
+
+// Disable activity stream (#131)
+pref("browser.library.activity-stream.enabled", false);
+pref("browser.newtabpage.activity-stream.discoverystream.enabled", false);
+
+// Disable corroborator (#141)
+pref("corroborator.enabled", false);

@@ -1,0 +1,27 @@
+From: Sam Macbeth <sam@cliqz.com>
+Date: Thu, 24 Sep 2020 14:05:20 +0200
+Subject: Hide Library -> Synced Tabs from the menu panel
+
+---
+ browser/themes/shared/menupanel.inc.css | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/browser/themes/shared/menupanel.inc.css b/browser/themes/shared/menupanel.inc.css
+index c919f32a14..7663ec536e 100644
+--- a/browser/themes/shared/menupanel.inc.css
++++ b/browser/themes/shared/menupanel.inc.css
+@@ -4,6 +4,11 @@
+ 
+ /* Menu panel and palette styles */
+ 
++/* Hide Library > Synced Tabs */
++#appMenu-library-remotetabs-button {
++  display: none;
++}
++
+ #appMenu-new-window-button {
+   list-style-image: url(chrome://browser/skin/new-window.svg);
+ }
+-- 
+2.28.0
+
