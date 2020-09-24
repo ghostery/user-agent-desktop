@@ -140,3 +140,6 @@ pref("browser.aboutwelcome.enabled", false);
 // Disable activity stream (#131)
 pref("browser.library.activity-stream.enabled", false);
 pref("browser.newtabpage.activity-stream.discoverystream.enabled", false);
+
+// Disable corroborator (#141)
+pref("corroborator.enabled", false);
