@@ -130,3 +130,6 @@ pref("app.feedback.baseURL", "https://www.ghostery.com/support/");
 
 // Override settings server to our own one
 pref("services.settings.server", "https://get.ghosterybrowser.com/settings/v1");
+
+// Disable extension abuse reporting (#186)
+pref("extensions.abuseReport.enabled", false);
