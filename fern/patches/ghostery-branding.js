@@ -9,44 +9,51 @@ async function getPathToSourceBranding() {
   return path.join(root, "brands", "ghostery", "branding");
 }
 
+async function getPathToSourceDevToolsIcons() {
+  const root = await getRoot();
+  return path.join(root, "brands", "ghostery", "devtools", "client", "themes", "images");
+}
+
 async function getPathToSourceWindowsInstaller() {
   const root = await getRoot();
   return path.join(root, "brands", "ghostery", "windows-installer", "7zSD.Win32.sfx");
 }
 
-async function getPathToGhosteryBranding() {
-  const root = await getRoot();
-  return path.join(root, "mozilla-release", "browser", "branding", "ghostery");
-}
 
-const windowsInstallerPathComponents = [
-  "other-licenses",
-  "7zstub",
-  "firefox",
-  "7zSD.Win32.sfx",
-];
+const brandingPathComponents = ["browser", "branding", "ghostery"];
+const windowsInstallerPathComponents = ["other-licenses", "7zstub", "firefox", "7zSD.Win32.sfx"];
+const devToolsIconsPathComponents = ["devtools", "client", "themes", "images"];
 
-async function getPathToWindowsInstallerIcon() {
+async function getTargetPath(pathComponents) {
   return path.join(
     await getRoot(),
     "mozilla-release",
-    ...windowsInstallerPathComponents
+    ...pathComponents,
   );
 }
 
 module.exports = {
   name: "Setup Ghostery branding",
-  paths: ["browser/branding/ghostery", path.join(...windowsInstallerPathComponents)],
+  paths: [
+    path.join(...brandingPathComponents),
+    path.join(...windowsInstallerPathComponents),
+    path.join(...devToolsIconsPathComponents),
+  ],
   skip: async () => false,
   apply: async () => {
     await fsExtra.copy(
       await getPathToSourceBranding(),
-      await getPathToGhosteryBranding()
+      await getTargetPath(brandingPathComponents)
     );
     // copy installer icon
-    return fsExtra.copy(
+    await fsExtra.copy(
       await getPathToSourceWindowsInstaller(),
-      await getPathToWindowsInstallerIcon()
+      await getTargetPath(windowsInstallerPathComponents)
+    );
+    // copy devtools icons
+    return fsExtra.copy(
+      await getPathToSourceDevToolsIcons(),
+      await getTargetPath(devToolsIconsPathComponents)
     );
   },
 };
