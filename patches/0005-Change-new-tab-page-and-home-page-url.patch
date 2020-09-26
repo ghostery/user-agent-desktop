@@ -3,14 +3,14 @@ Date: Thu, 10 Sep 2020 17:41:05 +0200
 Subject: Change new tab page and home page url
 
 ---
+ browser/app/profile/firefox.js  | 2 +-
  browser/base/content/browser.js | 1 +
  browser/modules/AboutNewTab.jsm | 2 +-
  browser/modules/HomePage.jsm    | 2 +-
- browser/app/profile/firefox.js | 2 +-
  4 files changed, 4 insertions(+), 3 deletions(-)
 
 diff --git a/browser/app/profile/firefox.js b/browser/app/profile/firefox.js
-index c73cf7982c..0dc87628be 100644
+index c73cf7982c..8f19a18df5 100644
 --- a/browser/app/profile/firefox.js
 +++ b/browser/app/profile/firefox.js
 @@ -243,7 +243,7 @@ pref("browser.defaultbrowser.notificationbar", false);
@@ -20,46 +20,46 @@ index c73cf7982c..0dc87628be 100644
 -pref("browser.startup.homepage",            "about:home");
 +pref("browser.startup.homepage",            "https://ui.customsearch.ai/hosted-page?customconfig=0cfcbc1f-6c1f-4008-9b5f-d56b1009e1f3&version=latest&market=en-US&q=");
  pref("browser.startup.homepage.abouthome_cache.enabled", false);
-
+ 
  // Whether we should skip the homepage when opening the first-run page
 diff --git a/browser/base/content/browser.js b/browser/base/content/browser.js
-index 8ddb9e5a28..76ba9b4025 100644
+index 8ddb9e5a28..0db8922d8f 100644
 --- a/browser/base/content/browser.js
 +++ b/browser/base/content/browser.js
 @@ -627,6 +627,7 @@ var gInitialPages = [
    "about:sessionrestore",
    "about:welcome",
    "about:newinstall",
-+  "https://ui.customsearch.ai/hosted-page?customconfig=0cfcbc1f-6c1f-4008-9b5f-d56b1009e1f3&version=latest&market=en-US&q=
++  "https://ui.customsearch.ai/hosted-page",
  ];
-
+ 
  function isInitialPage(url) {
 diff --git a/browser/modules/AboutNewTab.jsm b/browser/modules/AboutNewTab.jsm
-index e7d4491840..c3326a8cbd 100644
+index e7d4491840..28f5878e4d 100644
 --- a/browser/modules/AboutNewTab.jsm
 +++ b/browser/modules/AboutNewTab.jsm
 @@ -19,7 +19,7 @@ XPCOMUtils.defineLazyModuleGetters(this, {
      "resource://gre/modules/remotepagemanager/RemotePageManagerParent.jsm",
  });
-
+ 
 -const ABOUT_URL = "about:newtab";
 +const ABOUT_URL = "https://ui.customsearch.ai/hosted-page?customconfig=0cfcbc1f-6c1f-4008-9b5f-d56b1009e1f3&version=latest&market=en-US&q=";
  const PREF_ACTIVITY_STREAM_DEBUG = "browser.newtabpage.activity-stream.debug";
  const TOPIC_APP_QUIT = "quit-application-granted";
  const BROWSER_READY_NOTIFICATION = "sessionstore-windows-restored";
 diff --git a/browser/modules/HomePage.jsm b/browser/modules/HomePage.jsm
-index c903787fde..52b5b61ee5 100644
+index c903787fde..b73ce973bc 100644
 --- a/browser/modules/HomePage.jsm
 +++ b/browser/modules/HomePage.jsm
 @@ -20,7 +20,7 @@ XPCOMUtils.defineLazyModuleGetters(this, {
  });
-
+ 
  const kPrefName = "browser.startup.homepage";
 -const kDefaultHomePage = "about:home";
 +const kDefaultHomePage = "https://ui.customsearch.ai/hosted-page?customconfig=0cfcbc1f-6c1f-4008-9b5f-d56b1009e1f3&version=latest&market=en-US&q=";
  const kExtensionControllerPref =
    "browser.startup.homepage_override.extensionControlled";
  const kHomePageIgnoreListId = "homepage-urls";
---
+-- 
 2.28.0
 
