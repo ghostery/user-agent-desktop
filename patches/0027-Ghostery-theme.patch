@@ -1,0 +1,117 @@
+From: Krzysztof Jan Modras <chrmod@chrmod.net>
+Date: Tue, 29 Sep 2020 15:04:41 +0200
+Subject: Ghostery theme
+
+---
+ toolkit/modules/LightweightThemeConsumer.jsm  |  2 +-
+ .../background-gradient-dark.svg              |  1 +
+ .../default-theme/background-gradient.svg     |  1 +
+ .../extensions/default-theme/manifest.json    | 39 ++++++++-----------
+ .../extensions/default-theme/moz.build        |  2 +
+ 5 files changed, 22 insertions(+), 23 deletions(-)
+ create mode 100644 toolkit/mozapps/extensions/default-theme/background-gradient-dark.svg
+ create mode 100644 toolkit/mozapps/extensions/default-theme/background-gradient.svg
+
+diff --git a/toolkit/modules/LightweightThemeConsumer.jsm b/toolkit/modules/LightweightThemeConsumer.jsm
+index 198d9a7331..68780513ce 100644
+--- a/toolkit/modules/LightweightThemeConsumer.jsm
++++ b/toolkit/modules/LightweightThemeConsumer.jsm
+@@ -6,7 +6,7 @@ var EXPORTED_SYMBOLS = ["LightweightThemeConsumer"];
+ 
+ const { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
+ 
+-const DEFAULT_THEME_ID = "default-theme@mozilla.org";
++const DEFAULT_THEME_ID = "__DOES_NOT_APPLY__"; // in Ghostery Browser default theme is a ligheweight theme
+ 
+ ChromeUtils.defineModuleGetter(
+   this,
+diff --git a/toolkit/mozapps/extensions/default-theme/background-gradient-dark.svg b/toolkit/mozapps/extensions/default-theme/background-gradient-dark.svg
+new file mode 100644
+index 0000000000..02f0cd9863
+--- /dev/null
++++ b/toolkit/mozapps/extensions/default-theme/background-gradient-dark.svg
+@@ -0,0 +1 @@
++<svg height="200" viewBox="0 0 3000 200" width="3000" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><linearGradient id="a" x1="13.300292%" x2="100%" y1="49.83051%" y2="50.191859%"><stop offset="0" stop-color="#5f7c86"/><stop offset="1" stop-color="#050505" stop-opacity=".987352"/></linearGradient><path d="m0 0h3000v200h-3000z" fill="url(#a)"/></svg>
+\ No newline at end of file
+diff --git a/toolkit/mozapps/extensions/default-theme/background-gradient.svg b/toolkit/mozapps/extensions/default-theme/background-gradient.svg
+new file mode 100644
+index 0000000000..850918c938
+--- /dev/null
++++ b/toolkit/mozapps/extensions/default-theme/background-gradient.svg
+@@ -0,0 +1 @@
++<svg height="200" viewBox="0 0 3000 200" width="3000" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><linearGradient id="a" x1="0%" x2="100%" y1="49.777778%" y2="50.187103%"><stop offset="0" stop-color="#720174"/><stop offset="1" stop-color="#00aef0"/></linearGradient><path d="m0 0h3000v200h-3000z" fill="url(#a)"/></svg>
+\ No newline at end of file
+diff --git a/toolkit/mozapps/extensions/default-theme/manifest.json b/toolkit/mozapps/extensions/default-theme/manifest.json
+index 8bb30977a6..2ff090c09f 100644
+--- a/toolkit/mozapps/extensions/default-theme/manifest.json
++++ b/toolkit/mozapps/extensions/default-theme/manifest.json
+@@ -7,36 +7,31 @@
+     }
+   },
+ 
+-  "name": "Default",
+-  "description": "A theme with the operating system color scheme.",
+-  "author": "Mozilla",
++  "name": "Ghostery Browser Theme",
++  "description": "",
++  "author": "Ghostery",
+   "version": "1.0",
+ 
+   "icons": {"32": "icon.svg"},
+ 
+   "theme": {
++    "images": {
++      "theme_frame": "background-gradient.svg"
++    },
++    "colors": {
++      "frame": "rgba(114, 1, 116, 1)",
++      "tab_background_text": "rgba(255, 255, 255, 1)",
++      "toolbar": "rgba(0, 0, 0, 0.5)"
++    }
+   },
+-
+   "dark_theme": {
++    "images": {
++      "theme_frame": "background-gradient-dark.svg"
++    },
+     "colors": {
+-      "tab_background_text": "rgb(249, 249, 250)",
+-      "icons": "rgb(249, 249, 250, 0.7)",
+-      "frame": "hsl(240, 5%, 5%)",
+-      "popup": "#4a4a4f",
+-      "popup_text": "rgb(249, 249, 250)",
+-      "popup_border": "#27272b",
+-      "tab_line": "#0a84ff",
+-      "toolbar": "hsl(240, 1%, 20%)",
+-      "toolbar_bottom_separator": "hsl(240, 5%, 5%)",
+-      "toolbar_field": "rgb(71, 71, 73)",
+-      "toolbar_field_border": "rgba(249, 249, 250, 0.2)",
+-      "toolbar_field_separator": "#5F6670",
+-      "toolbar_field_text": "rgb(249, 249, 250)",
+-      "ntp_background": "#2A2A2E",
+-      "ntp_text": "rgb(249, 249, 250)",
+-      "sidebar": "#38383D",
+-      "sidebar_text": "rgb(249, 249, 250)",
+-      "sidebar_border": "rgba(255, 255, 255, 0.1)"
++      "frame": "rgba(95, 124, 134, 1)",
++      "tab_background_text": "rgba(255, 255, 255, 1)",
++      "toolbar": "rgba(0, 0, 0, 0.6)"
+     }
+   }
+ }
+diff --git a/toolkit/mozapps/extensions/default-theme/moz.build b/toolkit/mozapps/extensions/default-theme/moz.build
+index 220d214d66..6f1df40912 100644
+--- a/toolkit/mozapps/extensions/default-theme/moz.build
++++ b/toolkit/mozapps/extensions/default-theme/moz.build
+@@ -5,6 +5,8 @@
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ 
+ EXTRA_JS_MODULES.themes['default'] += [
++    'background-gradient-dark.svg',
++    'background-gradient.svg',
+     'icon.svg',
+     'manifest.json',
+ ]
+-- 
+2.28.0
+
