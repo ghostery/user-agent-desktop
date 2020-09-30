@@ -30,7 +30,7 @@ index 8ddb9e5a28..0db8922d8f 100644
    "about:sessionrestore",
    "about:welcome",
    "about:newinstall",
-+  "https://ui.customsearch.ai/hosted-page",
++  "https://ghostery.github.io/user-agent-desktop/",
  ];
  
  function isInitialPage(url) {
