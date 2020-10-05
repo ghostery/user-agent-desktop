@@ -77,12 +77,12 @@ index 0000000000..a923fdb002
 +    "search_provider": {
 +      "name": "Ghostery",
 +      "search_url": "https://ui.customsearch.ai/hosted-page",
-+      "search_form": "https://ui.customsearch.ai/hosted-page?customconfig=0cfcbc1f-6c1f-4008-9b5f-d56b1009e1f3&version=latest&market=en-US&q=",
++      "search_form": "https://ui.customsearch.ai/hosted-page?customconfig=b6879739-efa8-4d5b-af72-19dcde4d8654&version=latest&market=en-US&q=",
 +      "search_url_get_params": "q={searchTerms}",
 +      "params": [
 +        {
 +          "name": "customconfig",
-+          "value": "0cfcbc1f-6c1f-4008-9b5f-d56b1009e1f3"
++          "value": "b6879739-efa8-4d5b-af72-19dcde4d8654"
 +        },
 +        {
 +          "name": "version",
