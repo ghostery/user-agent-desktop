@@ -3,14 +3,28 @@ Date: Wed, 30 Sep 2020 12:22:19 +0200
 Subject: Move Ghostery icon to UrlBar
 
 ---
- browser/components/customizableui/CustomizableUI.jsm | 6 ++++++
- 1 file changed, 6 insertions(+)
+ .../components/customizableui/CustomizableUI.jsm    | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
 diff --git a/browser/components/customizableui/CustomizableUI.jsm b/browser/components/customizableui/CustomizableUI.jsm
-index 517273b89c..8ee7598c52 100644
+index 517273b89c..039c1ac657 100644
 --- a/browser/components/customizableui/CustomizableUI.jsm
 +++ b/browser/components/customizableui/CustomizableUI.jsm
-@@ -1440,6 +1440,12 @@ var CustomizableUIInternal = {
+@@ -1007,7 +1007,12 @@ var CustomizableUIInternal = {
+         if (widget) {
+           widget.currentArea = aArea;
+         }
+-        this.insertWidgetBefore(node, currentNode, container, aArea);
++        if (node.getAttribute("data-extensionid") === "firefox@ghostery.com") {
++          const container = window.document.getElementById("urlbar-input-container");
++          container.insertAdjacentElement('afterbegin', node);
++        } else {
++          this.insertWidgetBefore(node, currentNode, container, aArea);
++        }
+         if (gResetting) {
+           this.notifyListeners("onWidgetReset", node, container);
+         } else if (gUndoResetting) {
+@@ -1440,6 +1445,12 @@ var CustomizableUIInternal = {
        this.ensureButtonContextMenu(widgetNode, aAreaNode);
      }
  
