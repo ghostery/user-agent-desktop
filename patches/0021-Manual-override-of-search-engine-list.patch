@@ -55,7 +55,7 @@ new file mode 100644
 index 0000000000..a923fdb002
 --- /dev/null
 +++ b/browser/components/search/extensions/ghostery/manifest.json
-@@ -0,0 +1,41 @@
+@@ -0,0 +1,28 @@
 +{
 +  "name": "Ghostery",
 +  "description": "Search Ghostery",
@@ -76,23 +76,10 @@ index 0000000000..a923fdb002
 +  "chrome_settings_overrides": {
 +    "search_provider": {
 +      "name": "Ghostery",
-+      "search_url": "https://ui.customsearch.ai/hosted-page",
-+      "search_form": "https://ui.customsearch.ai/hosted-page?customconfig=b6879739-efa8-4d5b-af72-19dcde4d8654&version=latest&market=en-US&q=",
++      "search_url": "https://ghosterysearch.com/search",
++      "search_form": "https://ghosterysearch.com/search?q=",
 +      "search_url_get_params": "q={searchTerms}",
-+      "params": [
-+        {
-+          "name": "customconfig",
-+          "value": "b6879739-efa8-4d5b-af72-19dcde4d8654"
-+        },
-+        {
-+          "name": "version",
-+          "value": "latest"
-+        },
-+        {
-+          "name": "market",
-+          "value": "en-US"
-+        }
-+      ]
++      "params": []
 +    }
 +  }
 +}
