@@ -18,7 +18,7 @@ index c73cf7982c..8f19a18df5 100644
  // The behavior of option 3 is detailed at: http://wiki.mozilla.org/Session_Restore
  pref("browser.startup.page",                1);
 -pref("browser.startup.homepage",            "about:home");
-+pref("browser.startup.homepage",            "https://ghostery.github.io/user-agent-desktop/");
++pref("browser.startup.homepage",            "https://ghosterysearch.com/");
  pref("browser.startup.homepage.abouthome_cache.enabled", false);
  
  // Whether we should skip the homepage when opening the first-run page
@@ -30,7 +30,7 @@ index 8ddb9e5a28..0db8922d8f 100644
    "about:sessionrestore",
    "about:welcome",
    "about:newinstall",
-+  "https://ghostery.github.io/user-agent-desktop/",
++  "https://ghosterysearch.com/",
  ];
  
  function isInitialPage(url) {
@@ -43,7 +43,7 @@ index e7d4491840..28f5878e4d 100644
  });
  
 -const ABOUT_URL = "about:newtab";
-+const ABOUT_URL = "https://ghostery.github.io/user-agent-desktop/";
++const ABOUT_URL = "https://ghosterysearch.com/";
  const PREF_ACTIVITY_STREAM_DEBUG = "browser.newtabpage.activity-stream.debug";
  const TOPIC_APP_QUIT = "quit-application-granted";
  const BROWSER_READY_NOTIFICATION = "sessionstore-windows-restored";
@@ -56,7 +56,7 @@ index c903787fde..b73ce973bc 100644
  
  const kPrefName = "browser.startup.homepage";
 -const kDefaultHomePage = "about:home";
-+const kDefaultHomePage = "https://ghostery.github.io/user-agent-desktop/";
++const kDefaultHomePage = "https://ghosterysearch.com/";
  const kExtensionControllerPref =
    "browser.startup.homepage_override.extensionControlled";
  const kHomePageIgnoreListId = "homepage-urls";
