@@ -93,7 +93,7 @@ async function use(addons) {
     ];
   }));
 
-  return new Listr(tasks.flat());
+  return new Listr([].concat(...tasks));
 }
 
 module.exports = {
