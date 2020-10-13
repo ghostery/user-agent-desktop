@@ -10,11 +10,11 @@ module.exports = (program) => {
     .description("Reset mozilla-folder to initial state (WARNING: make sure you saved all your changes)")
     .action(
       async () => {
-        let { firefox, ghostery } = await workspace.load();
+        let { firefox } = await workspace.load();
 
-        if (firefox === undefined || ghostery === undefined) {
+        if (firefox === undefined) {
           console.error(
-            "Firefox or Ghostery version missing from workspace, make sure to run 'fern.js use'."
+            "Firefox version missing from workspace, make sure to run 'fern.js use'."
           );
           process.exit(1);
         }

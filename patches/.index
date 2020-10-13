@@ -1,6 +1,6 @@
 0001-Fix-Mac-packaging-when-using-a-non-firefox-app-name.patch
 0002-Specify-correct-executable-in-Mac-Info.plist.patch
-0003-Include-ghostery-extension-in-browser-bundle.patch
+0003-Include-addons-in-browser-bundle.patch
 0004-Set-update-URL.patch
 0005-Change-new-tab-page-and-home-page-url.patch
 0006-Update-text-in-about-dialog.patch

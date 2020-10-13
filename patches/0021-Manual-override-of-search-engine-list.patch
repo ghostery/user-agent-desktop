@@ -3,87 +3,15 @@ Date: Wed, 23 Sep 2020 16:30:43 +0200
 Subject: Manual override of search engine list
 
 ---
- .../search/extensions/ghostery/favicon.ico    | Bin 0 -> 1672 bytes
- .../search/extensions/ghostery/manifest.json  |  41 ++++++++++++
  .../search/extensions/tailcat/favicon.ico     | Bin 0 -> 15086 bytes
  .../search/extensions/tailcat/manifest.json   |  29 ++++++++
  .../search/SearchEngineSelector.jsm           |  62 ++++++++++++++++++
- 5 files changed, 132 insertions(+)
+ 3 files changed, 91 insertions(+)
  create mode 100644 browser/components/search/extensions/ghostery/favicon.ico
  create mode 100644 browser/components/search/extensions/ghostery/manifest.json
  create mode 100644 browser/components/search/extensions/tailcat/favicon.ico
  create mode 100644 browser/components/search/extensions/tailcat/manifest.json
 
-diff --git a/browser/components/search/extensions/ghostery/favicon.ico b/browser/components/search/extensions/ghostery/favicon.ico
-new file mode 100644
-index 0000000000000000000000000000000000000000..a8b38a2908fb8bb7bd3cd3f90d7902d9f448ca79
-GIT binary patch
-literal 1672
-zcmb_bdrXs86u)hOLd!!|UelpP9#&hrf{2Xi5NH(;5NliNlFb%qkqKJ0Q&Hy%L5(^e
-zQE?^{<t0HLr3Dcv3=oj;9wJ3h?4XEKQT+O~fNg2J5|_m#x<8iPoO{o?=lsq&_awi2
-zDlT@D9cD2G0ALpxL8Y5Deqmdq%qO+*bh}wuB!|X?0w6t)o#$FE1QR3ZF#sI)0YH=m
-zfX?g^JqO@>3IH!T00dtJz*TTfwsjo<$m4O*44N4L#41o>76^zTAb~*z3~J^U><`M{
-z$PY%}Ip3A~7r=iDeXQ)q{O@-$&-K^aR3Dz}eenNnBgD|6DwT~C0_6}!s&c4OZSR`t
-zo}MqC)OpL`6*5>nsq31akMEoz)WeDygUMvd8PlRFAd3p<#<=#0#^57^6MJWu)WGgF
-zu+e1V^v)iZ&rNBKE9+rmgZh=$cyMrz-#5Fg79N{1kQ&s=SwsG~&Qb#1RO-fO46Ewl
-zgx*;>JYV}<PppUQUg!r^^PHYpq!@CkR@qgm>?>8y)hd)2`l?0aR;>bMP<X2bErDol
-znnI<H@~hgT4*pr8wU$5yO5GoG#_T6rddEyaliI&gy}4a;a^&r(#?U;acfPG!UJJLr
-z((8>TNN0SbGinW{5w#(xN$ph!tM$gW22)^@8Y6{5S~PnH<_<iVi@c|?m`Hau^YDO>
-z9=mOUkPB<kYDV%-W`H9CK{(p_Vs8HJy&s9l^s$K_a2{eqmAAXB8FQn^_G>NIp*>s^
-zb-b_)Wp$^)8eP|9W8*Y1>_(dQXB#<)tGURf3eP>hQ@U{#-17SyeBOCFHbt=Irvfij
-ze(`rVmACAcWl=0M>W9|Pn42OJHgBSy)Q@1h%@?#VGKPj8N7_5MJ34QRL7TtKl1OSO
-zBd9x(BSLNTv5zJ1Ui$4<#}It0=;q}FFVgZ=K4h}Ts+Hcpt(iW(9W9>|<E_vz<}|6S
-z1MVS3bt!of8)(e4$89`*YtI*NJz*7)&0a+2-X9>hf?yfR8mnpB5H{(Y&E)Zz@->tA
-z>y3!fPh7%dB-bCwbSFwm+KZmKP##7&@-5CtZ7%GPKN?af?vKcyC=?H{0k@)ioJvHe
-zXo$kRk_vZ%JOojks`R>$>A$+zorHYGvAmRlDT>YsbdTr-M2RHJ?QR0kjzz%{9t3iS
-zQt@&$i<5|Da*`cbl;qt<^bKMy_R(WkGLk3|ByD8Hu^JC`4)B=F{Z}g3HnS^anQ$Mo
-z^r5JQ`&!1F>Xxn?mh8oO*_IBaDl%!I@}acH@yv|ob2(?EGVa6a^+)DjhX|nlanDWC
-zy1cTN!>U=_iY+<2L-yanlx9|z?8o-i)a+m%lVTQ6P%LBZ``yGcp|(rD%Q;T#@3}Lp
-zDyY60hv+yfI9Ixakx{?%Q`XqH4Xe3N>3!~-j2efa;O$2ZT>@YN7aU0$;#wyQ%PP@D
-zYz>BNsqonFC0m%*B|ticyI5W6msCR5j-3&VTZDq=ZiY&BY;I=l+brr$uks|nq;$jO
-z!ou3Y+ZtOJE1#n1P=1`E6Uh(KzPk2wbY1Q*Fjmx;$nQ%^qCRa5ODo7vAi7++*iVmC
-zb6f(8Ex_gKC~3P>-ISR*-a;B%n8X$Gf)n@g%nJBZ{MPzX{C)ib7=CMl{l5tITT7()
-z1yd;HyVCRik&w10DTSZ@@r2R9yYA+M_`?jgkj_1b7wp@^Pf6wBh3NtwK1Co*1mMuM
-z3E0+pFN;9v+S1(<IY|d7Pb@hRi}S>7zT||$;i;m4)+Cf?6$9TrJlN6J)Am^#x?2>H
-a8$|{$T^)sR*qUr}3lK?*rHaEinSTPP`z0m-
-
-literal 0
-HcmV?d00001
-
-diff --git a/browser/components/search/extensions/ghostery/manifest.json b/browser/components/search/extensions/ghostery/manifest.json
-new file mode 100644
-index 0000000000..a923fdb002
---- /dev/null
-+++ b/browser/components/search/extensions/ghostery/manifest.json
-@@ -0,0 +1,28 @@
-+{
-+  "name": "Ghostery",
-+  "description": "Search Ghostery",
-+  "manifest_version": 2,
-+  "version": "1.0",
-+  "applications": {
-+    "gecko": {
-+      "id": "ghostery@search.mozilla.org"
-+    }
-+  },
-+  "hidden": true,
-+  "icons": {
-+    "16": "favicon.ico"
-+  },
-+  "web_accessible_resources": [
-+    "favicon.ico"
-+  ],
-+  "chrome_settings_overrides": {
-+    "search_provider": {
-+      "name": "Ghostery",
-+      "search_url": "https://ghosterysearch.com/search",
-+      "search_form": "https://ghosterysearch.com/search?q=",
-+      "search_url_get_params": "q={searchTerms}",
-+      "params": []
-+    }
-+  }
-+}
-+
 diff --git a/browser/components/search/extensions/tailcat/favicon.ico b/browser/components/search/extensions/tailcat/favicon.ico
 new file mode 100644
 index 0000000000000000000000000000000000000000..fde51f907c563e396d9f614b186289b0ebd6744e
@@ -169,7 +97,7 @@ index 5a6992e0c9..5abcf6f003 100644
 @@ -94,6 +94,68 @@ class SearchEngineSelector {
      this._changeListener = listener;
    }
- 
+
 +  get _configuration() {
 +    return [{
 +      "appliesTo": [{
@@ -235,6 +163,6 @@ index 5a6992e0c9..5abcf6f003 100644
    /**
     * Handles getting the configuration from remote settings.
     */
--- 
+--
 2.28.0
 

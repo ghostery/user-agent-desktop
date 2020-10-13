@@ -25,14 +25,14 @@ async function getVersionDisplay(version) {
   return `${version} (${commitHash})`;
 }
 
-module.exports = {
+module.exports = ({ app: version }) => ({
   name: "Setup app version",
   paths: ["browser/config/version.txt", "browser/config/version_display.txt"],
-  skip: async ({ app: version }) =>
+  skip: async () =>
     (await fs.readFile(getPathToVersion(), "utf-8")) === version &&
     (await fs.readFile(getPathToVersionDisplay(), "utf-8")) ===
       (await getVersionDisplay(version)),
-  apply: async ({ app: version }) => {
+  apply: async () => {
     await fs.writeFile(getPathToVersion(), version, "utf-8");
     await fs.writeFile(
       getPathToVersionDisplay(),
@@ -40,4 +40,4 @@ module.exports = {
       "utf-8"
     );
   },
-};
+});

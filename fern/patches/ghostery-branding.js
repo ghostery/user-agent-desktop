@@ -32,7 +32,7 @@ async function getTargetPath(pathComponents) {
   );
 }
 
-module.exports = {
+module.exports = () => ({
   name: "Setup Ghostery branding",
   paths: [
     path.join(...brandingPathComponents),
@@ -56,4 +56,4 @@ module.exports = {
       await getTargetPath(devToolsIconsPathComponents)
     );
   },
-};
+});
