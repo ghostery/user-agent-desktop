@@ -23,7 +23,7 @@ async function applyManagedPatches(workspace) {
       const patch = patchFactory(workspace);
       return {
         title: `[patch] ${patch.name}`,
-        skip: () => patch.skip,
+        skip: () => patch.skip(),
         task: async () => {
           await patch.apply();
           await commitChanges(patch);

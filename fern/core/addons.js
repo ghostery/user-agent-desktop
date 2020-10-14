@@ -1,5 +1,4 @@
 const stream = require("stream");
-const { promisify } = require("util");
 const path = require("path");
 const fs = require("fs");
 
@@ -42,11 +41,20 @@ async function use(addons) {
       {
         title: `Download ${addonName}`,
         skip: () => fileExists(archive),
-        task: () =>
-          promisify(stream.pipeline)(
+        task: () => new Promise((resolve, reject) => {
+          stream.pipeline(
             got.stream(url),
-            fs.createWriteStream(archive)
-          ),
+            fs.createWriteStream(archive),
+            (err) => {
+              if (err) {
+                fs.unlinkSync(archive);
+                reject(err);
+              } else {
+                resolve();
+              }
+            }
+          )
+        })
       },
       {
         title: `Extract ${addonName}`,

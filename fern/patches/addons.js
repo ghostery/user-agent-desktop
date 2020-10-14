@@ -22,7 +22,7 @@ module.exports = (workspace) => {
   return {
     name: "Setup Addons",
     paths: addonNames.map(addonName => `browser/extensions/${addonName}`),
-    skip: false,
+    skip: () => false,
     apply: async () => {
         return Promise.all(addonNames.map(async addonName => {
           return fsExtra.copy(
