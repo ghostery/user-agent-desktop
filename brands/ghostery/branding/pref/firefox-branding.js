@@ -143,3 +143,6 @@ pref("browser.newtabpage.activity-stream.discoverystream.enabled", false);
 
 // Disable corroborator (#141)
 pref("corroborator.enabled", false);
+
+// Disable password breach alerts
+pref("signon.management.page.breach-alerts.enabled", false);
