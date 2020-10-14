@@ -5,12 +5,12 @@
   "icon-size": 80,
   "window": {
     "size": {
-        "width": 528,
-        "height": 360
+        "width": 575,
+        "height": 400
     }
   },
   "contents": [
-    { "x": 418, "y": 180, "type": "link", "path": "/Applications" },
-    { "x": 110, "y": 180, "type": "file", "path": "pkg/Ghostery Browser.app" }
+    { "x": 429, "y": 210, "type": "link", "path": "/Applications" },
+    { "x": 143, "y": 210, "type": "file", "path": "pkg/Ghostery Browser.app" }
   ]
 }
