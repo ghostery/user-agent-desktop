@@ -16,7 +16,7 @@ async function getPathToTargetCertificates() {
   return path.join(root, "mozilla-release", ...updaterPathComponents);
 }
 
-module.exports = {
+module.exports = () => ({
   name: "Setup certificates",
   paths: [path.join(...updaterPathComponents)],
   skip: async () => false,
@@ -26,4 +26,4 @@ module.exports = {
       await getPathToTargetCertificates()
     );
   },
-};
+});

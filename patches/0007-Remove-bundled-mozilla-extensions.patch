@@ -12,14 +12,14 @@ index 974c48c612..0d1e95fa22 100644
 +++ b/browser/extensions/moz.build
 @@ -5,9 +5,6 @@
  # file, You can obtain one at http://mozilla.org/MPL/2.0/.
- 
+
  DIRS += [
 -    'doh-rollout',
 -    'formautofill',
 -    'screenshots',
      'webcompat',
      'report-site-issue',
-     'ghostery'
--- 
+     'ghostery',
+--
 2.28.0
 

@@ -3,12 +3,12 @@ const Listr = require("listr");
 
 const version = require("../patches/app-version.js");
 const branding = require('../patches/ghostery-branding.js');
-const ghostery = require('../patches/ghostery-extension.js');
+const addons = require('../patches/addons.js');
 const certificates = require('../patches/certificates.js');
 
 const { withCwd } = require("./utils.js");
 
-const PATCHES = [version, ghostery, branding, certificates];
+const PATCHES = [version, addons, branding, certificates];
 
 async function commitChanges(patch) {
   await withCwd("mozilla-release", async () => {
@@ -19,14 +19,17 @@ async function commitChanges(patch) {
 
 async function applyManagedPatches(workspace) {
   return new Listr(
-    PATCHES.map((patch) => ({
-      title: `[patch] ${patch.name}`,
-      skip: () => patch.skip(workspace),
-      task: async () => {
-        await patch.apply(workspace);
-        await commitChanges(patch);
-      },
-    }))
+    PATCHES.map(patchFactory => {
+      const patch = patchFactory(workspace);
+      return {
+        title: `[patch] ${patch.name}`,
+        skip: () => patch.skip(),
+        task: async () => {
+          await patch.apply();
+          await commitChanges(patch);
+        },
+      };
+    })
   );
 }
 

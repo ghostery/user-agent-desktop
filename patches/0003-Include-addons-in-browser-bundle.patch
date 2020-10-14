@@ -1,23 +1,24 @@
 From: Sam Macbeth <sam@cliqz.com>
 Date: Fri, 21 Aug 2020 13:35:37 +0200
-Subject: Include ghostery extension in browser bundle
+Subject: Include addons in browser bundle
 
 ---
- browser/extensions/moz.build | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ browser/extensions/moz.build | 4 ++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/browser/extensions/moz.build b/browser/extensions/moz.build
 index f71ece63c4..974c48c612 100644
 --- a/browser/extensions/moz.build
 +++ b/browser/extensions/moz.build
-@@ -9,5 +9,6 @@ DIRS += [
+@@ -9,5 +9,7 @@ DIRS += [
      'formautofill',
      'screenshots',
      'webcompat',
 -    'report-site-issue'
 +    'report-site-issue',
-+    'ghostery'
++    'ghostery',
++    'ghostery-search'
  ]
--- 
+--
 2.28.0
 
