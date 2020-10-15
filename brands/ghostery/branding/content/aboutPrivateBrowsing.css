@@ -1,0 +1,15 @@
+
+html.private {
+  /* TODO: Background logo */
+}
+
+.wordmark {
+  background: url("chrome://branding/content/ghostery-wordmark-white.svg") no-repeat center center;
+  width: 231px;
+  height: 68px;
+}
+
+.logo {
+  display: none;
+}
+

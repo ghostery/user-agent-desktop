@@ -23,6 +23,12 @@ async function getPathToSourceWindowsInstaller() {
 const brandingPathComponents = ["browser", "branding", "ghostery"];
 const windowsInstallerPathComponents = ["other-licenses", "7zstub", "firefox", "7zSD.Win32.sfx"];
 const devToolsIconsPathComponents = ["devtools", "client", "themes", "images"];
+const privateBrowsingIconPaths = [
+  ["browser", "themes","shared","icons","private-browsing.svg"],
+  ["browser", "themes","shared","icons","privateBrowsing.svg"],
+  ["browser", "themes", "shared", "privatebrowsing", "favicon.svg"],
+  ["browser", "themes", "shared", "privatebrowsing", "private-browsing.svg"]
+];
 
 async function getTargetPath(pathComponents) {
   return path.join(
@@ -35,10 +41,11 @@ async function getTargetPath(pathComponents) {
 module.exports = () => ({
   name: "Setup Ghostery branding",
   paths: [
-    path.join(...brandingPathComponents),
-    path.join(...windowsInstallerPathComponents),
-    path.join(...devToolsIconsPathComponents),
-  ],
+    brandingPathComponents,
+    windowsInstallerPathComponents,
+    devToolsIconsPathComponents,
+    ...privateBrowsingIconPaths
+  ].map(p => path.join(...p)),
   skip: async () => false,
   apply: async () => {
     await fsExtra.copy(
@@ -51,9 +58,16 @@ module.exports = () => ({
       await getTargetPath(windowsInstallerPathComponents)
     );
     // copy devtools icons
-    return fsExtra.copy(
+    await fsExtra.copy(
       await getPathToSourceDevToolsIcons(),
       await getTargetPath(devToolsIconsPathComponents)
     );
+    // copy private browser icon
+    return Promise.all(privateBrowsingIconPaths.map(async (iconPath) => {
+      return fsExtra.copy(
+        path.join(await getRoot(), "brands", "ghostery", "branding", "content", "private-browsing.svg"),
+        await getTargetPath(iconPath)
+      )
+    }));
   },
 });
