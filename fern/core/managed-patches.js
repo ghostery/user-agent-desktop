@@ -5,10 +5,11 @@ const version = require("../patches/app-version.js");
 const branding = require('../patches/ghostery-branding.js');
 const addons = require('../patches/addons.js');
 const certificates = require('../patches/certificates.js');
+const hardcoded = require('../patches/hardcoded-strings.js');
 
 const { withCwd } = require("./utils.js");
 
-const PATCHES = [version, addons, branding, certificates];
+const PATCHES = [version, addons, branding, certificates, hardcoded];
 
 async function commitChanges(patch) {
   await withCwd("mozilla-release", async () => {
