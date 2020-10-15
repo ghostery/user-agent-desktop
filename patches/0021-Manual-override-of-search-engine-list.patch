@@ -107,7 +107,7 @@ index 5a6992e0c9..5abcf6f003 100644
 +        },
 +      }],
 +      "webExtension": {
-+        "id": "ghostery@search.mozilla.org"
++        "id": "search@ghostery.com"
 +      }
 +    }, {
 +      "appliesTo": [{
