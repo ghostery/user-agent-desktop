@@ -1,0 +1,111 @@
+From: Sam Macbeth <sam@cliqz.com>
+Date: Wed, 14 Oct 2020 17:54:25 +0200
+Subject: Remove Lockwise branding in about:logins
+
+---
+ .../components/aboutlogins/content/aboutLogins.html    |  6 ++++++
+ .../aboutlogins/content/components/login-intro.js      | 10 +++++-----
+ browser/locales/en-US/browser/aboutLogins.ftl          |  4 ++--
+ browser/themes/shared/preferences/privacy.css          |  4 ++++
+ 4 files changed, 17 insertions(+), 7 deletions(-)
+
+diff --git a/browser/components/aboutlogins/content/aboutLogins.html b/browser/components/aboutlogins/content/aboutLogins.html
+index fe23a90d9f..a2e3f6d702 100644
+--- a/browser/components/aboutlogins/content/aboutLogins.html
++++ b/browser/components/aboutlogins/content/aboutLogins.html
+@@ -133,6 +133,7 @@
+       <img class="illustration" src="chrome://browser/content/aboutlogins/icons/intro-illustration.svg"/>
+       <h1 class="heading" data-l10n-id="about-logins-login-intro-heading-logged-out"></h1>
+       <section>
++        <!--
+         <p class="description" data-l10n-id="login-intro-description"></p>
+         <ul>
+           <li data-l10n-id="login-intro-instruction-fxa"></li>
+@@ -141,13 +142,16 @@
+             <a data-l10n-name="help-link" class="intro-help-link" target="_blank" rel="noreferrer"></a>
+           </li>
+         </ul>
++        -->
+         <p class="description intro-import-text no-file-import" hidden data-l10n-id="about-logins-intro-import">
+           <a data-l10n-name="import-link" href="#"></a>
+         </p>
++        <!--
+         <p class="description intro-import-text file-import" hidden data-l10n-id="about-logins-intro-import2">
+           <a data-l10n-name="import-browser-link" href="#"></a>
+           <a data-l10n-name="import-file-link" href="#"></a>
+         </p>
++        -->
+       </section>
+     </template>
+ 
+@@ -281,9 +285,11 @@
+         <button role="menuitem" class="menuitem-button menuitem-preferences ghost-button" data-event-name="AboutLoginsOpenPreferences" data-l10n-id="menu-menuitem-preferences"></button>
+         <hr role="separator" class="menuitem-separator"></hr>
+         <button role="menuitem" class="menuitem-button menuitem-help ghost-button" data-event-name="AboutLoginsGetHelp" data-l10n-id="about-logins-menu-menuitem-help"></button>
++        <!--
+         <hr role="separator" class="menuitem-separator"></hr>
+         <button role="menuitem" class="menuitem-button menuitem-mobile menuitem-mobile-android ghost-button" data-event-name="AboutLoginsOpenMobileAndroid" data-l10n-id="menu-menuitem-android-app"></button>
+         <button role="menuitem" class="menuitem-button menuitem-mobile menuitem-mobile-ios ghost-button" data-event-name="AboutLoginsOpenMobileIos" data-l10n-id="menu-menuitem-iphone-app"></button>
++        -->
+       </ul>
+     </template>
+ 
+diff --git a/browser/components/aboutlogins/content/components/login-intro.js b/browser/components/aboutlogins/content/components/login-intro.js
+index a0cd1d8cd1..10d72b3a94 100644
+--- a/browser/components/aboutlogins/content/components/login-intro.js
++++ b/browser/components/aboutlogins/content/components/login-intro.js
+@@ -50,11 +50,11 @@ export default class LoginIntro extends HTMLElement {
+       .querySelector(".illustration")
+       .classList.toggle("logged-in", syncState.loggedIn);
+ 
+-    let supportURL =
+-      window.AboutLoginsUtils.supportBaseURL + "firefox-lockwise";
+-    this.shadowRoot
+-      .querySelector(".intro-help-link")
+-      .setAttribute("href", supportURL);
++    // let supportURL =
++    //   window.AboutLoginsUtils.supportBaseURL + "firefox-lockwise";
++    // this.shadowRoot
++    //   .querySelector(".intro-help-link")
++    //   .setAttribute("href", supportURL);
+ 
+     let importClass = window.AboutLoginsUtils.fileImportEnabled
+       ? ".intro-import-text.file-import"
+diff --git a/browser/locales/en-US/browser/aboutLogins.ftl b/browser/locales/en-US/browser/aboutLogins.ftl
+index ccd8ccdab9..d4983d07d4 100644
+--- a/browser/locales/en-US/browser/aboutLogins.ftl
++++ b/browser/locales/en-US/browser/aboutLogins.ftl
+@@ -70,13 +70,13 @@ about-logins-list-item-vulnerable-password-icon =
+ 
+ ## Introduction screen
+ 
+-about-logins-login-intro-heading-logged-out = Looking for your saved logins? Set up { -sync-brand-short-name } or Import Them.
++about-logins-login-intro-heading-logged-out = Looking for your saved logins? You can import Them.
+ about-logins-login-intro-heading-logged-in = No synced logins found.
+ login-intro-description = If you saved your logins to { -brand-product-name } on a different device, here’s how to get them here:
+ login-intro-instruction-fxa = Create or sign in to your { -fxaccount-brand-name } on the device where your logins are saved
+ login-intro-instruction-fxa-settings = Make sure you’ve selected the Logins checkbox in { -sync-brand-short-name } Settings
+ about-logins-intro-instruction-help = Visit <a data-l10n-name="help-link">{ -lockwise-brand-short-name } Support</a> for more help
+-about-logins-intro-import = If your logins are saved in another browser, you can <a data-l10n-name="import-link">import them into { -lockwise-brand-short-name }</a>
++about-logins-intro-import = If your logins are saved in another browser, you can <a data-l10n-name="import-link">import them</a>
+ about-logins-intro-import2 = If your logins are saved outside of { -brand-product-name }, you can <a data-l10n-name="import-browser-link">import them from another browser</a> or <a data-l10n-name="import-file-link">from a file</a>
+ 
+ ## Login
+diff --git a/browser/themes/shared/preferences/privacy.css b/browser/themes/shared/preferences/privacy.css
+index 51841957a1..aeee1d9225 100644
+--- a/browser/themes/shared/preferences/privacy.css
++++ b/browser/themes/shared/preferences/privacy.css
+@@ -4,6 +4,10 @@
+ 
+ /* Permissions */
+ 
++#breachAlertsBox {
++  display: none;
++}
++
+ .content-blocking-icon,
+ .permission-icon,
+ .content-blocking-checkbox {
+-- 
+2.28.0
+
