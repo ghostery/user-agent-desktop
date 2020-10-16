@@ -20,12 +20,12 @@ index 198d9a7331..462cce11ca 100644
 --- a/toolkit/modules/LightweightThemeConsumer.jsm
 +++ b/toolkit/modules/LightweightThemeConsumer.jsm
 @@ -6,7 +6,7 @@ var EXPORTED_SYMBOLS = ["LightweightThemeConsumer"];
- 
+
  const { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
- 
+
 -const DEFAULT_THEME_ID = "default-theme@mozilla.org";
 +const DEFAULT_THEME_ID = "__DOES_NOT_APPLY__"; // in Ghostery Browser default theme is a lightweight theme
- 
+
  ChromeUtils.defineModuleGetter(
    this,
 diff --git a/toolkit/mozapps/extensions/default-theme/background-gradient-dark.svg b/toolkit/mozapps/extensions/default-theme/background-gradient-dark.svg
@@ -51,7 +51,7 @@ index 8bb30977a6..90173e3875 100644
 @@ -7,36 +7,34 @@
      }
    },
- 
+
 -  "name": "Default",
 -  "description": "A theme with the operating system color scheme.",
 -  "author": "Mozilla",
@@ -60,9 +60,9 @@ index 8bb30977a6..90173e3875 100644
 +  "description": "",
 +  "author": "Ghostery",
 +  "version": "1.1",
- 
+
    "icons": {"32": "icon.svg"},
- 
+
    "theme": {
 +    "images": {
 +      "theme_frame": "background-gradient.svg"
@@ -112,7 +112,7 @@ index 220d214d66..6f1df40912 100644
 +++ b/toolkit/mozapps/extensions/default-theme/moz.build
 @@ -5,6 +5,8 @@
  # file, You can obtain one at http://mozilla.org/MPL/2.0/.
- 
+
  EXTRA_JS_MODULES.themes['default'] += [
 +    'background-gradient-dark.svg',
 +    'background-gradient.svg',
@@ -158,6 +158,6 @@ index ef827dedb5..6fa966f858 100644
    margin-inline-end: -8px !important;
    min-width: 14px;
    max-width: 24px;
--- 
+--
 2.28.0
 

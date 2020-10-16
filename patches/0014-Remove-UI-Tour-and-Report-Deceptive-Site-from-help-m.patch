@@ -8,10 +8,10 @@ Subject: Remove UI Tour and Report Deceptive Site from help menubar
  2 files changed, 3 insertions(+)
 
 diff --git a/browser/base/content/browser-menubar.inc b/browser/base/content/browser-menubar.inc
-index 267ec91707..f043dd6e7f 100644
+index 1efe3f82ae..579b4bce3c 100644
 --- a/browser/base/content/browser-menubar.inc
 +++ b/browser/base/content/browser-menubar.inc
-@@ -464,8 +464,10 @@
+@@ -463,8 +463,10 @@
  #else
                            />
  #endif

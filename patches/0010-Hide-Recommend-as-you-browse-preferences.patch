@@ -8,10 +8,10 @@ Subject: Hide "Recommend as you browse" preferences
  2 files changed, 9 insertions(+), 9 deletions(-)
 
 diff --git a/browser/components/preferences/main.inc.xhtml b/browser/components/preferences/main.inc.xhtml
-index d907cbfe6f..a733bec5c7 100644
+index f7239b4d73..40ffb62efc 100644
 --- a/browser/components/preferences/main.inc.xhtml
 +++ b/browser/components/preferences/main.inc.xhtml
-@@ -642,7 +642,7 @@
+@@ -643,7 +643,7 @@
              preference="media.videocontrols.picture-in-picture.video-toggle.enabled"/>
      <label id="pictureInPictureLearnMore" class="learnMore" data-l10n-id="browsing-picture-in-picture-learn-more" is="text-link"/>
    </hbox>
@@ -20,7 +20,7 @@ index d907cbfe6f..a733bec5c7 100644
      <checkbox id="cfrRecommendations"
              class="tail-with-learn-more"
              data-l10n-id="browsing-cfr-recommendations"
-@@ -655,7 +655,7 @@
+@@ -656,7 +656,7 @@
              data-l10n-id="browsing-cfr-features"
              preference="browser.newtabpage.activity-stream.asrouter.userprefs.cfr.features"/>
      <label id="cfrFeaturesLearnMore" class="learnMore" data-l10n-id="browsing-cfr-recommendations-learn-more" is="text-link"/>
@@ -30,10 +30,10 @@ index d907cbfe6f..a733bec5c7 100644
  
  <hbox id="networkProxyCategory"
 diff --git a/browser/components/preferences/main.js b/browser/components/preferences/main.js
-index 955386a737..f4f434e850 100644
+index 969ea7fa1e..a3e90aeee9 100644
 --- a/browser/components/preferences/main.js
 +++ b/browser/components/preferences/main.js
-@@ -380,13 +380,13 @@ var gMainPane = {
+@@ -389,13 +389,13 @@ var gMainPane = {
      // listener for future menu changes.
      gMainPane.initDefaultZoomValues();
  

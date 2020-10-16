@@ -7,12 +7,12 @@ Subject: Remove bundled mozilla extensions
  1 file changed, 3 deletions(-)
 
 diff --git a/browser/extensions/moz.build b/browser/extensions/moz.build
-index 974c48c612..0d1e95fa22 100644
+index 771e7b7198..97dfc98e52 100644
 --- a/browser/extensions/moz.build
 +++ b/browser/extensions/moz.build
 @@ -5,9 +5,6 @@
  # file, You can obtain one at http://mozilla.org/MPL/2.0/.
-
+ 
  DIRS += [
 -    'doh-rollout',
 -    'formautofill',
@@ -20,6 +20,6 @@ index 974c48c612..0d1e95fa22 100644
      'webcompat',
      'report-site-issue',
      'ghostery',
---
+-- 
 2.28.0
 

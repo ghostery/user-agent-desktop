@@ -1,0 +1,31 @@
+From: Sam Macbeth <sam@cliqz.com>
+Date: Fri, 16 Oct 2020 15:47:47 +0200
+Subject: Hide Protection Dashboard link from right burger menu
+
+---
+ browser/base/content/browser.xhtml | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/browser/base/content/browser.xhtml b/browser/base/content/browser.xhtml
+index 446d6aadda..1ad258807c 100644
+--- a/browser/base/content/browser.xhtml
++++ b/browser/base/content/browser.xhtml
+@@ -768,6 +768,7 @@
+                         closemenu="none"
+                         oncommand="gSync.toggleAccountPanel('PanelUI-fxa', this, event)"/>
+         </toolbaritem>
++        <!--
+         <toolbarseparator class="sync-ui-item"/>
+         <toolbaritem>
+           <toolbarbutton id="appMenu-protection-report-button"
+@@ -781,6 +782,7 @@
+           </toolbarbutton>
+         </toolbaritem>
+         <toolbarseparator id="appMenu-tp-separator"/>
++        -->
+         <toolbarbutton id="appMenu-new-window-button"
+                        class="subviewbutton subviewbutton-iconic"
+                        label="&newNavigatorCmd.label;"
+-- 
+2.28.0
+

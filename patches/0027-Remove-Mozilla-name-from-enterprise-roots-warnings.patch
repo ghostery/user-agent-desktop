@@ -7,10 +7,10 @@ Subject: Remove Mozilla name from enterprise roots warnings
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/browser/locales/en-US/browser/browser.ftl b/browser/locales/en-US/browser/browser.ftl
-index 9657590716..6c20c130fd 100644
+index 6363efe5e0..e9a14e729b 100644
 --- a/browser/locales/en-US/browser/browser.ftl
 +++ b/browser/locales/en-US/browser/browser.ftl
-@@ -213,7 +213,7 @@ identity-connection-internal = This is a secure { -brand-short-name } page.
+@@ -240,7 +240,7 @@ identity-connection-internal = This is a secure { -brand-short-name } page.
  identity-connection-file = This page is stored on your computer.
  identity-extension-page = This page is loaded from an extension.
  identity-active-blocked = { -brand-short-name } has blocked parts of this page that are not secure.
@@ -19,7 +19,7 @@ index 9657590716..6c20c130fd 100644
  identity-passive-loaded = Parts of this page are not secure (such as images).
  identity-active-loaded = You have disabled protection on this page.
  identity-weak-encryption = This page uses weak encryption.
-@@ -227,7 +227,7 @@ identity-clear-site-data =
+@@ -254,7 +254,7 @@ identity-clear-site-data =
  identity-connection-not-secure-security-view = You are not securely connected to this site.
  identity-connection-verified = You are securely connected to this site.
  identity-ev-owner-label = Certificate issued to:

@@ -7,10 +7,10 @@ Subject: Move Ghostery icon to UrlBar
  1 file changed, 12 insertions(+), 1 deletion(-)
 
 diff --git a/browser/components/customizableui/CustomizableUI.jsm b/browser/components/customizableui/CustomizableUI.jsm
-index 517273b89c..039c1ac657 100644
+index 8d0e43d694..150620b22d 100644
 --- a/browser/components/customizableui/CustomizableUI.jsm
 +++ b/browser/components/customizableui/CustomizableUI.jsm
-@@ -1007,7 +1007,12 @@ var CustomizableUIInternal = {
+@@ -1009,7 +1009,12 @@ var CustomizableUIInternal = {
          if (widget) {
            widget.currentArea = aArea;
          }
@@ -24,7 +24,7 @@ index 517273b89c..039c1ac657 100644
          if (gResetting) {
            this.notifyListeners("onWidgetReset", node, container);
          } else if (gUndoResetting) {
-@@ -1440,6 +1445,12 @@ var CustomizableUIInternal = {
+@@ -1442,6 +1447,12 @@ var CustomizableUIInternal = {
        this.ensureButtonContextMenu(widgetNode, aAreaNode);
      }
  

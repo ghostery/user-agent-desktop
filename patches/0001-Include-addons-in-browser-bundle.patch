@@ -3,11 +3,11 @@ Date: Fri, 21 Aug 2020 13:35:37 +0200
 Subject: Include addons in browser bundle
 
 ---
- browser/extensions/moz.build | 4 ++-
+ browser/extensions/moz.build | 4 +++-
  1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/browser/extensions/moz.build b/browser/extensions/moz.build
-index f71ece63c4..974c48c612 100644
+index f71ece63c4..771e7b7198 100644
 --- a/browser/extensions/moz.build
 +++ b/browser/extensions/moz.build
 @@ -9,5 +9,7 @@ DIRS += [
@@ -19,6 +19,6 @@ index f71ece63c4..974c48c612 100644
 +    'ghostery',
 +    'ghostery-search'
  ]
---
+-- 
 2.28.0
 
