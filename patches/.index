@@ -1,12 +1,9 @@
-0001-Fix-Mac-packaging-when-using-a-non-firefox-app-name.patch
-0002-Specify-correct-executable-in-Mac-Info.plist.patch
 0003-Include-addons-in-browser-bundle.patch
 0004-Set-update-URL.patch
 0005-Change-new-tab-page-and-home-page-url.patch
 0006-Update-text-in-about-dialog.patch
 0007-Remove-bundled-mozilla-extensions.patch
 0008-Remove-tracking-protection-panel-from-url-bar.patch
-0009-Hide-Protection-Dashboard-link-from-right-burger-men.patch
 0010-Remove-Tracking-Protection-Settings-from-preferences.patch
 0011-Force-healthreport-and-normandy-off-at-configure-tim.patch
 0012-Hide-Recommend-as-you-browse-preferences.patch
