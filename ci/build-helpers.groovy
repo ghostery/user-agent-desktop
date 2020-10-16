@@ -84,39 +84,41 @@ def build(name, dockerFile, targetPlatform, objDir, params, buildId) {
             docker.build("ua-build-${name.toLowerCase()}", "-f build/${dockerFile} ./build")
         }
 
-        image.inside("--env MOZCONFIG=${env.WORKSPACE}/mozconfig --env MOZ_BUILD_DATE=${buildId} -v /mnt/vfat/vs2017_15.8.4/:/builds/worker/fetches/vs2017_15.8.4") {
-            stage('prepare mozilla-release') {
-                sh 'npm ci'
-                if (params.Reset) {
-                    sh 'rm -rf .cache'
-                }
-                sh 'rm -rf mozilla-release'
-                sh "./fern.js use"
-                sh "./fern.js config --print --force --platform ${targetPlatform} --brand ghostery"
-                sh "./fern.js reset"
-                sh './fern.js import-patches'
-            }
-
-            dir('mozilla-release') {
-                stage("${name}: mach build") {
-                    sh 'rm -f `pwd`/MacOSX10.11.sdk; ln -s /builds/worker/fetches/MacOSX10.11.sdk `pwd`/MacOSX10.11.sdk'
-                    if (params.Clobber) {
-                        sh './mach clobber'
+        image.inside("-v /mnt/vfat/vs2017_15.8.4/:/builds/worker/fetches/vs2017_15.8.4") {
+            withEnv(["MACH_USE_SYSTEM_PYTHON=1", "MOZCONFIG=${env.WORKSPACE}/mozconfig", "MOZ_BUILD_DATE=${buildId}"]) {
+                stage('prepare mozilla-release') {
+                    sh 'npm ci'
+                    if (params.Reset) {
+                        sh 'rm -rf .cache'
                     }
-                    sh './mach build'
+                    sh 'rm -rf mozilla-release'
+                    sh "./fern.js use"
+                    sh "./fern.js config --print --force --platform ${targetPlatform} --brand ghostery"
+                    sh "./fern.js reset"
+                    sh './fern.js import-patches'
                 }
 
-                stage("${name}: mach package") {
-                    sh './mach package'
-                }
+                dir('mozilla-release') {
+                    stage("${name}: mach build") {
+                        sh 'rm -f `pwd`/MacOSX10.11.sdk; ln -s /builds/worker/fetches/MacOSX10.11.sdk `pwd`/MacOSX10.11.sdk'
+                        if (params.Clobber) {
+                            sh './mach clobber'
+                        }
+                        sh './mach build'
+                    }
 
-                stage("${name}: make update-packaging") {
-                    dir(objDir) {
-                        withEnv([
-                            "ACCEPTED_MAR_CHANNEL_IDS=firefox-ghostery-release",
-                            "MAR_CHANNEL_ID=firefox-ghostery-release",
-                        ]) {
-                            sh 'make update-packaging'
+                    stage("${name}: mach package") {
+                        sh './mach package'
+                    }
+
+                    stage("${name}: make update-packaging") {
+                        dir(objDir) {
+                            withEnv([
+                                "ACCEPTED_MAR_CHANNEL_IDS=firefox-ghostery-release",
+                                "MAR_CHANNEL_ID=firefox-ghostery-release",
+                            ]) {
+                                sh 'make update-packaging'
+                            }
                         }
                     }
                 }
