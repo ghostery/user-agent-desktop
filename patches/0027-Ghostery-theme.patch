@@ -6,14 +6,17 @@ Subject: Ghostery theme
  toolkit/modules/LightweightThemeConsumer.jsm  |  2 +-
  .../background-gradient-dark.svg              |  1 +
  .../default-theme/background-gradient.svg     |  1 +
- .../extensions/default-theme/manifest.json    | 39 ++++++++-----------
+ .../extensions/default-theme/manifest.json    | 44 +++++++++----------
  .../extensions/default-theme/moz.build        |  2 +
- 5 files changed, 22 insertions(+), 23 deletions(-)
+ toolkit/themes/linux/global/toolbarbutton.css |  2 +-
+ toolkit/themes/osx/global/toolbarbutton.css   |  2 +-
+ .../themes/windows/global/toolbarbutton.css   |  2 +-
+ 8 files changed, 29 insertions(+), 27 deletions(-)
  create mode 100644 toolkit/mozapps/extensions/default-theme/background-gradient-dark.svg
  create mode 100644 toolkit/mozapps/extensions/default-theme/background-gradient.svg
 
 diff --git a/toolkit/modules/LightweightThemeConsumer.jsm b/toolkit/modules/LightweightThemeConsumer.jsm
-index 198d9a7331..68780513ce 100644
+index 198d9a7331..462cce11ca 100644
 --- a/toolkit/modules/LightweightThemeConsumer.jsm
 +++ b/toolkit/modules/LightweightThemeConsumer.jsm
 @@ -6,7 +6,7 @@ var EXPORTED_SYMBOLS = ["LightweightThemeConsumer"];
@@ -27,11 +30,11 @@ index 198d9a7331..68780513ce 100644
    this,
 diff --git a/toolkit/mozapps/extensions/default-theme/background-gradient-dark.svg b/toolkit/mozapps/extensions/default-theme/background-gradient-dark.svg
 new file mode 100644
-index 0000000000..02f0cd9863
+index 0000000000..0c9a971f29
 --- /dev/null
 +++ b/toolkit/mozapps/extensions/default-theme/background-gradient-dark.svg
 @@ -0,0 +1 @@
-+<svg height="200" viewBox="0 0 3000 200" width="3000" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><linearGradient id="a" x1="13.300292%" x2="100%" y1="49.83051%" y2="50.191859%"><stop offset="0" stop-color="#5f7c86"/><stop offset="1" stop-color="#050505" stop-opacity=".987352"/></linearGradient><path d="m0 0h3000v200h-3000z" fill="url(#a)"/></svg>
++<svg height="200" viewBox="0 0 3000 200" width="3000" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><linearGradient id="a" x1="0%" x2="100%" y1="49.777778%" y2="50.187103%"><stop offset="0" stop-color="#2b5993"/><stop offset=".614537806" stop-color="#17304f"/><stop offset="1"/></linearGradient><path d="m0 0h3000v200h-3000z" fill="url(#a)"/></svg>
 \ No newline at end of file
 diff --git a/toolkit/mozapps/extensions/default-theme/background-gradient.svg b/toolkit/mozapps/extensions/default-theme/background-gradient.svg
 new file mode 100644
@@ -42,20 +45,21 @@ index 0000000000..850918c938
 +<svg height="200" viewBox="0 0 3000 200" width="3000" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><linearGradient id="a" x1="0%" x2="100%" y1="49.777778%" y2="50.187103%"><stop offset="0" stop-color="#720174"/><stop offset="1" stop-color="#00aef0"/></linearGradient><path d="m0 0h3000v200h-3000z" fill="url(#a)"/></svg>
 \ No newline at end of file
 diff --git a/toolkit/mozapps/extensions/default-theme/manifest.json b/toolkit/mozapps/extensions/default-theme/manifest.json
-index 8bb30977a6..2ff090c09f 100644
+index 8bb30977a6..90173e3875 100644
 --- a/toolkit/mozapps/extensions/default-theme/manifest.json
 +++ b/toolkit/mozapps/extensions/default-theme/manifest.json
-@@ -7,36 +7,31 @@
+@@ -7,36 +7,34 @@
      }
    },
  
 -  "name": "Default",
 -  "description": "A theme with the operating system color scheme.",
 -  "author": "Mozilla",
+-  "version": "1.0",
 +  "name": "Ghostery Browser Theme",
 +  "description": "",
 +  "author": "Ghostery",
-   "version": "1.0",
++  "version": "1.1",
  
    "icons": {"32": "icon.svg"},
  
@@ -66,7 +70,8 @@ index 8bb30977a6..2ff090c09f 100644
 +    "colors": {
 +      "frame": "rgba(114, 1, 116, 1)",
 +      "tab_background_text": "rgba(255, 255, 255, 1)",
-+      "toolbar": "rgba(0, 0, 0, 0.5)"
++      "toolbar": "rgba(0, 0, 0, 0.5)",
++      "toolbar_field": "rgba(0, 0, 0, 1)"
 +    }
    },
 -
@@ -93,9 +98,11 @@ index 8bb30977a6..2ff090c09f 100644
 -      "sidebar": "#38383D",
 -      "sidebar_text": "rgb(249, 249, 250)",
 -      "sidebar_border": "rgba(255, 255, 255, 0.1)"
-+      "frame": "rgba(95, 124, 134, 1)",
++      "frame": "rgba(0, 0, 0, 1)",
 +      "tab_background_text": "rgba(255, 255, 255, 1)",
-+      "toolbar": "rgba(0, 0, 0, 0.6)"
++      "toolbar": "rgba(61, 61, 61, 0.5)",
++      "toolbar_field": "rgba(61, 61, 61, 1)",
++      "toolbar_field_text": "rgba(255, 255, 255, 1)"
      }
    }
  }
@@ -112,5 +119,45 @@ index 220d214d66..6f1df40912 100644
      'icon.svg',
      'manifest.json',
  ]
+diff --git a/toolkit/themes/linux/global/toolbarbutton.css b/toolkit/themes/linux/global/toolbarbutton.css
+index 3e6169d75c..a54168f7d8 100644
+--- a/toolkit/themes/linux/global/toolbarbutton.css
++++ b/toolkit/themes/linux/global/toolbarbutton.css
+@@ -76,7 +76,7 @@ toolbarbutton:-moz-lwtheme:not(:hover):not([checked="true"]):not([open="true"]):
+   box-shadow: 0 1px 0 hsla(0, 100%, 100%, .2) inset,
+               0 -1px 0 hsla(0, 0%, 0%, .1) inset,
+               0 1px 0 hsla(206, 50%, 10%, .2);
+-  margin: -6px 0 0 !important;
++  margin: -4px 0 0 !important;
+   margin-inline-end: -8px !important;
+   min-width: 14px;
+   max-width: 24px;
+diff --git a/toolkit/themes/osx/global/toolbarbutton.css b/toolkit/themes/osx/global/toolbarbutton.css
+index 5a0621d000..37158aa2b9 100644
+--- a/toolkit/themes/osx/global/toolbarbutton.css
++++ b/toolkit/themes/osx/global/toolbarbutton.css
+@@ -47,7 +47,7 @@ toolbarbutton[disabled="true"] {
+   box-shadow: 0 1px 0 hsla(0, 100%, 100%, .2) inset,
+               0 -1px 0 hsla(0, 0%, 0%, .1) inset,
+               0 1px 0 hsla(206, 50%, 10%, .2);
+-  margin: -6px 0 0 !important;
++  margin: -4px 0 0 !important;
+   margin-inline-end: -6px !important;
+   min-width: 14px;
+   max-width: 24px;
+diff --git a/toolkit/themes/windows/global/toolbarbutton.css b/toolkit/themes/windows/global/toolbarbutton.css
+index ef827dedb5..6fa966f858 100644
+--- a/toolkit/themes/windows/global/toolbarbutton.css
++++ b/toolkit/themes/windows/global/toolbarbutton.css
+@@ -90,7 +90,7 @@ toolbarbutton[disabled="true"] {
+   box-shadow: 0 1px 0 hsla(0, 100%, 100%, .2) inset,
+               0 -1px 0 hsla(0, 0%, 0%, .1) inset,
+               0 1px 0 hsla(206, 50%, 10%, .2);
+-  margin: -6px 0 0 !important;
++  margin: -4px 0 0 !important;
+   margin-inline-end: -8px !important;
+   min-width: 14px;
+   max-width: 24px;
 -- 
 2.28.0
+
