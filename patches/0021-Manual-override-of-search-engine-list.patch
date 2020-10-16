@@ -3,15 +3,125 @@ Date: Wed, 23 Sep 2020 16:30:43 +0200
 Subject: Manual override of search engine list
 
 ---
+ .../search/extensions/bing/manifest.json      |  36 +----------
+ .../search/extensions/startpage/favicon.ico   | Bin 0 -> 1150 bytes
+ .../search/extensions/startpage/manifest.json |  26 ++++++++
  .../search/extensions/tailcat/favicon.ico     | Bin 0 -> 15086 bytes
- .../search/extensions/tailcat/manifest.json   |  29 ++++++++
- .../search/SearchEngineSelector.jsm           |  62 ++++++++++++++++++
- 3 files changed, 91 insertions(+)
- create mode 100644 browser/components/search/extensions/ghostery/favicon.ico
- create mode 100644 browser/components/search/extensions/ghostery/manifest.json
+ .../search/extensions/tailcat/manifest.json   |  29 +++++++++
+ .../search/extensions/yahoo/favicon.ico       | Bin 0 -> 5430 bytes
+ .../search/extensions/yahoo/manifest.json     |  26 ++++++++
+ .../search/SearchEngineSelector.jsm           |  61 ++++++++++++++++++
+ 8 files changed, 145 insertions(+), 33 deletions(-)
+ create mode 100644 browser/components/search/extensions/startpage/favicon.ico
+ create mode 100644 browser/components/search/extensions/startpage/manifest.json
  create mode 100644 browser/components/search/extensions/tailcat/favicon.ico
  create mode 100644 browser/components/search/extensions/tailcat/manifest.json
+ create mode 100644 browser/components/search/extensions/yahoo/favicon.ico
+ create mode 100644 browser/components/search/extensions/yahoo/manifest.json
 
+diff --git a/browser/components/search/extensions/bing/manifest.json b/browser/components/search/extensions/bing/manifest.json
+index ae114e0c69..bfbbc9b73d 100644
+--- a/browser/components/search/extensions/bing/manifest.json
++++ b/browser/components/search/extensions/bing/manifest.json
+@@ -5,7 +5,7 @@
+   "version": "1.1",
+   "applications": {
+     "gecko": {
+-      "id": "bing@search.mozilla.org"
++      "id": "bing@search.ghostery.com"
+     }
+   },
+   "hidden": true,
+@@ -19,39 +19,9 @@
+     "search_provider": {
+       "name": "Bing",
+       "search_url": "https://www.bing.com/search",
+-      "search_form": "https://www.bing.com/search?pc=MOZI&q={searchTerms}",
+-      "search_url_get_params": "pc=MOZI&q={searchTerms}",
++      "search_form": "https://www.bing.com/search?q={searchTerms}",
++      "search_url_get_params": "q={searchTerms}",
+       "params": [
+-        {
+-          "name": "form",
+-          "condition": "purpose",
+-          "purpose": "contextmenu",
+-          "value": "MOZCON"
+-        },
+-        {
+-          "name": "form",
+-          "condition": "purpose",
+-          "purpose": "searchbar",
+-          "value": "MOZSBR"
+-        },
+-        {
+-          "name": "form",
+-          "condition": "purpose",
+-          "purpose": "homepage",
+-          "value": "MOZSPG"
+-        },
+-        {
+-          "name": "form",
+-          "condition": "purpose",
+-          "purpose": "keyword",
+-          "value": "MOZLBR"
+-        },
+-        {
+-          "name": "form",
+-          "condition": "purpose",
+-          "purpose": "newtab",
+-          "value": "MOZTSB"
+-        }
+       ],
+       "suggest_url": "https://www.bing.com/osjson.aspx",
+       "suggest_url_get_params": "query={searchTerms}&form=OSDJAS&language={moz:locale}"
+diff --git a/browser/components/search/extensions/startpage/favicon.ico b/browser/components/search/extensions/startpage/favicon.ico
+new file mode 100644
+index 0000000000000000000000000000000000000000..19991e7478b0c727b34e192486287cefdff658a4
+GIT binary patch
+literal 1150
+zcmd^<ze|Ea7{{;Z4{&PghXk47(BK#?ngk9(LeLT|MIusUnh-{rxzvzDLl6Wl4USQ3
+zL|YJ1LxdHD6lqfaS}H0&-Mw$`&=UC47RTql+;jJRp1Wr_A?oC?ScIId!rvf7qY%O_
+zks%q;<5Gl>d%=1gZ7nBHr`0FPNT?CzG3zyInW<}d|3qE3X51Z$7JBWi8nyHxJTioT
+zz{{|whrw<q{Z0qoE*pK0HZ7OR>y|ZC9anqPPh{-n?Uib^!ec(i?e!(+rzad89<aZ+
+z!)|(;^yUUzYpbj;CrQO)tjtD8h9^i&1(^$s!r3ugUBF!y3OOh~LACr%Mb}CR%8DYC
+zp7|`~`FObJJ$nO@afk*WHVN|~h({n1g{5CuoPmX~etvok6d`#RGZ_B=s~N3-=H9Qo
+OK8cwen%DRT%<2~=8E$+4
+
+literal 0
+HcmV?d00001
+
+diff --git a/browser/components/search/extensions/startpage/manifest.json b/browser/components/search/extensions/startpage/manifest.json
+new file mode 100644
+index 0000000000..16ed15b645
+--- /dev/null
++++ b/browser/components/search/extensions/startpage/manifest.json
+@@ -0,0 +1,26 @@
++{
++  "name": "Startpage",
++  "description": "Startpage.",
++  "manifest_version": 2,
++  "version": "1.1",
++  "applications": {
++    "gecko": {
++      "id": "startpage@search.ghostery.com"
++    }
++  },
++  "hidden": true,
++  "icons": {
++    "16": "favicon.ico"
++  },
++  "web_accessible_resources": [
++    "favicon.ico"
++  ],
++  "chrome_settings_overrides": {
++    "search_provider": {
++      "name": "StartPage",
++      "search_url": "https://www.startpage.com/do/dsearch",
++      "search_form": "https://www.startpage.com/do/dsearch?query={searchTerms}",
++      "search_url_get_params": "query={searchTerms}"
++    }
++  }
++}
 diff --git a/browser/components/search/extensions/tailcat/favicon.ico b/browser/components/search/extensions/tailcat/favicon.ico
 new file mode 100644
 index 0000000000000000000000000000000000000000..fde51f907c563e396d9f614b186289b0ebd6744e
@@ -90,14 +200,71 @@ index 0000000000..a6efe21f4f
 +  }
 +}
 \ No newline at end of file
+diff --git a/browser/components/search/extensions/yahoo/favicon.ico b/browser/components/search/extensions/yahoo/favicon.ico
+new file mode 100644
+index 0000000000000000000000000000000000000000..34a916ccde63c64fb92f109f0d238fe692fc0c3d
+GIT binary patch
+literal 5430
+zcmeI0O-NKx6vvMmY6Oi0eF(t}(f5a0St3MJL_~|oqD9oADEe4LC2eXEPPvGJiYN+%
+z3L>bWoh?EF6<f3lf{HdVN(*rj2$79s-hO9%ce>u*jH9y(-h;!r_kaHXbM8C$&gH2{
+znUqUSjo=e<YKF*C5lJM*=g+`zf-MJQ2xA<_iGW8>{tj#qa|ScMSq1nv?5myU^G(&c
+z9A{n5Ix!9F#jI!)GvCGivDL#p=f}Xhv8O(6=M7?3v&NtH9sF9vTQtU6wpfkzaAy<y
+ztZ{gI@CO6#O3R`4V#TocVAU4KSAf0L7@TVsr%sb%<U3$7<{uTqo?8sfodA0SmOH5d
+z=I+TQT|4-QdUP*BIPErX<O_Ge7-1*=THi^L3@1GEU1X?5q_1A2cL7G43WsMkde0=V
+zt(e|N*+(y)=!rTIb>P3~K*;^+-najZ-IwAHj&rvk;~sttp1ZeQ&SYb>4_L!+k?XkN
+z=0nqEb*y8*8=LAF{W9#j%@_Cqe51yA*SX}J@Q%cq1KvCQ;i=XP;|KX{-_v0n2P>}^
+zv&5N~Je*?vY`u+Q7NI+jHJ7@8>C|U`9tOHWd~CXFAdi0c*xsw}D<&5_dk*wl=T<SA
+z5KcAPyI%b<ejocnxD%i{F|*Lw-_S44YVMnD0<pjZ{e7>tp6L-a*08sLG#i4~VfDPn
+z>&f_TocxEZHt^{tF>@Gi!}Pm*l$@tsjXx&G@j#p1zhe5PIq20|bUz$z2CTv656<?7
+zAbt<L(#Bj*ycYZI<k8>mOqb)2*|&M{(~d^JpHKKa;xX)1!0W}=`W&5uzYRFH2d!be
+z0IP(nxw2gK)Yf}E-=loH$Aj$0E}uyJqMMKLF!xi!=P@rM_Qd0U(sLZb74{%Wy`%8k
+zJxv$$HrBnHIyLZCd2xNW4nHT@4UeaPGp+G?c1|o^ggsI|yf2v6Rn2YA(sul2)_4Se
+z1?$8#?pi1DoxJ0wQtxwe>>yX2U3;)5dpEc>^Nw9@G>$qDbs*|MDIG8co-tXNR5K~8
+wf7F<M6USnv2TPeMlWM(cB-u7r8M{0htLn+b+q#G1{C^_JKOACa0Gssr1NfV+nE(I)
+
+literal 0
+HcmV?d00001
+
+diff --git a/browser/components/search/extensions/yahoo/manifest.json b/browser/components/search/extensions/yahoo/manifest.json
+new file mode 100644
+index 0000000000..5056642d8e
+--- /dev/null
++++ b/browser/components/search/extensions/yahoo/manifest.json
+@@ -0,0 +1,26 @@
++{
++  "name": "Yahoo!",
++  "description": "Yahoo Search",
++  "manifest_version": 2,
++  "version": "1.0",
++  "applications": {
++    "gecko": {
++      "id": "yahoo@search.ghostery.com"
++    }
++  },
++  "hidden": true,
++  "icons": {
++    "16": "favicon.ico"
++  },
++  "web_accessible_resources": [
++    "favicon.ico"
++  ],
++  "chrome_settings_overrides": {
++    "search_provider": {
++      "name": "Yahoo",
++      "search_url": "https://search.yahoo.com/search",
++      "search_form": "https://search.yahoo.co.com/",
++      "search_url_get_params": "p={searchTerms}&ei=UTF-8"
++    }
++  }
++}
 diff --git a/toolkit/components/search/SearchEngineSelector.jsm b/toolkit/components/search/SearchEngineSelector.jsm
-index 5a6992e0c9..5abcf6f003 100644
+index 5a6992e0c9..77d810e189 100644
 --- a/toolkit/components/search/SearchEngineSelector.jsm
 +++ b/toolkit/components/search/SearchEngineSelector.jsm
-@@ -94,6 +94,68 @@ class SearchEngineSelector {
+@@ -94,6 +94,67 @@ class SearchEngineSelector {
      this._changeListener = listener;
    }
-
+ 
 +  get _configuration() {
 +    return [{
 +      "appliesTo": [{
@@ -124,11 +291,8 @@ index 5a6992e0c9..5abcf6f003 100644
 +            "everywhere": true
 +          }
 +      }],
-+      "id": "c0b26c0e-63e6-4235-b2ce-5f16b6a8bf87",
-+      "last_modified": 1595254832054,
-+      "schema": 1594312388385,
 +      "webExtension": {
-+        "id": "ddg@search.mozilla.org"
++        "id": "bing@search.ghostery.com"
 +      }
 +    }, {
 +      "appliesTo": [{
@@ -136,11 +300,8 @@ index 5a6992e0c9..5abcf6f003 100644
 +          "everywhere": true
 +        }
 +      }],
-+      "id": "3f3beb1d-e32e-40a4-b6ed-56741803e1d8",
-+      "last_modified": 1589299342069,
-+      "schema": 1588177692141,
 +      "webExtension": {
-+        "id": "wikipedia@search.mozilla.org"
++        "id": "yahoo@search.ghostery.com"
 +      }
 +    }, {
 +      "appliesTo": [{
@@ -148,10 +309,15 @@ index 5a6992e0c9..5abcf6f003 100644
 +          "everywhere": true
 +        }
 +      }],
-+      "id": "cb8e7210-9f0b-48fa-8708-b9a03df79eea",
-+      "last_modified": 1595254832050,
-+      "schema": 1594237297787,
-+      "telemetryId": "google-b-d",
++      "webExtension": {
++        "id": "startpage@search.ghostery.com"
++      }
++    }, {
++      "appliesTo": [{
++        "included": {
++          "everywhere": true
++        }
++      }],
 +      "webExtension": {
 +        "id": "google@search.mozilla.org"
 +      }
@@ -163,6 +329,6 @@ index 5a6992e0c9..5abcf6f003 100644
    /**
     * Handles getting the configuration from remote settings.
     */
---
+-- 
 2.28.0
 
