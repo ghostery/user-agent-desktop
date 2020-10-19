@@ -3,7 +3,7 @@ Date: Mon, 19 Oct 2020 12:13:51 +0200
 Subject: Manual override of search engine list
 
 ---
- .../search/extensions/bing/manifest.json      |  36 +----------
+ .../search/extensions/bing/manifest.json      |  39 ++---------
  .../search/extensions/startpage/favicon.ico   | Bin 0 -> 1150 bytes
  .../search/extensions/startpage/manifest.json |  26 ++++++++
  .../search/extensions/tailcat/favicon.ico     | Bin 0 -> 15086 bytes
@@ -11,7 +11,7 @@ Subject: Manual override of search engine list
  .../search/extensions/yahoo/favicon.ico       | Bin 0 -> 5430 bytes
  .../search/extensions/yahoo/manifest.json     |  26 ++++++++
  .../search/SearchEngineSelector.jsm           |  61 ++++++++++++++++++
- 8 files changed, 145 insertions(+), 33 deletions(-)
+ 8 files changed, 146 insertions(+), 35 deletions(-)
  create mode 100644 browser/components/search/extensions/startpage/favicon.ico
  create mode 100644 browser/components/search/extensions/startpage/manifest.json
  create mode 100644 browser/components/search/extensions/tailcat/favicon.ico
@@ -20,11 +20,15 @@ Subject: Manual override of search engine list
  create mode 100644 browser/components/search/extensions/yahoo/manifest.json
 
 diff --git a/browser/components/search/extensions/bing/manifest.json b/browser/components/search/extensions/bing/manifest.json
-index 3f490b4f16..0c75359544 100644
+index 3f490b4f16..bfbbc9b73d 100644
 --- a/browser/components/search/extensions/bing/manifest.json
 +++ b/browser/components/search/extensions/bing/manifest.json
-@@ -5,7 +5,7 @@
-   "version": "1.2",
+@@ -2,10 +2,10 @@
+   "name": "Bing",
+   "description": "Bing. Search by Microsoft.",
+   "manifest_version": 2,
+-  "version": "1.2",
++  "version": "1.1",
    "applications": {
      "gecko": {
 -      "id": "bing@search.mozilla.org"
@@ -32,8 +36,11 @@ index 3f490b4f16..0c75359544 100644
      }
    },
    "hidden": true,
-@@ -20,39 +20,9 @@
-       "keyword": "@bing",
+@@ -17,42 +17,11 @@
+   ],
+   "chrome_settings_overrides": {
+     "search_provider": {
+-      "keyword": "@bing",
        "name": "Bing",
        "search_url": "https://www.bing.com/search",
 -      "search_form": "https://www.bing.com/search?pc=MOZI&q={searchTerms}",
