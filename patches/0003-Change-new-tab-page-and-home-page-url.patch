@@ -10,10 +10,10 @@ Subject: Change new tab page and home page url
  4 files changed, 4 insertions(+), 3 deletions(-)
 
 diff --git a/browser/app/profile/firefox.js b/browser/app/profile/firefox.js
-index 3d3d398bd4..56b4c71600 100644
+index 190db2bac3..487dd67cc8 100644
 --- a/browser/app/profile/firefox.js
 +++ b/browser/app/profile/firefox.js
-@@ -251,7 +251,7 @@ pref("browser.defaultbrowser.notificationbar.checklimit", 10000);
+@@ -253,7 +253,7 @@ pref("browser.defaultbrowser.notificationbar.checklimit", 10000);
  // 0 = blank, 1 = home (browser.startup.homepage), 2 = last visited page, 3 = resume previous browser session
  // The behavior of option 3 is detailed at: http://wiki.mozilla.org/Session_Restore
  pref("browser.startup.page",                1);
@@ -23,10 +23,10 @@ index 3d3d398bd4..56b4c71600 100644
  
  // Whether we should skip the homepage when opening the first-run page
 diff --git a/browser/base/content/browser.js b/browser/base/content/browser.js
-index 04f2d0195a..fce57c0be4 100644
+index 452b4e58d8..1f96c8b93c 100644
 --- a/browser/base/content/browser.js
 +++ b/browser/base/content/browser.js
-@@ -628,6 +628,7 @@ var gInitialPages = [
+@@ -623,6 +623,7 @@ var gInitialPages = [
    "about:sessionrestore",
    "about:welcome",
    "about:newinstall",
