@@ -25,7 +25,6 @@ const windowsInstallerPathComponents = ["other-licenses", "7zstub", "firefox", "
 const devToolsIconsPathComponents = ["devtools", "client", "themes", "images"];
 const privateBrowsingIconPaths = [
   ["browser", "themes","shared","icons","private-browsing.svg"],
-  ["browser", "themes","shared","icons","privateBrowsing.svg"],
   ["browser", "themes", "shared", "privatebrowsing", "favicon.svg"],
   ["browser", "themes", "shared", "privatebrowsing", "private-browsing.svg"]
 ];
@@ -61,6 +60,11 @@ module.exports = () => ({
     await fsExtra.copy(
       await getPathToSourceDevToolsIcons(),
       await getTargetPath(devToolsIconsPathComponents)
+    );
+    // copy new private tab logo
+    await fsExtra.copy(
+      path.join(await getRoot(), "brands", "ghostery", "branding", "content", "private-ghosty-logo.svg"),
+      await getTargetPath(["browser", "themes","shared","icons","privateBrowsing.svg"])
     );
     // copy private browser icon
     return Promise.all(privateBrowsingIconPaths.map(async (iconPath) => {
