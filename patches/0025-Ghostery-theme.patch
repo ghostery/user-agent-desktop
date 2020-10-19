@@ -1,22 +1,22 @@
 From: Krzysztof Jan Modras <chrmod@chrmod.net>
-Date: Tue, 29 Sep 2020 15:04:41 +0200
+Date: Mon, 19 Oct 2020 11:00:56 +0200
 Subject: Ghostery theme
 
 ---
  toolkit/modules/LightweightThemeConsumer.jsm  |  2 +-
  .../background-gradient-dark.svg              |  1 +
  .../default-theme/background-gradient.svg     |  1 +
- .../extensions/default-theme/manifest.json    | 44 +++++++++----------
- .../extensions/default-theme/moz.build        |  2 +
+ .../extensions/default-theme/manifest.json    | 41 +++++++++----------
+ toolkit/mozapps/extensions/jar.mn             |  2 +
  toolkit/themes/linux/global/toolbarbutton.css |  2 +-
  toolkit/themes/osx/global/toolbarbutton.css   |  2 +-
  .../themes/windows/global/toolbarbutton.css   |  2 +-
- 8 files changed, 29 insertions(+), 27 deletions(-)
+ 8 files changed, 28 insertions(+), 25 deletions(-)
  create mode 100644 toolkit/mozapps/extensions/default-theme/background-gradient-dark.svg
  create mode 100644 toolkit/mozapps/extensions/default-theme/background-gradient.svg
 
 diff --git a/toolkit/modules/LightweightThemeConsumer.jsm b/toolkit/modules/LightweightThemeConsumer.jsm
-index 198d9a7331..462cce11ca 100644
+index 799437c560..3c54d006e6 100644
 --- a/toolkit/modules/LightweightThemeConsumer.jsm
 +++ b/toolkit/modules/LightweightThemeConsumer.jsm
 @@ -6,7 +6,7 @@ var EXPORTED_SYMBOLS = ["LightweightThemeConsumer"];
@@ -45,21 +45,20 @@ index 0000000000..850918c938
 +<svg height="200" viewBox="0 0 3000 200" width="3000" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><linearGradient id="a" x1="0%" x2="100%" y1="49.777778%" y2="50.187103%"><stop offset="0" stop-color="#720174"/><stop offset="1" stop-color="#00aef0"/></linearGradient><path d="m0 0h3000v200h-3000z" fill="url(#a)"/></svg>
 \ No newline at end of file
 diff --git a/toolkit/mozapps/extensions/default-theme/manifest.json b/toolkit/mozapps/extensions/default-theme/manifest.json
-index 8bb30977a6..90173e3875 100644
+index 05d6e0e19a..3182ab9618 100644
 --- a/toolkit/mozapps/extensions/default-theme/manifest.json
 +++ b/toolkit/mozapps/extensions/default-theme/manifest.json
-@@ -7,36 +7,34 @@
+@@ -7,36 +7,35 @@
      }
    },
  
 -  "name": "Default",
 -  "description": "A theme with the operating system color scheme.",
 -  "author": "Mozilla",
--  "version": "1.0",
 +  "name": "Ghostery Browser Theme",
 +  "description": "",
 +  "author": "Ghostery",
-+  "version": "1.1",
+   "version": "1.1",
  
    "icons": {"32": "icon.svg"},
  
@@ -74,7 +73,7 @@ index 8bb30977a6..90173e3875 100644
 +      "toolbar_field": "rgba(0, 0, 0, 1)"
 +    }
    },
--
+ 
    "dark_theme": {
 +    "images": {
 +      "theme_frame": "background-gradient-dark.svg"
@@ -106,19 +105,17 @@ index 8bb30977a6..90173e3875 100644
      }
    }
  }
-diff --git a/toolkit/mozapps/extensions/default-theme/moz.build b/toolkit/mozapps/extensions/default-theme/moz.build
-index 220d214d66..6f1df40912 100644
---- a/toolkit/mozapps/extensions/default-theme/moz.build
-+++ b/toolkit/mozapps/extensions/default-theme/moz.build
-@@ -5,6 +5,8 @@
- # file, You can obtain one at http://mozilla.org/MPL/2.0/.
- 
- EXTRA_JS_MODULES.themes['default'] += [
-+    'background-gradient-dark.svg',
-+    'background-gradient.svg',
-     'icon.svg',
-     'manifest.json',
- ]
+diff --git a/toolkit/mozapps/extensions/jar.mn b/toolkit/mozapps/extensions/jar.mn
+index a203524e23..1b924aa053 100644
+--- a/toolkit/mozapps/extensions/jar.mn
++++ b/toolkit/mozapps/extensions/jar.mn
+@@ -37,4 +37,6 @@ toolkit.jar:
+ % resource default-theme %content/mozapps/extensions/default-theme/
+   content/mozapps/extensions/default-theme/icon.svg             (default-theme/icon.svg)
+   content/mozapps/extensions/default-theme/manifest.json        (default-theme/manifest.json)
++  content/mozapps/extensions/default-theme/background-gradient-dark.svg        (default-theme/background-gradient-dark.svg)
++  content/mozapps/extensions/default-theme/background-gradient.svg        (default-theme/background-gradient.svg)
+ #endif
 diff --git a/toolkit/themes/linux/global/toolbarbutton.css b/toolkit/themes/linux/global/toolbarbutton.css
 index 3e6169d75c..a54168f7d8 100644
 --- a/toolkit/themes/linux/global/toolbarbutton.css

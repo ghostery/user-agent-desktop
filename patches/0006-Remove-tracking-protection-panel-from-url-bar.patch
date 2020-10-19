@@ -9,7 +9,7 @@ Subject: Remove tracking protection panel from url bar
  3 files changed, 18 insertions(+), 16 deletions(-)
 
 diff --git a/browser/base/content/browser-siteIdentity.js b/browser/base/content/browser-siteIdentity.js
-index 017aac1fc6..7054a75ac6 100644
+index 16d5b35874..975f1a54e6 100644
 --- a/browser/base/content/browser-siteIdentity.js
 +++ b/browser/base/content/browser-siteIdentity.js
 @@ -897,10 +897,10 @@ var gIdentityHandler = {
@@ -28,7 +28,7 @@ index 017aac1fc6..7054a75ac6 100644
  
    /**
 diff --git a/browser/base/content/browser.js b/browser/base/content/browser.js
-index 76ba9b4025..f041c7265e 100644
+index 1f96c8b93c..c2cd5b193b 100644
 --- a/browser/base/content/browser.js
 +++ b/browser/base/content/browser.js
 @@ -1985,7 +1985,7 @@ var gBrowserInit = {
@@ -40,7 +40,7 @@ index 76ba9b4025..f041c7265e 100644
      HomePage.delayedStartup().catch(Cu.reportError);
  
      let safeMode = document.getElementById("helpSafeMode");
-@@ -2473,7 +2473,7 @@ var gBrowserInit = {
+@@ -2498,7 +2498,7 @@ var gBrowserInit = {
        Services.prefs.removeObserver(ctrlTab.prefName, ctrlTab);
        ctrlTab.uninit();
        gBrowserThumbnails.uninit();
@@ -49,7 +49,7 @@ index 76ba9b4025..f041c7265e 100644
        FullZoom.destroy();
  
        Services.obs.removeObserver(gIdentityHandler, "perm-changed");
-@@ -5147,7 +5147,7 @@ var XULBrowserWindow = {
+@@ -5164,7 +5164,7 @@ var XULBrowserWindow = {
      const nsIWebProgressListener = Ci.nsIWebProgressListener;
  
      let browser = gBrowser.selectedBrowser;
@@ -58,7 +58,7 @@ index 76ba9b4025..f041c7265e 100644
  
      if (
        aStateFlags & nsIWebProgressListener.STATE_START &&
-@@ -5259,7 +5259,7 @@ var XULBrowserWindow = {
+@@ -5295,7 +5295,7 @@ var XULBrowserWindow = {
  
        gIdentityHandler.onLocationChange();
  
@@ -67,7 +67,7 @@ index 76ba9b4025..f041c7265e 100644
  
        BrowserPageActions.onLocationChange();
  
-@@ -5404,12 +5404,12 @@ var XULBrowserWindow = {
+@@ -5444,12 +5444,12 @@ var XULBrowserWindow = {
        );
      }
  
@@ -87,7 +87,7 @@ index 76ba9b4025..f041c7265e 100644
      // We need the state of the previous content blocking event, so update
      // event after onContentBlockingEvent is called.
 diff --git a/browser/base/content/browser.xhtml b/browser/base/content/browser.xhtml
-index 93b1b0932b..67fc4666af 100644
+index 01293021b3..0f50c84017 100644
 --- a/browser/base/content/browser.xhtml
 +++ b/browser/base/content/browser.xhtml
 @@ -71,7 +71,7 @@
@@ -99,7 +99,7 @@ index 93b1b0932b..67fc4666af 100644
    <link rel="localization" href="browser/appmenu.ftl"/>
    <link rel="localization" href="preview/interventions.ftl"/>
    <link rel="localization" href="browser/sidebarMenu.ftl"/>
-@@ -618,7 +618,7 @@
+@@ -638,7 +638,7 @@
  
  #include ../../components/customizableui/content/panelUI.inc.xhtml
  #include ../../components/controlcenter/content/identityPanel.inc.xhtml
@@ -108,7 +108,7 @@ index 93b1b0932b..67fc4666af 100644
  #include ../../components/downloads/content/downloadsPanel.inc.xhtml
  #include ../../../devtools/startup/enableDevToolsPopup.inc.xhtml
  #include browser-allTabsMenu.inc.xhtml
-@@ -1495,6 +1495,7 @@
+@@ -1732,6 +1732,7 @@
                     class="chromeclass-toolbar-additional"/>
                <!-- Use onclick instead of normal popup= syntax since the popup
                     code fires onmousedown, and hence eats our favicon drag events. -->
@@ -116,7 +116,7 @@ index 93b1b0932b..67fc4666af 100644
                <box id="tracking-protection-icon-container" align="center"
                     role="button"
                     onclick="gProtectionsHandler.handleProtectionsButtonEvent(event);"
-@@ -1512,6 +1513,7 @@
+@@ -1749,6 +1750,7 @@
                    <description id="tracking-protection-icon-tooltip-label" class="tooltip-label"/>
                  </tooltip>
                </box>

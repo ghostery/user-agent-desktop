@@ -8,7 +8,7 @@ Subject: Override UA for addons.mozilla.org
  2 files changed, 16 insertions(+), 3 deletions(-)
 
 diff --git a/browser/extensions/webcompat/data/ua_overrides.js b/browser/extensions/webcompat/data/ua_overrides.js
-index 86f02a5237..ac525ffdc6 100644
+index ab6980d888..b7fd317b40 100644
 --- a/browser/extensions/webcompat/data/ua_overrides.js
 +++ b/browser/extensions/webcompat/data/ua_overrides.js
 @@ -34,6 +34,19 @@ const AVAILABLE_UA_OVERRIDES = [
@@ -32,7 +32,7 @@ index 86f02a5237..ac525ffdc6 100644
      /*
       * Bug 1577519 - att.tv - Create a UA override for att.tv for playback on desktop
 diff --git a/toolkit/components/extensions/WebExtensionPolicy.cpp b/toolkit/components/extensions/WebExtensionPolicy.cpp
-index 48a8fb1a1c..c154cb5e87 100644
+index 02a38edaf7..eca6e10b3a 100644
 --- a/toolkit/components/extensions/WebExtensionPolicy.cpp
 +++ b/toolkit/components/extensions/WebExtensionPolicy.cpp
 @@ -432,9 +432,9 @@ bool WebExtensionPolicy::IsRestrictedURI(const URLInfo& aURI) {
@@ -49,5 +49,5 @@ index 48a8fb1a1c..c154cb5e87 100644
    return false;
  }
 -- 
-2.25.1
+2.28.0
 

@@ -24,7 +24,7 @@ index 5ef8d2a02a..143151a29b 100644
  WIN32_MODULE_PRODUCTNAME=@MOZ_APP_DISPLAYNAME@
  WIN32_MODULE_NAME=@MOZ_APP_DISPLAYNAME@
 diff --git a/ipc/app/module.ver b/ipc/app/module.ver
-index 8abbd23f0e..97083d7e54 100644
+index 8abbd23f0e..af50bc1fef 100644
 --- a/ipc/app/module.ver
 +++ b/ipc/app/module.ver
 @@ -1,4 +1,4 @@

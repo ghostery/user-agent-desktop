@@ -92,7 +92,7 @@ index ccd8ccdab9..d4983d07d4 100644
  
  ## Login
 diff --git a/browser/themes/shared/preferences/privacy.css b/browser/themes/shared/preferences/privacy.css
-index 51841957a1..aeee1d9225 100644
+index a53a914f1c..1d52de99a6 100644
 --- a/browser/themes/shared/preferences/privacy.css
 +++ b/browser/themes/shared/preferences/privacy.css
 @@ -4,6 +4,10 @@

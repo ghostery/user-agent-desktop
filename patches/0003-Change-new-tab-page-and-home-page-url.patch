@@ -10,10 +10,10 @@ Subject: Change new tab page and home page url
  4 files changed, 4 insertions(+), 3 deletions(-)
 
 diff --git a/browser/app/profile/firefox.js b/browser/app/profile/firefox.js
-index c73cf7982c..8f19a18df5 100644
+index 190db2bac3..487dd67cc8 100644
 --- a/browser/app/profile/firefox.js
 +++ b/browser/app/profile/firefox.js
-@@ -243,7 +243,7 @@ pref("browser.defaultbrowser.notificationbar", false);
+@@ -253,7 +253,7 @@ pref("browser.defaultbrowser.notificationbar.checklimit", 10000);
  // 0 = blank, 1 = home (browser.startup.homepage), 2 = last visited page, 3 = resume previous browser session
  // The behavior of option 3 is detailed at: http://wiki.mozilla.org/Session_Restore
  pref("browser.startup.page",                1);
@@ -23,10 +23,10 @@ index c73cf7982c..8f19a18df5 100644
  
  // Whether we should skip the homepage when opening the first-run page
 diff --git a/browser/base/content/browser.js b/browser/base/content/browser.js
-index 8ddb9e5a28..0db8922d8f 100644
+index 452b4e58d8..1f96c8b93c 100644
 --- a/browser/base/content/browser.js
 +++ b/browser/base/content/browser.js
-@@ -627,6 +627,7 @@ var gInitialPages = [
+@@ -623,6 +623,7 @@ var gInitialPages = [
    "about:sessionrestore",
    "about:welcome",
    "about:newinstall",
@@ -35,7 +35,7 @@ index 8ddb9e5a28..0db8922d8f 100644
  
  function isInitialPage(url) {
 diff --git a/browser/modules/AboutNewTab.jsm b/browser/modules/AboutNewTab.jsm
-index e7d4491840..28f5878e4d 100644
+index e7d4491840..61a72cdee2 100644
 --- a/browser/modules/AboutNewTab.jsm
 +++ b/browser/modules/AboutNewTab.jsm
 @@ -19,7 +19,7 @@ XPCOMUtils.defineLazyModuleGetters(this, {
@@ -48,7 +48,7 @@ index e7d4491840..28f5878e4d 100644
  const TOPIC_APP_QUIT = "quit-application-granted";
  const BROWSER_READY_NOTIFICATION = "sessionstore-windows-restored";
 diff --git a/browser/modules/HomePage.jsm b/browser/modules/HomePage.jsm
-index c903787fde..b73ce973bc 100644
+index c903787fde..bbeff85841 100644
 --- a/browser/modules/HomePage.jsm
 +++ b/browser/modules/HomePage.jsm
 @@ -20,7 +20,7 @@ XPCOMUtils.defineLazyModuleGetters(this, {
