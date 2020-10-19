@@ -70,7 +70,7 @@ index 05d6e0e19a..3182ab9618 100644
 +      "frame": "rgba(114, 1, 116, 1)",
 +      "tab_background_text": "rgba(255, 255, 255, 1)",
 +      "toolbar": "rgba(0, 0, 0, 0.5)",
-+      "toolbar_field": "rgba(0, 0, 0, 1)"
++      "toolbar_field_text": "rgba(0, 0, 0, 1)"
 +    }
    },
  
