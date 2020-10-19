@@ -1,8 +1,10 @@
 const fs = require("fs");
 const path = require("path");
 
+const fse = require("fs-extra");
 const yaml = require("js-yaml");
 const Listr = require("listr");
+const execa = require("execa");
 
 const { getRoot } = require("./workspace.js");
 
@@ -86,13 +88,10 @@ function generateFetch(fetches, key) {
   }
 }
 
-async function generateDockerFile({ key, buildPath, fetches, toolchains }) {
-  const builds = yaml.safeLoad(await fs.promises.readFile(buildPath, "utf-8"));
-
-  const job = builds[key];
-
+async function generateDockerFile({ key, fetches, job, name }) {
   const statements = ["FROM ua-build-base"];
-  const env = Object.entries(job.worker.env)
+  statements.push("RUN ipfs init");
+  const env = Object.entries(job.worker.env || {})
     .map(([k, v]) => `${k}=${v}`)
     .join(" \\\n    ");
   statements.push(`ENV ${env}`);
@@ -102,46 +101,39 @@ async function generateDockerFile({ key, buildPath, fetches, toolchains }) {
     statements.push(generateFetch(fetches, key));
   }
 
-  for (const key of job.fetches.toolchain) {
-    if (toolchains.get(key).run["toolchain-artifact"] !== undefined) {
-      const name = toolchains.get(key).name || key;
-      const artifact = toolchains.get(key).run["toolchain-artifact"];
-      const filename = artifact.split("/").pop();
-      statements.push(
-        [
-          `RUN wget -O ${MOZ_FETCHES_DIR}${filename} https://firefox-ci-tc.services.mozilla.com/api/index/v1/task/gecko.cache.level-3.toolchains.v3.${name}.latest/artifacts/${artifact} &&`,
-          `cd ${MOZ_FETCHES_DIR} &&`,
-          `tar -xf ${filename} &&`,
-          `rm ${filename}`,
-        ].join(" \\\n    ")
-      );
-    }
-  }
+  statements.push(`ADD fetch-toolchain-${name}.sh /builds/worker/bin/`);
+  statements.push(
+    `RUN /bin/bash /builds/worker/bin/fetch-toolchain-${name}.sh`
+  );
 
-  if (key.startsWith('win')) {
-    statements.push('ADD --chown=worker:worker makecab.exe /builds/worker/fetches/')
+  if (key.startsWith("win")) {
+    statements.push(
+      "ADD --chown=worker:worker makecab.exe /builds/worker/fetches/"
+    );
   }
-  if (key.startsWith('mac')) {
-    statements.push('COPY MacOSX10.11.sdk.tar.bz2 /builds/worker/fetches/')
-    statements.push([
-      'RUN cd /builds/worker/fetches/ &&',
-      'tar -xf MacOSX10.11.sdk.tar.bz2 &&',
-      'rm MacOSX10.11.sdk.tar.bz2',
-    ].join(" \\\n    "))
+  if (key.startsWith("mac")) {
+    statements.push("COPY MacOSX10.11.sdk.tar.bz2 /builds/worker/fetches/");
+    statements.push(
+      [
+        "RUN cd /builds/worker/fetches/ &&",
+        "tar -xf MacOSX10.11.sdk.tar.bz2 &&",
+        "rm MacOSX10.11.sdk.tar.bz2",
+      ].join(" \\\n    ")
+    );
   }
 
   statements.push(
     [
-      'ENV MOZ_FETCHES_DIR=/builds/worker/fetches/',
-      'GECKO_PATH=/builds/worker/workspace',
-      'WORKSPACE=/builds/worker/workspace',
-      'TOOLTOOL_DIR=/builds/worker/fetches/',
-      'LANG=en_US.UTF-8',
-      'LANGUAGE=en_US:en',
+      "ENV MOZ_FETCHES_DIR=/builds/worker/fetches/",
+      "GECKO_PATH=/builds/worker/workspace",
+      "WORKSPACE=/builds/worker/workspace",
+      "TOOLTOOL_DIR=/builds/worker/fetches/",
+      "LANG=en_US.UTF-8",
+      "LANGUAGE=en_US:en",
     ].join(" \\\n    ")
   );
-  statements.push('COPY configs /builds/worker/configs')
-  statements.push('WORKDIR $WORKSPACE')
+  statements.push("COPY configs /builds/worker/configs");
+  statements.push("WORKDIR $WORKSPACE");
 
   return statements.join("\n\n");
 }
@@ -150,69 +142,155 @@ async function generate() {
   const root = await getRoot();
   const fetches = await loadFetches(root);
   const toolchains = await loadToolchains(root);
-
+  const buildConfigs = [
+    {
+      name: "Linux",
+      key: "linux64/opt",
+      buildPath: path.join(
+        root,
+        "mozilla-release",
+        "taskcluster",
+        "ci",
+        "build",
+        "linux.yml"
+      ),
+    },
+    {
+      name: "Windows",
+      key: "win64/opt",
+      buildPath: path.join(
+        root,
+        "mozilla-release",
+        "taskcluster",
+        "ci",
+        "build",
+        "windows.yml"
+      ),
+    },
+    {
+      name: "MacOSX",
+      key: "macosx64/opt",
+      buildPath: path.join(
+        root,
+        "mozilla-release",
+        "taskcluster",
+        "ci",
+        "build",
+        "macosx.yml"
+      ),
+    },
+  ];
+  const buildInfos = await Promise.all(
+    buildConfigs.map(
+      async ({ buildPath, key }) =>
+        yaml.safeLoad(await fs.promises.readFile(buildPath, "utf-8"))[key]
+    )
+  );
+  const toolchainFetchTasks = [];
+  const toolchainsForConfig = buildConfigs.map(() => []);
+  buildInfos.forEach((job, i) => {
+    for (const key of job.fetches.toolchain) {
+      if (toolchains.get(key).run["toolchain-artifact"] !== undefined) {
+        const name = toolchains.get(key).name || key;
+        const artifact = toolchains.get(key).run["toolchain-artifact"];
+        const filename = artifact.split("/").pop();
+        const localDir = path.join("./artifacts", name);
+        const localPath = path.join(localDir, filename.split(".")[0]);
+        const artifactPath = path.join(localDir, filename);
+        toolchainFetchTasks.push({
+          title: `Fetch toolchain: ${name} ${filename}`,
+          skip: async () => fse.pathExists(localPath),
+          task: () =>
+            new Listr([
+              {
+                title: "Download from taskcluster",
+                skip: async () => fse.pathExists(artifactPath),
+                task: async () => {
+                  await fse.mkdirp(localDir);
+                  await execa("wget", [
+                    "-O",
+                    artifactPath,
+                    `https://firefox-ci-tc.services.mozilla.com/api/index/v1/task/gecko.cache.level-3.toolchains.v3.${name}.latest/artifacts/${artifact}`,
+                  ]);
+                },
+              },
+              {
+                title: "Extract toolchain",
+                task: async () => {
+                  await execa("tar", ["-xf", filename], { cwd: localDir });
+                  await execa("rm", [artifactPath]);
+                },
+              },
+            ]),
+        });
+        toolchainFetchTasks.push({
+          title: `Get toolchain IPFS address: ${name} ${filename}`,
+          task: async () => {
+            const ipfsAdd = await execa("ipfs", [
+              "add",
+              "-Q",
+              "-r",
+              `./artifacts/${name}`,
+            ]);
+            const hash = ipfsAdd.stdout.trim();
+            toolchainsForConfig[i].push({
+              name,
+              hash,
+            });
+            return hash;
+          },
+        });
+      }
+    }
+  });
   return new Listr([
     {
-      title: "Linux",
-      task: async () =>
-        fs.promises.writeFile(
-          path.join(root, "build", "Windows.dockerfile"),
-          await generateDockerFile({
-            key: "linux64/opt",
-            fetches,
-            toolchains,
-            buildPath: path.join(
-              root,
-              "mozilla-release",
-              "taskcluster",
-              "ci",
-              "build",
-              "linux.yml"
-            ),
-          }),
-          "utf-8"
+      title: "Prepare toolchains",
+      task: () => new Listr(toolchainFetchTasks),
+    },
+    {
+      title: "Generate toolchain scripts",
+      task: () =>
+        new Listr(
+          buildConfigs.map((conf, i) => ({
+            title: conf.name,
+            task: async () => {
+              const lines = [];
+              lines.push("ipfs daemon &");
+              lines.push("sleep 5");
+              for (const { name, hash } of toolchainsForConfig[i]) {
+                lines.push(`# ${name}`);
+                lines.push(`ipfs get -o /builds/worker/fetches/ /ipfs/${hash}`);
+              }
+              lines.push("killall ipfs");
+              return fse.writeFile(
+                path.join("build", `fetch-toolchain-${conf.name}.sh`),
+                lines.join("\n"),
+                "utf-8"
+              );
+            },
+          }))
         ),
     },
     {
-      title: "Windows",
-      task: async () =>
-        fs.promises.writeFile(
-          path.join(root, "build", "Windows.dockerfile"),
-          await generateDockerFile({
-            key: "win64/opt",
-            fetches,
-            toolchains,
-            buildPath: path.join(
-              root,
-              "mozilla-release",
-              "taskcluster",
-              "ci",
-              "build",
-              "windows.yml"
-            ),
-          }),
-          "utf-8"
-        ),
-    },
-    {
-      title: "Mac OS X",
-      task: async () =>
-        fs.promises.writeFile(
-          path.join(root, "build", "MacOSX.dockerfile"),
-          await generateDockerFile({
-            key: "macosx64/opt",
-            fetches,
-            toolchains,
-            buildPath: path.join(
-              root,
-              "mozilla-release",
-              "taskcluster",
-              "ci",
-              "build",
-              "macosx.yml"
-            ),
-          }),
-          "utf-8"
+      title: "Generate dockerfiles",
+      task: () =>
+        new Listr(
+          buildConfigs.map((conf, i) => ({
+            title: conf.name,
+            task: async () => {
+              return fse.writeFile(
+                path.join("build", `${conf.name}.dockerfile`),
+                await generateDockerFile({
+                  key: conf.key,
+                  fetches,
+                  job: buildInfos[i],
+                  name: conf.name,
+                }),
+                "utf-8"
+              );
+            },
+          }))
         ),
     },
   ]);

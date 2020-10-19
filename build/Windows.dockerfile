@@ -1,5 +1,7 @@
 FROM ua-build-base
 
+RUN ipfs init
+
 ENV TOOLTOOL_MANIFEST=browser/config/tooltool-manifests/win64/releng.manifest \
     MOZ_AUTOMATION_PACKAGE_TESTS=1
 
@@ -23,65 +25,9 @@ RUN /builds/worker/bin/fetch-content static-url \
     unzip upx-3.95-win64.zip && \
     rm upx-3.95-win64.zip
 
-RUN wget -O /builds/worker/fetches/binutils.tar.xz https://firefox-ci-tc.services.mozilla.com/api/index/v1/task/gecko.cache.level-3.toolchains.v3.linux64-binutils.latest/artifacts/public/build/binutils.tar.xz && \
-    cd /builds/worker/fetches/ && \
-    tar -xf binutils.tar.xz && \
-    rm binutils.tar.xz
+ADD fetch-toolchain-Windows.sh /builds/worker/bin/
 
-RUN wget -O /builds/worker/fetches/clang.tar.zst https://firefox-ci-tc.services.mozilla.com/api/index/v1/task/gecko.cache.level-3.toolchains.v3.linux64-clang-9-win-cross.latest/artifacts/public/build/clang.tar.zst && \
-    cd /builds/worker/fetches/ && \
-    tar -xf clang.tar.zst && \
-    rm clang.tar.zst
-
-RUN wget -O /builds/worker/fetches/rustc.tar.zst https://firefox-ci-tc.services.mozilla.com/api/index/v1/task/gecko.cache.level-3.toolchains.v3.linux64-rust-cross-1.43.latest/artifacts/public/build/rustc.tar.zst && \
-    cd /builds/worker/fetches/ && \
-    tar -xf rustc.tar.zst && \
-    rm rustc.tar.zst
-
-RUN wget -O /builds/worker/fetches/rust-size.tar.xz https://firefox-ci-tc.services.mozilla.com/api/index/v1/task/gecko.cache.level-3.toolchains.v3.linux64-rust-size.latest/artifacts/public/build/rust-size.tar.xz && \
-    cd /builds/worker/fetches/ && \
-    tar -xf rust-size.tar.xz && \
-    rm rust-size.tar.xz
-
-RUN wget -O /builds/worker/fetches/nasm.tar.bz2 https://firefox-ci-tc.services.mozilla.com/api/index/v1/task/gecko.cache.level-3.toolchains.v3.linux64-nasm.latest/artifacts/public/build/nasm.tar.bz2 && \
-    cd /builds/worker/fetches/ && \
-    tar -xf nasm.tar.bz2 && \
-    rm nasm.tar.bz2
-
-RUN wget -O /builds/worker/fetches/node.tar.xz https://firefox-ci-tc.services.mozilla.com/api/index/v1/task/gecko.cache.level-3.toolchains.v3.linux64-node-10.latest/artifacts/public/build/node.tar.xz && \
-    cd /builds/worker/fetches/ && \
-    tar -xf node.tar.xz && \
-    rm node.tar.xz
-
-RUN wget -O /builds/worker/fetches/cbindgen.tar.xz https://firefox-ci-tc.services.mozilla.com/api/index/v1/task/gecko.cache.level-3.toolchains.v3.linux64-cbindgen.latest/artifacts/public/build/cbindgen.tar.xz && \
-    cd /builds/worker/fetches/ && \
-    tar -xf cbindgen.tar.xz && \
-    rm cbindgen.tar.xz
-
-RUN wget -O /builds/worker/fetches/sccache.tar.xz https://firefox-ci-tc.services.mozilla.com/api/index/v1/task/gecko.cache.level-3.toolchains.v3.linux64-sccache.latest/artifacts/public/build/sccache.tar.xz && \
-    cd /builds/worker/fetches/ && \
-    tar -xf sccache.tar.xz && \
-    rm sccache.tar.xz
-
-RUN wget -O /builds/worker/fetches/dump_syms.tar.xz https://firefox-ci-tc.services.mozilla.com/api/index/v1/task/gecko.cache.level-3.toolchains.v3.linux64-dump-syms.latest/artifacts/public/build/dump_syms.tar.xz && \
-    cd /builds/worker/fetches/ && \
-    tar -xf dump_syms.tar.xz && \
-    rm dump_syms.tar.xz
-
-RUN wget -O /builds/worker/fetches/wine.tar.xz https://firefox-ci-tc.services.mozilla.com/api/index/v1/task/gecko.cache.level-3.toolchains.v3.linux64-wine.latest/artifacts/public/build/wine.tar.xz && \
-    cd /builds/worker/fetches/ && \
-    tar -xf wine.tar.xz && \
-    rm wine.tar.xz
-
-RUN wget -O /builds/worker/fetches/liblowercase.tar.xz https://firefox-ci-tc.services.mozilla.com/api/index/v1/task/gecko.cache.level-3.toolchains.v3.linux64-liblowercase.latest/artifacts/public/build/liblowercase.tar.xz && \
-    cd /builds/worker/fetches/ && \
-    tar -xf liblowercase.tar.xz && \
-    rm liblowercase.tar.xz
-
-RUN wget -O /builds/worker/fetches/winchecksec.tar.bz2 https://firefox-ci-tc.services.mozilla.com/api/index/v1/task/gecko.cache.level-3.toolchains.v3.linux64-winchecksec.latest/artifacts/public/build/winchecksec.tar.bz2 && \
-    cd /builds/worker/fetches/ && \
-    tar -xf winchecksec.tar.bz2 && \
-    rm winchecksec.tar.bz2
+RUN /bin/bash /builds/worker/bin/fetch-toolchain-Windows.sh
 
 ADD --chown=worker:worker makecab.exe /builds/worker/fetches/
 
@@ -91,5 +37,7 @@ ENV MOZ_FETCHES_DIR=/builds/worker/fetches/ \
     TOOLTOOL_DIR=/builds/worker/fetches/ \
     LANG=en_US.UTF-8 \
     LANGUAGE=en_US:en
+
+COPY configs /builds/worker/configs
 
 WORKDIR $WORKSPACE
