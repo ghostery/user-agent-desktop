@@ -24,6 +24,7 @@ const brandingPathComponents = ["browser", "branding", "ghostery"];
 const windowsInstallerPathComponents = ["other-licenses", "7zstub", "firefox", "7zSD.Win32.sfx"];
 const devToolsIconsPathComponents = ["devtools", "client", "themes", "images"];
 const privateBrowsingIconPaths = [
+  ["browser", "themes","shared","icons","private-browsing.svg"],
   ["browser", "themes","shared","icons","privateBrowsing.svg"],
   ["browser", "themes", "shared", "privatebrowsing", "favicon.svg"],
   ["browser", "themes", "shared", "privatebrowsing", "private-browsing.svg"]
@@ -35,6 +36,16 @@ async function getTargetPath(pathComponents) {
     "mozilla-release",
     ...pathComponents,
   );
+}
+
+async function copy(fromPath, ...to) {
+  const from = path.join(await getRoot(), ...fromPath);
+  return Promise.all(to.map(async (toPath) => {
+    return fsExtra.copy(
+      from,
+      await getTargetPath(toPath)
+    )
+  }));
 }
 
 module.exports = () => ({
@@ -61,17 +72,17 @@ module.exports = () => ({
       await getPathToSourceDevToolsIcons(),
       await getTargetPath(devToolsIconsPathComponents)
     );
-    // white ghosty for right side of private tab
-    await fsExtra.copy(
-      path.join(await getRoot(), "brands", "ghostery", "branding", "content", "private-ghosty-logo-white.svg"),
-      await getTargetPath(["browser", "themes","shared","icons","private-browsing.svg"])
+    // white ghosty private tab logo
+    await copy(
+      ["brands", "ghostery", "branding", "content", "private-ghosty-logo-white.svg"],
+      ["browser", "themes", "shared", "icons", "private-browsing.svg"],
+      ["browser", "themes", "shared", "privatebrowsing", "private-browsing.svg"],
     );
-    // copy private browser icon
-    return Promise.all(privateBrowsingIconPaths.map(async (iconPath) => {
-      return fsExtra.copy(
-        path.join(await getRoot(), "brands", "ghostery", "branding", "content", "private-ghosty-logo.svg"),
-        await getTargetPath(iconPath)
-      )
-    }));
+    // context-fill ghosty private tab logo
+    return copy(
+        ["brands", "ghostery", "branding", "content", "private-ghosty-logo.svg"],
+        ["browser", "themes","shared","icons","privateBrowsing.svg"],
+        ["browser", "themes", "shared", "privatebrowsing", "favicon.svg"],
+    );
   },
 });
