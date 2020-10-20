@@ -146,3 +146,6 @@ pref("corroborator.enabled", false);
 
 // Disable password breach alerts
 pref("signon.management.page.breach-alerts.enabled", false);
+
+// Disable Firefox VPN promo
+pref("browser.privatebrowsing.vpnpromourl", "");

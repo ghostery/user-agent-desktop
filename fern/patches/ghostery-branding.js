@@ -23,6 +23,12 @@ async function getPathToSourceWindowsInstaller() {
 const brandingPathComponents = ["browser", "branding", "ghostery"];
 const windowsInstallerPathComponents = ["other-licenses", "7zstub", "firefox", "7zSD.Win32.sfx"];
 const devToolsIconsPathComponents = ["devtools", "client", "themes", "images"];
+const privateBrowsingIconPaths = [
+  ["browser", "themes","shared","icons","private-browsing.svg"],
+  ["browser", "themes","shared","icons","privateBrowsing.svg"],
+  ["browser", "themes", "shared", "privatebrowsing", "favicon.svg"],
+  ["browser", "themes", "shared", "privatebrowsing", "private-browsing.svg"]
+];
 
 async function getTargetPath(pathComponents) {
   return path.join(
@@ -32,13 +38,24 @@ async function getTargetPath(pathComponents) {
   );
 }
 
+async function copy(fromPath, ...to) {
+  const from = path.join(await getRoot(), ...fromPath);
+  return Promise.all(to.map(async (toPath) => {
+    return fsExtra.copy(
+      from,
+      await getTargetPath(toPath)
+    )
+  }));
+}
+
 module.exports = () => ({
   name: "Setup Ghostery branding",
   paths: [
-    path.join(...brandingPathComponents),
-    path.join(...windowsInstallerPathComponents),
-    path.join(...devToolsIconsPathComponents),
-  ],
+    brandingPathComponents,
+    windowsInstallerPathComponents,
+    devToolsIconsPathComponents,
+    ...privateBrowsingIconPaths
+  ].map(p => path.join(...p)),
   skip: async () => false,
   apply: async () => {
     await fsExtra.copy(
@@ -51,9 +68,21 @@ module.exports = () => ({
       await getTargetPath(windowsInstallerPathComponents)
     );
     // copy devtools icons
-    return fsExtra.copy(
+    await fsExtra.copy(
       await getPathToSourceDevToolsIcons(),
       await getTargetPath(devToolsIconsPathComponents)
+    );
+    // white ghosty private tab logo
+    await copy(
+      ["brands", "ghostery", "branding", "content", "private-ghosty-logo-white.svg"],
+      ["browser", "themes", "shared", "icons", "private-browsing.svg"],
+      ["browser", "themes", "shared", "privatebrowsing", "private-browsing.svg"],
+    );
+    // context-fill ghosty private tab logo
+    return copy(
+        ["brands", "ghostery", "branding", "content", "private-ghosty-logo.svg"],
+        ["browser", "themes","shared","icons","privateBrowsing.svg"],
+        ["browser", "themes", "shared", "privatebrowsing", "favicon.svg"],
     );
   },
 });

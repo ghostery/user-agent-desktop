@@ -1,0 +1,17 @@
+
+html.private {
+  background:
+    url('chrome://branding/content/ghosty-tile.png') repeat,
+    linear-gradient(131deg, rgba(5, 5, 5, 0.99) 13%, #5f7c86 97%);
+}
+
+.wordmark {
+  background: url("chrome://branding/content/ghostery-wordmark-white.svg") no-repeat center center;
+  width: 231px;
+  height: 68px;
+}
+
+.logo {
+  display: none;
+}
+

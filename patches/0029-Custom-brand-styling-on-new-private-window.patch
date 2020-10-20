@@ -1,0 +1,37 @@
+From: Sam Macbeth <sam@cliqz.com>
+Date: Tue, 20 Oct 2020 16:48:54 +0200
+Subject: Custom brand styling on new private window
+
+---
+ .../privatebrowsing/content/aboutPrivateBrowsing.html           | 1 +
+ browser/locales/en-US/browser/aboutPrivateBrowsing.ftl          | 2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/browser/components/privatebrowsing/content/aboutPrivateBrowsing.html b/browser/components/privatebrowsing/content/aboutPrivateBrowsing.html
+index 4d22812723..993438d22e 100644
+--- a/browser/components/privatebrowsing/content/aboutPrivateBrowsing.html
++++ b/browser/components/privatebrowsing/content/aboutPrivateBrowsing.html
+@@ -11,6 +11,7 @@
+     <link rel="icon" href="chrome://browser/skin/privatebrowsing/favicon.svg"/>
+     <link rel="stylesheet" href="chrome://browser/content/aboutPrivateBrowsing.css" media="all"/>
+     <link rel="stylesheet" href="chrome://browser/skin/privatebrowsing/aboutPrivateBrowsing.css" media="all"/>
++    <link rel="stylesheet" href="chrome://branding/content/aboutPrivateBrowsing.css" media="all"/>
+     <link rel="localization" href="branding/brand.ftl"/>
+     <link rel="localization" href="browser/branding/brandings.ftl">
+     <link rel="localization" href="browser/aboutPrivateBrowsing.ftl"/>
+diff --git a/browser/locales/en-US/browser/aboutPrivateBrowsing.ftl b/browser/locales/en-US/browser/aboutPrivateBrowsing.ftl
+index 306e1b8f1b..7ffef093bf 100644
+--- a/browser/locales/en-US/browser/aboutPrivateBrowsing.ftl
++++ b/browser/locales/en-US/browser/aboutPrivateBrowsing.ftl
+@@ -4,7 +4,7 @@
+ 
+ privatebrowsingpage-open-private-window-label = Open a Private Window
+     .accesskey = P
+-about-private-browsing-search-placeholder = Search the Web
++about-private-browsing-search-placeholder = Search Privately
+ about-private-browsing-info-title = You’re in a Private Window
+ about-private-browsing-info-myths = Common myths about private browsing
+ about-private-browsing =
+-- 
+2.28.0
+
