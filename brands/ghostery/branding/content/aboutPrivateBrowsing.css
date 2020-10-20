@@ -1,7 +1,8 @@
 
 html.private {
-  /* TODO: Background logo */
-  background-image: linear-gradient(131deg, rgba(5, 5, 5, 0.99) 13%, #5f7c86 97%);
+  background:
+    url('chrome://branding/content/ghosty-tile.png') repeat,
+    linear-gradient(131deg, rgba(5, 5, 5, 0.99) 13%, #5f7c86 97%);
 }
 
 .wordmark {
