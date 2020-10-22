@@ -1,5 +1,10 @@
+set -x -e
 ipfs daemon &
-sleep 5
+while [ ! -e ${HOME}/.ipfs/api ]
+do
+echo "Waiting for IPFS to start"
+sleep 1
+done
 # linux64-binutils
 ipfs get -o /builds/worker/fetches/ /ipfs/QmbFSjpvmnMyBXe2yfYao1kFyJDT5JYwU13PoPAMzw8ZoR
 # linux64-clang-9

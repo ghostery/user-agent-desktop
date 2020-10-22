@@ -226,12 +226,7 @@ async function generate(artifactBaseDir) {
         toolchainFetchTasks.push({
           title: `Get toolchain IPFS address: ${name} ${filename}`,
           task: async () => {
-            const ipfsAdd = await execa("ipfs", [
-              "add",
-              "-Q",
-              "-r",
-              localPath,
-            ]);
+            const ipfsAdd = await execa("ipfs", ["add", "-Q", "-r", localDir]);
             const hash = ipfsAdd.stdout.trim();
             toolchainsForConfig[i].push({
               name,
@@ -256,8 +251,14 @@ async function generate(artifactBaseDir) {
             title: conf.name,
             task: async () => {
               const lines = [];
+              lines.push("set -x -e");
+              // start up ipfs daemon and wait for it
               lines.push("ipfs daemon &");
-              lines.push("sleep 5");
+              lines.push("while [ ! -e ${HOME}/.ipfs/api ]");
+              lines.push("do");
+              lines.push('echo "Waiting for IPFS to start"');
+              lines.push("sleep 1");
+              lines.push("done");
               for (const { name, hash } of toolchainsForConfig[i]) {
                 lines.push(`# ${name}`);
                 lines.push(`ipfs get -o /builds/worker/fetches/ /ipfs/${hash}`);
