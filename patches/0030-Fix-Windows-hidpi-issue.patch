@@ -1,0 +1,24 @@
+From: Sam Macbeth <sam@cliqz.com>
+Date: Thu, 22 Oct 2020 19:04:34 +0200
+Subject: Fix Windows hidpi issue
+
+---
+ browser/app/splash.rc | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/browser/app/splash.rc b/browser/app/splash.rc
+index a5d418e812..c406b79850 100644
+--- a/browser/app/splash.rc
++++ b/browser/app/splash.rc
+@@ -6,6 +6,8 @@
+ #include <windows.h>
+ #include "nsNativeAppSupportWin.h"
+ 
++1 24 "firefox.exe.manifest"
++
+ IDI_APPICON ICON FIREFOX_ICO
+ IDI_DOCUMENT ICON DOCUMENT_ICO
+ IDI_APPLICATION ICON FIREFOX_ICO
+-- 
+2.28.0
+
