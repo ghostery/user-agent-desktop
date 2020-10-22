@@ -1,0 +1,24 @@
+From: Sam Macbeth <sam@cliqz.com>
+Date: Thu, 22 Oct 2020 09:24:59 +0200
+Subject: Use the same UA as Firefox
+
+---
+ netwerk/protocol/http/nsHttpHandler.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/netwerk/protocol/http/nsHttpHandler.cpp b/netwerk/protocol/http/nsHttpHandler.cpp
+index ae703663bf..1b0d3e819d 100644
+--- a/netwerk/protocol/http/nsHttpHandler.cpp
++++ b/netwerk/protocol/http/nsHttpHandler.cpp
+@@ -943,7 +943,7 @@ void nsHttpHandler::BuildUserAgent() {
+   mUserAgent += '/';
+   mUserAgent += mProductSub;
+ 
+-  bool isFirefox = mAppName.EqualsLiteral("Firefox");
++  bool isFirefox = true;
+   if (isFirefox || mCompatFirefoxEnabled) {
+     // "Firefox/x.y" (compatibility) app token
+     mUserAgent += ' ';
+-- 
+2.28.0
+
