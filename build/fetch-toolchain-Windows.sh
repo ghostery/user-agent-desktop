@@ -7,8 +7,8 @@ sleep 1
 done
 # linux64-binutils
 ipfs get -o /builds/worker/fetches/ /ipfs/QmbFSjpvmnMyBXe2yfYao1kFyJDT5JYwU13PoPAMzw8ZoR
-# linux64-clang-9-win-cross
-ipfs get -o /builds/worker/fetches/ /ipfs/QmVP2xyATSXq3mWF67NfMcFWxi8wQwZzRiokPHQbh5VtWE
+# linux64-clang-11-win-cross
+ipfs get -o /builds/worker/fetches/ /ipfs/QmU3mPbDJrfKpZ1zUkVY85RFXE1K8LP3H2QTgNhZjmFZN6
 # linux64-rust-cross-1.43
 ipfs get -o /builds/worker/fetches/ /ipfs/QmTm5Q6Q4rCoo1Wta1BW2mo977HkqKKLH6pxwQWRf95N5T
 # linux64-rust-size
@@ -29,4 +29,6 @@ ipfs get -o /builds/worker/fetches/ /ipfs/Qmc9y75MCWnWNbZmcHP6sV5tJdQ4GpN9EPSem4
 ipfs get -o /builds/worker/fetches/ /ipfs/Qmf38zh6yE7Q5vxRfhJRmEGifkzUZ11SddAzkKTwreACGH
 # linux64-winchecksec
 ipfs get -o /builds/worker/fetches/ /ipfs/QmQ9LcsYkQ9r3h93Gike1k3LZANumSy64YN8p5otAHQnRh
+# win64-dump-syms
+ipfs get -o /builds/worker/fetches/ /ipfs/QmV2QW6EaWQEXQUunHv5PVUAimv5apNwhR84WPtJv628MQ
 killall ipfs

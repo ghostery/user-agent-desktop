@@ -7,8 +7,8 @@ sleep 1
 done
 # linux64-binutils
 ipfs get -o /builds/worker/fetches/ /ipfs/QmbFSjpvmnMyBXe2yfYao1kFyJDT5JYwU13PoPAMzw8ZoR
-# linux64-clang-9
-ipfs get -o /builds/worker/fetches/ /ipfs/QmQ97228DNiAURGmQs9RYZXVp1ebGVK3Sze3dQnRLrJKtc
+# linux64-clang-11
+ipfs get -o /builds/worker/fetches/ /ipfs/QmQiiWbgMWSqnvmdXrek8ms6kSwjjz12t8AguGTj2Li9Gb
 # linux64-rust-1.43
 ipfs get -o /builds/worker/fetches/ /ipfs/QmdkG2PjnJBQP6W5nj2VftqvfwVqEa4xGr7RZp2ywPvpJr
 # linux64-rust-size
@@ -25,6 +25,6 @@ ipfs get -o /builds/worker/fetches/ /ipfs/QmWvnVdiVKukH1se82Rq1Wjsmjn9axo6xVQq4B
 ipfs get -o /builds/worker/fetches/ /ipfs/QmSuuKqV6u9Hg1ciGmqBYkMjYY6HHms84bbXpySDpGXNLM
 # linux64-lucetc
 ipfs get -o /builds/worker/fetches/ /ipfs/QmSgacDiHuKMnKoBS9kpZVSPbdABkwpGqdrQtHDVSF1pQV
-# wasi-sysroot
-ipfs get -o /builds/worker/fetches/ /ipfs/QmQTd24kEGFbEYhrc8qV3iDHbjFkstRAyeMhCFsWZ8WGc5
+# wasi-sysroot-11
+ipfs get -o /builds/worker/fetches/ /ipfs/QmTNWAZhW6g6PH7vrMoWPRUXH8NTN11KrGgpFWGphYTWpw
 killall ipfs

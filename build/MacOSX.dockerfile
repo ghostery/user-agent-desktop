@@ -2,7 +2,7 @@ FROM ua-build-base
 
 RUN ipfs init
 
-ENV 
+ENV MOZ_AUTOMATION_PACKAGE_TESTS=1
 
 
 
