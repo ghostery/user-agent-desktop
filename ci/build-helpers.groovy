@@ -186,7 +186,7 @@ def windows_signing(name, objDir, artifactGlob) {
                     stage("Checkout") {
                         checkout scm
                         // clean old build artifacts in work dir
-                        sh 'rm -rf mozilla-release'
+                        bat 'del /s /q mozilla-release'
                     }
                     stage('Prepare') {
                         unstash name
