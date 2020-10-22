@@ -138,7 +138,7 @@ async function generateDockerFile({ key, fetches, job, name }) {
   return statements.join("\n\n");
 }
 
-async function generate() {
+async function generate(artifactBaseDir) {
   const root = await getRoot();
   const fetches = await loadFetches(root);
   const toolchains = await loadToolchains(root);
@@ -194,7 +194,7 @@ async function generate() {
         const name = toolchains.get(key).name || key;
         const artifact = toolchains.get(key).run["toolchain-artifact"];
         const filename = artifact.split("/").pop();
-        const localDir = path.join("./artifacts", name);
+        const localDir = path.join(artifactBaseDir, name);
         const localPath = path.join(localDir, filename.split(".")[0]);
         const artifactPath = path.join(localDir, filename);
         toolchainFetchTasks.push({
@@ -230,7 +230,7 @@ async function generate() {
               "add",
               "-Q",
               "-r",
-              `./artifacts/${name}`,
+              localPath,
             ]);
             const hash = ipfsAdd.stdout.trim();
             toolchainsForConfig[i].push({
