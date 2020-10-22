@@ -7,7 +7,7 @@ Subject: Rename 'Firefox Home' to '$Brand Home'
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/browser/locales/en-US/browser/preferences/preferences.ftl b/browser/locales/en-US/browser/preferences/preferences.ftl
-index 7296ddeab6..c4b932a559 100644
+index 83c4f937df..15ba5e2f8e 100644
 --- a/browser/locales/en-US/browser/preferences/preferences.ftl
 +++ b/browser/locales/en-US/browser/preferences/preferences.ftl
 @@ -581,7 +581,7 @@ home-restore-defaults =
