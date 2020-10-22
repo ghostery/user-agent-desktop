@@ -10,6 +10,8 @@ const { getRoot } = require("./workspace.js");
 
 const MOZ_FETCHES_DIR = "/builds/worker/fetches/";
 
+const SKIP_TOOLCHAINS = new Set(['win64-pdbstr'])
+
 async function loadFetches(root) {
   return yaml.safeLoad(
     await fs.promises.readFile(
@@ -181,16 +183,23 @@ async function generate(artifactBaseDir) {
     },
   ];
   const buildInfos = await Promise.all(
-    buildConfigs.map(
-      async ({ buildPath, key }) =>
-        yaml.safeLoad(await fs.promises.readFile(buildPath, "utf-8"))[key]
-    )
+    buildConfigs.map(async ({ buildPath, key }) => {
+      const jobs = yaml.safeLoad(
+        await fs.promises.readFile(buildPath, "utf-8")
+      );
+      if (jobs["job-defaults"]) {
+        for (const toolchain of jobs["job-defaults"].fetches.toolchain) {
+          jobs[key].fetches.toolchain.push(toolchain);
+        }
+      }
+      return jobs[key];
+    })
   );
   const toolchainFetchTasks = [];
   const toolchainsForConfig = buildConfigs.map(() => []);
   buildInfos.forEach((job, i) => {
     for (const key of job.fetches.toolchain) {
-      if (toolchains.get(key).run["toolchain-artifact"] !== undefined) {
+      if (toolchains.get(key).run["toolchain-artifact"] !== undefined && !SKIP_TOOLCHAINS.has(key)) {
         const name = toolchains.get(key).name || key;
         const artifact = toolchains.get(key).run["toolchain-artifact"];
         const filename = artifact.split("/").pop();
