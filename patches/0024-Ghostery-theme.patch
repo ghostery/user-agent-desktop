@@ -45,7 +45,7 @@ index 0000000000..850918c938
 +<svg height="200" viewBox="0 0 3000 200" width="3000" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><linearGradient id="a" x1="0%" x2="100%" y1="49.777778%" y2="50.187103%"><stop offset="0" stop-color="#720174"/><stop offset="1" stop-color="#00aef0"/></linearGradient><path d="m0 0h3000v200h-3000z" fill="url(#a)"/></svg>
 \ No newline at end of file
 diff --git a/toolkit/mozapps/extensions/default-theme/manifest.json b/toolkit/mozapps/extensions/default-theme/manifest.json
-index 05d6e0e19a..3182ab9618 100644
+index 05d6e0e19a..9cc863bd5d 100644
 --- a/toolkit/mozapps/extensions/default-theme/manifest.json
 +++ b/toolkit/mozapps/extensions/default-theme/manifest.json
 @@ -7,36 +7,35 @@

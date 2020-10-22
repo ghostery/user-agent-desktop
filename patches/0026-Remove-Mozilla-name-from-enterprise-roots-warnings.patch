@@ -7,7 +7,7 @@ Subject: Remove Mozilla name from enterprise roots warnings
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/browser/locales/en-US/browser/browser.ftl b/browser/locales/en-US/browser/browser.ftl
-index 6363efe5e0..e9a14e729b 100644
+index 3da741bd0c..f7c588a40f 100644
 --- a/browser/locales/en-US/browser/browser.ftl
 +++ b/browser/locales/en-US/browser/browser.ftl
 @@ -240,7 +240,7 @@ identity-connection-internal = This is a secure { -brand-short-name } page.
