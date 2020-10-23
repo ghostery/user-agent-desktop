@@ -6,12 +6,13 @@ Subject: Ghostery theme
  toolkit/modules/LightweightThemeConsumer.jsm  |  2 +-
  .../background-gradient-dark.svg              |  1 +
  .../default-theme/background-gradient.svg     |  1 +
- .../extensions/default-theme/manifest.json    | 41 +++++++++----------
+ .../extensions/default-theme/manifest.json    | 43 +++++++++----------
+ .../extensions/internal/XPIProvider.jsm       |  2 +-
  toolkit/mozapps/extensions/jar.mn             |  2 +
  toolkit/themes/linux/global/toolbarbutton.css |  2 +-
  toolkit/themes/osx/global/toolbarbutton.css   |  2 +-
  .../themes/windows/global/toolbarbutton.css   |  2 +-
- 8 files changed, 28 insertions(+), 25 deletions(-)
+ 9 files changed, 30 insertions(+), 27 deletions(-)
  create mode 100644 toolkit/mozapps/extensions/default-theme/background-gradient-dark.svg
  create mode 100644 toolkit/mozapps/extensions/default-theme/background-gradient.svg
 
@@ -55,10 +56,11 @@ index 05d6e0e19a..9cc863bd5d 100644
 -  "name": "Default",
 -  "description": "A theme with the operating system color scheme.",
 -  "author": "Mozilla",
+-  "version": "1.1",
 +  "name": "Ghostery Browser Theme",
 +  "description": "",
 +  "author": "Ghostery",
-   "version": "1.1",
++  "version": "1.2",
  
    "icons": {"32": "icon.svg"},
  
@@ -105,6 +107,19 @@ index 05d6e0e19a..9cc863bd5d 100644
      }
    }
  }
+diff --git a/toolkit/mozapps/extensions/internal/XPIProvider.jsm b/toolkit/mozapps/extensions/internal/XPIProvider.jsm
+index 7b4e3b4f11..5e229ceeef 100644
+--- a/toolkit/mozapps/extensions/internal/XPIProvider.jsm
++++ b/toolkit/mozapps/extensions/internal/XPIProvider.jsm
+@@ -2460,7 +2460,7 @@ var XPIProvider = {
+ 
+       this.maybeInstallBuiltinAddon(
+         "default-theme@mozilla.org",
+-        "1.1",
++        "1.2",
+         "resource://default-theme/"
+       );
+ 
 diff --git a/toolkit/mozapps/extensions/jar.mn b/toolkit/mozapps/extensions/jar.mn
 index a203524e23..1b924aa053 100644
 --- a/toolkit/mozapps/extensions/jar.mn
