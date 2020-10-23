@@ -28,3 +28,4 @@
 0028-Custom-brand-styling-on-new-private-window.patch
 0029-Use-the-same-UA-as-Firefox.patch
 0030-Fix-Windows-hidpi-issue.patch
+0031-Allow-update-channel-to-be-configured-via-prefs.patch
