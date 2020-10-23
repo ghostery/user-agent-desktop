@@ -90,23 +90,26 @@ function generateFetch(fetches, key) {
   }
 }
 
-async function generateDockerFile({ key, fetches, job, name }) {
+async function generateDockerFile({ key, fetches, job, name, toolchains }) {
   const statements = ["FROM ua-build-base"];
-  statements.push("RUN ipfs init");
+  statements.push("ARG IPFS_GATEWAY=https://cloudflare-ipfs.com");
   const env = Object.entries(job.worker.env || {})
     .map(([k, v]) => `${k}=${v}`)
     .join(" \\\n    ");
   statements.push(`ENV ${env}`);
-  statements.push("");
 
   for (const key of job.fetches.fetch || []) {
     statements.push(generateFetch(fetches, key));
   }
 
-  statements.push(`ADD fetch-toolchain-${name}.sh /builds/worker/bin/`);
-  statements.push(
-    `RUN /bin/bash /builds/worker/bin/fetch-toolchain-${name}.sh`
-  );
+  for (const { filename, hash } of toolchains) {
+    statements.push([
+      `RUN wget -O /builds/worker/fetches/${filename} $IPFS_GATEWAY/ipfs/${hash} &&`,
+      `cd /builds/worker/fetches/ &&`,
+      `tar -xf ${filename} &&`,
+      `rm ${filename}`
+    ].join(" \\\n    "));
+  }
 
   if (key.startsWith("win")) {
     statements.push(
@@ -204,41 +207,27 @@ async function generate(artifactBaseDir) {
         const artifact = toolchains.get(key).run["toolchain-artifact"];
         const filename = artifact.split("/").pop();
         const localDir = path.join(artifactBaseDir, name);
-        const localPath = path.join(localDir, filename.split(".")[0]);
         const artifactPath = path.join(localDir, filename);
         toolchainFetchTasks.push({
           title: `Fetch toolchain: ${name} ${filename}`,
-          skip: async () => fse.pathExists(localPath),
-          task: () =>
-            new Listr([
-              {
-                title: "Download from taskcluster",
-                skip: async () => fse.pathExists(artifactPath),
-                task: async () => {
-                  await fse.mkdirp(localDir);
-                  await execa("wget", [
-                    "-O",
-                    artifactPath,
-                    `https://firefox-ci-tc.services.mozilla.com/api/index/v1/task/gecko.cache.level-3.toolchains.v3.${name}.latest/artifacts/${artifact}`,
-                  ]);
-                },
-              },
-              {
-                title: "Extract toolchain",
-                task: async () => {
-                  await execa("tar", ["-xf", filename], { cwd: localDir });
-                  await execa("rm", [artifactPath]);
-                },
-              },
-            ]),
+          skip: async () => fse.pathExists(artifactPath),
+          task: async () => {
+            await fse.mkdirp(localDir);
+            await execa("wget", [
+              "-O",
+              artifactPath,
+              `https://firefox-ci-tc.services.mozilla.com/api/index/v1/task/gecko.cache.level-3.toolchains.v3.${name}.latest/artifacts/${artifact}`,
+            ]);
+          }
         });
         toolchainFetchTasks.push({
           title: `Get toolchain IPFS address: ${name} ${filename}`,
           task: async () => {
-            const ipfsAdd = await execa("ipfs", ["add", "-Q", "-r", localDir]);
+            const ipfsAdd = await execa("ipfs", ["add", "-Q", artifactPath]);
             const hash = ipfsAdd.stdout.trim();
             toolchainsForConfig[i].push({
               name,
+              filename,
               hash,
             });
             return hash;
@@ -253,36 +242,6 @@ async function generate(artifactBaseDir) {
       task: () => new Listr(toolchainFetchTasks),
     },
     {
-      title: "Generate toolchain scripts",
-      task: () =>
-        new Listr(
-          buildConfigs.map((conf, i) => ({
-            title: conf.name,
-            task: async () => {
-              const lines = [];
-              lines.push("set -x -e");
-              // start up ipfs daemon and wait for it
-              lines.push("ipfs daemon &");
-              lines.push("while [ ! -e ${HOME}/.ipfs/api ]");
-              lines.push("do");
-              lines.push('echo "Waiting for IPFS to start"');
-              lines.push("sleep 1");
-              lines.push("done");
-              for (const { name, hash } of toolchainsForConfig[i]) {
-                lines.push(`# ${name}`);
-                lines.push(`ipfs get -o /builds/worker/fetches/ /ipfs/${hash}`);
-              }
-              lines.push("killall ipfs");
-              return fse.writeFile(
-                path.join("build", `fetch-toolchain-${conf.name}.sh`),
-                lines.join("\n"),
-                "utf-8"
-              );
-            },
-          }))
-        ),
-    },
-    {
       title: "Generate dockerfiles",
       task: () =>
         new Listr(
@@ -292,10 +251,11 @@ async function generate(artifactBaseDir) {
               return fse.writeFile(
                 path.join("build", `${conf.name}.dockerfile`),
                 await generateDockerFile({
+                  name: conf.name,
                   key: conf.key,
                   fetches,
                   job: buildInfos[i],
-                  name: conf.name,
+                  toolchains: toolchainsForConfig[i],
                 }),
                 "utf-8"
               );

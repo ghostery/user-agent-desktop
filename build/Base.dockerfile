@@ -108,13 +108,5 @@ RUN chown -R worker:worker /builds/worker/bin && chmod 755 /builds/worker/bin/*
 # fetches
 RUN mkdir -p /builds/worker/fetches/ && \
     chown -R worker:worker /builds/worker/fetches
-# ipfs
-RUN wget https://dist.ipfs.io/go-ipfs/v0.7.0/go-ipfs_v0.7.0_linux-amd64.tar.gz && \
-    tar -xzf go-ipfs_v0.7.0_linux-amd64.tar.gz && \
-    cd go-ipfs && \
-    bash install.sh && \
-    cd .. && \
-    rm -r go-ipfs && \
-    rm go-ipfs_v0.7.0_linux-amd64.tar.gz
 
 USER worker
