@@ -1,0 +1,24 @@
+From: Sam Macbeth <sam@cliqz.com>
+Date: Fri, 23 Oct 2020 15:01:24 +0200
+Subject: Allow update channel to be configured via prefs
+
+---
+ toolkit/modules/UpdateUtils.jsm | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/toolkit/modules/UpdateUtils.jsm b/toolkit/modules/UpdateUtils.jsm
+index d2b695b474..3f4c77f9fa 100644
+--- a/toolkit/modules/UpdateUtils.jsm
++++ b/toolkit/modules/UpdateUtils.jsm
+@@ -59,7 +59,7 @@ var UpdateUtils = {
+    *        Whether or not to include the partner bits. Default: true.
+    */
+   getUpdateChannel(aIncludePartners = true) {
+-    let defaults = Services.prefs.getDefaultBranch(null);
++    let defaults = Services.prefs;
+     let channel = defaults.getCharPref(
+       "app.update.channel",
+       AppConstants.MOZ_UPDATE_CHANNEL
+-- 
+2.28.0
+
