@@ -73,7 +73,7 @@ index 05d6e0e19a..aaf5e35c09 100644
 +      "tab_background_text": "rgba(255, 255, 255, 1)",
 +      "toolbar": "rgba(0, 0, 0, 0.5)",
 +      "toolbar_field_text": "rgba(0, 0, 0, 1)",
-+      "toolbar_field_highlight": "#00aef0",
++      "toolbar_field_highlight": "#0063E1",
 +      "popup_highlight": "#00aef0"
 +    }
    },
