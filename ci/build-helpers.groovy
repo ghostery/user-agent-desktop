@@ -81,7 +81,7 @@ def build(name, dockerFile, targetPlatform, objDir, params, buildId) {
 
         image = stage('docker build base') {
             docker.build('ua-build-base', '-f build/Base.dockerfile ./build/ --build-arg user=`whoami` --build-arg UID=`id -u` --build-arg GID=`id -g`')
-            docker.build("ua-build-${name.toLowerCase()}", "-f build/${dockerFile} ./build")
+            docker.build("ua-build-${name.toLowerCase()}", "-f build/${dockerFile} ./build --build-arg IPFS_GATEWAY=http://kria.cliqz:8080")
         }
 
         image.inside("-v /mnt/vfat/vs2017_15.8.4/:/builds/worker/fetches/vs2017_15.8.4") {
