@@ -149,3 +149,6 @@ pref("signon.management.page.breach-alerts.enabled", false);
 
 // Disable Firefox VPN promo
 pref("browser.privatebrowsing.vpnpromourl", "");
+
+// Disable dropdown suggestions with empty query
+pref("browser.urlbar.suggest.topsites", false);
