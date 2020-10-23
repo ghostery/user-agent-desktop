@@ -8,7 +8,7 @@ done
 # linux64-binutils
 ipfs get -o /builds/worker/fetches/ /ipfs/QmbFSjpvmnMyBXe2yfYao1kFyJDT5JYwU13PoPAMzw8ZoR
 # linux64-clang-11
-ipfs get -o /builds/worker/fetches/ /ipfs/QmQiiWbgMWSqnvmdXrek8ms6kSwjjz12t8AguGTj2Li9Gb
+ipfs get -o /builds/worker/fetches/ /ipfs/QmWiYddEt4LyCBy1c3HfP8DbZtttj71hp8KQ13FyKAYrtC
 # linux64-rust-1.43
 ipfs get -o /builds/worker/fetches/ /ipfs/QmdkG2PjnJBQP6W5nj2VftqvfwVqEa4xGr7RZp2ywPvpJr
 # linux64-rust-size
