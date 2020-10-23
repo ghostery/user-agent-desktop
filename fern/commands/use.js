@@ -58,7 +58,6 @@ module.exports = (program) => {
         ) {
           workspace.app = appVersionOverride;
         }
-        console.log('xxx', ipfsGateway)
 
         const tasks = new Listr([
           {
