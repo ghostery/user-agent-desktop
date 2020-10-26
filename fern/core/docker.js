@@ -185,6 +185,7 @@ async function generate(artifactBaseDir) {
       ),
     },
   ];
+  // Collect the toolchains required for each build from it's specification in taskcluster configs.
   const buildInfos = await Promise.all(
     buildConfigs.map(async ({ buildPath, key }) => {
       const jobs = yaml.safeLoad(
@@ -198,6 +199,7 @@ async function generate(artifactBaseDir) {
       return jobs[key];
     })
   );
+  // Generate the Listr tasks for fetching toolchains from taskcluster and getting their IPFS address.
   const toolchainFetchTasks = [];
   const toolchainsForConfig = buildConfigs.map(() => []);
   buildInfos.forEach((job, i) => {
