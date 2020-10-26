@@ -21,11 +21,15 @@ module.exports = (program) => {
       "-a, --app <APP>",
       "Specify the app version"
     )
+    .option(
+      "--ipfs-gateway <URL>",
+      "Specify an IPFS gateway for downloading Firefox"
+    )
     .action(
       async ({
         app: appVersionOverride,
         firefox: firefoxVersionOverride,
-        ghostery: ghosteryVersionOverride,
+        ipfsGateway,
       }) => {
         let workspace = await loadWorkspace();
 
@@ -58,7 +62,7 @@ module.exports = (program) => {
         const tasks = new Listr([
           {
             title: `Setup Firefox ${workspace.firefox}`,
-            task: async () => await firefox.use(workspace.firefox),
+            task: async () => await firefox.use(workspace.firefox, ipfsGateway),
           },
           {
             title: `Setup Addons`,

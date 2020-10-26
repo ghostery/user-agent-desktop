@@ -1,78 +1,83 @@
 FROM ua-build-base
 
-ENV TOOLTOOL_MANIFEST=browser/config/tooltool-manifests/macosx64/cross-releng.manifest
+ARG IPFS_GATEWAY=https://cloudflare-ipfs.com
 
+ENV MOZ_AUTOMATION_PACKAGE_TESTS=1
 
-
-RUN wget -O /builds/worker/fetches/binutils.tar.xz https://firefox-ci-tc.services.mozilla.com/api/index/v1/task/gecko.cache.level-3.toolchains.v3.linux64-binutils.latest/artifacts/public/build/binutils.tar.xz && \
-    cd /builds/worker/fetches/ && \
-    tar -xf binutils.tar.xz && \
-    rm binutils.tar.xz
-
-RUN wget -O /builds/worker/fetches/cctools.tar.xz https://firefox-ci-tc.services.mozilla.com/api/index/v1/task/gecko.cache.level-3.toolchains.v3.linux64-cctools-port.latest/artifacts/public/build/cctools.tar.xz && \
+RUN wget -O /builds/worker/fetches/cctools.tar.xz $IPFS_GATEWAY/ipfs/QmTxe5waLFp7rCEv8zmgPZSaTHXUGTD6y1WTBog15xq4fo && \
     cd /builds/worker/fetches/ && \
     tar -xf cctools.tar.xz && \
     rm cctools.tar.xz
 
-RUN wget -O /builds/worker/fetches/clang.tar.zst https://firefox-ci-tc.services.mozilla.com/api/index/v1/task/gecko.cache.level-3.toolchains.v3.linux64-clang-9-macosx-cross.latest/artifacts/public/build/clang.tar.zst && \
+RUN wget -O /builds/worker/fetches/clang.tar.zst $IPFS_GATEWAY/ipfs/QmNp3Rb8vbgaztJMgsHWN75zyGtUkAESRYhf6eBm4eVfe7 && \
     cd /builds/worker/fetches/ && \
     tar -xf clang.tar.zst && \
     rm clang.tar.zst
 
-RUN wget -O /builds/worker/fetches/hfsplus-tools.tar.xz https://firefox-ci-tc.services.mozilla.com/api/index/v1/task/gecko.cache.level-3.toolchains.v3.linux64-hfsplus.latest/artifacts/public/build/hfsplus-tools.tar.xz && \
-    cd /builds/worker/fetches/ && \
-    tar -xf hfsplus-tools.tar.xz && \
-    rm hfsplus-tools.tar.xz
-
-RUN wget -O /builds/worker/fetches/dmg.tar.xz https://firefox-ci-tc.services.mozilla.com/api/index/v1/task/gecko.cache.level-3.toolchains.v3.linux64-libdmg.latest/artifacts/public/build/dmg.tar.xz && \
-    cd /builds/worker/fetches/ && \
-    tar -xf dmg.tar.xz && \
-    rm dmg.tar.xz
-
-RUN wget -O /builds/worker/fetches/llvm-dsymutil.tar.xz https://firefox-ci-tc.services.mozilla.com/api/index/v1/task/gecko.cache.level-3.toolchains.v3.linux64-llvm-dsymutil.latest/artifacts/public/build/llvm-dsymutil.tar.xz && \
-    cd /builds/worker/fetches/ && \
-    tar -xf llvm-dsymutil.tar.xz && \
-    rm llvm-dsymutil.tar.xz
-
-RUN wget -O /builds/worker/fetches/rustc.tar.zst https://firefox-ci-tc.services.mozilla.com/api/index/v1/task/gecko.cache.level-3.toolchains.v3.linux64-rust-macos-1.43.latest/artifacts/public/build/rustc.tar.zst && \
-    cd /builds/worker/fetches/ && \
-    tar -xf rustc.tar.zst && \
-    rm rustc.tar.zst
-
-RUN wget -O /builds/worker/fetches/rust-size.tar.xz https://firefox-ci-tc.services.mozilla.com/api/index/v1/task/gecko.cache.level-3.toolchains.v3.linux64-rust-size.latest/artifacts/public/build/rust-size.tar.xz && \
-    cd /builds/worker/fetches/ && \
-    tar -xf rust-size.tar.xz && \
-    rm rust-size.tar.xz
-
-RUN wget -O /builds/worker/fetches/cbindgen.tar.xz https://firefox-ci-tc.services.mozilla.com/api/index/v1/task/gecko.cache.level-3.toolchains.v3.linux64-cbindgen.latest/artifacts/public/build/cbindgen.tar.xz && \
-    cd /builds/worker/fetches/ && \
-    tar -xf cbindgen.tar.xz && \
-    rm cbindgen.tar.xz
-
-RUN wget -O /builds/worker/fetches/sccache.tar.xz https://firefox-ci-tc.services.mozilla.com/api/index/v1/task/gecko.cache.level-3.toolchains.v3.linux64-sccache.latest/artifacts/public/build/sccache.tar.xz && \
+RUN wget -O /builds/worker/fetches/sccache.tar.xz $IPFS_GATEWAY/ipfs/QmeB7fo2FuA9RNwK3fCRsHMD685HN9843HUfnHxw8S5iCt && \
     cd /builds/worker/fetches/ && \
     tar -xf sccache.tar.xz && \
     rm sccache.tar.xz
 
-RUN wget -O /builds/worker/fetches/nasm.tar.bz2 https://firefox-ci-tc.services.mozilla.com/api/index/v1/task/gecko.cache.level-3.toolchains.v3.linux64-nasm.latest/artifacts/public/build/nasm.tar.bz2 && \
+RUN wget -O /builds/worker/fetches/wasi-sysroot.tar.xz $IPFS_GATEWAY/ipfs/QmVHARn5VnwKa2x8PPP2g4YagneCFsZfDxUY5BqZBZALY3 && \
+    cd /builds/worker/fetches/ && \
+    tar -xf wasi-sysroot.tar.xz && \
+    rm wasi-sysroot.tar.xz
+
+RUN wget -O /builds/worker/fetches/binutils.tar.xz $IPFS_GATEWAY/ipfs/QmfTyFzy9f61Est4wodKXvwKtPzDbsChWn6WknABjqXd99 && \
+    cd /builds/worker/fetches/ && \
+    tar -xf binutils.tar.xz && \
+    rm binutils.tar.xz
+
+RUN wget -O /builds/worker/fetches/dump_syms.tar.xz $IPFS_GATEWAY/ipfs/QmNqhTYRQjunm9kduj8vnoWy6zMteMPy6H7fvHi3PPRVHp && \
+    cd /builds/worker/fetches/ && \
+    tar -xf dump_syms.tar.xz && \
+    rm dump_syms.tar.xz
+
+RUN wget -O /builds/worker/fetches/hfsplus-tools.tar.xz $IPFS_GATEWAY/ipfs/QmWW2sbyn2raXW13JmXMfYkpAxcjJYfSLLFq1huKrvuYbk && \
+    cd /builds/worker/fetches/ && \
+    tar -xf hfsplus-tools.tar.xz && \
+    rm hfsplus-tools.tar.xz
+
+RUN wget -O /builds/worker/fetches/dmg.tar.xz $IPFS_GATEWAY/ipfs/QmchVhUdZ9sJcaAS6HBy47KMEqxrTyKdxcFafqVbNrCZWv && \
+    cd /builds/worker/fetches/ && \
+    tar -xf dmg.tar.xz && \
+    rm dmg.tar.xz
+
+RUN wget -O /builds/worker/fetches/llvm-dsymutil.tar.xz $IPFS_GATEWAY/ipfs/QmT3sLuWBehn5L89qRuKuhGiCiioZ7Wco2MgkSZw6ahvXP && \
+    cd /builds/worker/fetches/ && \
+    tar -xf llvm-dsymutil.tar.xz && \
+    rm llvm-dsymutil.tar.xz
+
+RUN wget -O /builds/worker/fetches/rustc.tar.zst $IPFS_GATEWAY/ipfs/QmbpZYDKzc2ZBagnCNMMzMZNNNC1e5vvqcUY7ULaiAnJAG && \
+    cd /builds/worker/fetches/ && \
+    tar -xf rustc.tar.zst && \
+    rm rustc.tar.zst
+
+RUN wget -O /builds/worker/fetches/rust-size.tar.xz $IPFS_GATEWAY/ipfs/QmaBFfnPsWcS1CFJ7ynd2fkkTcUTdg3nzLobVr67yicYub && \
+    cd /builds/worker/fetches/ && \
+    tar -xf rust-size.tar.xz && \
+    rm rust-size.tar.xz
+
+RUN wget -O /builds/worker/fetches/cbindgen.tar.xz $IPFS_GATEWAY/ipfs/QmVbXdagSvuQcbV1qTCdoU2gDqg8pALckngYok2pz4ze5P && \
+    cd /builds/worker/fetches/ && \
+    tar -xf cbindgen.tar.xz && \
+    rm cbindgen.tar.xz
+
+RUN wget -O /builds/worker/fetches/nasm.tar.bz2 $IPFS_GATEWAY/ipfs/QmXkwK3DDQyUsJPRnaNG9mn74L2aMn2dWHWoC8d9CBiUTa && \
     cd /builds/worker/fetches/ && \
     tar -xf nasm.tar.bz2 && \
     rm nasm.tar.bz2
 
-RUN wget -O /builds/worker/fetches/node.tar.xz https://firefox-ci-tc.services.mozilla.com/api/index/v1/task/gecko.cache.level-3.toolchains.v3.linux64-node-10.latest/artifacts/public/build/node.tar.xz && \
+RUN wget -O /builds/worker/fetches/node.tar.xz $IPFS_GATEWAY/ipfs/QmcPrE765WnKHryAF1s5FPdnoW6E6yYq4VzzUnLdZ5yMB3 && \
     cd /builds/worker/fetches/ && \
     tar -xf node.tar.xz && \
     rm node.tar.xz
 
-RUN wget -O /builds/worker/fetches/lucetc.tar.xz https://firefox-ci-tc.services.mozilla.com/api/index/v1/task/gecko.cache.level-3.toolchains.v3.linux64-lucetc.latest/artifacts/public/build/lucetc.tar.xz && \
+RUN wget -O /builds/worker/fetches/lucetc.tar.xz $IPFS_GATEWAY/ipfs/QmWjh2TadXMWYkXHYYDNQuBRCcS3AqvvVwGvvaGvH25tmU && \
     cd /builds/worker/fetches/ && \
     tar -xf lucetc.tar.xz && \
     rm lucetc.tar.xz
-
-RUN wget -O /builds/worker/fetches/wasi-sysroot.tar.xz https://firefox-ci-tc.services.mozilla.com/api/index/v1/task/gecko.cache.level-3.toolchains.v3.wasi-sysroot.latest/artifacts/public/build/wasi-sysroot.tar.xz && \
-    cd /builds/worker/fetches/ && \
-    tar -xf wasi-sysroot.tar.xz && \
-    rm wasi-sysroot.tar.xz
 
 COPY MacOSX10.11.sdk.tar.bz2 /builds/worker/fetches/
 
@@ -86,5 +91,7 @@ ENV MOZ_FETCHES_DIR=/builds/worker/fetches/ \
     TOOLTOOL_DIR=/builds/worker/fetches/ \
     LANG=en_US.UTF-8 \
     LANGUAGE=en_US:en
+
+COPY configs /builds/worker/configs
 
 WORKDIR $WORKSPACE
