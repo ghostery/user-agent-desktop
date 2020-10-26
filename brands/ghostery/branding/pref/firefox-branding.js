@@ -37,7 +37,7 @@ pref("devtools.selfxss.count", 5);
 /** Anti-tracking settings */
 // tracker storage partitioning - currently undocumented setting to partition browser storage for trackers in 3rd party contexts.
 // See https://bugzilla.mozilla.org/show_bug.cgi?id=1549587
-pref("network.cookie.cookieBehavior", 5);
+pref("network.cookie.cookieBehavior", 4);
 // origin trimming - controls how much referrer to send across origins, 2 = only send the origin
 // https://wiki.mozilla.org/Security/Referrer
 pref("network.http.referer.XOriginTrimmingPolicy", 2);
