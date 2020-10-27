@@ -43,7 +43,7 @@ pref("network.cookie.cookieBehavior", 5);
 pref("network.http.referer.XOriginTrimmingPolicy", 2);
 // samesite cookies - lax by default. Protects against CSRF attacks
 // https://hacks.mozilla.org/2020/08/changes-to-samesite-cookie-behavior/
-pref("network.cookie.sameSite.laxByDefault", false);
+pref("network.cookie.sameSite.laxByDefault", true);
 pref("network.cookie.sameSite.noneRequiresSecure", true);
 // redirect tracking protection - purges tracker cookies for domains with no first-party interactions.
 // https://developer.mozilla.org/en-US/docs/Mozilla/Firefox/Privacy/Redirect_Tracking_Protection
