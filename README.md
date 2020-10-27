@@ -1,9 +1,73 @@
-# Workflow
+# Ghostery Desktop Browser
 
-The `fern.js` script enables a patch-based workflow to manage our Firefox fork.
-Here is how common tasks look like using it.
+The Ghostery Desktop Browser is a minimal fork of Firefox optimised for privacy. The main extra
+features are:
+ * The [Ghostery Privacy Blocker](https://github.com/ghostery/ghostery-extension/) extension is
+ included and enabled by default.
+ * Ghostery privacy search included.
+ * Firefox settings (telemetry etc) tuned for maximum privacy.
 
-### Setup
+## Download
+
+The Ghostery browser is available for the following platforms:
+
+ * [Windows (64bit)](https://get.ghosterybrowser.com/download/win)
+ * [Mac OSX](https://get.ghosterybrowser.com/download/mac)
+ * [Linux (64bit)](https://get.ghosterybrowser.com/download/linux)
+
+### Nightly channel
+
+We also offer a nightly build for testing development builds. To get them:
+ 1. Install the standard release build from one of the links above.
+ 2. Open the browser and navigate to `about:config`.
+ 3. Search for the pref `app.update.channel` and change the value to `nightly`.
+
+## Build Locally
+
+To build the browser we first need to download a copy of Firefox and patch it with our
+customisations. This process is handled via `fern.js`, which is our tool to handle the patch
+workflow. Set up your local workspace as follows:
+
+```sh
+git clone https://github.com/ghostery/user-agent-desktop.git
+cd user-agent-desktop
+npm ci # Fern.js dependencies
+./fern.js use # Pull the correct Firefox and Ghostery extension sources
+./fern.js import-patches # Apply patches to Firefox
+```
+
+Once you have Firefox source, you'll have to set up your environment to build the browser. Detailed
+instructions are available [for Firefox](https://firefox-source-docs.mozilla.org/setup/index.html),
+but in most cases the following will suffice:
+
+```sh
+cd mozilla-release
+./mach bootstrap
+```
+
+Once your build toolchains are setup you can build using the Ghostery `mozconfig` file:
+
+```sh
+cd mozilla-release
+MOZCONFIG=/path/to/user-agent-desktop/brands/ghostery/mozconfig ./mach build # start build
+./mach run # to launch the browser
+```
+
+## Cross platform builds
+
+The local build setup will build the browser for your current platform. To build for other platforms
+we provide dockerised builds. These can be run using the `fern.js build` command:
+
+```sh
+./fern.js build -t mac
+```
+
+Windows and Mac builds depend on platform frameworks being included. These should be placed in the
+`build` directory:
+ * Mac: `MacOSX10.11.sdk.tar.bz2`. This can be found inside an XCode install.
+ * Windows: `vs2017_15.8.4.zip` and `Makecab.exe`. See the end of this document to where to find these.
+
+## Development workflow
 
 After cloning the [repository](https://github.com/human-web/user-agent-desktop),
 run the following commands to get started (Note that you will need `npm` and
