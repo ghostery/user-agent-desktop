@@ -1,0 +1,27 @@
+From: Sam Macbeth <sam@cliqz.com>
+Date: Fri, 30 Oct 2020 11:12:49 +0100
+Subject: Add DNS and websocket permissions to ghostery extension
+
+---
+ browser/extensions/ghostery/manifest.json | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/browser/extensions/ghostery/manifest.json b/browser/extensions/ghostery/manifest.json
+index ebd67505c5..746f8c5287 100644
+--- a/browser/extensions/ghostery/manifest.json
++++ b/browser/extensions/ghostery/manifest.json
+@@ -86,7 +86,10 @@
+ 		"tabs",
+ 		"http://*/*",
+ 		"https://*/*",
+-		"storage"
++		"storage",
++		"dns",
++		"ws://*/*",
++		"wss://*/*"
+ 	],
+ 	"background": {
+ 		"scripts": [
+-- 
+2.28.0
+
