@@ -29,3 +29,4 @@
 0029-Use-the-same-UA-as-Firefox.patch
 0030-Fix-Windows-hidpi-issue.patch
 0031-Allow-update-channel-to-be-configured-via-prefs.patch
+0032-Add-DNS-and-websocket-permissions-to-ghostery-extens.patch
