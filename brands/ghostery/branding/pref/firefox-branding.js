@@ -152,6 +152,3 @@ pref("browser.privatebrowsing.vpnpromourl", "");
 
 // Disable dropdown suggestions with empty query
 pref("browser.urlbar.suggest.topsites", false);
-
-// Captive portal detection: use our endpoint instead of firefox.com
-pref("captivedetect.canonicalURL", "http://get.ghosterybrowser.com/detect/success.txt");
