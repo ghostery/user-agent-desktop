@@ -1,7 +1,7 @@
 {
   "addons": {
     "ghostery": "https://ghostery-deployments.s3.amazonaws.com/ghostery-extension/8.5.4.5bf5c45f/ghostery-firefox-v8.5.4.zip",
-    "ghostery-search": "https://github.com/ghostery/ghostery-search-extension/releases/download/v0.1.11/ghostery_search-0.1.11.zip"
+    "ghostery-search": "https://github.com/ghostery/ghostery-search-extension/releases/download/v0.1.12/ghostery_search-0.1.12.zip"
   },
   "firefox": "82.0.2",
   "app": "2020.10.1"
