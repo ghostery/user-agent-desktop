@@ -63,6 +63,7 @@ if (params.Windows64) {
 
             archiveArtifacts artifacts: "mozilla-release/$objDir/dist/update/*.mar"
             archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
+            archiveArtifacts artifacts: "mozilla-release/${objDir}/dist/*.win64.zip"
             archiveArtifacts artifacts: "mozilla-release/browser/config/version*"
 
             stash name: name, includes: [
