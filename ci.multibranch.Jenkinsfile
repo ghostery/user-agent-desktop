@@ -53,13 +53,13 @@ if (params.Windows64) {
         node('docker && magrathea') {
             helpers.build(name, 'Windows.dockerfile', 'win64', objDir, params, buildId, {    
                 if (true || shouldRelease) {
-                    stash name: "${name}-pre-pkg", [
+                    stash name: "${name}-pre-pkg", includes: [
                         "mozilla-release/${objDir}/dist/Ghostery",
                     ].join(',')
                     helpers.windows_pre_pkg_signing(name, objDir, artifactGlob)()
                 }
             })()
-            
+
             archiveArtifacts artifacts: "mozilla-release/$objDir/dist/update/*.mar"
             archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
             archiveArtifacts artifacts: "mozilla-release/browser/config/version*"
@@ -88,7 +88,7 @@ if (params.MacOSX64) {
         node('docker && !magrathea') {
             helpers.build(name, 'MacOSX.dockerfile', 'macosx', objDir, params, buildId, {     
                 if (true || shouldRelease) {
-                    stash name: "${name}-pre-pkg", [
+                    stash name: "${name}-pre-pkg", includes: [
                         "mozilla-release/${objDir}/dist/Ghostery",
                     ].join(',')
                     helpers.mac_pre_pkg_signing(name, objDir, artifactGlob)()
