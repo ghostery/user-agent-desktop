@@ -46,5 +46,6 @@ if (!tagExists) {
         booleanParam(name: 'Windows64', value: true),
         booleanParam(name: 'MacOSX64', value: true),
         booleanParam(name: 'Nightly', value: true),
+        booleanParam(name: 'PGO',  value: true),
     ], propagate: false, wait: false
 }

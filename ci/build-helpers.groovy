@@ -64,7 +64,7 @@ def withVagrant(String vagrantFilePath, String jenkinsFolderPath, Integer cpu, I
     }
 }
 
-def build(name, dockerFile, targetPlatform, objDir, params, buildId) {
+def build(name, dockerFile, targetPlatform, objDir, params, buildId, buildEnv=[]) {
     return {
         stage('checkout') {
             checkout scm
@@ -99,25 +99,39 @@ def build(name, dockerFile, targetPlatform, objDir, params, buildId) {
                 }
 
                 dir('mozilla-release') {
-                    stage("${name}: mach build") {
-                        sh 'rm -f `pwd`/MacOSX10.11.sdk; ln -s /builds/worker/fetches/MacOSX10.11.sdk `pwd`/MacOSX10.11.sdk'
-                        if (params.Clobber) {
-                            sh './mach clobber'
+                    sh 'rm -f `pwd`/MacOSX10.11.sdk; ln -s /builds/worker/fetches/MacOSX10.11.sdk `pwd`/MacOSX10.11.sdk'
+
+                    if (params.PGO) {
+                        stage("${name}: fetch profiles") {
+                            sh 'mkdir -p /builds/worker/artifacts/'
+                            sh "wget -O en-US.log ${params.PGOProfiles}/${targetPlatform}/en-US.log"
+                            sh "wget -O merged.profdata ${params.PGOProfiles}/${targetPlatform}/merged.profdata"
+                            buildEnv.add('PGO_PROFILE_USE=1')
                         }
-                        sh './mach build'
+                    } else if (params.Instrument) {
+                        buildEnv.add('PGO_PROFILE_GENERATE=1')
                     }
 
-                    stage("${name}: mach package") {
-                        sh './mach package'
-                    }
+                    withEnv(buildEnv) {
+                        stage("${name}: mach build") {
+                            if (params.Clobber) {
+                                sh './mach clobber'
+                            }
+                            sh './mach build'
+                        }
 
-                    stage("${name}: make update-packaging") {
-                        dir(objDir) {
-                            withEnv([
-                                "ACCEPTED_MAR_CHANNEL_IDS=firefox-ghostery-release",
-                                "MAR_CHANNEL_ID=firefox-ghostery-release",
-                            ]) {
-                                sh 'make update-packaging'
+                        stage("${name}: mach package") {
+                            sh './mach package'
+                        }
+
+                        stage("${name}: make update-packaging") {
+                            dir(objDir) {
+                                withEnv([
+                                    "ACCEPTED_MAR_CHANNEL_IDS=firefox-ghostery-release",
+                                    "MAR_CHANNEL_ID=firefox-ghostery-release",
+                                ]) {
+                                    sh 'make update-packaging'
+                                }
                             }
                         }
                     }

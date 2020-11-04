@@ -7,6 +7,9 @@ properties([
         booleanParam(name: 'MacOSX64', defaultValue: true, description: ''),
         string(name: 'ReleaseName', defaultValue: '', description: ''),
         booleanParam(name: 'Nightly', defaultValue: false, description: 'Push release to nightly'),
+        booleanParam(name: 'PGO', defaultValue: false, description: 'Enable Profile Guided Optimization'),
+        string(name: 'PGOProfiles', defaultValue: 'http://kria.cliqz:8080/ipns/k51qzi5uqu5dkxjdi0r53p86qphpdhqkhr44qfhfug1fl225ggq4og9t2kjymv/profiles/82.0.2', description: 'Base URL for fetching PGO Profiles'),
+        booleanParam(name: 'Instrument', defaultValue: false, description: 'Enable an instrumented build for generating profiles for PGO'),
     ]),
 ])
 
@@ -60,6 +63,7 @@ if (params.Windows64) {
 
             archiveArtifacts artifacts: "mozilla-release/$objDir/dist/update/*.mar"
             archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
+            archiveArtifacts artifacts: "mozilla-release/${objDir}/dist/*.win64.zip"
             archiveArtifacts artifacts: "mozilla-release/browser/config/version*"
 
             stash name: name, includes: [
