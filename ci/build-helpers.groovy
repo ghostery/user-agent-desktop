@@ -106,14 +106,18 @@ def build(name, dockerFile, targetPlatform, objDir, params, buildId, Closure pre
                         }
                         sh './mach build'
                     }
-                    
-                    pre_pkg_signing()
+
+                    stage("Pre Packaging Signing") {
+                        pre_pkg_signing()
+                    }
 
                     stage("${name}: mach package") {
                         sh './mach package'
                     }
-                    
-                    post_pkg_signing()
+    
+                    stage("Post Packaging Signing") {
+                        post_pkg_signing()
+                    }
 
                     stage("${name}: make update-packaging") {
                         dir(objDir) {
@@ -181,65 +185,51 @@ def signmar() {
 def windows_pre_pkg_signing(name, objDir, artifactGlob) {
     return {
         node('master') {
-            stage('checkout') {
-                checkout scm
-            }
+            checkout scm
 
             withVagrant("ci/win.Vagrantfile", "c:\\jenkins", 1, 2000, 7000, false) { nodeId ->
-                node(nodeId) {
-                    stage("Checkout") {
-                        checkout scm
-                        // clean old build artifacts in work dir
-                        bat 'del /s /q mozilla-release'
+                node(nodeId) {       
+                    checkout scm
+                    // clean old build artifacts in work dir
+                    bat 'del /s /q mozilla-release'
+
+                    unstash name
+
+                    withCredentials([
+                        file(credentialsId: "7da7d2de-5a10-45e6-9ffd-4e49f83753a8", variable: 'WIN_CERT'),
+                        string(credentialsId: "33b3705c-1c2e-4462-9354-56a76bbb164c", variable: 'WIN_CERT_PASS'),
+                    ]) {
+                        bat 'ci/sign_win_dll.bat'
                     }
-                    stage('Prepare') {
-                        unstash name
-                    }
-                    stage('Sign') {
-                        withCredentials([
-                            file(credentialsId: "7da7d2de-5a10-45e6-9ffd-4e49f83753a8", variable: 'WIN_CERT'),
-                            string(credentialsId: "33b3705c-1c2e-4462-9354-56a76bbb164c", variable: 'WIN_CERT_PASS'),
-                        ]) {
-                            bat 'ci/sign_win_dll.bat'
-                        }
-                    }
-                    stage('Publish') {
-                        archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
-                    }
+
+                    archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
                 }
             }
         }
     }
 }
 
-def windows_pre_post_signing(name, objDir, artifactGlob) {
+def windows_pre_pkg_signing(name, objDir, artifactGlob) {
     return {
         node('master') {
-            stage('checkout') {
-                checkout scm
-            }
+            checkout scm
 
             withVagrant("ci/win.Vagrantfile", "c:\\jenkins", 1, 2000, 7000, false) { nodeId ->
                 node(nodeId) {
-                    stage("Checkout") {
-                        checkout scm
-                        // clean old build artifacts in work dir
-                        bat 'del /s /q mozilla-release'
+                    checkout scm
+                    // clean old build artifacts in work dir
+                    bat 'del /s /q mozilla-release'
+
+                    unstash name
+
+                    withCredentials([
+                        file(credentialsId: "7da7d2de-5a10-45e6-9ffd-4e49f83753a8", variable: 'WIN_CERT'),
+                        string(credentialsId: "33b3705c-1c2e-4462-9354-56a76bbb164c", variable: 'WIN_CERT_PASS'),
+                    ]) {
+                        bat 'ci/sign_win_repack.bat'
                     }
-                    stage('Prepare') {
-                        unstash name
-                    }
-                    stage('Sign') {
-                        withCredentials([
-                            file(credentialsId: "7da7d2de-5a10-45e6-9ffd-4e49f83753a8", variable: 'WIN_CERT'),
-                            string(credentialsId: "33b3705c-1c2e-4462-9354-56a76bbb164c", variable: 'WIN_CERT_PASS'),
-                        ]) {
-                            bat 'ci/sign_win_repack.bat'
-                        }
-                    }
-                    stage('Publish') {
-                        archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
-                    }
+
+                    archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
                 }
             }
         }
@@ -249,123 +239,54 @@ def windows_pre_post_signing(name, objDir, artifactGlob) {
 def mac_pre_pkg_signing(name, objDir, artifactGlob) {
     return {
         node('gideon') {
-            stage('checkout') {
-                checkout scm
-            }
-            stage('prepare') {
-                sh 'npm ci'
-            }
-            stage('unstash') {
-                sh 'rm -rf mozilla-release'
-                unstash name
-            }
-            stage('sign') {
-                withCredentials([
-                    file(credentialsId: '5f834aab-07ff-4c3f-9848-c2ac02b3b532', variable: 'MAC_CERT'),
-                    string(credentialsId: 'b21cbf0b-c5e1-4c0f-9df7-20bb8ba61a2c', variable: 'MAC_CERT_PASS'),
-                    usernamePassword(
-                        credentialsId: '840e974f-f733-4f02-809f-54dc68f5fa46',
-                        passwordVariable: 'MAC_NOTARY_PASS',
-                        usernameVariable: 'MAC_NOTARY_USER'
-                    ),
-                ]) {
-                    try {
-                        // create temporary keychain and make it a default one
-                        sh '''#!/bin/bash -l -x
-                            security create-keychain -p cliqz cliqz
-                            security list-keychains -s cliqz
-                            security default-keychain -s cliqz
-                            security unlock-keychain -p cliqz cliqz
-                        '''
+            checkout scm
 
-                        sh '''#!/bin/bash -l +x
-                            security import $MAC_CERT -P $MAC_CERT_PASS -k cliqz -A
-                            security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k cliqz cliqz
-                        '''
+            sh 'npm ci'
 
-                        withEnv([
-                            "MAC_CERT_NAME=HPY23A294X",
-                            "APP_NAME=Ghostery",
-                            "PKG_NAME=Ghostery Browser",
-                            "ARTIFACT_GLOB=${artifactGlob}"
-                        ]){
-                            sh "./ci/sign_mac_app.sh"
-                        }
-                    } finally {
-                        sh '''#!/bin/bash -l -x
-                            security delete-keychain cliqz
-                            security list-keychains -s login.keychain
-                            security default-keychain -s login.keychain
-                            true
-                        '''
+            sh 'rm -rf mozilla-release'
+            unstash name
+
+            withCredentials([
+                file(credentialsId: '5f834aab-07ff-4c3f-9848-c2ac02b3b532', variable: 'MAC_CERT'),
+                string(credentialsId: 'b21cbf0b-c5e1-4c0f-9df7-20bb8ba61a2c', variable: 'MAC_CERT_PASS'),
+                usernamePassword(
+                    credentialsId: '840e974f-f733-4f02-809f-54dc68f5fa46',
+                    passwordVariable: 'MAC_NOTARY_PASS',
+                    usernameVariable: 'MAC_NOTARY_USER'
+                ),
+            ]) {
+                try {
+                    // create temporary keychain and make it a default one
+                    sh '''#!/bin/bash -l -x
+                        security create-keychain -p cliqz cliqz
+                        security list-keychains -s cliqz
+                        security default-keychain -s cliqz
+                        security unlock-keychain -p cliqz cliqz
+                    '''
+
+                    sh '''#!/bin/bash -l +x
+                        security import $MAC_CERT -P $MAC_CERT_PASS -k cliqz -A
+                        security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k cliqz cliqz
+                    '''
+
+                    withEnv([
+                        "MAC_CERT_NAME=HPY23A294X",
+                        "APP_NAME=Ghostery",
+                        "PKG_NAME=Ghostery Browser",
+                        "ARTIFACT_GLOB=${artifactGlob}"
+                    ]){
+                        sh "./ci/sign_mac_app.sh"
                     }
+                } finally {
+                    sh '''#!/bin/bash -l -x
+                        security delete-keychain cliqz
+                        security list-keychains -s login.keychain
+                        security default-keychain -s login.keychain
+                        true
+                    '''
                 }
             }
-            stage('publish artifacts') {
-                archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
-            }
-        }
-    }
-}
-
-def mac_post_pkg_signing(name, objDir, artifactGlob) {
-    return {
-        node('gideon') {
-            stage('checkout') {
-                checkout scm
-            }
-            stage('prepare') {
-                sh 'npm ci'
-            }
-            stage('unstash') {
-                sh 'rm -rf mozilla-release'
-                unstash name
-            }
-            stage('sign') {
-                withCredentials([
-                    file(credentialsId: '5f834aab-07ff-4c3f-9848-c2ac02b3b532', variable: 'MAC_CERT'),
-                    string(credentialsId: 'b21cbf0b-c5e1-4c0f-9df7-20bb8ba61a2c', variable: 'MAC_CERT_PASS'),
-                    usernamePassword(
-                        credentialsId: '840e974f-f733-4f02-809f-54dc68f5fa46',
-                        passwordVariable: 'MAC_NOTARY_PASS',
-                        usernameVariable: 'MAC_NOTARY_USER'
-                    ),
-                ]) {
-                    try {
-                        // create temporary keychain and make it a default one
-                        sh '''#!/bin/bash -l -x
-                            security create-keychain -p cliqz cliqz
-                            security list-keychains -s cliqz
-                            security default-keychain -s cliqz
-                            security unlock-keychain -p cliqz cliqz
-                        '''
-
-                        sh '''#!/bin/bash -l +x
-                            security import $MAC_CERT -P $MAC_CERT_PASS -k cliqz -A
-                            security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k cliqz cliqz
-                        '''
-
-                        withEnv([
-                            "MAC_CERT_NAME=HPY23A294X",
-                            "APP_NAME=Ghostery",
-                            "PKG_NAME=Ghostery Browser",
-                            "ARTIFACT_GLOB=${artifactGlob}"
-                        ]){
-                            sh "./ci/sign_mac_repack.sh"
-                        }
-                    } finally {
-                        sh '''#!/bin/bash -l -x
-                            security delete-keychain cliqz
-                            security list-keychains -s login.keychain
-                            security default-keychain -s login.keychain
-                            true
-                        '''
-                    }
-                }
-            }
-            stage('publish artifacts') {
-                archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
-            }
+            archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
         }
     }
 }
