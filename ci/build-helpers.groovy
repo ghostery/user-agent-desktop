@@ -209,7 +209,7 @@ def windows_pre_pkg_signing(name, objDir, artifactGlob) {
     }
 }
 
-def windows_pre_pkg_signing(name, objDir, artifactGlob) {
+def windows_post_pkg_signing(name, objDir, artifactGlob) {
     return {
         node('master') {
             checkout scm
