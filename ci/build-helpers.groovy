@@ -117,9 +117,11 @@ def build(name, dockerFile, targetPlatform, objDir, params, buildId, Closure pre
 
         image.inside("-v /mnt/vfat/vs2017_15.8.4/:/builds/worker/fetches/vs2017_15.8.4") {
             withEnv(["MACH_USE_SYSTEM_PYTHON=1", "MOZCONFIG=${env.WORKSPACE}/mozconfig", "MOZ_BUILD_DATE=${buildId}"]) {
+                dir('mozilla-release') {
                     stage("${name}: mach package") {
                         sh './mach package'
                     }
+                }
             }
         }
     
@@ -129,6 +131,7 @@ def build(name, dockerFile, targetPlatform, objDir, params, buildId, Closure pre
         
         image.inside("-v /mnt/vfat/vs2017_15.8.4/:/builds/worker/fetches/vs2017_15.8.4") {
             withEnv(["MACH_USE_SYSTEM_PYTHON=1", "MOZCONFIG=${env.WORKSPACE}/mozconfig", "MOZ_BUILD_DATE=${buildId}"]) {
+                dir('mozilla-release') {
                     stage("${name}: make update-packaging") {
                         dir(objDir) {
                             withEnv([
