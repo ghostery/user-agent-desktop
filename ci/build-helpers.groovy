@@ -64,7 +64,7 @@ def withVagrant(String vagrantFilePath, String jenkinsFolderPath, Integer cpu, I
     }
 }
 
-def build(name, dockerFile, targetPlatform, objDir, params, buildId, Closure signing) {
+def build(name, dockerFile, targetPlatform, objDir, params, buildId, Closure pre_pkg_signing, Closure post_pkg_signing) {
     return {
         stage('checkout') {
             checkout scm
@@ -106,12 +106,14 @@ def build(name, dockerFile, targetPlatform, objDir, params, buildId, Closure sig
                         }
                         sh './mach build'
                     }
+                    
+                    pre_pkg_signing()
 
                     stage("${name}: mach package") {
                         sh './mach package'
                     }
                     
-                    signing()
+                    post_pkg_signing()
 
                     stage("${name}: make update-packaging") {
                         unstash "${name}-mar"
