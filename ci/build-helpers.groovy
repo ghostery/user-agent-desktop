@@ -214,28 +214,6 @@ def windows_signing(name, objDir, artifactGlob) {
     }
 }
 
-def linux_signing(name, objDir, artifactGlob) {
-    return {
-        node('docker') {
-            stage('checkout') {
-                checkout scm
-            }
-            stage('prepare') {
-                // keep empty stage for symmetry
-            }
-            stage('unstash') {
-                sh 'rm -rf mozilla-release'
-                unstash name
-            }
-            stage('sign') {
-            }
-            stage('publish artifacts') {
-                archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
-            }
-        }
-    }
-}
-
 def mac_signing(name, objDir, artifactGlob) {
     return {
         node('gideon') {
