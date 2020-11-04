@@ -114,8 +114,8 @@ def build(name, dockerFile, targetPlatform, objDir, params, buildId, Closure sig
                     signing()
 
                     stage("${name}: make update-packaging") {
-                        unarchive mapping: ["mozilla-release/" : "."]
-
+                        unstash "${name}-mar"
+                        
                         dir(objDir) {
                             withEnv([
                                 "ACCEPTED_MAR_CHANNEL_IDS=firefox-ghostery-release",
