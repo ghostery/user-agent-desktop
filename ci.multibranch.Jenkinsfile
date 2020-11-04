@@ -11,7 +11,6 @@ properties([
 ])
 
 def buildmatrix = [:]
-def signmatrix = [:]
 def shouldRelease = params.ReleaseName?.trim()
 def helpers
 def buildId = new Date().format('yyyyMMddHHmmss')
@@ -29,7 +28,11 @@ if (params.Linux64) {
 
     buildmatrix[name] = {
         node('docker && !magrathea') {
-            helpers.build(name, 'Linux.dockerfile', 'linux', objDir, params, buildId)()
+            helpers.build(name, 'Linux.dockerfile', 'linux', objDir, params, buildId, {
+                if (shouldRelease) {
+                    helpers.linux_signing(name, objDir, artifactGlob)
+                }
+            })()
 
             archiveArtifacts artifacts: "mozilla-release/$objDir/dist/update/*.mar"
             archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
@@ -42,10 +45,6 @@ if (params.Linux64) {
             sh "rm -rf mozilla-release/$objDir/dist/update"
         }
     }
-
-    if (shouldRelease) {
-        signmatrix["Sign ${name}"] = helpers.linux_signing(name, objDir, artifactGlob)
-    }
 }
 
 if (params.Windows64) {
@@ -56,7 +55,11 @@ if (params.Windows64) {
     buildmatrix[name] = {
         // we have to run windows builds on magrathea because that is where the vssdk mount is.
         node('docker && magrathea') {
-            helpers.build(name, 'Windows.dockerfile', 'win64', objDir, params, buildId)()
+            helpers.build(name, 'Windows.dockerfile', 'win64', objDir, params, buildId, {    
+                if (shouldRelease) {
+                    helpers.windows_signing(name, objDir, artifactGlob)
+                }
+            })()
 
             archiveArtifacts artifacts: "mozilla-release/$objDir/dist/update/*.mar"
             archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
@@ -72,10 +75,6 @@ if (params.Windows64) {
             sh "rm -rf mozilla-release/$objDir/dist/update"
         }
     }
-
-    if (shouldRelease) {
-        signmatrix["Sign ${name}"] = helpers.windows_signing(name, objDir, artifactGlob)
-    }
 }
 
 if (params.MacOSX64) {
@@ -84,7 +83,11 @@ if (params.MacOSX64) {
     def artifactGlob = "$objDir/dist/Ghostery-*"
     buildmatrix[name] = {
         node('docker && !magrathea') {
-            helpers.build(name, 'MacOSX.dockerfile', 'macosx', objDir, params, buildId)()
+            helpers.build(name, 'MacOSX.dockerfile', 'macosx', objDir, params, buildId, {     
+                if (shouldRelease) {
+                    helpers.mac_signing(name, objDir, artifactGlob)
+                }
+            })()
 
             archiveArtifacts artifacts: "mozilla-release/$objDir/dist/update/*.mar"
             archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
@@ -99,14 +102,9 @@ if (params.MacOSX64) {
             sh "rm -rf mozilla-release/$objDir/dist/update"
         }
     }
-
-    if (shouldRelease) {
-        signmatrix["Sign MacOSX64"] = helpers.mac_signing(name, objDir, artifactGlob)
-    }
 }
 
 parallel buildmatrix
-parallel signmatrix
 
 stage('Sign MAR') {
     if (shouldRelease) {
