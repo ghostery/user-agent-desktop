@@ -6,7 +6,7 @@ set -x
 echo "***** MAC SIGNING AND NOTARY *****"
 
 security unlock-keychain -p cliqz cliqz
-PKG_DIR="mozilla-release/obj-x86_64-apple-darwin/dist/Ghostery"
+PKG_DIR="mozilla-release/obj-x86_64-apple-darwin/dist"
 PKG_NAME="Ghostery Browser"
 BUNDLE=$PKG_DIR/$PKG_NAME.app
 IDENTITY=$MAC_CERT_NAME
