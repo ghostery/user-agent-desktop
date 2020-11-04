@@ -64,7 +64,7 @@ def withVagrant(String vagrantFilePath, String jenkinsFolderPath, Integer cpu, I
     }
 }
 
-def build(name, dockerFile, targetPlatform, objDir, params, buildId) {
+def build(name, dockerFile, targetPlatform, objDir, params, buildId, Closure signing) {
     return {
         stage('checkout') {
             checkout scm
@@ -110,8 +110,12 @@ def build(name, dockerFile, targetPlatform, objDir, params, buildId) {
                     stage("${name}: mach package") {
                         sh './mach package'
                     }
+                    
+                    signing()
 
                     stage("${name}: make update-packaging") {
+                        unarchive mapping: ["mozilla-release/" : "."]
+
                         dir(objDir) {
                             withEnv([
                                 "ACCEPTED_MAR_CHANNEL_IDS=firefox-ghostery-release",
