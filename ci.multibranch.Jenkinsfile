@@ -28,7 +28,7 @@ if (params.Linux64) {
 
     buildmatrix[name] = {
         node('docker && !magrathea') {
-            helpers.build(name, 'Linux.dockerfile', 'linux', objDir, params, buildId, {}, {})()
+            helpers.build(name, 'Linux.dockerfile', 'linux', objDir, params, buildId, {})()
 
             archiveArtifacts artifacts: "mozilla-release/$objDir/dist/update/*.mar"
             archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
@@ -58,10 +58,6 @@ if (params.Windows64) {
                     ].join(',')
                     helpers.windows_pre_pkg_signing(name, objDir, artifactGlob)()
                 }
-            }, {
-                if (true || shouldRelease) {
-                    helpers.windows_post_pkg_signing(name, objDir, artifactGlob)()
-                }
             })()
             
             archiveArtifacts artifacts: "mozilla-release/$objDir/dist/update/*.mar"
@@ -76,6 +72,10 @@ if (params.Windows64) {
             ].join(',')
 
             sh "rm -rf mozilla-release/$objDir/dist/update"
+        }
+        
+        if (true || shouldRelease) {
+            helpers.windows_post_pkg_signing(name, objDir, artifactGlob)()
         }
     }
 }
@@ -93,7 +93,7 @@ if (params.MacOSX64) {
                     ].join(',')
                     helpers.mac_pre_pkg_signing(name, objDir, artifactGlob)()
                 }
-            }, {})()
+            })()
 
             archiveArtifacts artifacts: "mozilla-release/$objDir/dist/update/*.mar"
             archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
