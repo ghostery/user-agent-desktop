@@ -64,7 +64,7 @@ def withVagrant(String vagrantFilePath, String jenkinsFolderPath, Integer cpu, I
     }
 }
 
-def build(name, dockerFile, targetPlatform, objDir, params, buildId, Closure pre_pkg_signing, Closure post_pkg_signing) {
+def build(name, dockerFile, targetPlatform, objDir, params, buildId, Closure pre_pkg_signing) {
     return {
         stage('checkout') {
             checkout scm
@@ -124,11 +124,7 @@ def build(name, dockerFile, targetPlatform, objDir, params, buildId, Closure pre
                 }
             }
         }
-    
-        stage("Post Packaging Signing") {
-            post_pkg_signing()
-        }
-        
+
         image.inside("-v /mnt/vfat/vs2017_15.8.4/:/builds/worker/fetches/vs2017_15.8.4") {
             withEnv(["MACH_USE_SYSTEM_PYTHON=1", "MOZCONFIG=${env.WORKSPACE}/mozconfig", "MOZ_BUILD_DATE=${buildId}"]) {
                 dir('mozilla-release') {
@@ -206,7 +202,7 @@ def windows_pre_pkg_signing(name, objDir, artifactGlob) {
                     // clean old build artifacts in work dir
                     bat 'del /s /q mozilla-release'
 
-                    unstash name
+                    unstash "${name}-pre-pkg"
 
                     withCredentials([
                         file(credentialsId: "7da7d2de-5a10-45e6-9ffd-4e49f83753a8", variable: 'WIN_CERT'),
@@ -257,7 +253,8 @@ def mac_pre_pkg_signing(name, objDir, artifactGlob) {
             sh 'npm ci'
 
             sh 'rm -rf mozilla-release'
-            unstash name
+
+            unstash "${name}-pre-pkg"
 
             withCredentials([
                 file(credentialsId: '5f834aab-07ff-4c3f-9848-c2ac02b3b532', variable: 'MAC_CERT'),
