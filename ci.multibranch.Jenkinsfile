@@ -89,7 +89,7 @@ if (params.MacOSX64) {
             helpers.build(name, 'MacOSX.dockerfile', 'macosx', objDir, params, buildId, {     
                 if (true || shouldRelease) {
                     stash name: "${name}-pre-pkg", includes: [
-                        "mozilla-release/${objDir}/dist/Ghostery/**/*",
+                        "mozilla-release/${objDir}/dist/*.app/**/*",
                     ].join(',')
                     helpers.mac_pre_pkg_signing(name, objDir, artifactGlob)()
                 }
