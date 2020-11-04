@@ -54,7 +54,7 @@ if (params.Windows64) {
             helpers.build(name, 'Windows.dockerfile', 'win64', objDir, params, buildId, {    
                 if (true || shouldRelease) {
                     stash name: "${name}-pre-pkg", includes: [
-                        "mozilla-release/${objDir}/dist/Ghostery",
+                        "mozilla-release/${objDir}/dist/Ghostery/**/*",
                     ].join(',')
                     helpers.windows_pre_pkg_signing(name, objDir, artifactGlob)()
                 }
@@ -89,7 +89,7 @@ if (params.MacOSX64) {
             helpers.build(name, 'MacOSX.dockerfile', 'macosx', objDir, params, buildId, {     
                 if (true || shouldRelease) {
                     stash name: "${name}-pre-pkg", includes: [
-                        "mozilla-release/${objDir}/dist/Ghostery",
+                        "mozilla-release/${objDir}/dist/Ghostery/**/*",
                     ].join(',')
                     helpers.mac_pre_pkg_signing(name, objDir, artifactGlob)()
                 }
