@@ -53,11 +53,11 @@ if (params.Windows64) {
         node('docker && magrathea') {
             helpers.build(name, 'Windows.dockerfile', 'win64', objDir, params, buildId, {    
                 if (true || shouldRelease) {
-                    helpers.windows_pre_pkg_signing(name, objDir, artifactGlob)
+                    helpers.windows_pre_pkg_signing(name, objDir, artifactGlob)()
                 }
             }, {
                 if (true || shouldRelease) {
-                    helpers.windows_post_pkg_signing(name, objDir, artifactGlob)
+                    helpers.windows_post_pkg_signing(name, objDir, artifactGlob)()
                 }
             })()
             
@@ -85,7 +85,7 @@ if (params.MacOSX64) {
         node('docker && !magrathea') {
             helpers.build(name, 'MacOSX.dockerfile', 'macosx', objDir, params, buildId, {     
                 if (true || shouldRelease) {
-                    helpers.mac_pre_pkg_signing(name, objDir, artifactGlob)
+                    helpers.mac_pre_pkg_signing(name, objDir, artifactGlob)()
                 }
             }, {})()
 
