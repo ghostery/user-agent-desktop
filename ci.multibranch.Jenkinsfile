@@ -29,7 +29,7 @@ if (params.Linux64) {
     buildmatrix[name] = {
         node('docker && !magrathea') {
             helpers.build(name, 'Linux.dockerfile', 'linux', objDir, params, buildId, {
-                if (shouldRelease) {
+                if (true || shouldRelease) {
                     helpers.linux_signing(name, objDir, artifactGlob)
                 }
             })()
@@ -56,7 +56,7 @@ if (params.Windows64) {
         // we have to run windows builds on magrathea because that is where the vssdk mount is.
         node('docker && magrathea') {
             helpers.build(name, 'Windows.dockerfile', 'win64', objDir, params, buildId, {    
-                if (shouldRelease) {
+                if (true || shouldRelease) {
                     helpers.windows_signing(name, objDir, artifactGlob)
                 }
             })()
@@ -84,7 +84,7 @@ if (params.MacOSX64) {
     buildmatrix[name] = {
         node('docker && !magrathea') {
             helpers.build(name, 'MacOSX.dockerfile', 'macosx', objDir, params, buildId, {     
-                if (shouldRelease) {
+                if (true || shouldRelease) {
                     helpers.mac_signing(name, objDir, artifactGlob)
                 }
             })()
