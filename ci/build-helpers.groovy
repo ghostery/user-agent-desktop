@@ -211,7 +211,7 @@ def windows_pre_pkg_signing(name, objDir, artifactGlob) {
                         bat 'ci/sign_win_dll.bat'
                     }
 
-                    archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
+                    archiveArtifacts artifacts: artifactGlob
                 }
             }
         }
@@ -238,7 +238,7 @@ def windows_post_pkg_signing(name, objDir, artifactGlob) {
                         bat 'ci/sign_win_repack.bat'
                     }
 
-                    archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
+                    archiveArtifacts artifacts: artifactGlob
                 }
             }
         }
