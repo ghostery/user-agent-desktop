@@ -87,12 +87,8 @@ if (params.MacOSX64) {
                 if (true || shouldRelease) {
                     helpers.mac_pre_pkg_signing(name, objDir, artifactGlob)
                 }
-            }, {
-                if (true || shouldRelease) {
-                    helpers.mac_post_pkg_signing(name, objDir, artifactGlob)
-                }
-            })()
-            
+            }, {})()
+
             archiveArtifacts artifacts: "mozilla-release/$objDir/dist/update/*.mar"
             archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
             archiveArtifacts artifacts: "mozilla-release/browser/config/version*"
