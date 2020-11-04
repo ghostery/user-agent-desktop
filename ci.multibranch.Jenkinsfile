@@ -56,7 +56,7 @@ if (params.Windows64) {
                     stash name: "${name}-pre-pkg", includes: [
                         "mozilla-release/${objDir}/dist/Ghostery/**/*",
                     ].join(',')
-                    helpers.windows_pre_pkg_signing(name, objDir, artifactGlob)()
+                    helpers.windows_pre_pkg_signing(name, objDir, "mozilla-release/${objDir}/dist/Ghostery/**/*")()
                 }
             })()
 
@@ -91,7 +91,7 @@ if (params.MacOSX64) {
                     stash name: "${name}-pre-pkg", includes: [
                         "mozilla-release/${objDir}/dist/*.app/**/*",
                     ].join(',')
-                    helpers.mac_pre_pkg_signing(name, objDir, artifactGlob)()
+                    helpers.mac_pre_pkg_signing(name, objDir, "mozilla-release/${objDir}/dist/*.app/**/*")()
                 }
             })()
 
