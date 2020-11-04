@@ -33,11 +33,7 @@ if (params.Linux64) {
                     helpers.linux_signing(name, objDir, artifactGlob)
                 }
             })()
-
-            archiveArtifacts artifacts: "mozilla-release/$objDir/dist/update/*.mar"
-            archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
-            archiveArtifacts artifacts: "mozilla-release/browser/config/version*"
-
+            
             stash name: name, includes: [
                 "mozilla-release/${artifactGlob}",
             ].join(',')
@@ -60,10 +56,6 @@ if (params.Windows64) {
                     helpers.windows_signing(name, objDir, artifactGlob)
                 }
             })()
-
-            archiveArtifacts artifacts: "mozilla-release/$objDir/dist/update/*.mar"
-            archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
-            archiveArtifacts artifacts: "mozilla-release/browser/config/version*"
 
             stash name: name, includes: [
                 "mozilla-release/${artifactGlob}",
@@ -88,10 +80,6 @@ if (params.MacOSX64) {
                     helpers.mac_signing(name, objDir, artifactGlob)
                 }
             })()
-
-            archiveArtifacts artifacts: "mozilla-release/$objDir/dist/update/*.mar"
-            archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
-            archiveArtifacts artifacts: "mozilla-release/browser/config/version*"
 
             stash name: name, includes: [
                 "mozilla-release/${artifactGlob}",
