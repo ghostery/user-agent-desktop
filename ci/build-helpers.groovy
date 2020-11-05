@@ -163,9 +163,10 @@ def build(nodeId, name, dockerFile, targetPlatform, objDir, params, buildId, Clo
 
     return {
         def nodeName = ''
-        def wsName = "${env.WORKSPACE}-${name}"
+        def wsName = ''
         
         node(nodeId) {
+            wsName = "${env.WORKSPACE}-${name}"
             nodeName = env.NODE_NAME
             ws(wsName) {
                 build()
@@ -298,6 +299,7 @@ def mac_pre_pkg_signing(name, objDir, artifactGlob) {
 
             sparseCheckout(scm, [
                 'ci/sign_mac_app.sh',
+                'ci/notarize_mac_app.sh',
             ])
 
             sh 'rm -rf app.tar'
