@@ -27,9 +27,7 @@ if (params.Linux64) {
     def artifactGlob = "$objDir/dist/Ghostery-*"
 
     buildmatrix[name] = {
-        node('docker && !magrathea') {
-            helpers.build(name, 'Linux.dockerfile', 'linux', objDir, params, buildId, {})()
-
+        helpers.build('docker && !magrathea', name, 'Linux.dockerfile', 'linux', objDir, params, buildId, {}, {
             archiveArtifacts artifacts: "mozilla-release/$objDir/dist/update/*.mar"
             archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
             archiveArtifacts artifacts: "mozilla-release/browser/config/version*"
@@ -37,9 +35,7 @@ if (params.Linux64) {
             stash name: name, includes: [
                 "mozilla-release/${artifactGlob}",
             ].join(',')
-
-            sh "rm -rf mozilla-release/$objDir/dist/update"
-        }
+        })()
     }
 }
 
@@ -50,16 +46,14 @@ if (params.Windows64) {
 
     buildmatrix[name] = {
         // we have to run windows builds on magrathea because that is where the vssdk mount is.
-        node('docker && magrathea') {
-            helpers.build(name, 'Windows.dockerfile', 'win64', objDir, params, buildId, {    
-                if (true || shouldRelease) {
-                    stash name: "${name}-pre-pkg", includes: [
-                        "mozilla-release/${objDir}/dist/Ghostery/**/*",
-                    ].join(',')
-                    helpers.windows_pre_pkg_signing(name, objDir, "mozilla-release/${objDir}/dist/Ghostery/**/*")()
-                }
-            })()
-
+        helpers.build('docker && magrathea', name, 'Windows.dockerfile', 'win64', objDir, params, buildId, {    
+            if (true || shouldRelease) {
+                stash name: "${name}-pre-pkg", includes: [
+                    "mozilla-release/${objDir}/dist/Ghostery/**/*",
+                ].join(',')
+                helpers.windows_pre_pkg_signing(name, objDir, "mozilla-release/${objDir}/dist/Ghostery/**/*")()
+            }
+        }, {
             archiveArtifacts artifacts: "mozilla-release/$objDir/dist/update/*.mar"
             archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
             archiveArtifacts artifacts: "mozilla-release/browser/config/version*"
@@ -70,10 +64,8 @@ if (params.Windows64) {
                 "mozilla-release/other-licenses/7zstub/firefox/*",
                 "mozilla-release/browser/installer/windows/*",
             ].join(',')
+        })()
 
-            sh "rm -rf mozilla-release/$objDir/dist/update"
-        }
-        
         if (true || shouldRelease) {
             helpers.windows_post_pkg_signing(name, objDir, artifactGlob)()
         }
@@ -85,19 +77,17 @@ if (params.MacOSX64) {
     def objDir = 'obj-x86_64-apple-darwin'
     def artifactGlob = "$objDir/dist/Ghostery-*"
     buildmatrix[name] = {
-        node('docker && !magrathea') {
-            helpers.build(name, 'MacOSX.dockerfile', 'macosx', objDir, params, buildId, {     
-                if (true || shouldRelease) {
-                    sh "tar -chf app.tar mozilla-release/${objDir}/dist/Ghostery\\ Browser.app"
-                    stash name: "${name}-pre-pkg", includes: [
-                        'app.tar',
-                        'mozilla-release/security/mac/hardenedruntime/browser.production.entitlements.xml',
-                        'mozilla-release/security/mac/hardenedruntime/plugin-container.production.entitlements.xml',
-                    ].join(',')
-                    helpers.mac_pre_pkg_signing(name, objDir, "mozilla-release/${objDir}/dist/*.app/**/*")()
-                }
-            })()
-
+        helpers.build('docker && !magrathea', name, 'MacOSX.dockerfile', 'macosx', objDir, params, buildId, {     
+            if (true || shouldRelease) {
+                sh "tar -chf app.tar mozilla-release/${objDir}/dist/Ghostery\\ Browser.app"
+                stash name: "${name}-pre-pkg", includes: [
+                    'app.tar',
+                    'mozilla-release/security/mac/hardenedruntime/browser.production.entitlements.xml',
+                    'mozilla-release/security/mac/hardenedruntime/plugin-container.production.entitlements.xml',
+                ].join(',')
+                helpers.mac_pre_pkg_signing(name, objDir, "mozilla-release/${objDir}/dist/*.app/**/*")()
+            }
+        }, {
             archiveArtifacts artifacts: "mozilla-release/$objDir/dist/update/*.mar"
             archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
             archiveArtifacts artifacts: "mozilla-release/browser/config/version*"
@@ -107,9 +97,7 @@ if (params.MacOSX64) {
                 "mozilla-release/build/package/mac_osx/unpack-diskimage",
                 "mozilla-release/security/mac/hardenedruntime/*",
             ].join(',')
-
-            sh "rm -rf mozilla-release/$objDir/dist/update"
-        }
+        })()
     }
 }
 
