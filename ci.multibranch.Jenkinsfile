@@ -92,7 +92,7 @@ if (params.MacOSX64) {
                     stash name: "${name}-pre-pkg", includes: [
                         "app.tar",
                     ].join(',')
-                    helpers.mac_pre_pkg_signing(name)()
+                    helpers.mac_pre_pkg_signing(name, objDir, "mozilla-release/${objDir}/dist/*.app/**/*")()
                 }
             })()
 
