@@ -84,7 +84,7 @@ def withVagrant(String vagrantFilePath, String jenkinsFolderPath, Integer cpu, I
     }
 }
 
-def build(nodeId, name, dockerFile, targetPlatform, objDir, params, buildId, Closure pre_pkg_signing) {
+def build(nodeId, name, dockerFile, targetPlatform, objDir, params, buildId, Closure pre_pkg_signing, Closure archiving) {
     return { node(nodeId) {
         stage('checkout') {
             checkout scm
@@ -158,6 +158,8 @@ def build(nodeId, name, dockerFile, targetPlatform, objDir, params, buildId, Clo
                 }
             }
         }
+        
+        archiving()
     }}
 }
 
