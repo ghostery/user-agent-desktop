@@ -85,7 +85,7 @@ def withVagrant(String vagrantFilePath, String jenkinsFolderPath, Integer cpu, I
 }
 
 def build(nodeId, name, dockerFile, targetPlatform, objDir, params, buildId, Closure pre_pkg_signing, Closure archiving) {
-    return { node(nodeId) {
+    def build = {
         stage('checkout') {
             checkout scm
         }
@@ -129,12 +129,9 @@ def build(nodeId, name, dockerFile, targetPlatform, objDir, params, buildId, Clo
                 }
             }
         }
-        
+    }
 
-        stage("${name}: Pre Packaging Signing") {
-            pre_pkg_signing()
-        }
-        
+    def packaging = {    
         sh 'rm -rf signed.tar'
         unstash "${name}-signed"   
         sh 'tar xf signed.tar'
@@ -160,7 +157,29 @@ def build(nodeId, name, dockerFile, targetPlatform, objDir, params, buildId, Clo
         }
         
         archiving()
-    }}
+    }
+
+    return {
+        def nodeName = ''
+        def wsName = "${env.BUILD_TAG}-${name}"
+        
+        node(nodeId) {
+            nodeName = env.NODE_NAME
+            ws(wsName) {
+                build()
+            }
+        }
+        
+        stage("${name}: Pre Packaging Signing") {
+            pre_pkg_signing()
+        }
+        
+        node(nodeName) {
+            ws(wsName) {
+                packaging()
+            }
+        }
+    }
 }
 
 def signmar() {
