@@ -270,7 +270,10 @@ def windows_post_pkg_signing(name, objDir, artifactGlob) {
 def mac_pre_pkg_signing(name, objDir, artifactGlob) {
     return {
         node('gideon') {
-            sparseCheckout(scm, ['ci/sign_mac_app.sh'])
+            sparseCheckout(scm, [
+                'ci/sign_mac_app.sh',
+                'mozilla-release/security/mac/hardenedruntime/browser.production.entitlements.xml',
+            ])
 
             sh 'rm -rf mozilla-release'
 
