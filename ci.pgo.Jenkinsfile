@@ -8,7 +8,7 @@ properties([
     ]),
 ])
 
-def buildParams = [Reset: false]
+def buildParams = [Reset: true]
 def buildId = new Date().format('yyyyMMddHHmmss')
 def helpers
 
@@ -40,7 +40,23 @@ if (params.Windows64) {
       stash name: name, includes: "mozilla-release/${objDir}/dist/*.win64.zip"
     }
 
+    stage('start windows vm') {
+      node('master') {
+        checkout scm
 
+        helpers.withVagrant("ci/win.Vagrantfile", "c:\\jenkins", 4, 4000, 7010, false) { nodeId ->
+          node(nodeId) {
+            stage('run profileserver') {
+              checkout scm
+              bat script: '''
+                SET BUILD_SHELL=c:\\mozilla-build\\start-shell.bat
+                ECHO cd %CD% ^^^&^^^& bash ./ci/profileserver_win.sh | call %BUILD_SHELL%
+              '''
+            }
+          }
+        }
+      }
+    }
   }
 }
 
