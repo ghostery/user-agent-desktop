@@ -4,10 +4,15 @@ SET APP_NAME=Ghostery
 SET lang=en-US
 SET timestamp_server_sha1=http://timestamp.verisign.com/scripts/timstamp.dll
 SET timestamp_server_sha256=http://sha256timestamp.ws.symantec.com/sha256/timestamp
+SET platform_prefix=win64
+SET ff_version=''
 
-"%CLZ_SIGNTOOL_PATH%" sign /t %timestamp_server_sha1% /f %WIN_CERT% /p %WIN_CERT_PASS% dist\install\sea\%APP_NAME%-%ff_exe%.%platform_prefix%.installer%STUB_PREFIX%.exe
-"%CLZ_SIGNTOOL_PATH%" sign /fd sha256 /tr %timestamp_server_sha256% /td sha256 /f %WIN_CERT% /p %WIN_CERT_PASS% /as dist\install\sea\%APP_NAME%-%ff_exe%.%platform_prefix%.installer%STUB_PREFIX%.exe
-"%CLZ_SIGNTOOL_PATH%" verify /pa dist\install\sea\%APP_NAME%-%ff_exe%.%platform_prefix%.installer%STUB_PREFIX%.exe
+for /F %%f in (..\browser\config\version.txt) do set ff_version=%%f
+SET ff_exe=%ff_version%.en-US
+
+"%CLZ_SIGNTOOL_PATH%" sign /t %timestamp_server_sha1% /f %WIN_CERT% /p %WIN_CERT_PASS% dist\install\sea\%APP_NAME%-%ff_exe%.%platform_prefix%.installer.exe
+"%CLZ_SIGNTOOL_PATH%" sign /fd sha256 /tr %timestamp_server_sha256% /td sha256 /f %WIN_CERT% /p %WIN_CERT_PASS% /as dist\install\sea\%APP_NAME%-%ff_exe%.%platform_prefix%.installer.exe
+"%CLZ_SIGNTOOL_PATH%" verify /pa dist\install\sea\%APP_NAME%-%ff_exe%.%platform_prefix%.installer.exe
 if ERRORLEVEL 1 (goto :error)
 
 goto :eof
