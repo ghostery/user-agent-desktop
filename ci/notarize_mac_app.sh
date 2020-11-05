@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PKG_DIR=ci/pkg
+PKG_DIR="mozilla-release/obj-x86_64-apple-darwin/dist"
 
 ASC_USERNAME="$1"
 ASC_PASSWORD="$2"
