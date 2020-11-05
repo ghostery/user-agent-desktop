@@ -131,31 +131,28 @@ def build(name, dockerFile, targetPlatform, objDir, params, buildId, Closure pre
         }
         
 
-        stage("Pre Packaging Signing") {
+        stage("${name}: Pre Packaging Signing") {
             pre_pkg_signing()
         }
+        
+        sh 'rm -rf signed.tar'
+        unstash "${name}-signed"   
+        sh 'tar xf signed.tar'
 
-        image.inside("-v /mnt/vfat/vs2017_15.8.4/:/builds/worker/fetches/vs2017_15.8.4") {
-            withEnv(["MACH_USE_SYSTEM_PYTHON=1", "MOZCONFIG=${env.WORKSPACE}/mozconfig", "MOZ_BUILD_DATE=${buildId}"]) {
-                dir('mozilla-release') {
-                    stage("${name}: mach package") {
+        stage("${name}: Packaging") {
+            image.inside() {
+                withEnv([
+                    "MACH_USE_SYSTEM_PYTHON=1", 
+                    "MOZCONFIG=${env.WORKSPACE}/mozconfig", 
+                    "MOZ_BUILD_DATE=${buildId}",
+                    "ACCEPTED_MAR_CHANNEL_IDS=firefox-ghostery-release",
+                    "MAR_CHANNEL_ID=firefox-ghostery-release",
+                ]) {
+                    dir('mozilla-release') {
                         sh './mach package'
-                    }
-                }
-            }
-        }
 
-        image.inside("-v /mnt/vfat/vs2017_15.8.4/:/builds/worker/fetches/vs2017_15.8.4") {
-            withEnv(["MACH_USE_SYSTEM_PYTHON=1", "MOZCONFIG=${env.WORKSPACE}/mozconfig", "MOZ_BUILD_DATE=${buildId}"]) {
-                dir('mozilla-release') {
-                    stage("${name}: make update-packaging") {
                         dir(objDir) {
-                            withEnv([
-                                "ACCEPTED_MAR_CHANNEL_IDS=firefox-ghostery-release",
-                                "MAR_CHANNEL_ID=firefox-ghostery-release",
-                            ]) {
-                                sh 'make update-packaging'
-                            }
+                            sh 'make update-packaging'
                         }
                     }
                 }
@@ -231,8 +228,10 @@ def windows_pre_pkg_signing(name, objDir, artifactGlob) {
                     ]) {
                         bat 'ci/sign_win_dll.bat'
                     }
-
-                    archiveArtifacts artifacts: artifactGlob
+                    
+                    sh 'rm -rf signed.tar'
+                    sh "tar -chf signed.tar mozilla-release/${objDir}/dist/Ghostery"
+                    stash name: "${name}-signed", includes: 'signed.tar'
                 }
             }
         }
@@ -260,7 +259,9 @@ def windows_post_pkg_signing(name, objDir, artifactGlob) {
                         bat 'ci/sign_win_installer.bat'
                     }
 
-                    archiveArtifacts artifacts: artifactGlob
+                    sh 'rm -rf signed.tar'
+                    sh "tar -chf signed.tar mozilla-release/${objDir}/dist/Ghostery\\ Browser.app"
+                    stash name: "${name}-signed", includes: 'signed.tar'
                 }
             }
         }
@@ -276,8 +277,8 @@ def mac_pre_pkg_signing(name, objDir, artifactGlob) {
                 'ci/sign_mac_app.sh',
             ])
 
-            unstash "${name}-pre-pkg"
-            
+            rm 'app.tar'
+            unstash "${name}-pre-pkg"   
             sh 'tar xf app.tar'
 
             withCredentials([
