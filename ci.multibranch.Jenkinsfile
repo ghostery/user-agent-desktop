@@ -88,7 +88,7 @@ if (params.MacOSX64) {
         node('docker && !magrathea') {
             helpers.build(name, 'MacOSX.dockerfile', 'macosx', objDir, params, buildId, {     
                 if (true || shouldRelease) {
-                    sh "tar -chf app.tar mozilla-release/${objDir}/dist/Ghostery\ Browser.app"
+                    sh "tar -chf app.tar mozilla-release/${objDir}/dist/Ghostery\\ Browser.app"
                     stash name: "${name}-pre-pkg", includes: [
                         "app.tar",
                     ].join(',')
