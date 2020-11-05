@@ -1,6 +1,26 @@
 import jenkins.model.*
 import hudson.model.*
 import hudson.slaves.*
+    
+def sparseCheckout(scm, files) {
+    if (scm.class.simpleName == 'GitSCM') {
+        def filesAsPaths = files.collect {
+            [path: it]
+        }
+
+        return checkout([$class                           : 'GitSCM',
+                         branches                         : scm.branches,
+                         doGenerateSubmoduleConfigurations: scm.doGenerateSubmoduleConfigurations,
+                         extensions                       : scm.extensions +
+                                 [[$class: 'SparseCheckoutPaths', sparseCheckoutPaths: filesAsPaths]],
+                         submoduleCfg                     : scm.submoduleCfg,
+                         userRemoteConfigs                : scm.userRemoteConfigs
+        ])
+    } else {
+        // fallback to checkout everything by default
+        return checkout(scm)
+    }
+}
 
 @NonCPS
 def createNode(nodeId, jenkinsFolderPath) {
@@ -194,11 +214,12 @@ def signmar() {
 def windows_pre_pkg_signing(name, objDir, artifactGlob) {
     return {
         node('master') {
-            checkout scm
+            sparseCheckout(scm, ['ci/win.Vagrantfile'])
 
             withVagrant("ci/win.Vagrantfile", "c:\\jenkins", 1, 2000, 7000, false) { nodeId ->
-                node(nodeId) {       
-                    checkout scm
+                node(nodeId) {
+                    sparseCheckout(scm, ['ci/sign_win_dll.bat'])
+
                     // clean old build artifacts in work dir
                     bat 'del /s /q mozilla-release'
 
@@ -221,11 +242,12 @@ def windows_pre_pkg_signing(name, objDir, artifactGlob) {
 def windows_post_pkg_signing(name, objDir, artifactGlob) {
     return {
         node('master') {
-            checkout scm
+            sparseCheckout(scm, ['ci/win.Vagrantfile'])
 
             withVagrant("ci/win.Vagrantfile", "c:\\jenkins", 1, 2000, 7000, false) { nodeId ->
                 node(nodeId) {
-                    checkout scm
+                    sparseCheckout(scm, ['ci/sign_win_installer.bat'])
+
                     // clean old build artifacts in work dir
                     bat 'del /s /q mozilla-release'
 
@@ -248,13 +270,13 @@ def windows_post_pkg_signing(name, objDir, artifactGlob) {
 def mac_pre_pkg_signing(name, objDir, artifactGlob) {
     return {
         node('gideon') {
-            checkout scm
-
-            sh 'npm ci'
+            sparseCheckout(scm, ['ci/sign_mac_app.sh'])
 
             sh 'rm -rf mozilla-release'
 
             unstash "${name}-pre-pkg"
+            
+            sh 'tar xf app.tar'
 
             withCredentials([
                 file(credentialsId: '5f834aab-07ff-4c3f-9848-c2ac02b3b532', variable: 'MAC_CERT'),
