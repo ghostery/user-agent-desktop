@@ -24,16 +24,6 @@
 
       #// "$topsrcdir/build/mozconfig.common"
 
-    if [ -n "$PGO_PROFILE_USE" ]; then
-        export MOZ_LTO=cross
-        ac_add_options --enable-profile-use=cross
-        ac_add_options --with-pgo-profile-path=$WORKSPACE/mozilla-release/merged.profdata
-        export LLVM_PROFDATA="$MOZ_FETCHES_DIR/clang/bin/llvm-profdata"
-        export AR="$MOZ_FETCHES_DIR/clang/bin/llvm-ar"
-        export NM="$MOZ_FETCHES_DIR/clang/bin/llvm-nm"
-        export RANLIB="$MOZ_FETCHES_DIR/clang/bin/llvm-ranlib"
-    fi
-
     if [ -n "$PGO_PROFILE_GENERATE" ]; then
         ac_add_options --enable-profile-generate=cross
     fi
@@ -53,4 +43,7 @@ export MOZ_PACKAGE_JSSHELL=1
 # disable tests for this build
 ac_add_options --disable-tests
 
+# browser/config/mozconfigs/linux64-aarch64/common-opt
+unset NASM
 ac_add_options --target=aarch64
+unset MOZ_STDCXX_COMPAT
