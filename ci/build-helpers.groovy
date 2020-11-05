@@ -163,7 +163,7 @@ def build(nodeId, name, dockerFile, targetPlatform, objDir, params, buildId, Clo
 
     return {
         def nodeName = ''
-        def wsName = "${env.BUILD_TAG}-${name}"
+        def wsName = "${env.WORKSPACE}-${name}"
         
         node(nodeId) {
             nodeName = env.NODE_NAME
