@@ -1,8 +1,6 @@
-FROM ua-build-base
+FROM ua-build-base:amd64
 
 ARG IPFS_GATEWAY=https://cloudflare-ipfs.com
-
-ENV MOZ_AUTOMATION_PACKAGE_TESTS=1
 
 RUN wget -O /builds/worker/fetches/cctools.tar.xz $IPFS_GATEWAY/ipfs/QmTxe5waLFp7rCEv8zmgPZSaTHXUGTD6y1WTBog15xq4fo && \
     cd /builds/worker/fetches/ && \
@@ -19,7 +17,7 @@ RUN wget -O /builds/worker/fetches/sccache.tar.xz $IPFS_GATEWAY/ipfs/QmeB7fo2FuA
     tar -xf sccache.tar.xz && \
     rm sccache.tar.xz
 
-RUN wget -O /builds/worker/fetches/wasi-sysroot.tar.xz $IPFS_GATEWAY/ipfs/QmVHARn5VnwKa2x8PPP2g4YagneCFsZfDxUY5BqZBZALY3 && \
+RUN wget -O /builds/worker/fetches/wasi-sysroot.tar.xz $IPFS_GATEWAY/ipfs/QmUkv5Rarn1p9TZkMMt1u46xNX7LVJs7NC4duoMmV4whPF && \
     cd /builds/worker/fetches/ && \
     tar -xf wasi-sysroot.tar.xz && \
     rm wasi-sysroot.tar.xz
@@ -29,7 +27,7 @@ RUN wget -O /builds/worker/fetches/binutils.tar.xz $IPFS_GATEWAY/ipfs/QmfTyFzy9f
     tar -xf binutils.tar.xz && \
     rm binutils.tar.xz
 
-RUN wget -O /builds/worker/fetches/dump_syms.tar.xz $IPFS_GATEWAY/ipfs/QmNqhTYRQjunm9kduj8vnoWy6zMteMPy6H7fvHi3PPRVHp && \
+RUN wget -O /builds/worker/fetches/dump_syms.tar.xz $IPFS_GATEWAY/ipfs/QmcBFu6XXN7qQbw8WDxdSqaX1F34ieScEbevhkQP4HGfZZ && \
     cd /builds/worker/fetches/ && \
     tar -xf dump_syms.tar.xz && \
     rm dump_syms.tar.xz

@@ -1,4 +1,4 @@
-FROM ua-build-base:amd64
+FROM ua-build-base:arm64
 
 ARG IPFS_GATEWAY=https://cloudflare-ipfs.com
 
@@ -7,7 +7,7 @@ RUN wget -O /builds/worker/fetches/binutils.tar.xz $IPFS_GATEWAY/ipfs/QmfTyFzy9f
     tar -xf binutils.tar.xz && \
     rm binutils.tar.xz
 
-RUN wget -O /builds/worker/fetches/clang.tar.zst $IPFS_GATEWAY/ipfs/QmakFK3Q9mKPPCFkJndQdi2oSv9CJCTSUxDZx655yDNpxz && \
+RUN wget -O /builds/worker/fetches/clang.tar.zst $IPFS_GATEWAY/ipfs/QmR9wkZyrUAZ7p8GLoQRDk4UMn4d1CDA7bSpPJ6z1mW55R && \
     cd /builds/worker/fetches/ && \
     tar -xf clang.tar.zst && \
     rm clang.tar.zst
@@ -36,11 +36,6 @@ RUN wget -O /builds/worker/fetches/sccache.tar.xz $IPFS_GATEWAY/ipfs/QmeB7fo2FuA
     cd /builds/worker/fetches/ && \
     tar -xf sccache.tar.xz && \
     rm sccache.tar.xz
-
-RUN wget -O /builds/worker/fetches/nasm.tar.bz2 $IPFS_GATEWAY/ipfs/QmXkwK3DDQyUsJPRnaNG9mn74L2aMn2dWHWoC8d9CBiUTa && \
-    cd /builds/worker/fetches/ && \
-    tar -xf nasm.tar.bz2 && \
-    rm nasm.tar.bz2
 
 RUN wget -O /builds/worker/fetches/node.tar.xz $IPFS_GATEWAY/ipfs/QmcPrE765WnKHryAF1s5FPdnoW6E6yYq4VzzUnLdZ5yMB3 && \
     cd /builds/worker/fetches/ && \

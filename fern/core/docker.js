@@ -90,13 +90,9 @@ function generateFetch(fetches, key) {
   }
 }
 
-async function generateDockerFile({ key, fetches, job, name, toolchains }) {
-  const statements = ["FROM ua-build-base"];
+async function generateDockerFile({ key, arch, fetches, job, name, toolchains }) {
+  const statements = [`FROM ua-build-base:${arch}`];
   statements.push("ARG IPFS_GATEWAY=https://cloudflare-ipfs.com");
-  const env = Object.entries(job.worker.env || {})
-    .map(([k, v]) => `${k}=${v}`)
-    .join(" \\\n    ");
-  statements.push(`ENV ${env}`);
 
   for (const key of job.fetches.fetch || []) {
     statements.push(generateFetch(fetches, key));
@@ -184,6 +180,19 @@ async function generate(artifactBaseDir) {
         "macosx.yml"
       ),
     },
+    {
+      name: "LinuxARM",
+      key: "linux64-aarch64/opt",
+      arch: 'arm64',
+      buildPath: path.join(
+        root,
+        "mozilla-release",
+        "taskcluster",
+        "ci",
+        "build",
+        "linux.yml"
+      ),
+    },
   ];
   // Collect the toolchains required for each build from it's specification in taskcluster configs.
   const buildInfos = await Promise.all(
@@ -255,6 +264,7 @@ async function generate(artifactBaseDir) {
                 await generateDockerFile({
                   name: conf.name,
                   key: conf.key,
+                  arch: conf.arch || 'amd64',
                   fetches,
                   job: buildInfos[i],
                   toolchains: toolchainsForConfig[i],

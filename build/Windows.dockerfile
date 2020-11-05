@@ -1,9 +1,6 @@
-FROM ua-build-base
+FROM ua-build-base:amd64
 
 ARG IPFS_GATEWAY=https://cloudflare-ipfs.com
-
-ENV TOOLTOOL_MANIFEST=browser/config/tooltool-manifests/win64/releng.manifest \
-    MOZ_AUTOMATION_PACKAGE_TESTS=1
 
 RUN /builds/worker/bin/fetch-content static-url \
     --sha256 daa17556c8690a34fb13af25c87ced89c79a36a935bf6126253a9d9a5226367c \
@@ -63,7 +60,7 @@ RUN wget -O /builds/worker/fetches/sccache.tar.xz $IPFS_GATEWAY/ipfs/QmeB7fo2FuA
     tar -xf sccache.tar.xz && \
     rm sccache.tar.xz
 
-RUN wget -O /builds/worker/fetches/dump_syms.tar.xz $IPFS_GATEWAY/ipfs/QmNqhTYRQjunm9kduj8vnoWy6zMteMPy6H7fvHi3PPRVHp && \
+RUN wget -O /builds/worker/fetches/dump_syms.tar.xz $IPFS_GATEWAY/ipfs/QmcBFu6XXN7qQbw8WDxdSqaX1F34ieScEbevhkQP4HGfZZ && \
     cd /builds/worker/fetches/ && \
     tar -xf dump_syms.tar.xz && \
     rm dump_syms.tar.xz
@@ -83,7 +80,7 @@ RUN wget -O /builds/worker/fetches/winchecksec.tar.bz2 $IPFS_GATEWAY/ipfs/QmZkQu
     tar -xf winchecksec.tar.bz2 && \
     rm winchecksec.tar.bz2
 
-RUN wget -O /builds/worker/fetches/dump_syms.tar.bz2 $IPFS_GATEWAY/ipfs/QmQt7EGMeedRrif1dhn44paKMYWCniWqXCARi1TyQo6fWA && \
+RUN wget -O /builds/worker/fetches/dump_syms.tar.bz2 $IPFS_GATEWAY/ipfs/QmWnwBGT8cL9JqFHuW8mjZXTdGaC9mfBRqGPaZaq6Mpc9d && \
     cd /builds/worker/fetches/ && \
     tar -xf dump_syms.tar.bz2 && \
     rm dump_syms.tar.bz2
