@@ -3,6 +3,7 @@ properties([
         booleanParam(name: 'Reset', defaultValue: false, description: 'clean workspace files'),
         booleanParam(name: 'Clobber', defaultValue: false, description: 'run mach clobber'),
         booleanParam(name: 'Linux64', defaultValue: true, description: ''),
+        booleanParam(name: 'LinuxARM64', defaultValue: false, description: ''),
         booleanParam(name: 'Windows64', defaultValue: true, description: ''),
         booleanParam(name: 'MacOSX64', defaultValue: true, description: ''),
         string(name: 'ReleaseName', defaultValue: '', description: ''),
@@ -33,6 +34,32 @@ if (params.Linux64) {
     buildmatrix[name] = {
         node('docker && !magrathea') {
             helpers.build(name, 'Linux.dockerfile', 'linux', objDir, params, buildId)()
+
+            archiveArtifacts artifacts: "mozilla-release/$objDir/dist/update/*.mar"
+            archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
+            archiveArtifacts artifacts: "mozilla-release/browser/config/version*"
+
+            stash name: name, includes: [
+                "mozilla-release/${artifactGlob}",
+            ].join(',')
+
+            sh "rm -rf mozilla-release/$objDir/dist/update"
+        }
+    }
+
+    if (shouldRelease) {
+        signmatrix["Sign ${name}"] = helpers.linux_signing(name, objDir, artifactGlob)
+    }
+}
+
+if (params.LinuxARM64) {
+    def name = 'LinuxARM64'
+    def objDir = 'obj-x86_64-pc-linux-gnu'
+    def artifactGlob = "$objDir/dist/Ghostery-*"
+
+    buildmatrix[name] = {
+        node('docker && !magrathea') {
+            helpers.build(name, 'LinuxARM.dockerfile', 'linux-arm', objDir, params, buildId)()
 
             archiveArtifacts artifacts: "mozilla-release/$objDir/dist/update/*.mar"
             archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"

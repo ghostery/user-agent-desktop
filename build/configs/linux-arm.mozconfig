@@ -1,0 +1,56 @@
+. $topsrcdir/browser/config/mozconfigs/linux64/plain-opt
+
+# browser/config/mozconfig/linux64/common-opt
+  . $topsrcdir/build/mozconfig.stylo
+  . $topsrcdir/build/mozconfig.wasm-sandboxing
+
+  # ac_add_options --enable-update-channel=${MOZ_UPDATE_CHANNEL}
+  # ac_add_options --with-google-location-service-api-keyfile=/builds/gls-gapi.data
+  # ac_add_options --with-google-safebrowsing-api-keyfile=/builds/sb-gapi.data
+  # ac_add_options --with-mozilla-api-keyfile=/builds/mozilla-desktop-geoloc-api.key
+
+  #. $topsrcdir/build/unix/mozconfig.linux
+
+    #. "$topsrcdir/build/unix/mozconfig.unix"
+
+      #. "$topsrcdir/build/mozconfig.common"
+
+      mk_add_options AUTOCLOBBER=1
+      ac_add_options --enable-crashreporter
+      ac_add_options --enable-js-shell
+      . "$topsrcdir/build/mozconfig.nasm"
+      . "$topsrcdir/build/mozconfig.node"
+      . "$topsrcdir/build/mozconfig.rust"
+
+      #// "$topsrcdir/build/mozconfig.common"
+
+    if [ -n "$PGO_PROFILE_USE" ]; then
+        export MOZ_LTO=cross
+        ac_add_options --enable-profile-use=cross
+        ac_add_options --with-pgo-profile-path=$WORKSPACE/mozilla-release/merged.profdata
+        export LLVM_PROFDATA="$MOZ_FETCHES_DIR/clang/bin/llvm-profdata"
+        export AR="$MOZ_FETCHES_DIR/clang/bin/llvm-ar"
+        export NM="$MOZ_FETCHES_DIR/clang/bin/llvm-nm"
+        export RANLIB="$MOZ_FETCHES_DIR/clang/bin/llvm-ranlib"
+    fi
+
+    if [ -n "$PGO_PROFILE_GENERATE" ]; then
+        ac_add_options --enable-profile-generate=cross
+    fi
+
+    mk_add_options "export PATH=$MOZ_FETCHES_DIR/binutils/bin:$PATH"
+    #. "$topsrcdir/build/unix/mozconfig.stdcxx"
+
+    #// "$topsrcdir/build/unix/mozconfig.unix"
+
+    ac_add_options --enable-default-toolkit=cairo-gtk3-wayland
+
+  #// $topsrcdir/build/unix/mozconfig.linux
+
+# Package js shell.
+export MOZ_PACKAGE_JSSHELL=1
+
+# disable tests for this build
+ac_add_options --disable-tests
+
+ac_add_options --target=aarch64
