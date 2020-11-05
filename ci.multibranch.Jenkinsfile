@@ -47,8 +47,9 @@ if (params.Windows64) {
     buildmatrix[name] = {
         // we have to run windows builds on magrathea because that is where the vssdk mount is.
         helpers.build('docker && magrathea', name, 'Windows.dockerfile', 'win64', objDir, params, buildId, {
+            sh "tar -chf app.tar mozilla-release/${objDir}/dist/bin"
             stash name: "${name}-pre-pkg", includes: [
-                "mozilla-release/${objDir}/dist/Ghostery/**/*",
+                'app.tar',
             ].join(',')
         }, {    
             if (true || shouldRelease) {
