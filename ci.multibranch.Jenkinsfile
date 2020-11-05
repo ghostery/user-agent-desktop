@@ -88,10 +88,11 @@ if (params.MacOSX64) {
         node('docker && !magrathea') {
             helpers.build(name, 'MacOSX.dockerfile', 'macosx', objDir, params, buildId, {     
                 if (true || shouldRelease) {
+                    sh "tar -chf app.tar mozilla-release/${objDir}/dist/Ghostery\ Browser.app"
                     stash name: "${name}-pre-pkg", includes: [
-                        "mozilla-release/${objDir}/dist/*.app/**/*",
+                        "app.tar",
                     ].join(',')
-                    helpers.mac_pre_pkg_signing(name, objDir, "mozilla-release/${objDir}/dist/*.app/**/*")()
+                    helpers.mac_pre_pkg_signing(name)()
                 }
             })()
 
