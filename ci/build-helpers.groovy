@@ -274,7 +274,6 @@ def mac_pre_pkg_signing(name, objDir, artifactGlob) {
 
             sparseCheckout(scm, [
                 'ci/sign_mac_app.sh',
-                'mozilla-release/security/mac/hardenedruntime/browser.production.entitlements.xml',
             ])
 
             unstash "${name}-pre-pkg"
