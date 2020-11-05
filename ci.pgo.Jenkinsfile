@@ -48,10 +48,12 @@ if (params.Windows64) {
           node(nodeId) {
             stage('run profileserver') {
               checkout scm
+              unstash name
               bat script: '''
                 SET BUILD_SHELL=c:\\mozilla-build\\start-shell.bat
-                ECHO cd %CD% ^^^&^^^& bash ./ci/profileserver_win.sh | call %BUILD_SHELL%
+                ECHO cd "%CD%" ^^^&^^^& bash ./ci/profileserver_win.sh | call %BUILD_SHELL%
               '''
+              archiveArtifacts artifacts: "${name}/profdata.tar.xz"
             }
           }
         }
@@ -85,7 +87,7 @@ if (params.MacOSX64) {
       stage('fetch toolchain') {
         sh '''#!/bin/bash
           set -x -e
-          wget -O clang.tar.zst 'http://kria.cliqz:8080/ipfs/Qme6cUwu2zm5AiGGxUVP7yvspLaDkAEXszYox8VywiSPBB'
+          wget -nv -O clang.tar.zst 'http://kria.cliqz:8080/ipfs/Qme6cUwu2zm5AiGGxUVP7yvspLaDkAEXszYox8VywiSPBB'
           zstd -d clang.tar.zst
           tar -xf clang.tar
           rm clang.tar*
