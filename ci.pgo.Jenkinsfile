@@ -92,9 +92,10 @@ if (params.MacOSX64) {
             ./mach python python/mozbuild/mozbuild/action/install.py ./obj-x86_64-apple-darwin/dist/Ghostery-*.dmg /tmp/
             ./mach python build/pgo/profileserver.py --binary /tmp/*.app/Contents/MacOS/Ghostery
           '''
-          sh "tar -Jcvf ./${name}_profdata.tar.xz merged.profdata en-US.log"
+          sh "mkdir -p $WORKSPACE/${name}/"
+          sh "tar -Jcvf $WORKSPACE/${name}/profdata.tar.xz merged.profdata en-US.log"
         }
-        archiveArtifacts artifacts: "mozilla-release/${name}_profdata.tar.xz"
+        archiveArtifacts artifacts: "${name}/profdata.tar.xz"
       }
     }
   }
