@@ -91,6 +91,7 @@ if (params.MacOSX64) {
                     sh "tar -chf app.tar mozilla-release/${objDir}/dist/Ghostery\\ Browser.app"
                     stash name: "${name}-pre-pkg", includes: [
                         "app.tar",
+                        "mozilla-release/security/mac/hardenedruntime/browser.production.entitlements.xml",
                     ].join(',')
                     helpers.mac_pre_pkg_signing(name, objDir, "mozilla-release/${objDir}/dist/*.app/**/*")()
                 }
