@@ -6,6 +6,8 @@ SET timestamp_server_sha1=http://timestamp.verisign.com/scripts/timstamp.dll
 SET timestamp_server_sha256=http://sha256timestamp.ws.symantec.com/sha256/timestamp
 SET platform_prefix=win64
 SET ff_version=''
+SET CQZ_WORKSPACE=%CD%
+cd %CQZ_WORKSPACE%\mozilla-release\obj-x86_64-pc-mingw32\
 
 for /F %%f in (..\browser\config\version.txt) do set ff_version=%%f
 SET ff_exe=%ff_version%.en-US
