@@ -1,4 +1,4 @@
-FROM ua-build-base:arm64
+FROM ua-build-base
 
 ARG IPFS_GATEWAY=https://cloudflare-ipfs.com
 

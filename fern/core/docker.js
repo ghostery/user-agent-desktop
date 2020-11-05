@@ -90,8 +90,8 @@ function generateFetch(fetches, key) {
   }
 }
 
-async function generateDockerFile({ key, arch, fetches, job, name, toolchains }) {
-  const statements = [`FROM ua-build-base:${arch}`];
+async function generateDockerFile({ key, fetches, job, name, toolchains }) {
+  const statements = [`FROM ua-build-base`];
   statements.push("ARG IPFS_GATEWAY=https://cloudflare-ipfs.com");
 
   for (const key of job.fetches.fetch || []) {
@@ -264,7 +264,6 @@ async function generate(artifactBaseDir) {
                 await generateDockerFile({
                   name: conf.name,
                   key: conf.key,
-                  arch: conf.arch || 'amd64',
                   fetches,
                   job: buildInfos[i],
                   toolchains: toolchainsForConfig[i],
