@@ -218,10 +218,10 @@ def windows_pre_pkg_signing(name, objDir, artifactGlob) {
 
             withVagrant("ci/win.Vagrantfile", "c:\\jenkins", 1, 2000, 7000, false) { nodeId ->
                 node(nodeId) {
-                    sparseCheckout(scm, ['ci/sign_win_dll.bat'])
-
                     // clean old build artifacts in work dir
                     bat 'del /s /q mozilla-release'
+
+                    sparseCheckout(scm, ['ci/sign_win_dll.bat'])
 
                     unstash "${name}-pre-pkg"
 
@@ -246,10 +246,10 @@ def windows_post_pkg_signing(name, objDir, artifactGlob) {
 
             withVagrant("ci/win.Vagrantfile", "c:\\jenkins", 1, 2000, 7000, false) { nodeId ->
                 node(nodeId) {
-                    sparseCheckout(scm, ['ci/sign_win_installer.bat'])
-
                     // clean old build artifacts in work dir
                     bat 'del /s /q mozilla-release'
+
+                    sparseCheckout(scm, ['ci/sign_win_installer.bat'])
 
                     unstash name
 
@@ -270,12 +270,12 @@ def windows_post_pkg_signing(name, objDir, artifactGlob) {
 def mac_pre_pkg_signing(name, objDir, artifactGlob) {
     return {
         node('gideon') {
+            sh 'rm -rf mozilla-release'
+
             sparseCheckout(scm, [
                 'ci/sign_mac_app.sh',
                 'mozilla-release/security/mac/hardenedruntime/browser.production.entitlements.xml',
             ])
-
-            sh 'rm -rf mozilla-release'
 
             unstash "${name}-pre-pkg"
             
