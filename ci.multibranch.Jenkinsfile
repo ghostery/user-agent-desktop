@@ -90,8 +90,9 @@ if (params.MacOSX64) {
                 if (true || shouldRelease) {
                     sh "tar -chf app.tar mozilla-release/${objDir}/dist/Ghostery\\ Browser.app"
                     stash name: "${name}-pre-pkg", includes: [
-                        "app.tar",
-                        "mozilla-release/security/mac/hardenedruntime/browser.production.entitlements.xml",
+                        'app.tar',
+                        'mozilla-release/security/mac/hardenedruntime/browser.production.entitlements.xml',
+                        'mozilla-release/security/mac/hardenedruntime/plugin-container.production.entitlements.xml',
                     ].join(',')
                     helpers.mac_pre_pkg_signing(name, objDir, "mozilla-release/${objDir}/dist/*.app/**/*")()
                 }
