@@ -279,7 +279,7 @@ def mac_pre_pkg_signing(name, objDir, artifactGlob) {
                 'ci/sign_mac_app.sh',
             ])
 
-            rm 'app.tar'
+            sh 'rm -rf app.tar'
             unstash "${name}-pre-pkg"   
             sh 'tar xf app.tar'
 
