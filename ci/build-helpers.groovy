@@ -127,10 +127,9 @@ def build(nodeId, name, dockerFile, targetPlatform, objDir, params, buildId, Clo
                         sh './mach build'
                     }
                 }
+                stash()
             }
         }
-        
-        stash()
     }
 
     def packaging = {    
@@ -154,11 +153,10 @@ def build(nodeId, name, dockerFile, targetPlatform, objDir, params, buildId, Clo
                             sh 'make update-packaging'
                         }
                     }
+                    archiving()
                 }
             }
         }
-        
-        archiving()
     }
 
     return {
