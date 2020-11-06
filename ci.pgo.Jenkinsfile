@@ -29,9 +29,9 @@ if (params.Linux64) {
           sh "BINARY=${objDir}/dist/Ghostery/Ghostery bash ${env.WORKSPACE}/ci/profileserver_linux.sh"
           sh "mkdir -p $WORKSPACE/${name}/"
           sh "tar -Jcvf $WORKSPACE/${name}/profdata.tar.xz merged.profdata en-US.log"
-          archiveArtifacts artifacts: "${name}/profdata.tar.xz"
         }
       })()
+      archiveArtifacts artifacts: "${name}/profdata.tar.xz"
     }
   }
 }
