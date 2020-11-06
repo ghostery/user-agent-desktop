@@ -2,13 +2,13 @@
 def buildmatrix = [:]
 properties([
     parameters([
-        booleanParam(name: 'Linux64', defaultValue: false, description: ''),
+        booleanParam(name: 'Linux64', defaultValue: true, description: ''),
         booleanParam(name: 'Windows64', defaultValue: true, description: ''),
         booleanParam(name: 'MacOSX64', defaultValue: true, description: ''),
     ]),
 ])
 
-def buildParams = [Reset: false]
+def buildParams = [Reset: true]
 def buildId = new Date().format('yyyyMMddHHmmss')
 def helpers
 
