@@ -252,7 +252,7 @@ def windows_pre_pkg_signing(name, objDir, artifactGlob) {
                     }
                     
                     bat 'del /s /q  signed.tar'
-                    powershell "Compress-Archive mozilla-release\\${objDir}\\dist\\Ghostery\\* -DestinationPath signed.zip -CompressionLevel Fastest"
+                    powershell "Compress-Archive mozilla-release\\${objDir}\\dist\\bin\\* -DestinationPath signed.zip -CompressionLevel Fastest"
                     stash name: "${name}-signed", includes: 'signed.zip'
                 }
             }
