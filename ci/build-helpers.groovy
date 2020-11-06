@@ -297,7 +297,6 @@ def mac_pre_pkg_signing(name, objDir, artifactGlob) {
 
             sparseCheckout(scm, [
                 'ci/sign_mac_app.sh',
-                'ci/notarize_mac_app.sh',
             ])
 
             sh 'rm -rf app.tar'
@@ -334,6 +333,9 @@ def mac_pre_pkg_signing(name, objDir, artifactGlob) {
                         "ARTIFACT_GLOB=${artifactGlob}"
                     ]){
                         sh "./ci/sign_mac_app.sh"
+                        sh 'rm -rf signed.tar'
+                        sh "tar -chf signed.tar mozilla-release/${objDir}/dist/Ghostery\\ Browser.app"
+                        stash name: "${name}-signed", includes: 'signed.tar'
                     }
                 } finally {
                     sh '''#!/bin/bash -l -x
@@ -344,7 +346,6 @@ def mac_pre_pkg_signing(name, objDir, artifactGlob) {
                     '''
                 }
             }
-            archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
         }
     }
 }
