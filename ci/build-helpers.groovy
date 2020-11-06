@@ -133,9 +133,9 @@ def build(nodeId, name, dockerFile, targetPlatform, objDir, params, buildId, Clo
     }
 
     def packaging = {    
-        sh 'rm -rf signed.tar'
+        sh 'rm -rf signed.zip'
         unstash "${name}-signed"   
-        sh 'tar xf signed.tar'
+        sh 'unzip signed.zip'
 
         stage("${name}: Packaging") {
             image.inside() {
@@ -252,8 +252,8 @@ def windows_pre_pkg_signing(name, objDir, artifactGlob) {
                     }
                     
                     bat 'del /s /q  signed.tar'
-                    bat "tar -chf signed.tar mozilla-release/${objDir}/dist/Ghostery"
-                    stash name: "${name}-signed", includes: 'signed.tar'
+                    powershell "Compress-Archive mozilla-release/${objDir}/dist/Ghostery signed.zip"
+                    stash name: "${name}-signed", includes: 'signed.zip'
                 }
             }
         }
@@ -331,9 +331,10 @@ def mac_pre_pkg_signing(name, objDir, artifactGlob) {
                         "ARTIFACT_GLOB=${artifactGlob}"
                     ]){
                         sh "./ci/sign_mac_app.sh"
-                        sh 'rm -rf signed.tar'
-                        sh "tar -chf signed.tar mozilla-release/${objDir}/dist/Ghostery\\ Browser.app"
-                        stash name: "${name}-signed", includes: 'signed.tar'
+                        
+                        sh 'rm -rf signed.zip'
+                        sh "zip -r signed.zip mozilla-release/${objDir}/dist/Ghostery\\ Browser.app"
+                        stash name: "${name}-signed", includes: 'signed.zip'
                     }
                 } finally {
                     sh '''#!/bin/bash -l -x
