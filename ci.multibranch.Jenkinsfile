@@ -27,7 +27,15 @@ if (params.Linux64) {
     def artifactGlob = "$objDir/dist/Ghostery-*"
 
     buildmatrix[name] = {
-        helpers.build('docker && !magrathea', name, 'Linux.dockerfile', 'linux', objDir, params, buildId, {}, {}, {
+        helpers.build('docker && !magrathea', name, 'Linux.dockerfile', 'linux', objDir, params, buildId, {
+            sh '''
+               touch empty
+               tar -chf app.tar empty
+            '''
+            stash name: "${name}-pre-pkg", includes: [
+                'app.tar',
+            ].join(',')
+        }, {}, {
             archiveArtifacts artifacts: "mozilla-release/$objDir/dist/update/*.mar"
             archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
             archiveArtifacts artifacts: "mozilla-release/browser/config/version*"
@@ -51,6 +59,7 @@ if (params.Windows64) {
             stash name: "${name}-pre-pkg", includes: [
                 'app.tar',
             ].join(',')
+            sh "rm -rf app.tar mozilla-release/${objDir}/dist/bin"
         }, {    
             if (true || shouldRelease) {
                 helpers.windows_pre_pkg_signing(name, objDir, "mozilla-release/${objDir}/dist/Ghostery/**/*")()
@@ -86,6 +95,7 @@ if (params.MacOSX64) {
                 'mozilla-release/security/mac/hardenedruntime/browser.production.entitlements.xml',
                 'mozilla-release/security/mac/hardenedruntime/plugin-container.production.entitlements.xml',
             ].join(',')
+            sh "rm -rf app.tar mozilla-release/${objDir}/dist/Ghostery\\ Browser.app"
         },{     
             if (true || shouldRelease) {
                 helpers.mac_pre_pkg_signing(name, objDir, "mozilla-release/${objDir}/dist/*.app/**/*")()
