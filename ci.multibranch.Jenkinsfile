@@ -111,6 +111,10 @@ if (params.MacOSX64) {
                 "mozilla-release/security/mac/hardenedruntime/*",
             ].join(',')
         })()
+        
+        if (true || shouldRelease) {
+            helpers.mac_post_pkg_signing(name, objDir, artifactGlob)()
+        }
     }
 }
 
