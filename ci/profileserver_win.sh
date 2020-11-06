@@ -21,7 +21,7 @@ rm firefox.tar.xz
 export JARLOG_FILE="en-US.log"
 export LLVM_PROFDATA=`pwd`/clang/bin/llvm-profdata
 
-cd mozilla-release
+cd firefox
 
 # prepare mach environment
 ./mach create-mach-environment
