@@ -64,7 +64,7 @@ def withVagrant(String vagrantFilePath, String jenkinsFolderPath, Integer cpu, I
     }
 }
 
-def build(name, dockerFile, targetPlatform, objDir, params, buildId, buildEnv=[]) {
+def build(name, dockerFile, targetPlatform, objDir, params, buildId, buildEnv=[], Closure archiving={}) {
     return {
         stage('checkout') {
             checkout scm
@@ -134,6 +134,7 @@ def build(name, dockerFile, targetPlatform, objDir, params, buildId, buildEnv=[]
                                 }
                             }
                         }
+                        archiving()
                     }
                 }
             }
