@@ -9,7 +9,8 @@ tar -xf clang.tar.gz
 rm clang.tar.gz
 
 # Clean workspace
-rm -rf firefox Ghostery
+rm -rf firefox
+rm -rf mozilla-release/Ghostery
 
 # get Firefox source
 wget -nv -O firefox.tar.xz http://kria.cliqz:8080/ipns/k2k4r8jy3h2kku2sungmzbrp2zpj3yf2js0w98bwbbyiqt2qzomkvyli/firefox/releases/82.0.2/source/firefox-82.0.2.source.tar.xz

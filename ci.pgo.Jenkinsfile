@@ -26,7 +26,7 @@ if (params.Linux64) {
     node('docker && !magrathea') {
       helpers.build(name, 'Linux.dockerfile', 'linux', objDir, buildParams, buildId, ['PGO_PROFILE_GENERATE=1'], {
         stage('run profileserver') {
-          sh "BINARY=${objDir}/dist/Ghostery/Ghostery bash ${WORKSPACE}/ci/profileserver_linux.sh"
+          sh "BINARY=${objDir}/dist/Ghostery/Ghostery bash ${env.WORKSPACE}/ci/profileserver_linux.sh"
           sh "mkdir -p $WORKSPACE/${name}/"
           sh "tar -Jcvf $WORKSPACE/${name}/profdata.tar.xz merged.profdata en-US.log"
         }
