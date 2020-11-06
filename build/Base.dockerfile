@@ -100,6 +100,12 @@ RUN apt-get update && \
       libnss3-tools \
       locales \
       liblzma-dev
+# ARM deps
+RUN dpkg --add-architecture arm64 && \
+    apt-get update && \
+    apt-get install -y && \
+      linux-libc-dev:arm64 && \
+      libstdc++-8-dev:arm64
 
 # custom
 RUN pip3 install zstandard importlib_metadata mar balrogclient
