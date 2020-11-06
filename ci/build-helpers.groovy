@@ -251,8 +251,8 @@ def windows_pre_pkg_signing(name, objDir, artifactGlob) {
                         bat 'ci/sign_win_dll.bat'
                     }
                     
-                    sh 'rm -rf signed.tar'
-                    sh "tar -chf signed.tar mozilla-release/${objDir}/dist/Ghostery"
+                    bat 'del /s /q  signed.tar'
+                    bat "tar -chf signed.tar mozilla-release/${objDir}/dist/Ghostery"
                     stash name: "${name}-signed", includes: 'signed.tar'
                 }
             }
@@ -281,9 +281,7 @@ def windows_post_pkg_signing(name, objDir, artifactGlob) {
                         bat 'ci/sign_win_installer.bat'
                     }
 
-                    sh 'rm -rf signed.tar'
-                    sh "tar -chf signed.tar mozilla-release/${objDir}/dist/Ghostery\\ Browser.app"
-                    stash name: "${name}-signed", includes: 'signed.tar'
+                    archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
                 }
             }
         }
