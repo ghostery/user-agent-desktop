@@ -89,12 +89,12 @@ if xcrun altool --notarize-app --primary-bundle-id "$BUNDLE_ID" --username "$MAC
 	# check status periodically
 	while sleep 60 && date; do
 		# check notarization status
-		if xcrun altool --notarization-info "$RequestUUID" --username "$ASC_USERNAME" --password "$ASC_PASSWORD" > "$NOTARIZE_INFO_LOG" 2>&1; then
+		if xcrun altool --notarization-info "$RequestUUID" --username "$MAC_NOTARY_USER" --password "$MAC_NOTARY_PASS" > "$NOTARIZE_INFO_LOG" 2>&1; then
 			cat "$NOTARIZE_INFO_LOG"
 
 			# once notarization is complete, run stapler and exit
 			if ! grep -q "Status: in progress" "$NOTARIZE_INFO_LOG"; then
-				xcrun stapler staple "$PKG_DIR/$PKG_NAME.app"
+				xcrun stapler staple "${BUNDLE}"
 				exit $?
 			fi
 		else
