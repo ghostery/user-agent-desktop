@@ -26,7 +26,7 @@ if (params.Linux64) {
     node('docker && !magrathea') {
       helpers.build(name, 'Linux.dockerfile', 'linux', objDir, buildParams, buildId, ['PGO_PROFILE_GENERATE=1'], {
         stage('run profileserver') {
-          sh "BINARY=${objDir}/dist/Ghostery/Ghostery bash ci/profileserver_linux.sh"
+          sh "BINARY=${objDir}/dist/Ghostery/Ghostery bash ${WORKSPACE}/ci/profileserver_linux.sh"
           sh "mkdir -p $WORKSPACE/${name}/"
           sh "tar -Jcvf $WORKSPACE/${name}/profdata.tar.xz merged.profdata en-US.log"
         }
@@ -74,7 +74,7 @@ if (params.MacOSX64) {
 
   buildmatrix[name] = {
     node('docker && !magrathea') {
-      helpers.build(name, 'MacOSX.dockerfile', 'macosx', objDir, params, buildId, ['PGO_PROFILE_GENERATE=1'])()
+      helpers.build(name, 'MacOSX.dockerfile', 'macosx', objDir, buildParams, buildId, ['PGO_PROFILE_GENERATE=1'])()
       stash name: name, includes: "mozilla-release/${objDir}/dist/Ghostery-*.dmg"
     }
 
