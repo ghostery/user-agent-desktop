@@ -349,6 +349,37 @@ def mac_pre_pkg_signing(name, objDir, artifactGlob) {
     }
 }
 
+def mac_post_pkg_signing(name, objDir, artifactGlob) {
+    return {
+        node('gideon') {
+            sh 'rm -rf mozilla-release'
+
+            sparseCheckout(scm, [
+                'ci/sign_mac_notarize.sh',
+            ])
+
+            unstash name
+
+            withCredentials([
+                usernamePassword(
+                    credentialsId: '840e974f-f733-4f02-809f-54dc68f5fa46',
+                    passwordVariable: 'MAC_NOTARY_PASS',
+                    usernameVariable: 'MAC_NOTARY_USER'
+                ),
+            ]) {
+                withEnv([
+                    "APP_NAME=Ghostery",
+                    "PKG_NAME=Ghostery Browser",
+                ]){
+                    sh "./ci/sign_mac_notarize.sh $MAC_NOTARY_USER $MAC_NOTARY_PASS"
+
+                    archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
+                }
+            }
+        }
+    }
+}
+
 def withGithubRelease(Closure body) {
     node('docker') {
         docker.image('golang').inside("-u root") {
