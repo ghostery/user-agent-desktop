@@ -360,7 +360,7 @@ def mac_post_pkg_signing(name, objDir, artifactGlob) {
             sh 'rm -rf mozilla-release'
 
             sparseCheckout(scm, [
-                'ci/sign_mac_notarize.sh',
+                'ci/sign_mac_notarization.sh',
             ])
 
             unstash name
@@ -376,7 +376,7 @@ def mac_post_pkg_signing(name, objDir, artifactGlob) {
                     "APP_NAME=Ghostery",
                     "PKG_NAME=Ghostery Browser",
                 ]){
-                    sh "./ci/sign_mac_notarize.sh $MAC_NOTARY_USER $MAC_NOTARY_PASS"
+                    sh "./ci/sign_mac_notarization.sh $MAC_NOTARY_USER $MAC_NOTARY_PASS"
 
                     archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
                 }
