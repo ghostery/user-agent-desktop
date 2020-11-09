@@ -18,6 +18,10 @@ function finish {
 }
 trap finish EXIT
 
+DMG_PATH=$(ls -t $PKG_DIR/*.dmg | head -n 1)
+
+mozilla-release/build/package/mac_osx/unpack-diskimage $DMG_PATH /Volumes/$APP_NAME $PKG_DIR
+
 zip -r "$BUNDLE_PKG" "$PKG_DIR/$PKG_NAME.app"
 
 # submit app for notarization
