@@ -333,7 +333,7 @@ def mac_pre_pkg_signing(name, objDir, artifactGlob) {
                         sh "./ci/sign_mac_app.sh"
                         
                         sh 'rm -rf signed.zip'
-                        sh "zip -r signed.zip mozilla-release/${objDir}/dist/Ghostery\\ Browser.app"
+                        sh "zip --symlinks -r signed.zip mozilla-release/${objDir}/dist/Ghostery\\ Browser.app"
                         stash name: "${name}-signed", includes: 'signed.zip'
                     }
                 } finally {
