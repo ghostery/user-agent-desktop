@@ -135,7 +135,7 @@ def build(nodeId, name, dockerFile, targetPlatform, objDir, params, buildId, Clo
     def packaging = {    
         sh 'rm -rf signed.zip'
         unstash "${name}-signed"   
-        sh 'unzip signed.zip'
+        sh 'unzip signed.zip || true'
 
         stage("${name}: Packaging") {
             image.inside() {
