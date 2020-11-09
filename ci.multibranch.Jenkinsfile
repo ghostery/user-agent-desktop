@@ -35,7 +35,15 @@ if (params.Linux64) {
             stash name: "${name}-pre-pkg", includes: [
                 'app.tar',
             ].join(',')
-        }, {}, {
+        }, {
+            sh '''
+               touch empty
+               tar -r signed.zip empty
+            '''
+            stash name: "${name}-signed", includes: [
+                'signed.zip',
+            ].join(',')
+        }, {
             archiveArtifacts artifacts: "mozilla-release/$objDir/dist/update/*.mar"
             archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
             archiveArtifacts artifacts: "mozilla-release/browser/config/version*"
