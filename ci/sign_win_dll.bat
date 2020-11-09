@@ -27,7 +27,7 @@ SET platform_prefix=win64
 dir /b %TOOLTOOL_DIR%
 dir /b c:\mozilla-build
 
-cd dist\%APP_NAME%
+cd dist\bin
 for /R %%f in (
   *.exe *.dll
 ) do (
