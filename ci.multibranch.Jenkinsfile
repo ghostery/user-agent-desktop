@@ -54,7 +54,7 @@ if (params.Windows64) {
         helpers.build('docker && magrathea', name, 'Windows.dockerfile', 'win64', objDir, params, buildId, {
             sh "tar -chf app.tar mozilla-release/${objDir}/dist/bin"
             stash name: "${name}-pre-pkg", includes: [
-                'browser\config\version.txt'
+                'mozilla-release/browser/config/version.txt'
                 'app.tar',
             ].join(',')
             sh "rm -rf app.tar mozilla-release/${objDir}/dist/bin"
