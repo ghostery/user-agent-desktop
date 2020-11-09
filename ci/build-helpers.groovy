@@ -240,7 +240,10 @@ def windows_pre_pkg_signing(name, objDir, artifactGlob) {
                     // clean old build artifacts in work dir
                     bat 'del /s /q mozilla-release'
 
-                    sparseCheckout(scm, ['ci/sign_win_dll.bat'])
+                    sparseCheckout(scm, [
+                        'ci/sign_win_dll.bat',
+                        'ci/bootstrap_windows.sh',
+                    ])
 
                     unstash "${name}-pre-pkg"
 
