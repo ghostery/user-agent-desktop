@@ -36,13 +36,15 @@ if (params.Linux64) {
                 'app.tar',
             ].join(',')
         }, {
-            sh '''
-               touch empty
-               tar -r signed.zip empty
-            '''
-            stash name: "${name}-signed", includes: [
-                'signed.zip',
-            ].join(',')
+            node('docker && !magrathea') {
+                sh '''
+                   touch empty
+                   zip -r signed.zip empty
+                '''
+                stash name: "${name}-signed", includes: [
+                    'signed.zip',
+                ].join(',')
+            }
         }, {
             archiveArtifacts artifacts: "mozilla-release/$objDir/dist/update/*.mar"
             archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
