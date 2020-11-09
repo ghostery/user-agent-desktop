@@ -244,10 +244,12 @@ def windows_pre_pkg_signing(name, objDir, artifactGlob) {
                         'ci/sign_win_dll.bat',
                         'ci/bootstrap_windows.sh',
                     ])
-
+                    bat 'dir /b'
                     unstash "${name}-pre-pkg"
+                    bat 'dir /b'
                     
-                    powershell "Expand-Archive -LiteralPath app.zip"
+                    powershell "Expand-Archive -LiteralPath app.zip -DestinationPath ."
+                    bat 'dir /b'
 
                     withCredentials([
                         file(credentialsId: "7da7d2de-5a10-45e6-9ffd-4e49f83753a8", variable: 'WIN_CERT'),
