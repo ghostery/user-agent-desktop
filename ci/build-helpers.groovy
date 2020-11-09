@@ -246,6 +246,8 @@ def windows_pre_pkg_signing(name, objDir, artifactGlob) {
                     ])
 
                     unstash "${name}-pre-pkg"
+                    
+                    powershell "Expand-Archive -LiteralPath app.zip"
 
                     withCredentials([
                         file(credentialsId: "7da7d2de-5a10-45e6-9ffd-4e49f83753a8", variable: 'WIN_CERT'),
@@ -254,7 +256,7 @@ def windows_pre_pkg_signing(name, objDir, artifactGlob) {
                         bat 'ci/sign_win_dll.bat'
                     }
                     
-                    bat 'del /s /q  signed.tar'
+                    bat 'del /s /q  signed.zip'
                     powershell "Compress-Archive mozilla-release\\${objDir}\\dist\\bin\\* -DestinationPath signed.zip -CompressionLevel Fastest"
                     stash name: "${name}-signed", includes: 'signed.zip'
                 }
