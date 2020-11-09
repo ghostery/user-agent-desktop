@@ -39,7 +39,6 @@ RUN apt-get update && \
       less \
       make \
       patch \
-      python2 \
       python3 \
       python3-distutils-extra \
       python3-minimal \
@@ -84,7 +83,6 @@ RUN apt-get update && \
       libfontconfig1-dev:$ARCH \
       libfreetype6-dev:$ARCH \
       libgconf2-dev:$ARCH \
-      libgtk2.0-dev:$ARCH \
       libgtk-3-dev:$ARCH \
       libpango1.0-dev:$ARCH \
       libpulse-dev:$ARCH \
@@ -97,6 +95,9 @@ RUN apt-get update && \
       libnss3-tools \
       locales \
       liblzma-dev
+RUN apt-get install -y \
+      python2 \
+      libgtk2.0-dev:$ARCH
 
 # custom
 RUN pip3 install zstandard importlib_metadata mar balrogclient
