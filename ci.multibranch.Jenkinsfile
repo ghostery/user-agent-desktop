@@ -54,12 +54,12 @@ if (params.Linux64) {
 
 if (params.LinuxARM64) {
     def name = 'LinuxARM64'
-    def objDir = 'obj-x86_64-pc-linux-gnu'
+    def objDir = 'obj-aarch64-pc-linux-gnu'
     def artifactGlob = "$objDir/dist/Ghostery-*"
 
     buildmatrix[name] = {
         node('docker && !magrathea') {
-            helpers.build(name, 'LinuxARM.dockerfile', 'linux-arm', objDir, params, buildId)()
+            helpers.build(name, 'LinuxARM.dockerfile', 'linux-arm', objDir, params, buildId, [], 'arm64')()
 
             archiveArtifacts artifacts: "mozilla-release/$objDir/dist/update/*.mar"
             archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"

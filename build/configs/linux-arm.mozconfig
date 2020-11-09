@@ -2,7 +2,6 @@
 
 # browser/config/mozconfig/linux64/common-opt
   . $topsrcdir/build/mozconfig.stylo
-  . $topsrcdir/build/mozconfig.wasm-sandboxing
 
   # ac_add_options --enable-update-channel=${MOZ_UPDATE_CHANNEL}
   # ac_add_options --with-google-location-service-api-keyfile=/builds/gls-gapi.data
@@ -23,6 +22,8 @@
       . "$topsrcdir/build/mozconfig.rust"
 
       #// "$topsrcdir/build/mozconfig.common"
+    CC="$MOZ_FETCHES_DIR/clang/bin/clang"
+    CXX="$MOZ_FETCHES_DIR/clang/bin/clang++"
 
     if [ -n "$PGO_PROFILE_GENERATE" ]; then
         ac_add_options --enable-profile-generate=cross
@@ -30,6 +31,9 @@
 
     mk_add_options "export PATH=$MOZ_FETCHES_DIR/binutils/bin:$PATH"
     #. "$topsrcdir/build/unix/mozconfig.stdcxx"
+    export MOZ_STDCXX_COMPAT=1
+    LD_LIBRARY_PATH=${LD_LIBRARY_PATH:+$LD_LIBRARY_PATH:}$MOZ_FETCHES_DIR/clang/lib:$MOZ_FETCHES_DIR/clang/lib32
+    mk_add_options "export LD_LIBRARY_PATH=$LD_LIBRARY_PATH"
 
     #// "$topsrcdir/build/unix/mozconfig.unix"
 

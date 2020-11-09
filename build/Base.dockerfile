@@ -7,7 +7,7 @@ ENV HOME=/builds/worker \
     USER=worker \
     LOGNAME=worker \
     HOSTNAME=taskcluster-worker
-ENV ARCH=amd64
+ARG ARCH=amd64
 ARG UID
 ARG GID
 ARG user
@@ -29,7 +29,7 @@ VOLUME /builds/worker/tooltool-cache
 
 RUN dpkg --add-architecture $ARCH
 RUN apt-get update && \
-    apt-get dist-upgrade -y  && \
+    apt-get dist-upgrade -y && \
     apt-get install -y \
       # from debian-raw
       apt-transport-https \
@@ -39,6 +39,7 @@ RUN apt-get update && \
       less \
       make \
       patch \
+      python2 \
       python3 \
       python3-distutils-extra \
       python3-minimal \
@@ -75,10 +76,7 @@ RUN apt-get update && \
       xvfb \
       yasm \
       zip \
-      linux-libc-dev \
       linux-libc-dev:$ARCH \
-      pkg-config \
-      dpkg-dev \
       libstdc++-8-dev \
       libstdc++-8-dev:$ARCH \
       libdbus-glib-1-dev:$ARCH \
@@ -86,26 +84,19 @@ RUN apt-get update && \
       libfontconfig1-dev:$ARCH \
       libfreetype6-dev:$ARCH \
       libgconf2-dev:$ARCH \
-      libgtk-3-dev:$ARCH \
       libgtk2.0-dev:$ARCH \
+      libgtk-3-dev:$ARCH \
       libpango1.0-dev:$ARCH \
       libpulse-dev:$ARCH \
       libx11-xcb-dev:$ARCH \
       libxt-dev:$ARCH \
       libglib2.0-dev \
       # extras
-      wine64 wine upx-ucl nodejs npm \
       python3-pip zstd \
       libasound2-dev libcurl4-openssl-dev \
       libnss3-tools \
       locales \
       liblzma-dev
-# ARM deps
-RUN dpkg --add-architecture arm64 && \
-    apt-get update && \
-    apt-get install -y && \
-      linux-libc-dev:arm64 && \
-      libstdc++-8-dev:arm64
 
 # custom
 RUN pip3 install zstandard importlib_metadata mar balrogclient

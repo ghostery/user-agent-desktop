@@ -90,8 +90,8 @@ function generateFetch(fetches, key) {
   }
 }
 
-async function generateDockerFile({ key, fetches, job, name, toolchains }) {
-  const statements = [`FROM ua-build-base`];
+async function generateDockerFile({ key, fetches, job, name, toolchains, arch }) {
+  const statements = [`FROM ua-build-base:${arch}`];
   statements.push("ARG IPFS_GATEWAY=https://cloudflare-ipfs.com");
 
   for (const key of job.fetches.fetch || []) {
@@ -100,7 +100,7 @@ async function generateDockerFile({ key, fetches, job, name, toolchains }) {
 
   for (const { filename, hash } of toolchains) {
     statements.push([
-      `RUN wget -O /builds/worker/fetches/${filename} $IPFS_GATEWAY/ipfs/${hash} &&`,
+      `RUN wget -nv -O /builds/worker/fetches/${filename} $IPFS_GATEWAY/ipfs/${hash} &&`,
       `cd /builds/worker/fetches/ &&`,
       `tar -xf ${filename} &&`,
       `rm ${filename}`
@@ -193,6 +193,19 @@ async function generate(artifactBaseDir) {
         "linux.yml"
       ),
     },
+    {
+      name: "WindowsARM",
+      key: "win64-aarch64/opt",
+      arch: 'arm64',
+      buildPath: path.join(
+        root,
+        "mozilla-release",
+        "taskcluster",
+        "ci",
+        "build",
+        "windows.yml"
+      ),
+    },
   ];
   // Collect the toolchains required for each build from it's specification in taskcluster configs.
   const buildInfos = await Promise.all(
@@ -225,6 +238,7 @@ async function generate(artifactBaseDir) {
           task: async () => {
             await fse.mkdirp(localDir);
             await execa("wget", [
+              "-nv",
               "-O",
               artifactPath,
               `https://firefox-ci-tc.services.mozilla.com/api/index/v1/task/gecko.cache.level-3.toolchains.v3.${name}.latest/artifacts/${artifact}`,
@@ -264,6 +278,7 @@ async function generate(artifactBaseDir) {
                 await generateDockerFile({
                   name: conf.name,
                   key: conf.key,
+                  arch: conf.arch || 'amd64',
                   fetches,
                   job: buildInfos[i],
                   toolchains: toolchainsForConfig[i],

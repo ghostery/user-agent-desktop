@@ -64,7 +64,7 @@ def withVagrant(String vagrantFilePath, String jenkinsFolderPath, Integer cpu, I
     }
 }
 
-def build(name, dockerFile, targetPlatform, objDir, params, buildId, buildEnv=[]) {
+def build(name, dockerFile, targetPlatform, objDir, params, buildId, buildEnv=[], arch='amd64') {
     return {
         stage('checkout') {
             checkout scm
@@ -80,7 +80,7 @@ def build(name, dockerFile, targetPlatform, objDir, params, buildId, buildEnv=[]
         }
 
         image = stage('docker build base') {
-            docker.build('ua-build-base', '-f build/Base.dockerfile ./build/ --build-arg user=`whoami` --build-arg UID=`id -u` --build-arg GID=`id -g`')
+            docker.build("ua-build-base:${arch}", "-f build/Base.dockerfile ./build/ --build-arg user=`whoami` --build-arg UID=`id -u` --build-arg GID=`id -g` --build-arg ARCH=${arch}")
             docker.build("ua-build-${name.toLowerCase()}", "-f build/${dockerFile} ./build --build-arg IPFS_GATEWAY=http://kria.cliqz:8080")
         }
 
