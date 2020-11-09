@@ -28,22 +28,12 @@ if (params.Linux64) {
 
     buildmatrix[name] = {
         helpers.build('docker && !magrathea', name, 'Linux.dockerfile', 'linux', objDir, params, buildId, {
-            sh '''
-               touch empty
-               tar -chf app.tar empty
-            '''
-            stash name: "${name}-pre-pkg", includes: [
-                'app.tar',
-            ].join(',')
+            sh 'touch empty'
+            stash name: "${name}-pre-pkg", includes: 'empty'
         }, {
             node('docker && !magrathea') {
-                sh '''
-                   touch empty
-                   zip -r signed.zip empty
-                '''
-                stash name: "${name}-signed", includes: [
-                    'signed.zip',
-                ].join(',')
+                sh 'touch empty'
+                stash name: "${name}-signed", includes: 'empty'
             }
         }, {
             archiveArtifacts artifacts: "mozilla-release/$objDir/dist/update/*.mar"
