@@ -70,7 +70,7 @@ if (params.Windows64) {
             sh "rm -rf app.tar mozilla-release/${objDir}/dist/bin"
         }, {    
             if (true || shouldRelease) {
-                helpers.windows_pre_pkg_signing(name, objDir, "mozilla-release/${objDir}/dist/Ghostery/**/*")()
+                helpers.windows_pre_pkg_signing(name, objDir, "mozilla-release/${objDir}/dist/bin/**/*")()
             }
         }, {
             archiveArtifacts artifacts: "mozilla-release/$objDir/dist/update/*.mar"
