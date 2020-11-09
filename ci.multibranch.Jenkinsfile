@@ -27,10 +27,7 @@ if (params.Linux64) {
     def artifactGlob = "$objDir/dist/Ghostery-*"
 
     buildmatrix[name] = {
-        helpers.build('docker && !magrathea', name, 'Linux.dockerfile', 'linux', objDir, params, buildId, {
-            sh 'touch empty'
-            stash name: "${name}-pre-pkg", includes: 'empty'
-        }, {
+        helpers.build('docker && !magrathea', name, 'Linux.dockerfile', 'linux', objDir, params, buildId, {}, {
             node('docker && !magrathea') {
                 sh 'touch empty'
                 stash name: "${name}-signed", includes: 'empty'
@@ -57,6 +54,7 @@ if (params.Windows64) {
         helpers.build('docker && magrathea', name, 'Windows.dockerfile', 'win64', objDir, params, buildId, {
             sh "tar -chf app.tar mozilla-release/${objDir}/dist/bin"
             stash name: "${name}-pre-pkg", includes: [
+                'browser\config\version.txt'
                 'app.tar',
             ].join(',')
             sh "rm -rf app.tar mozilla-release/${objDir}/dist/bin"
