@@ -105,7 +105,7 @@ if (params.MacOSX64) {
                 'mozilla-release/security/mac/hardenedruntime/browser.production.entitlements.xml',
                 'mozilla-release/security/mac/hardenedruntime/plugin-container.production.entitlements.xml',
             ].join(',')
-            //sh "rm -rf app.tar mozilla-release/${objDir}/dist/Ghostery\\ Browser.app"
+            sh "rm -rf app.tar mozilla-release/${objDir}/dist/Ghostery\\ Browser.app"
         },{     
             if (true || shouldRelease) {
                 helpers.mac_pre_pkg_signing(name, objDir, "mozilla-release/${objDir}/dist/*.app/**/*")()
