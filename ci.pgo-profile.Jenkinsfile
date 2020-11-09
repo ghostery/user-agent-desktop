@@ -26,7 +26,7 @@ if (params.Linux64) {
     node('docker && !magrathea') {
       helpers.build(name, 'Linux.dockerfile', 'linux', objDir, buildParams, buildId, ['PGO_PROFILE_GENERATE=1'], {
         stage('run profileserver') {
-          sh "BINARY=${objDir}/dist/Ghostery/Ghostery bash ${env.WORKSPACE}/ci/profileserver_linux.sh"
+          sh "BINARY=${objDir}/dist/Ghostery/Ghostery bash ${env.WORKSPACE}/ci/linux_profileserver.sh"
           sh "mkdir -p $WORKSPACE/${name}/"
           sh "tar -Jcvf $WORKSPACE/${name}/profdata.tar.xz merged.profdata en-US.log"
         }
@@ -57,7 +57,7 @@ if (params.Windows64) {
               unstash name
               bat script: '''
                 SET BUILD_SHELL=c:\\mozilla-build\\start-shell.bat
-                ECHO cd "%CD%" ^^^&^^^& bash ./ci/profileserver_win.sh | call %BUILD_SHELL%
+                ECHO cd "%CD%" ^^^&^^^& bash ./ci/win_profileserver.sh | call %BUILD_SHELL%
               '''
               archiveArtifacts artifacts: "${name}/profdata.tar.xz"
             }
