@@ -383,7 +383,10 @@ def mac_post_pkg_signing(name, objDir, artifactGlob) {
                     "APP_NAME=Ghostery",
                     "PKG_NAME=Ghostery Browser",
                 ]){
-                    sh "./ci/sign_mac_notarization.sh $MAC_NOTARY_USER $MAC_NOTARY_PASS"
+                    sh """
+                        chmod a+x ./ci/sign_mac_notarization.sh
+                        ./ci/sign_mac_notarization.sh $MAC_NOTARY_USER $MAC_NOTARY_PASS
+                    """
 
                     archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
                 }
