@@ -138,6 +138,11 @@ def build(nodeId, name, dockerFile, targetPlatform, objDir, params, buildId, Clo
         sh 'unzip signed.zip || true'
 
         stage("${name}: Packaging") {
+            image = stage('docker build base') {
+                docker.build('ua-build-base', '-f build/Base.dockerfile ./build/ --build-arg user=`whoami` --build-arg UID=`id -u` --build-arg GID=`id -g`')
+                docker.build("ua-build-${name.toLowerCase()}", "-f build/${dockerFile} ./build --build-arg IPFS_GATEWAY=http://kria.cliqz:8080")
+            }
+
             image.inside() {
                 withEnv([
                     "MACH_USE_SYSTEM_PYTHON=1", 
