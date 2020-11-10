@@ -114,8 +114,8 @@ def build(nodeId, name, dockerFile, targetPlatform, objDir, params, buildId, Clo
                     sh 'rm -rf mozilla-release'
                     sh "./fern.js use --ipfs-gateway=http://kria.cliqz:8080"
                     sh "./fern.js config --print --force --platform ${targetPlatform} --brand ghostery"
-                    sh "./fern.js reset"
-                    sh './fern.js import-patches'
+                    //sh "./fern.js reset"
+                    //sh './fern.js import-patches'
                 }
 
                 dir('mozilla-release') {
