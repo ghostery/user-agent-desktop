@@ -261,7 +261,7 @@ def windows_pre_pkg_signing(name, objDir, artifactGlob) {
                     }
                     
                     bat 'del /s /q signed.zip'
-                    bar "c:\\mozilla-build\\bin\\7z.exe signed.zip mozilla-release\\${objDir}\\dist\\bin"
+                    bat "c:\\mozilla-build\\bin\\7z.exe signed.zip mozilla-release\\${objDir}\\dist\\bin"
                     stash name: "${name}-signed", includes: 'signed.zip'
                 }
             }
