@@ -1,5 +1,8 @@
 #!/bin/bash
 
+set -x
+set -e
+
 PKG_DIR="mozilla-release/obj-x86_64-apple-darwin/dist"
 
 ASC_USERNAME="$1"
