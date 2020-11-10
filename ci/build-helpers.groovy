@@ -312,11 +312,6 @@ def mac_pre_pkg_signing(name, objDir, artifactGlob) {
             withCredentials([
                 file(credentialsId: '5f834aab-07ff-4c3f-9848-c2ac02b3b532', variable: 'MAC_CERT'),
                 string(credentialsId: 'b21cbf0b-c5e1-4c0f-9df7-20bb8ba61a2c', variable: 'MAC_CERT_PASS'),
-                usernamePassword(
-                    credentialsId: '840e974f-f733-4f02-809f-54dc68f5fa46',
-                    passwordVariable: 'MAC_NOTARY_PASS',
-                    usernameVariable: 'MAC_NOTARY_USER'
-                ),
             ]) {
                 try {
                     // create temporary keychain and make it a default one
@@ -374,17 +369,43 @@ def mac_post_pkg_signing(name, objDir, artifactGlob) {
                     passwordVariable: 'MAC_NOTARY_PASS',
                     usernameVariable: 'MAC_NOTARY_USER'
                 ),
+                file(credentialsId: '5f834aab-07ff-4c3f-9848-c2ac02b3b532', variable: 'MAC_CERT'),
+                string(credentialsId: 'b21cbf0b-c5e1-4c0f-9df7-20bb8ba61a2c', variable: 'MAC_CERT_PASS'),
             ]) {
-                withEnv([
-                    "APP_NAME=Ghostery",
-                    "PKG_NAME=Ghostery Browser",
-                ]){
-                    sh """
-                        chmod a+x ./ci/sign_mac_notarization.sh
-                        ./ci/sign_mac_notarization.sh $MAC_NOTARY_USER $MAC_NOTARY_PASS
-                    """
+                try {
+                    // create temporary keychain and make it a default one
+                    sh '''#!/bin/bash -l -x
+                        security create-keychain -p cliqz cliqz
+                        security list-keychains -s cliqz
+                        security default-keychain -s cliqz
+                        security unlock-keychain -p cliqz cliqz
+                    '''
 
-                    archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
+                    sh '''#!/bin/bash -l +x
+                        security import $MAC_CERT -P $MAC_CERT_PASS -k cliqz -A
+                        security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k cliqz cliqz
+                    '''
+
+                    withEnv([
+                        "MAC_CERT_NAME=HPY23A294X",
+                        "APP_NAME=Ghostery",
+                        "PKG_NAME=Ghostery Browser",
+                        "ARTIFACT_GLOB=${artifactGlob}"
+                    ]) {
+                        sh """
+                            chmod a+x ./ci/sign_mac_notarization.sh
+                            ./ci/sign_mac_notarization.sh $MAC_NOTARY_USER $MAC_NOTARY_PASS
+                        """
+
+                        archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
+                    }
+                } finally {
+                    sh '''#!/bin/bash -l -x
+                        security delete-keychain cliqz
+                        security list-keychains -s login.keychain
+                        security default-keychain -s login.keychain
+                        true
+                    '''
                 }
             }
         }
