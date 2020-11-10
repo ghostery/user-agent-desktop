@@ -3,13 +3,15 @@
 set -x
 set -e
 
-PKG_DIR="mozilla-release/obj-x86_64-apple-darwin/dist"
+PKG_DIR=ci/pkg
 
 ASC_USERNAME="$1"
 ASC_PASSWORD="$2"
 
 BUNDLE_ID="com.cliqz.desktopbrowser"
 BUNDLE_PKG="$PKG_NAME.zip"
+BROWSER_ENTITLEMENTS_FILE=mozilla-release/security/mac/hardenedruntime/browser.production.entitlements.xml
+IDENTITY=$MAC_CERT_NAME
 
 # create temporary files
 NOTARIZE_APP_LOG=$(mktemp -t notarize-app)
@@ -21,11 +23,22 @@ function finish {
 }
 trap finish EXIT
 
-DMG_PATH=$(ls -t $PKG_DIR/*.dmg | head -n 1)
+DMG_PATH=$(ls -t mozilla-release/obj-x86_64-apple-darwin/dist/*.dmg | head -n 1)
 
+rm -f -rf $PKG_DIR
+mkdir -p $PKG_DIR
 mozilla-release/build/package/mac_osx/unpack-diskimage $DMG_PATH /Volumes/$APP_NAME $PKG_DIR
-find $PKG_DIR
-zip -r "$BUNDLE_PKG" "$PKG_DIR/$PKG_NAME.app"
+
+BUNDLE=$PKG_DIR/$PKG_NAME.app
+
+# Sign the main bundle
+codesign --force -o runtime --verbose --sign "$IDENTITY" \
+--entitlements ${BROWSER_ENTITLEMENTS_FILE} "${BUNDLE}"
+
+# Validate
+codesign -vvv --deep --strict "${BUNDLE}"
+
+zip -r "$BUNDLE_PKG" "$BUNDLE"
 
 # submit app for notarization
 if xcrun altool --notarize-app --primary-bundle-id "$BUNDLE_ID" --username "$ASC_USERNAME" --password "$ASC_PASSWORD" --asc-provider EvidonInc -f "$BUNDLE_PKG" > "$NOTARIZE_APP_LOG" 2>&1; then
