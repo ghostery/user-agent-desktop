@@ -25,7 +25,7 @@ codesign --force -o runtime --verbose --sign "$IDENTITY" \
 codesign --force -o runtime --verbose --sign "$IDENTITY" \
 "${PKG_DIR}"/gmp-clearkey/0.1/libclearkey.dylib
 
-codesign --force -o runtime --verbose --sign "$IDENTITY" --deep --entitlements ${BROWSER_ENTITLEMENTS_FILE} "${BUNDLE}" \
+codesign --force -o runtime --verbose --sign "$IDENTITY" --deep --entitlements ${BROWSER_ENTITLEMENTS_FILE} \
 "${PKG_DIR}"/updater.app
 
 # Sign the plugin-container bundle with deep
