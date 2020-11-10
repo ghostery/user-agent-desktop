@@ -12,7 +12,7 @@ BROWSER_ENTITLEMENTS_FILE=mozilla-release/security/mac/hardenedruntime/browser.p
 PLUGINCONTAINER_ENTITLEMENTS_FILE=mozilla-release/security/mac/hardenedruntime/plugin-container.production.entitlements.xml
 
 # Clear extended attributes which cause codesign to fail
-xattr -crs "${BUNDLE}"
+xattr -crs "${PKG_DIR}"
 
 # Sign these binaries first. Signing of some binaries has an ordering
 # requirement where other binaries must be signed first.
