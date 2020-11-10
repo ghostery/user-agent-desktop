@@ -307,7 +307,7 @@ def mac_pre_pkg_signing(name, objDir, artifactGlob) {
             ])
 
             unstash "${name}-pre-pkg"   
-            sh 'tar xf app.tar'
+            sh 'unzip app.zip'
 
             withCredentials([
                 file(credentialsId: '5f834aab-07ff-4c3f-9848-c2ac02b3b532', variable: 'MAC_CERT'),
