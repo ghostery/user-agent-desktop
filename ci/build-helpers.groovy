@@ -251,7 +251,7 @@ def windows_pre_pkg_signing(name, objDir, artifactGlob) {
                     ])
 
                     unstash "${name}-pre-pkg"
-                    bat "c:\mozilla-build\bin\7z.exe x app.zip"
+                    bat "c:\\mozilla-build\\bin\\7z.exe x app.zip"
 
                     withCredentials([
                         file(credentialsId: "7da7d2de-5a10-45e6-9ffd-4e49f83753a8", variable: 'WIN_CERT'),
@@ -261,7 +261,7 @@ def windows_pre_pkg_signing(name, objDir, artifactGlob) {
                     }
                     
                     bat 'del /s /q signed.zip'
-                    bar "c:\mozilla-build\bin\7z.exe signed.zip mozilla-release\\${objDir}\\dist\\bin"
+                    bar "c:\\mozilla-build\\bin\\7z.exe signed.zip mozilla-release\\${objDir}\\dist\\bin"
                     stash name: "${name}-signed", includes: 'signed.zip'
                 }
             }
