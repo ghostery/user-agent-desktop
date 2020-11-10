@@ -34,5 +34,5 @@ codesign --force -o runtime --verbose --sign "$IDENTITY" --deep --entitlements $
 
 # Sign main exectuable
 codesign --force -o runtime --verbose --sign "$IDENTITY" --deep --entitlements ${BROWSER_ENTITLEMENTS_FILE} \
-"${PKG_DIR}"/APP_NAME-bin \
+"${PKG_DIR}"/$APP_NAME-bin \
 "${PKG_DIR}"/$APP_NAME
