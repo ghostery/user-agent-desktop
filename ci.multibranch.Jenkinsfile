@@ -91,7 +91,7 @@ if (params.MacOSX64) {
             sh 'rm -rf app.zip'
             sh "zip -r app.zip mozilla-release/${objDir}/dist/bin"
             stash name: "${name}-pre-pkg", includes: [
-                'app.tar',
+                'app.zip',
                 'mozilla-release/security/mac/hardenedruntime/browser.production.entitlements.xml',
                 'mozilla-release/security/mac/hardenedruntime/plugin-container.production.entitlements.xml',
             ].join(',')
