@@ -11,10 +11,13 @@ node('docker && magrathea') {
       docker.build('ua-build-base', '-f build/Base.dockerfile ./build/ --build-arg user=`whoami` --build-arg UID=`id -u` --build-arg GID=`id -g`')
     }
 
+    def helpers = load "ci/build-helpers.groovy"
+
     image.inside('--dns 1.1.1.1') {
         stage('prepare mozilla-release') {
           sh '''
             set -ex
+            rm -rf *.mar
             npm ci
             ./fern.js use --ipfs-gateway=http://kria.cliqz:8080
           '''
@@ -35,6 +38,26 @@ node('docker && magrathea') {
               """
               archiveArtifacts artifacts: "*.mar"
           }
+        }
+    }
+    stage('upload to github') {
+        helpers.withGithubRelease() {
+
+            unarchive
+            sh 'ls -la ./'
+
+            def artifacts = sh(returnStdout: true, script: 'find artifacts -type f').trim().split("\\r?\\n")
+            for(String artifactPath in artifacts) {
+                def artifactName = artifactPath.split('/').last()
+                sh """
+                    github-release upload \
+                        --user ghostery \
+                        --repo user-agent-desktop \
+                        --tag "${params.to}" \
+                        --name "${artifactName}" \
+                        --file "${artifactPath}"
+                """
+            }
         }
     }
 }
