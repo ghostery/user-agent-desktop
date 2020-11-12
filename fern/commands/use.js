@@ -62,7 +62,7 @@ module.exports = (program) => {
         const tasks = new Listr([
           {
             title: `Setup Firefox ${workspace.firefox}`,
-            task: async () => await firefox.use(workspace.firefox, ipfsGateway),
+            task: async () => await firefox.use(workspace.firefox, ipfsGateway, workspace.ipfsAddr),
           },
           {
             title: `Setup Addons`,
