@@ -8,7 +8,7 @@ properties([
     ]),
 ])
 
-def buildParams = [Reset: true]
+def buildParams = [Reset: false]
 def buildId = new Date().format('yyyyMMddHHmmss')
 def helpers
 
@@ -50,17 +50,15 @@ if (params.Windows64) {
       node('master') {
         checkout scm
 
-        helpers.withVagrant("ci/win.Vagrantfile", "c:\\jenkins", 4, 4000, 7010, false) { nodeId ->
-          node(nodeId) {
-            stage('run profileserver') {
-              checkout scm
-              unstash name
-              bat script: '''
-                SET BUILD_SHELL=c:\\mozilla-build\\start-shell.bat
-                ECHO cd "%CD%" ^^^&^^^& bash ./ci/win_profileserver.sh | call %BUILD_SHELL%
-              '''
-              archiveArtifacts artifacts: "${name}/profdata.tar.xz"
-            }
+        node('windows') {
+          stage('run profileserver') {
+            checkout scm
+            unstash name
+            bat script: '''
+              SET BUILD_SHELL=c:\\mozilla-build\\start-shell.bat
+              ECHO cd "%CD%" ^^^&^^^& bash ./ci/win_profileserver.sh | call %BUILD_SHELL%
+            '''
+            archiveArtifacts artifacts: "${name}/profdata.tar.xz"
           }
         }
       }
