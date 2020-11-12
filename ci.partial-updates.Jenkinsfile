@@ -36,17 +36,13 @@ node('docker && magrathea') {
                     --client-id "$AUTH0_M2M_CLIENT_ID" \
                     --client-secret "$AUTH0_M2M_CLIENT_SECRET"
               """
-              archiveArtifacts artifacts: "*.mar"
           }
         }
     }
+
     stage('upload to github') {
         helpers.withGithubRelease() {
-
-            unarchive
-            sh 'ls -la ./'
-
-            def artifacts = sh(returnStdout: true, script: 'find artifacts -type f').trim().split("\\r?\\n")
+            def artifacts = sh(returnStdout: true, script: 'ls *.mar').trim().split("\\r?\\n")
             for(String artifactPath in artifacts) {
                 def artifactName = artifactPath.split('/').last()
                 sh """
@@ -60,4 +56,6 @@ node('docker && magrathea') {
             }
         }
     }
+
 }
+

@@ -143,26 +143,28 @@ stage('Sign MAR') {
 
 stage('publish to github') {
     if (shouldRelease) {
-        helpers.withGithubRelease() {
-            sh 'rm -rf artifacts'
+        node('docker') {
+            helpers.withGithubRelease() {
+                sh 'rm -rf artifacts'
 
-            unarchive mapping: ["mozilla-release/" : "artifacts"]
+                unarchive mapping: ["mozilla-release/" : "artifacts"]
 
-            def artifacts = sh(returnStdout: true, script: 'find artifacts -type f').trim().split("\\r?\\n")
+                def artifacts = sh(returnStdout: true, script: 'find artifacts -type f').trim().split("\\r?\\n")
 
-            for(String artifactPath in artifacts) {
-                def artifactName = artifactPath.split('/').last()
-                sh """
-                    github-release upload \
-                        --user human-web \
-                        --repo user-agent-desktop \
-                        --tag "${params.ReleaseName}" \
-                        --name "${artifactName}" \
-                        --file "${artifactPath}"
-                """
+                for(String artifactPath in artifacts) {
+                    def artifactName = artifactPath.split('/').last()
+                    sh """
+                        github-release upload \
+                            --user human-web \
+                            --repo user-agent-desktop \
+                            --tag "${params.ReleaseName}" \
+                            --name "${artifactName}" \
+                            --file "${artifactPath}"
+                    """
+                }
+
+                sh 'rm -rf artifacts'
             }
-
-            sh 'rm -rf artifacts'
         }
     }
 }
