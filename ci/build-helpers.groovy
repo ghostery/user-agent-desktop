@@ -64,7 +64,7 @@ def withVagrant(String vagrantFilePath, String jenkinsFolderPath, Integer cpu, I
     }
 }
 
-def build(name, dockerFile, targetPlatform, objDir, params, buildId, buildEnv=[]) {
+def build(name, dockerFile, targetPlatform, objDir, params, buildId, buildEnv=[], Closure archiving={}) {
     return {
         stage('checkout') {
             checkout scm
@@ -72,10 +72,10 @@ def build(name, dockerFile, targetPlatform, objDir, params, buildId, buildEnv=[]
 
         stage('prepare') {
             if (!fileExists('./build/makecab.exe')) {
-                sh 'wget -O ./build/makecab.exe ftp://cliqznas.cliqz/cliqz-browser-build-artifacts/makecab.exe '
+                sh 'wget -nv -O ./build/makecab.exe ftp://cliqznas.cliqz/cliqz-browser-build-artifacts/makecab.exe '
             }
             if (!fileExists('./build/MacOSX10.11.sdk.tar.bz2')) {
-                sh 'wget -O ./build/MacOSX10.11.sdk.tar.bz2 ftp://cliqznas.cliqz/cliqz-browser-build-artifacts/MacOSX10.11.sdk.tar.bz2'
+                sh 'wget -nv -O ./build/MacOSX10.11.sdk.tar.bz2 ftp://cliqznas.cliqz/cliqz-browser-build-artifacts/MacOSX10.11.sdk.tar.bz2'
             }
         }
 
@@ -104,8 +104,8 @@ def build(name, dockerFile, targetPlatform, objDir, params, buildId, buildEnv=[]
                     if (params.PGO) {
                         stage("${name}: fetch profiles") {
                             sh 'mkdir -p /builds/worker/artifacts/'
-                            sh "wget -O en-US.log ${params.PGOProfiles}/${targetPlatform}/en-US.log"
-                            sh "wget -O merged.profdata ${params.PGOProfiles}/${targetPlatform}/merged.profdata"
+                            sh "wget -nv -O profdata.tar.xz ${params.PGOProfiles}/${name}/profdata.tar.xz"
+                            sh "tar -xvf profdata.tar.xz"
                             buildEnv.add('PGO_PROFILE_USE=1')
                         }
                     } else if (params.Instrument) {
@@ -134,6 +134,7 @@ def build(name, dockerFile, targetPlatform, objDir, params, buildId, buildEnv=[]
                                 }
                             }
                         }
+                        archiving()
                     }
                 }
             }
