@@ -19,6 +19,7 @@ node('docker && magrathea') {
             set -ex
             rm -rf *.mar
             rm -rf dist
+            mkdir -p dist
             npm ci
             ./fern.js use
           '''
@@ -31,11 +32,12 @@ node('docker && magrathea') {
               usernameVariable: 'AUTH0_M2M_CLIENT_ID'
           )]) {
               sh """
-                  python3 ci/generate_partials.py \
+                  python3 ci/partials.py generate \
                     --old ${params.from} \
                     --to ${params.to} \
                     --client-id "$AUTH0_M2M_CLIENT_ID" \
-                    --client-secret "$AUTH0_M2M_CLIENT_SECRET"
+                    --client-secret "$AUTH0_M2M_CLIENT_SECRET" \
+                    --mar-dir ./dist/
               """
           }
         }
@@ -43,9 +45,6 @@ node('docker && magrathea') {
 
     image.inside() {
         stage('sign mars') {
-            // signmar filters for 'dist' so we have to put our mars in a dist folder
-            sh 'mkdir -p dist'
-            sh 'mv *.mar dist/'
             helpers.signmar()
         }
     }
@@ -64,6 +63,25 @@ node('docker && magrathea') {
                         --file "${artifactPath}"
                 """
             }
+        }
+    }
+
+    image.inside('--dns 1.1.1.1') {
+        stage('update balrog') {
+          withCredentials([usernamePassword(
+              credentialsId: 'dd3e97c0-5a9c-4ba9-bf34-f0071f6c3afa',
+              passwordVariable: 'AUTH0_M2M_CLIENT_SECRET',
+              usernameVariable: 'AUTH0_M2M_CLIENT_ID'
+          )]) {
+              sh """
+                  python3 ci/partials.py publish \
+                    --old ${params.from} \
+                    --to ${params.to} \
+                    --client-id "$AUTH0_M2M_CLIENT_ID" \
+                    --client-secret "$AUTH0_M2M_CLIENT_SECRET" \
+                    --mar-dir ./dist/
+              """
+          }
         }
     }
 
