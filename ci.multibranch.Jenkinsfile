@@ -194,6 +194,13 @@ stage('publish to balrog') {
                     }
 
                     if (params.Nightly) {
+                        // generate partials from the last nightly version
+                        // By doing this before updating nightly we can use the nightly release
+                        // data on balrog to reference the previous day's nightly
+                        build job: 'user-agent/desktop-partial-updates', parameters: [
+                            string(name: 'from', value: 'nightly'),
+                            string(name: 'to', value: params.ReleaseName)
+                        ], propagate: true, wait: true
                         // copy this release to nightly
                         sh """
                             python3 ci/submitter.py nightly --tag "${params.ReleaseName}" \
