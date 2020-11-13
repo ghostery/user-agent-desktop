@@ -1,68 +1,3 @@
-import jenkins.model.*
-import hudson.model.*
-import hudson.slaves.*
-
-@NonCPS
-def createNode(nodeId, jenkinsFolderPath) {
-    def launcher = new JNLPLauncher()
-
-    def node = new DumbSlave(
-        nodeId,
-        jenkinsFolderPath,
-        launcher
-    )
-    Jenkins.instance.addNode(node)
-}
-
-@NonCPS
-def removeNode(nodeId) {
-    def allNodes = Jenkins.getInstance().getNodes()
-    for (int i =0; i < allNodes.size(); i++) {
-        Slave node = allNodes[i]
-
-        if (node.name.toString() == nodeId) {
-            Jenkins.getInstance().removeNode(node)
-            return
-        }
-    }
-}
-
-@NonCPS
-def getNodeSecret(nodeId) {
-    return jenkins.slaves.JnlpSlaveAgentProtocol.SLAVE_SECRET.mac(nodeId)
-}
-
-def withVagrant(String vagrantFilePath, String jenkinsFolderPath, Integer cpu, Integer memory, Integer vnc_port, Boolean rebuild, Closure body) {
-    def nodeId = "${env.BUILD_TAG}"
-    createNode(nodeId, jenkinsFolderPath)
-
-    try {
-        def nodeSecret = getNodeSecret(nodeId)
-
-        withEnv([
-            "VAGRANT_VAGRANTFILE=${vagrantFilePath}",
-            "NODE_CPU_COUNT=${cpu}",
-            "NODE_MEMORY=${memory}",
-            "NODE_VNC_PORT=${vnc_port}",
-            "NODE_SECRET=${nodeSecret}",
-            "NODE_ID=${nodeId}",
-        ]) {
-
-            sh 'vagrant halt --force'
-            if (rebuild) {
-              sh 'vagrant destroy --force'
-            }
-            sh  'vagrant up'
-        }
-
-        body(nodeId)
-    } finally {
-        removeNode(nodeId)
-        withEnv(["VAGRANT_VAGRANTFILE=${vagrantFilePath}"]) {
-            sh 'vagrant halt --force'
-        }
-    }
-}
 
 def build(name, dockerFile, targetPlatform, objDir, params, buildId, buildEnv=[], Closure archiving={}) {
     return {
@@ -191,33 +126,25 @@ def signmar() {
 
 def windows_signing(name, objDir, artifactGlob) {
     return {
-        node('master') {
-            stage('checkout') {
+        node('windows') {
+            stage("Checkout") {
                 checkout scm
+                // clean old build artifacts in work dir
+                bat 'del /s /q mozilla-release'
             }
-
-            withVagrant("ci/win.Vagrantfile", "c:\\jenkins", 1, 2000, 7000, false) { nodeId ->
-                node(nodeId) {
-                    stage("Checkout") {
-                        checkout scm
-                        // clean old build artifacts in work dir
-                        bat 'del /s /q mozilla-release'
-                    }
-                    stage('Prepare') {
-                        unstash name
-                    }
-                    stage('Sign') {
-                        withCredentials([
-                            file(credentialsId: "7da7d2de-5a10-45e6-9ffd-4e49f83753a8", variable: 'WIN_CERT'),
-                            string(credentialsId: "33b3705c-1c2e-4462-9354-56a76bbb164c", variable: 'WIN_CERT_PASS'),
-                        ]) {
-                            bat 'ci/sign_win.bat'
-                        }
-                    }
-                    stage('Publish') {
-                        archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
-                    }
+            stage('Prepare') {
+                unstash name
+            }
+            stage('Sign') {
+                withCredentials([
+                    file(credentialsId: "7da7d2de-5a10-45e6-9ffd-4e49f83753a8", variable: 'WIN_CERT'),
+                    string(credentialsId: "33b3705c-1c2e-4462-9354-56a76bbb164c", variable: 'WIN_CERT_PASS'),
+                ]) {
+                    bat 'ci/sign_win.bat'
                 }
+            }
+            stage('Publish') {
+                archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
             }
         }
     }
