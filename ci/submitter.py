@@ -4,7 +4,7 @@ import json
 import subprocess
 from balrogclient import Release, SingleLocale
 from uadpy.common import balrog_api_opts, get_build_target_for_platform, get_update_url, get_file_hash
-from uadpy.const import PRODUCT_NAME
+from uadpy.const import PRODUCT_NAME, RELEASE_CHANNELS
 
 parser = argparse.ArgumentParser()
 parser.add_argument("action", help="'release', 'build', or 'nightly")
@@ -18,7 +18,6 @@ args = parser.parse_args()
 
 balrog_opts = balrog_api_opts(args.client_id, args.client_secret)
 name = f"{PRODUCT_NAME}-{args.tag}"
-release_channels = ["release"]
 
 app_version = open(os.path.join(args.moz_root, 'browser',
                                 'config', 'version.txt'), 'r').read()
@@ -26,7 +25,7 @@ display_version = open(os.path.join(
     args.moz_root, 'browser', 'config', 'version_display.txt'), 'r').read()
 
 fileUrls = {}
-for channel in release_channels + ['*']:
+for channel in RELEASE_CHANNELS + ['*']:
     fileUrls[channel] = {
         "completes": {
             "*": get_update_url(args.tag, PRODUCT_NAME, app_version)

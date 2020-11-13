@@ -4,7 +4,7 @@ import subprocess
 from os.path import join, getsize
 from balrogclient import Release, SingleLocale
 from uadpy.common import balrog_api_opts, get_platform_for_build_target, get_file_hash
-from uadpy.const import PRODUCT_NAME, REPOSITORY_BASE_URL
+from uadpy.const import PRODUCT_NAME, REPOSITORY_BASE_URL, RELEASE_CHANNELS
 
 parser = argparse.ArgumentParser()
 parser.add_argument("action", help="'generate', or 'publish'")
@@ -22,8 +22,8 @@ name = f"{PRODUCT_NAME}-{args.to}"
 target_release = Release(name=name, **balrog_opts)
 target_release_data = target_release.get_data()[0]
 
-from_release_data = Release(name=f"{PRODUCT_NAME}-{args.old}",
-                            **balrog_opts).get_data()[0]
+from_release = Release(name=f"{PRODUCT_NAME}-{args.old}", **balrog_opts)
+from_release_data = from_release.get_data()[0]
 
 # traverse platforms and locales for partials to build
 partials = []
@@ -76,12 +76,13 @@ elif args.action == 'publish':
         if 'partials' not in build_data:
             build_data['partials'] = []
         build_data['partials'].append({
-            "from": partial['fromBuildId'],
+            "from": from_release.name,
             "filesize": getsize(join(args.mar_dir, partial["name"])),
             "hashValue": file_hash,
             "fileUrl": update_url,
         })
-        print(f'Add {file_hash} to {PRODUCT_NAME}-{partial["toVersion"]} ({partial["buildId"]})')
+        print(
+            f'Add {partial["name"]} to {PRODUCT_NAME}-{partial["toVersion"]} ({from_release.name})')
         build.update_build(product=PRODUCT_NAME,
                            hashFunction='sha512',
                            buildData=json.dumps(build_data),
