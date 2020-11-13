@@ -3,7 +3,7 @@ import os.path
 import json
 import subprocess
 from balrogclient import Release, SingleLocale
-from uadpy.common import balrog_api_opts, get_platform_for_build_target, get_update_url, get_file_hash
+from uadpy.common import balrog_api_opts, get_build_target_for_platform, get_update_url, get_file_hash
 from uadpy.const import PRODUCT_NAME
 
 parser = argparse.ArgumentParser()
@@ -92,9 +92,7 @@ elif args.action == 'nightly':
     # copy the state of the tagged release to nightly
     current = Release(name=name, **balrog_opts)
     data = current.get_data()[0]
-    nightly = Release(name=f"{PRODUCT_NAME}-nightly",
-                      auth0_secrets=auth0_secrets,
-                      api_root=api_root)
+    nightly = Release(name=f"{PRODUCT_NAME}-nightly", **balrog_opts)
     nightly_data = nightly.get_data()[0]
     data["name"] = nightly.name
     print(json.dumps(data, indent=2))
