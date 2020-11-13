@@ -18,8 +18,9 @@ node('docker && magrathea') {
           sh '''
             set -ex
             rm -rf *.mar
+            rm -rf dist
             npm ci
-            ./fern.js use --ipfs-gateway=http://kria.cliqz:8080
+            ./fern.js use
           '''
         }
 
@@ -40,9 +41,18 @@ node('docker && magrathea') {
         }
     }
 
+    image.inside() {
+        stage('sign mars') {
+            // signmar filters for 'dist' so we have to put our mars in a dist folder
+            sh 'mkdir -p dist'
+            sh 'mv *.mar dist/'
+            helpers.signmar()
+        }
+    }
+
     stage('upload to github') {
         helpers.withGithubRelease() {
-            def artifacts = sh(returnStdout: true, script: 'ls *.mar').trim().split("\\r?\\n")
+            def artifacts = sh(returnStdout: true, script: 'ls dist/*.mar').trim().split("\\r?\\n")
             for(String artifactPath in artifacts) {
                 def artifactName = artifactPath.split('/').last()
                 sh """

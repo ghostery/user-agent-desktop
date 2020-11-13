@@ -120,16 +120,6 @@ stage('Sign MAR') {
             docker.build('ua-build-base', '-f build/Base.dockerfile ./build/ --build-arg user=`whoami` --build-arg UID=`id -u` --build-arg GID=`id -g`')
 
             docker.image('ua-build-base').inside() {
-                if (!fileExists('./signmar')) {
-                    sh 'wget -O ./signmar ftp://cliqznas.cliqz/cliqz-browser-build-artifacts/mar/signmar'
-                    sh 'chmod a+x signmar'
-                }
-                if (!fileExists('./libmozsqlite3.so')) { sh 'wget -O ./libmozsqlite3.so ftp://cliqznas.cliqz/cliqz-browser-build-artifacts/mar/libmozsqlite3.so' }
-                if (!fileExists('./libnss3.so')) { sh 'wget -O ./libnss3.so ftp://cliqznas.cliqz/cliqz-browser-build-artifacts/mar/libnss3.so' }
-                if (!fileExists('./libnspr4.so')) { sh 'wget -O ./libnspr4.so ftp://cliqznas.cliqz/cliqz-browser-build-artifacts/mar/libnspr4.so' }
-                if (!fileExists('./libfreeblpriv3.so')) { sh 'wget -O ./libfreeblpriv3.so ftp://cliqznas.cliqz/cliqz-browser-build-artifacts/mar/libfreeblpriv3.so' }
-                if (!fileExists('./libsoftokn3.so')) { sh 'wget -O ./libsoftokn3.so ftp://cliqznas.cliqz/cliqz-browser-build-artifacts/mar/libsoftokn3.so' }
-
                 unarchive mapping: ["mozilla-release/" : "."]
 
                 helpers.signmar()
