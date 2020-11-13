@@ -46,21 +46,15 @@ if (params.Windows64) {
       stash name: name, includes: "mozilla-release/${objDir}/dist/*.win64.zip"
     }
 
-    stage('start windows vm') {
-      node('master') {
+    node('windows') {
+      stage('run profileserver') {
         checkout scm
-
-        node('windows') {
-          stage('run profileserver') {
-            checkout scm
-            unstash name
-            bat script: '''
-              SET BUILD_SHELL=c:\\mozilla-build\\start-shell.bat
-              ECHO cd "%CD%" ^^^&^^^& bash ./ci/win_profileserver.sh | call %BUILD_SHELL%
-            '''
-            archiveArtifacts artifacts: "${name}/profdata.tar.xz"
-          }
-        }
+        unstash name
+        bat script: '''
+          SET BUILD_SHELL=c:\\mozilla-build\\start-shell.bat
+          ECHO cd "%CD%" ^^^&^^^& bash ./ci/win_profileserver.sh | call %BUILD_SHELL%
+        '''
+        archiveArtifacts artifacts: "${name}/profdata.tar.xz"
       }
     }
   }

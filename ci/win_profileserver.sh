@@ -13,9 +13,11 @@ rm -rf firefox
 rm -rf mozilla-release/Ghostery
 
 # get Firefox source
-wget -nv -O firefox.tar.xz http://kria.cliqz:8080/ipns/k2k4r8jy3h2kku2sungmzbrp2zpj3yf2js0w98bwbbyiqt2qzomkvyli/firefox/releases/82.0.2/source/firefox-82.0.2.source.tar.xz
+# TODO: Use fern here
+FIREFOX_VERSION=82.0.3
+wget -nv -O firefox.tar.xz http://kria.cliqz:8080/ipfs/QmUajsHzRDKSTzVhz8WtPnMxqv5dqADBrxHSbbp1RathRZ/firefox/releases/${FIREFOX_VERSION}/source/firefox-${FIREFOX_VERSION}.source.tar.xz
 tar -xf firefox.tar.xz
-mv firefox-82.0.2 firefox
+mv firefox-${FIREFOX_VERSION} firefox
 rm firefox.tar.xz
 
 export JARLOG_FILE="en-US.log"
