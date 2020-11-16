@@ -1,4 +1,4 @@
-VSPATH=/builds/worker/fetches/vs2017_15.8.4
+VSPATH=/builds/worker/fetches/vs2017_15.9.29
 export LLVM_CONFIG="${MOZ_FETCHES_DIR}/clang/bin/llvm-config"
 
 . $topsrcdir/build/mozconfig.win-common
