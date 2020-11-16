@@ -104,8 +104,9 @@ RUN apt-get update && \
 # custom
 RUN pip3 install zstandard importlib_metadata mar balrogclient
 ADD fetch-content /builds/worker/bin/fetch-content
-# mbsdiff (built from martools on linux)
+# mbsdiff and mar (built from martools on linux)
 ADD mbsdiff /builds/worker/bin/mbsdiff
+ADD mar /builds/worker/bin/mar
 RUN chown -R worker:worker /builds/worker/bin && chmod 755 /builds/worker/bin/*
 ENV PATH="/builds/worker/bin:${PATH}"
 # fetches
