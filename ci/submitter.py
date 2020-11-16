@@ -2,9 +2,9 @@ import argparse
 import os.path
 import json
 import subprocess
-from balrogclient import Release, SingleLocale
+from balrogclient import Release, SingleLocale, Rule
 from uadpy.common import balrog_api_opts, get_build_target_for_platform, get_update_url, get_file_hash
-from uadpy.const import PRODUCT_NAME, RELEASE_CHANNELS
+from uadpy.const import PRODUCT_NAME, RELEASE_CHANNELS, NIGHTLY_RULE_ID
 
 parser = argparse.ArgumentParser()
 parser.add_argument("action", help="'release', 'build', or 'nightly")
@@ -88,15 +88,6 @@ elif args.action == 'build':
                      schemaVersion=9)
 
 elif args.action == 'nightly':
-    # copy the state of the tagged release to nightly
-    current = Release(name=name, **balrog_opts)
-    data = current.get_data()[0]
-    nightly = Release(name=f"{PRODUCT_NAME}-nightly", **balrog_opts)
-    nightly_data = nightly.get_data()[0]
-    data["name"] = nightly.name
-    print(json.dumps(data, indent=2))
-    if data == nightly_data:
-        print(f"Nightly already points at {current.name}")
-    else:
-        nightly.update_release(product=PRODUCT_NAME, hashFunction='sha512',
-                               releaseData=json.dumps(data), schemaVersion=9)
+    # get the nightly Rule and update mapping
+    nightly_rule = Rule(NIGHTLY_RULE_ID, **balrog_opts)
+    nightly_rule.update_rule(mapping=name)

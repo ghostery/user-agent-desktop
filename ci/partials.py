@@ -2,9 +2,9 @@ import argparse
 import json
 import subprocess
 from os.path import join, getsize
-from balrogclient import Release, SingleLocale
+from balrogclient import Release, SingleLocale, Rule
 from uadpy.common import balrog_api_opts, get_platform_for_build_target, get_file_hash
-from uadpy.const import PRODUCT_NAME, REPOSITORY_BASE_URL, RELEASE_CHANNELS
+from uadpy.const import PRODUCT_NAME, REPOSITORY_BASE_URL, RELEASE_CHANNELS, NIGHTLY_RULE_ID
 
 parser = argparse.ArgumentParser()
 parser.add_argument("action", help="'generate', or 'publish'")
@@ -22,7 +22,15 @@ name = f"{PRODUCT_NAME}-{args.to}"
 target_release = Release(name=name, **balrog_opts)
 target_release_data = target_release.get_data()[0]
 
-from_release = Release(name=f"{PRODUCT_NAME}-{args.old}", **balrog_opts)
+# if the old build is 'nightly', infer it from the nightly Balrog Rule
+if args.old == 'nightly':
+    nightly_rule = Rule(NIGHTLY_RULE_ID, **balrog_opts)
+    nightly_rule_data = nightly_rule.get_data()[0]
+    print(f"nightly = {nightly_rule_data['mapping']}")
+    from_release = Release(name=nightly_rule_data["mapping"], **balrog_opts)
+else:
+    from_release = Release(name=f"{PRODUCT_NAME}-{args.old}", **balrog_opts)
+
 from_release_data = from_release.get_data()[0]
 
 # traverse platforms and locales for partials to build
