@@ -78,6 +78,17 @@ def build(name, dockerFile, targetPlatform, objDir, params, buildId, buildEnv=[]
 }
 
 def signmar() {
+    // prepare signmar environment
+    if (!fileExists('./signmar')) {
+        sh 'wget -O ./signmar ftp://cliqznas.cliqz/cliqz-browser-build-artifacts/mar/signmar'
+        sh 'chmod a+x signmar'
+    }
+    if (!fileExists('./libmozsqlite3.so')) { sh 'wget -O ./libmozsqlite3.so ftp://cliqznas.cliqz/cliqz-browser-build-artifacts/mar/libmozsqlite3.so' }
+    if (!fileExists('./libnss3.so')) { sh 'wget -O ./libnss3.so ftp://cliqznas.cliqz/cliqz-browser-build-artifacts/mar/libnss3.so' }
+    if (!fileExists('./libnspr4.so')) { sh 'wget -O ./libnspr4.so ftp://cliqznas.cliqz/cliqz-browser-build-artifacts/mar/libnspr4.so' }
+    if (!fileExists('./libfreeblpriv3.so')) { sh 'wget -O ./libfreeblpriv3.so ftp://cliqznas.cliqz/cliqz-browser-build-artifacts/mar/libfreeblpriv3.so' }
+    if (!fileExists('./libsoftokn3.so')) { sh 'wget -O ./libsoftokn3.so ftp://cliqznas.cliqz/cliqz-browser-build-artifacts/mar/libsoftokn3.so' }
+
     def mars = sh(returnStdout: true, script: "find . -type f -name '*.mar' | grep dist").trim().split("\\r?\\n")
     def pwd = sh(returnStdout: true, script: 'pwd').trim()
 
@@ -235,18 +246,16 @@ def mac_signing(name, objDir, artifactGlob) {
 }
 
 def withGithubRelease(Closure body) {
-    node('docker') {
-        docker.image('golang').inside("-u root") {
-            sh 'go get github.com/human-web/github-release'
-            withCredentials([
-                usernamePassword(
-                    credentialsId: 'd60e38ae-4a5a-4eeb-ab64-32fd1fad4a28',
-                    passwordVariable: 'GITHUB_TOKEN',
-                    usernameVariable: 'GITHUB_USERNAME'
-                )
-            ]) {
-                body()
-            }
+    docker.image('golang').inside("-u root") {
+        sh 'go get github.com/human-web/github-release'
+        withCredentials([
+            usernamePassword(
+                credentialsId: 'd60e38ae-4a5a-4eeb-ab64-32fd1fad4a28',
+                passwordVariable: 'GITHUB_TOKEN',
+                usernameVariable: 'GITHUB_USERNAME'
+            )
+        ]) {
+            body()
         }
     }
 }

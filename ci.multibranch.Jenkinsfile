@@ -120,16 +120,6 @@ stage('Sign MAR') {
             docker.build('ua-build-base', '-f build/Base.dockerfile ./build/ --build-arg user=`whoami` --build-arg UID=`id -u` --build-arg GID=`id -g`')
 
             docker.image('ua-build-base').inside() {
-                if (!fileExists('./signmar')) {
-                    sh 'wget -O ./signmar ftp://cliqznas.cliqz/cliqz-browser-build-artifacts/mar/signmar'
-                    sh 'chmod a+x signmar'
-                }
-                if (!fileExists('./libmozsqlite3.so')) { sh 'wget -O ./libmozsqlite3.so ftp://cliqznas.cliqz/cliqz-browser-build-artifacts/mar/libmozsqlite3.so' }
-                if (!fileExists('./libnss3.so')) { sh 'wget -O ./libnss3.so ftp://cliqznas.cliqz/cliqz-browser-build-artifacts/mar/libnss3.so' }
-                if (!fileExists('./libnspr4.so')) { sh 'wget -O ./libnspr4.so ftp://cliqznas.cliqz/cliqz-browser-build-artifacts/mar/libnspr4.so' }
-                if (!fileExists('./libfreeblpriv3.so')) { sh 'wget -O ./libfreeblpriv3.so ftp://cliqznas.cliqz/cliqz-browser-build-artifacts/mar/libfreeblpriv3.so' }
-                if (!fileExists('./libsoftokn3.so')) { sh 'wget -O ./libsoftokn3.so ftp://cliqznas.cliqz/cliqz-browser-build-artifacts/mar/libsoftokn3.so' }
-
                 unarchive mapping: ["mozilla-release/" : "."]
 
                 helpers.signmar()
@@ -143,26 +133,28 @@ stage('Sign MAR') {
 
 stage('publish to github') {
     if (shouldRelease) {
-        helpers.withGithubRelease() {
-            sh 'rm -rf artifacts'
+        node('docker') {
+            helpers.withGithubRelease() {
+                sh 'rm -rf artifacts'
 
-            unarchive mapping: ["mozilla-release/" : "artifacts"]
+                unarchive mapping: ["mozilla-release/" : "artifacts"]
 
-            def artifacts = sh(returnStdout: true, script: 'find artifacts -type f').trim().split("\\r?\\n")
+                def artifacts = sh(returnStdout: true, script: 'find artifacts -type f').trim().split("\\r?\\n")
 
-            for(String artifactPath in artifacts) {
-                def artifactName = artifactPath.split('/').last()
-                sh """
-                    github-release upload \
-                        --user human-web \
-                        --repo user-agent-desktop \
-                        --tag "${params.ReleaseName}" \
-                        --name "${artifactName}" \
-                        --file "${artifactPath}"
-                """
+                for(String artifactPath in artifacts) {
+                    def artifactName = artifactPath.split('/').last()
+                    sh """
+                        github-release upload \
+                            --user human-web \
+                            --repo user-agent-desktop \
+                            --tag "${params.ReleaseName}" \
+                            --name "${artifactName}" \
+                            --file "${artifactPath}"
+                    """
+                }
+
+                sh 'rm -rf artifacts'
             }
-
-            sh 'rm -rf artifacts'
         }
     }
 }
@@ -202,6 +194,13 @@ stage('publish to balrog') {
                     }
 
                     if (params.Nightly) {
+                        // generate partials from the last nightly version
+                        // By doing this before updating nightly we can use the nightly release
+                        // data on balrog to reference the previous day's nightly
+                        build job: 'user-agent/desktop-partial-updates', parameters: [
+                            string(name: 'from', value: 'nightly'),
+                            string(name: 'to', value: params.ReleaseName)
+                        ], propagate: true, wait: true
                         // copy this release to nightly
                         sh """
                             python3 ci/submitter.py nightly --tag "${params.ReleaseName}" \
