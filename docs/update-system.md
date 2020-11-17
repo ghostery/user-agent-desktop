@@ -37,3 +37,28 @@ but this means that we cannot configure release builds differently to nightlies.
 by making `app.update.channel` pref changes from `about:config` work, so users can manually update
 their update channel in the browser. This is achieved via a subtle change to `UpdateUtils.jsm`, as
 you can see in this [patch](../patches/0031-Allow-update-channel-to-be-configured-via-prefs.patch).
+
+## Partial updates
+
+For incremental updates partial updates can be used to reduce the update size. From a normal build
+a "complete" update `.mar` file is generated, which contains a full update from any version to the
+new version. We can also generate a diff between too complete mars, which can be used to update
+between specific versions.
+
+This "partial" mar can be generated with the following steps (see also `ci/mar_diff.sh`)
+ 1. Download both mars and unpack each with the `mozilla-release/tools/update-packaging/unwrap_full_update.pl`
+ script.
+ 2. Run `mozilla-release/tools/update-packaging/make_incremental_update.sh` with the two unpacked mars
+ as input.
+
+We can then add these partials to a balrog Release, which enables clients with specific versions to
+use the partial to update rather than the complete mar.
+
+The "partial-updates" Jenkins job automates the generation of partials, given a pair of releases to diff,
+by doing the following:
+
+ 1. Fetching mars for all build targets for the given releases (using Balrog to get the download
+ links for these) and diffing each pair (implemented by `ci/partials.py generate`).
+ 2. Signing the partial mars.
+ 3. Uploading mars to Github Releases.
+ 4. Updating Balrog with the new partial builds (implemented by `ci/partials.py publish`)
