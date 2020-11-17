@@ -105,6 +105,10 @@ if (params.WindowsARM) {
             sh "rm -rf mozilla-release/$objDir/dist/update"
         }
     }
+
+    if (shouldRelease) {
+        signmatrix["Sign ${name}"] = helpers.windows_signing(name, objDir, artifactGlob)
+    }
 }
 
 if (params.MacOSX64) {
