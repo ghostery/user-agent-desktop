@@ -1,7 +1,7 @@
 import argparse
 import json
 import subprocess
-from os.path import join, getsize
+from os.path import join, getsize, exists
 from balrogclient import Release, SingleLocale, Rule
 from uadpy.common import balrog_api_opts, get_platform_for_build_target, get_file_hash
 from uadpy.const import PRODUCT_NAME, REPOSITORY_BASE_URL, RELEASE_CHANNELS, NIGHTLY_RULE_ID
@@ -20,7 +20,6 @@ name = f"{PRODUCT_NAME}-{args.to}"
 
 # get release data from Balrog
 target_release = Release(name=name, **balrog_opts)
-target_release_data = target_release.get_data()[0]
 
 # if the old build is 'nightly', infer it from the nightly Balrog Rule
 if args.old == 'nightly':
@@ -32,6 +31,7 @@ else:
     from_release = Release(name=f"{PRODUCT_NAME}-{args.old}", **balrog_opts)
 
 from_release_data = from_release.get_data()[0]
+target_release_data = target_release.get_data()[0]
 
 # traverse platforms and locales for partials to build
 partials = []
@@ -54,7 +54,6 @@ for platform, platform_info in target_release_data['platforms'].items():
         except KeyError:
             print('error with', platform, locale)
             continue
-    # break
 
 # process each partial in turn
 for partial in partials:
@@ -79,7 +78,11 @@ elif args.action == 'publish':
         build = SingleLocale(
             name=name, build_target=partial['platform'], locale=partial['locale'], **balrog_opts)
         update_url = f'{REPOSITORY_BASE_URL}/{args.to}/{partial["name"]}'
-        file_hash = get_file_hash(join(args.mar_dir, partial["name"]))
+        mar_path = join(args.mar_dir, partial["name"])
+        if not exists(mar_path):
+            print(f'WARN: Skipping {mar_path} - NOT_FOUND')
+            continue
+        file_hash = get_file_hash(mar_path)
         build_data = build.get_data()[0]
         if 'partials' not in build_data:
             build_data['partials'] = []
