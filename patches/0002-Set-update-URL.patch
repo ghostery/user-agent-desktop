@@ -20,5 +20,5 @@ index 43b2537227..ad3b9766e4 100644
          appini_defines['MOZ_APPUPDATE_HOST'] = CONFIG['MOZ_APPUPDATE_HOST']
  
 -- 
-2.28.0
+2.29.2
 

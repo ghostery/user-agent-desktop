@@ -8,10 +8,10 @@ Subject: Update uninstaller survey URL
  2 files changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/browser/installer/windows/nsis/uninstaller.nsi b/browser/installer/windows/nsis/uninstaller.nsi
-index 4e532bd5b9..b845febac0 100755
+index 697375e3d8..4ec104800e 100755
 --- a/browser/installer/windows/nsis/uninstaller.nsi
 +++ b/browser/installer/windows/nsis/uninstaller.nsi
-@@ -140,7 +140,7 @@ OutFile "helper.exe"
+@@ -150,7 +150,7 @@ OutFile "helper.exe"
  !endif
  ShowUnInstDetails nevershow
  
@@ -34,5 +34,5 @@ index daeb276f06..67f6f74218 100644
  # _DESC strings support approximately 65 characters per line.
  # One line
 -- 
-2.28.0
+2.29.2
 

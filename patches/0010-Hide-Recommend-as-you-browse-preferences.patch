@@ -1,5 +1,5 @@
 From: Sam Macbeth <sam@cliqz.com>
-Date: Thu, 17 Sep 2020 16:08:42 +0200
+Date: Tue, 17 Nov 2020 10:30:32 +0100
 Subject: Hide "Recommend as you browse" preferences
 
 ---
@@ -8,32 +8,30 @@ Subject: Hide "Recommend as you browse" preferences
  2 files changed, 9 insertions(+), 9 deletions(-)
 
 diff --git a/browser/components/preferences/main.inc.xhtml b/browser/components/preferences/main.inc.xhtml
-index f7239b4d73..40ffb62efc 100644
+index ec30d31cde..8dbe8398d9 100644
 --- a/browser/components/preferences/main.inc.xhtml
 +++ b/browser/components/preferences/main.inc.xhtml
-@@ -643,7 +643,7 @@
-             preference="media.videocontrols.picture-in-picture.video-toggle.enabled"/>
-     <label id="pictureInPictureLearnMore" class="learnMore" data-l10n-id="browsing-picture-in-picture-learn-more" is="text-link"/>
+@@ -650,13 +650,13 @@
+             preference="media.hardwaremediakeys.enabled"/>
+     <label id="mediaControlLearnMore" class="learnMore" data-l10n-id="browsing-media-control-learn-more" is="text-link"/>
    </hbox>
 -  <hbox align="center" data-subcategory="cfraddons">
 +  <!--<hbox align="center" data-subcategory="cfraddons">
      <checkbox id="cfrRecommendations"
              class="tail-with-learn-more"
              data-l10n-id="browsing-cfr-recommendations"
-@@ -656,7 +656,7 @@
-             data-l10n-id="browsing-cfr-features"
-             preference="browser.newtabpage.activity-stream.asrouter.userprefs.cfr.features"/>
-     <label id="cfrFeaturesLearnMore" class="learnMore" data-l10n-id="browsing-cfr-recommendations-learn-more" is="text-link"/>
+             preference="browser.newtabpage.activity-stream.asrouter.userprefs.cfr.addons"/>
+     <label id="cfrLearnMore" class="learnMore" data-l10n-id="browsing-cfr-recommendations-learn-more" is="text-link"/>
 -  </hbox>
 +  </hbox>-->
- </groupbox>
- 
- <hbox id="networkProxyCategory"
+   <hbox align="center" data-subcategory="cfrfeatures">
+     <checkbox id="cfrRecommendations-features"
+             class="tail-with-learn-more"
 diff --git a/browser/components/preferences/main.js b/browser/components/preferences/main.js
-index 969ea7fa1e..a3e90aeee9 100644
+index 3e101f9329..a1f39cddf6 100644
 --- a/browser/components/preferences/main.js
 +++ b/browser/components/preferences/main.js
-@@ -389,13 +389,13 @@ var gMainPane = {
+@@ -392,13 +392,13 @@ var gMainPane = {
      // listener for future menu changes.
      gMainPane.initDefaultZoomValues();
  
@@ -55,5 +53,5 @@ index 969ea7fa1e..a3e90aeee9 100644
      if (
        Services.prefs.getBoolPref(
 -- 
-2.28.0
+2.29.2
 

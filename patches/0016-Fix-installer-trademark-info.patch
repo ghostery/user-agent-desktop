@@ -7,7 +7,7 @@ Subject: Fix installer trademark info
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/browser/installer/windows/nsis/defines.nsi.in b/browser/installer/windows/nsis/defines.nsi.in
-index 4c7fb2671e..2cb441cd19 100644
+index 5b098a7ff8..12e4690081 100644
 --- a/browser/installer/windows/nsis/defines.nsi.in
 +++ b/browser/installer/windows/nsis/defines.nsi.in
 @@ -146,7 +146,7 @@ VIProductVersion "1.0.0.0"
@@ -20,5 +20,5 @@ index 4c7fb2671e..2cb441cd19 100644
  VIAddVersionKey "LegalCopyright"  "${CompanyName}"
  VIAddVersionKey "FileVersion"     "${AppVersion}"
 -- 
-2.28.0
+2.29.2
 
