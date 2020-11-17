@@ -7,10 +7,10 @@ Subject: Hide Protection Dashboard link from right burger menu
  1 file changed, 2 insertions(+)
 
 diff --git a/browser/base/content/browser.xhtml b/browser/base/content/browser.xhtml
-index 0f50c84017..4efa5af128 100644
+index b563193388..ccb996d820 100644
 --- a/browser/base/content/browser.xhtml
 +++ b/browser/base/content/browser.xhtml
-@@ -767,6 +767,7 @@
+@@ -761,6 +761,7 @@
                          closemenu="none"
                          oncommand="gSync.toggleAccountPanel('PanelUI-fxa', this, event)"/>
          </toolbaritem>
@@ -18,7 +18,7 @@ index 0f50c84017..4efa5af128 100644
          <toolbarseparator class="sync-ui-item"/>
          <toolbaritem>
            <toolbarbutton id="appMenu-protection-report-button"
-@@ -780,6 +781,7 @@
+@@ -774,6 +775,7 @@
            </toolbarbutton>
          </toolbaritem>
          <toolbarseparator id="appMenu-tp-separator"/>
@@ -27,5 +27,5 @@ index 0f50c84017..4efa5af128 100644
                         class="subviewbutton subviewbutton-iconic"
                         label="&newNavigatorCmd.label;"
 -- 
-2.28.0
+2.29.2
 

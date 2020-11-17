@@ -7,10 +7,10 @@ Subject: Rename 'Firefox Home' to '$Brand Home'
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/browser/locales/en-US/browser/preferences/preferences.ftl b/browser/locales/en-US/browser/preferences/preferences.ftl
-index 83c4f937df..15ba5e2f8e 100644
+index 028b305f5a..381f2033cd 100644
 --- a/browser/locales/en-US/browser/preferences/preferences.ftl
 +++ b/browser/locales/en-US/browser/preferences/preferences.ftl
-@@ -581,7 +581,7 @@ home-restore-defaults =
+@@ -590,7 +590,7 @@ home-restore-defaults =
  # "Firefox" should be treated as a brand and kept in English,
  # while "Home" and "(Default)" can be localized.
  home-mode-choice-default =
@@ -20,5 +20,5 @@ index 83c4f937df..15ba5e2f8e 100644
  home-mode-choice-custom =
      .label = Custom URLs…
 -- 
-2.28.0
+2.29.2
 

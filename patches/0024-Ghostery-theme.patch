@@ -17,7 +17,7 @@ Subject: Ghostery theme
  create mode 100644 toolkit/mozapps/extensions/default-theme/background-gradient.svg
 
 diff --git a/toolkit/modules/LightweightThemeConsumer.jsm b/toolkit/modules/LightweightThemeConsumer.jsm
-index 799437c560..3c54d006e6 100644
+index 039aeb93c7..c3e3428fac 100644
 --- a/toolkit/modules/LightweightThemeConsumer.jsm
 +++ b/toolkit/modules/LightweightThemeConsumer.jsm
 @@ -6,7 +6,7 @@ var EXPORTED_SYMBOLS = ["LightweightThemeConsumer"];
@@ -46,7 +46,7 @@ index 0000000000..850918c938
 +<svg height="200" viewBox="0 0 3000 200" width="3000" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><linearGradient id="a" x1="0%" x2="100%" y1="49.777778%" y2="50.187103%"><stop offset="0" stop-color="#720174"/><stop offset="1" stop-color="#00aef0"/></linearGradient><path d="m0 0h3000v200h-3000z" fill="url(#a)"/></svg>
 \ No newline at end of file
 diff --git a/toolkit/mozapps/extensions/default-theme/manifest.json b/toolkit/mozapps/extensions/default-theme/manifest.json
-index 05d6e0e19a..aaf5e35c09 100644
+index 05d6e0e19a..313378f316 100644
 --- a/toolkit/mozapps/extensions/default-theme/manifest.json
 +++ b/toolkit/mozapps/extensions/default-theme/manifest.json
 @@ -7,36 +7,37 @@
@@ -110,7 +110,7 @@ index 05d6e0e19a..aaf5e35c09 100644
    }
  }
 diff --git a/toolkit/mozapps/extensions/internal/XPIProvider.jsm b/toolkit/mozapps/extensions/internal/XPIProvider.jsm
-index 7b4e3b4f11..5e229ceeef 100644
+index 2d79d9b68a..e9b8f5ac8d 100644
 --- a/toolkit/mozapps/extensions/internal/XPIProvider.jsm
 +++ b/toolkit/mozapps/extensions/internal/XPIProvider.jsm
 @@ -2460,7 +2460,7 @@ var XPIProvider = {
@@ -173,5 +173,5 @@ index ef827dedb5..6fa966f858 100644
    min-width: 14px;
    max-width: 24px;
 -- 
-2.28.0
+2.29.2
 

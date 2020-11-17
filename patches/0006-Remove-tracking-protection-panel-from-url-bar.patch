@@ -9,10 +9,10 @@ Subject: Remove tracking protection panel from url bar
  3 files changed, 18 insertions(+), 16 deletions(-)
 
 diff --git a/browser/base/content/browser-siteIdentity.js b/browser/base/content/browser-siteIdentity.js
-index 16d5b35874..975f1a54e6 100644
+index f012228e57..3c2f9c1660 100644
 --- a/browser/base/content/browser-siteIdentity.js
 +++ b/browser/base/content/browser-siteIdentity.js
-@@ -897,10 +897,10 @@ var gIdentityHandler = {
+@@ -1047,10 +1047,10 @@ var gIdentityHandler = {
      this._refreshPermissionIcons();
  
      // Hide the shield icon if it is a chrome page.
@@ -28,10 +28,10 @@ index 16d5b35874..975f1a54e6 100644
  
    /**
 diff --git a/browser/base/content/browser.js b/browser/base/content/browser.js
-index 1f96c8b93c..c2cd5b193b 100644
+index 87e93042f8..9b27d3133a 100644
 --- a/browser/base/content/browser.js
 +++ b/browser/base/content/browser.js
-@@ -1985,7 +1985,7 @@ var gBrowserInit = {
+@@ -1986,7 +1986,7 @@ var gBrowserInit = {
      BookmarkingUI.init();
      BrowserSearch.delayedStartupInit();
      AutoShowBookmarksToolbar.init();
@@ -40,7 +40,7 @@ index 1f96c8b93c..c2cd5b193b 100644
      HomePage.delayedStartup().catch(Cu.reportError);
  
      let safeMode = document.getElementById("helpSafeMode");
-@@ -2498,7 +2498,7 @@ var gBrowserInit = {
+@@ -2550,7 +2550,7 @@ var gBrowserInit = {
        Services.prefs.removeObserver(ctrlTab.prefName, ctrlTab);
        ctrlTab.uninit();
        gBrowserThumbnails.uninit();
@@ -49,7 +49,7 @@ index 1f96c8b93c..c2cd5b193b 100644
        FullZoom.destroy();
  
        Services.obs.removeObserver(gIdentityHandler, "perm-changed");
-@@ -5164,7 +5164,7 @@ var XULBrowserWindow = {
+@@ -5246,7 +5246,7 @@ var XULBrowserWindow = {
      const nsIWebProgressListener = Ci.nsIWebProgressListener;
  
      let browser = gBrowser.selectedBrowser;
@@ -58,7 +58,7 @@ index 1f96c8b93c..c2cd5b193b 100644
  
      if (
        aStateFlags & nsIWebProgressListener.STATE_START &&
-@@ -5295,7 +5295,7 @@ var XULBrowserWindow = {
+@@ -5377,7 +5377,7 @@ var XULBrowserWindow = {
  
        gIdentityHandler.onLocationChange();
  
@@ -67,7 +67,7 @@ index 1f96c8b93c..c2cd5b193b 100644
  
        BrowserPageActions.onLocationChange();
  
-@@ -5444,12 +5444,12 @@ var XULBrowserWindow = {
+@@ -5526,12 +5526,12 @@ var XULBrowserWindow = {
        );
      }
  
@@ -87,7 +87,7 @@ index 1f96c8b93c..c2cd5b193b 100644
      // We need the state of the previous content blocking event, so update
      // event after onContentBlockingEvent is called.
 diff --git a/browser/base/content/browser.xhtml b/browser/base/content/browser.xhtml
-index 01293021b3..0f50c84017 100644
+index 7ce329b833..b563193388 100644
 --- a/browser/base/content/browser.xhtml
 +++ b/browser/base/content/browser.xhtml
 @@ -71,7 +71,7 @@
@@ -99,7 +99,7 @@ index 01293021b3..0f50c84017 100644
    <link rel="localization" href="browser/appmenu.ftl"/>
    <link rel="localization" href="preview/interventions.ftl"/>
    <link rel="localization" href="browser/sidebarMenu.ftl"/>
-@@ -638,7 +638,7 @@
+@@ -632,7 +632,7 @@
  
  #include ../../components/customizableui/content/panelUI.inc.xhtml
  #include ../../components/controlcenter/content/identityPanel.inc.xhtml
@@ -108,7 +108,7 @@ index 01293021b3..0f50c84017 100644
  #include ../../components/downloads/content/downloadsPanel.inc.xhtml
  #include ../../../devtools/startup/enableDevToolsPopup.inc.xhtml
  #include browser-allTabsMenu.inc.xhtml
-@@ -1732,6 +1732,7 @@
+@@ -1726,6 +1726,7 @@
                     class="chromeclass-toolbar-additional"/>
                <!-- Use onclick instead of normal popup= syntax since the popup
                     code fires onmousedown, and hence eats our favicon drag events. -->
@@ -116,7 +116,7 @@ index 01293021b3..0f50c84017 100644
                <box id="tracking-protection-icon-container" align="center"
                     role="button"
                     onclick="gProtectionsHandler.handleProtectionsButtonEvent(event);"
-@@ -1749,6 +1750,7 @@
+@@ -1743,6 +1744,7 @@
                    <description id="tracking-protection-icon-tooltip-label" class="tooltip-label"/>
                  </tooltip>
                </box>
@@ -125,5 +125,5 @@ index 01293021b3..0f50c84017 100644
                     align="center"
                     data-l10n-id="urlbar-identity-button"
 -- 
-2.28.0
+2.29.2
 
