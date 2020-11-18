@@ -31,3 +31,4 @@
 0031-Allow-update-channel-to-be-configured-via-prefs.patch
 0032-Add-DNS-and-websocket-permissions-to-ghostery-extens.patch
 0033-Fix-compiler-error-on-optimised-windows-builds.patch
+0034-Feather-icons.patch
