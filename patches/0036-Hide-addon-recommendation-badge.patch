@@ -1,0 +1,24 @@
+From: Krzysztof Jan Modras <chrmod@chrmod.net>
+Date: Wed, 18 Nov 2020 13:29:04 +0100
+Subject: Hide addon recommendation badge
+
+fix #256
+---
+ toolkit/mozapps/extensions/content/aboutaddons.css | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/toolkit/mozapps/extensions/content/aboutaddons.css b/toolkit/mozapps/extensions/content/aboutaddons.css
+index f9a0ba95df..01d257851a 100644
+--- a/toolkit/mozapps/extensions/content/aboutaddons.css
++++ b/toolkit/mozapps/extensions/content/aboutaddons.css
+@@ -332,6 +332,7 @@ addon-card[expanded] .update-postponed-bar + .addon-card-message {
+ .addon-badge-recommended {
+   background-color: var(--orange-50);
+   background-image: url("chrome://mozapps/skin/extensions/recommended.svg");
++  display: none;
+ }
+ 
+ .addon-badge-line {
+-- 
+2.29.2
+
