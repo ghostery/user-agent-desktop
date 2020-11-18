@@ -1,0 +1,103 @@
+From: Krzysztof Jan Modras <chrmod@chrmod.net>
+Date: Wed, 18 Nov 2020 10:07:17 +0100
+Subject: Feather icons
+
+Note that Feather icons cannot be used stright away. They have to manually update to replace stroke color value with "context-fill" and stroke opacity color with "context-fill-opacity". Some icons may require more changes so every single one has to be tested in regular and in dark mode.
+
+Fix #347
+---
+ browser/themes/shared/icons/home.svg           |  7 +------
+ browser/themes/shared/icons/library.svg        |  7 +------
+ browser/themes/shared/icons/menu.svg           | 11 +++++------
+ browser/themes/shared/icons/print.svg          |  7 +------
+ browser/themes/shared/icons/sidebars-right.svg |  8 +-------
+ browser/themes/shared/icons/sidebars.svg       |  8 +-------
+ 6 files changed, 10 insertions(+), 38 deletions(-)
+
+diff --git a/browser/themes/shared/icons/home.svg b/browser/themes/shared/icons/home.svg
+index a605303c2d..d5d49949d0 100644
+--- a/browser/themes/shared/icons/home.svg
++++ b/browser/themes/shared/icons/home.svg
+@@ -1,6 +1 @@
+-<!-- This Source Code Form is subject to the terms of the Mozilla Public
+-   - License, v. 2.0. If a copy of the MPL was not distributed with this
+-   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+-<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+-  <path fill="context-fill" fill-opacity="context-fill-opacity" d="M15.707,7.293l-7-7a1,1,0,0,0-1.414,0l-7,7A1,1,0,0,0,1.707,8.707L2,8.414V14a2,2,0,0,0,2,2h8a2,2,0,0,0,2-2V8.414l.293.293a1,1,0,0,0,1.414-1.414ZM8,11.5a.5.5,0,1,1,.5.5A.5.5,0,0,1,8,11.5ZM12,13a1,1,0,0,1-1,1H10V9A1,1,0,0,0,9,8H7A1,1,0,0,0,6,9v5H5a1,1,0,0,1-1-1V6.414l4-4,4,4Z"/>
+-</svg>
++<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="context-fill" stroke-opacity="context-fill-opacity" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-home"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+\ No newline at end of file
+diff --git a/browser/themes/shared/icons/library.svg b/browser/themes/shared/icons/library.svg
+index 4c23e7ec94..0792848417 100644
+--- a/browser/themes/shared/icons/library.svg
++++ b/browser/themes/shared/icons/library.svg
+@@ -1,6 +1 @@
+-<!-- This Source Code Form is subject to the terms of the Mozilla Public
+-   - License, v. 2.0. If a copy of the MPL was not distributed with this
+-   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+-<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+-  <path fill="context-fill" fill-opacity="context-fill-opacity" d="M5 3a1 1 0 0 0-1 1v10a1 1 0 0 0 2 0V4a1 1 0 0 0-1-1zm3-1a1 1 0 0 0-1 1v11a1 1 0 0 0 2 0V3a1 1 0 0 0-1-1zm7.939 11.658l-4-11a1 1 0 1 0-1.879.684l4 11a1 1 0 1 0 1.879-.684zM2 1a1 1 0 0 0-1 1v12a1 1 0 0 0 2 0V2a1 1 0 0 0-1-1z"/>
+-</svg>
++<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="context-fill" stroke-opacity="context-fill-opacity" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-book-open"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+\ No newline at end of file
+diff --git a/browser/themes/shared/icons/menu.svg b/browser/themes/shared/icons/menu.svg
+index 86f38be5e4..46ea811c22 100644
+--- a/browser/themes/shared/icons/menu.svg
++++ b/browser/themes/shared/icons/menu.svg
+@@ -1,6 +1,5 @@
+-<!-- This Source Code Form is subject to the terms of the Mozilla Public
+-   - License, v. 2.0. If a copy of the MPL was not distributed with this
+-   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+-<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+-  <path fill="context-fill" fill-opacity="context-fill-opacity" d="M3,4H13a1,1,0,0,0,0-2H3A1,1,0,0,0,3,4ZM13,7H3A1,1,0,0,0,3,9H13a1,1,0,0,0,0-2Zm0,5H3a1,1,0,0,0,0,2H13a1,1,0,0,0,0-2Z"/>
+-</svg>
++<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="context-fill" fill-opacity="context-fill-opacity" viewBox="0 0 24 24" stroke="context-fill" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu">
++<line x1="3" y1="12" x2="21" y2="12"></line>
++<line x1="3" y1="6" x2="21" y2="6"></line>
++<line x1="3" y1="18" x2="21" y2="18"></line>
++</svg>
+\ No newline at end of file
+diff --git a/browser/themes/shared/icons/print.svg b/browser/themes/shared/icons/print.svg
+index 4d1485b353..8a9a7ace19 100644
+--- a/browser/themes/shared/icons/print.svg
++++ b/browser/themes/shared/icons/print.svg
+@@ -1,6 +1 @@
+-<!-- This Source Code Form is subject to the terms of the Mozilla Public
+-   - License, v. 2.0. If a copy of the MPL was not distributed with this
+-   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+-<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+-  <path fill="context-fill" fill-opacity="context-fill-opacity" d="M14 5h-1V1a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v4H2a2 2 0 0 0-2 2v5h3v3a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-3h3V7a2 2 0 0 0-2-2zM2.5 8a.5.5 0 1 1 .5-.5.5.5 0 0 1-.5.5zm9.5 7H4v-5h8zm0-10H4V1h8zm-6.5 7h4a.5.5 0 0 0 0-1h-4a.5.5 0 1 0 0 1zm0 2h5a.5.5 0 0 0 0-1h-5a.5.5 0 1 0 0 1z"/>
+-</svg>
++<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-printer"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+\ No newline at end of file
+diff --git a/browser/themes/shared/icons/sidebars-right.svg b/browser/themes/shared/icons/sidebars-right.svg
+index 4fa62cfffd..48cbed2f86 100644
+--- a/browser/themes/shared/icons/sidebars-right.svg
++++ b/browser/themes/shared/icons/sidebars-right.svg
+@@ -1,7 +1 @@
+-<!-- This Source Code Form is subject to the terms of the Mozilla Public
+-   - License, v. 2.0. If a copy of the MPL was not distributed with this
+-   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+-<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="context-fill" fill-opacity="context-fill-opacity">
+-  <path d="M13 1H3a3.007 3.007 0 0 0-3 3v8a3.009 3.009 0 0 0 3 3h10a3.005 3.005 0 0 0 3-3V4a3.012 3.012 0 0 0-3-3zM2 12V4a1 1 0 0 1 1-1h5v10H3a1 1 0 0 1-1-1zm12 0a1 1 0 0 1-1 1H9V3h4a1 1 0 0 1 1 1z"/>
+-  <path d="M12.5 5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 0 1zm0 2h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 0 1zm-1 2h-1a.5.5 0 0 1 0-1h1a.5.5 0 0 1 0 1z"/>
+-</svg>
++<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="context-fill" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-sidebar"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line></svg>
+\ No newline at end of file
+diff --git a/browser/themes/shared/icons/sidebars.svg b/browser/themes/shared/icons/sidebars.svg
+index bb35fbe06f..48cbed2f86 100644
+--- a/browser/themes/shared/icons/sidebars.svg
++++ b/browser/themes/shared/icons/sidebars.svg
+@@ -1,7 +1 @@
+-<!-- This Source Code Form is subject to the terms of the Mozilla Public
+-   - License, v. 2.0. If a copy of the MPL was not distributed with this
+-   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
+-<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="context-fill" fill-opacity="context-fill-opacity">
+-  <path d="M3 1h10c1.655.004 2.996 1.345 3 3v8c-.005 1.655-1.345 2.995-3 3H3c-1.656-.003-2.997-1.344-3-3V4c.007-1.654 1.346-2.993 3-3zm11 11V4c0-.552-.448-1-1-1H8v10h5c.552 0 1-.448 1-1zM2 12c0 .552.448 1 1 1h4V3H3c-.552 0-1 .448-1 1v8z"/>
+-  <path d="M3.5 5h2c.276 0 .5-.224.5-.5S5.776 4 5.5 4h-2c-.276 0-.5.224-.5.5s.224.5.5.5zm0 2h2c.276 0 .5-.224.5-.5S5.776 6 5.5 6h-2c-.276 0-.5.224-.5.5s.224.5.5.5zm1 2h1c.276 0 .5-.224.5-.5S5.776 8 5.5 8h-1c-.276 0-.5.224-.5.5s.224.5.5.5z"/>
+-</svg>
++<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="context-fill" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-sidebar"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line></svg>
+\ No newline at end of file
+-- 
+2.28.0
+
