@@ -3,11 +3,11 @@ Date: Thu, 10 Sep 2020 17:41:05 +0200
 Subject: Change new tab page and home page url
 
 ---
- browser/app/profile/firefox.js  | 2 +-
- browser/base/content/browser.js | 1 +
- browser/modules/AboutNewTab.jsm | 2 +-
- browser/modules/HomePage.jsm    | 2 +-
- 4 files changed, 4 insertions(+), 3 deletions(-)
+ browser/app/profile/firefox.js                   |  2 +-
+ browser/base/content/browser.js                  |  1 +
+ browser/components/newtab/AboutNewTabService.jsm | 15 +--------------
+ browser/modules/HomePage.jsm                     |  2 +-
+ 4 files changed, 4 insertions(+), 16 deletions(-)
 
 diff --git a/browser/app/profile/firefox.js b/browser/app/profile/firefox.js
 index adbada08c2..a344345f0a 100644
@@ -34,19 +34,32 @@ index 28a68dba90..87e93042f8 100644
  ];
  
  function isInitialPage(url) {
-diff --git a/browser/modules/AboutNewTab.jsm b/browser/modules/AboutNewTab.jsm
-index e7d4491840..61a72cdee2 100644
---- a/browser/modules/AboutNewTab.jsm
-+++ b/browser/modules/AboutNewTab.jsm
-@@ -19,7 +19,7 @@ XPCOMUtils.defineLazyModuleGetters(this, {
-     "resource://gre/modules/remotepagemanager/RemotePageManagerParent.jsm",
- });
+diff --git a/browser/components/newtab/AboutNewTabService.jsm b/browser/components/newtab/AboutNewTabService.jsm
+index c65e25ea58..371b48f551 100644
+--- a/browser/components/newtab/AboutNewTabService.jsm
++++ b/browser/components/newtab/AboutNewTabService.jsm
+@@ -327,20 +327,7 @@ class BaseAboutNewTabService {
+    * the newtab page has no effect on the result of this function.
+    */
+   get defaultURL() {
+-    // Generate the desired activity stream resource depending on state, e.g.,
+-    // "resource://activity-stream/prerendered/activity-stream.html"
+-    // "resource://activity-stream/prerendered/activity-stream-debug.html"
+-    // "resource://activity-stream/prerendered/activity-stream-noscripts.html"
+-    return [
+-      "resource://activity-stream/prerendered/",
+-      "activity-stream",
+-      // Debug version loads dev scripts but noscripts separately loads scripts
+-      this.activityStreamDebug && !this.privilegedAboutProcessEnabled
+-        ? "-debug"
+-        : "",
+-      this.privilegedAboutProcessEnabled ? "-noscripts" : "",
+-      ".html",
+-    ].join("");
++    return "https://ghosterysearch.com/";
+   }
  
--const ABOUT_URL = "about:newtab";
-+const ABOUT_URL = "https://ghosterysearch.com/";
- const PREF_ACTIVITY_STREAM_DEBUG = "browser.newtabpage.activity-stream.debug";
- const TOPIC_APP_QUIT = "quit-application-granted";
- const BROWSER_READY_NOTIFICATION = "sessionstore-windows-restored";
+   get welcomeURL() {
 diff --git a/browser/modules/HomePage.jsm b/browser/modules/HomePage.jsm
 index c903787fde..bbeff85841 100644
 --- a/browser/modules/HomePage.jsm
