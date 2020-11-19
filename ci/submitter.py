@@ -39,7 +39,13 @@ if args.action == "release":
         "hashFunction": "sha512",
         "appVersion": app_version,
         "displayVersion": display_version,
-        "updateLine": [],
+        "updateLine": [{
+            "fields": {
+                "actions": "showURL",
+                "openURL": f"https://get.ghosterybrowser.com/releasenotes/{args.tag}"
+            },
+            "for": {}
+        }],
         "fileUrls": fileUrls,
         "platforms": {
             "Darwin_x86_64-gcc3": {
