@@ -8,7 +8,7 @@ properties([
     ]),
 ])
 
-def buildParams = [Reset: false]
+def buildParams = [Reset: true]
 def buildId = new Date().format('yyyyMMddHHmmss')
 def helpers
 

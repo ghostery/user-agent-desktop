@@ -8,7 +8,7 @@ properties([
         string(name: 'ReleaseName', defaultValue: '', description: ''),
         booleanParam(name: 'Nightly', defaultValue: false, description: 'Push release to nightly'),
         booleanParam(name: 'PGO', defaultValue: false, description: 'Enable Profile Guided Optimization'),
-        string(name: 'PGOProfiles', defaultValue: 'http://kria.cliqz:8080/ipfs/QmbgLeiiCdNbGYywzgqX7esXfkBFAQwr6zyA4MQySrmj2i/82.0.3', description: 'Base URL for fetching PGO Profiles'),
+        string(name: 'PGOProfiles', defaultValue: 'http://kria.cliqz:8080/ipfs/QmcKRVZK8bPvZ9NTAPaZ4gkrND2QpZ6jnP9qwDTJhxqLG4/83.0', description: 'Base URL for fetching PGO Profiles'),
         booleanParam(name: 'Instrument', defaultValue: false, description: 'Enable an instrumented build for generating profiles for PGO'),
     ]),
 ])
