@@ -4,6 +4,7 @@ properties([
         booleanParam(name: 'Clobber', defaultValue: false, description: 'run mach clobber'),
         booleanParam(name: 'Linux64', defaultValue: true, description: ''),
         booleanParam(name: 'Windows64', defaultValue: true, description: ''),
+        booleanParam(name: 'WindowsARM', defaultValue: false, description: ''),
         booleanParam(name: 'MacOSX64', defaultValue: true, description: ''),
         string(name: 'ReleaseName', defaultValue: '', description: ''),
         booleanParam(name: 'Nightly', defaultValue: false, description: 'Push release to nightly'),
@@ -65,6 +66,34 @@ if (params.Windows64) {
             archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
             archiveArtifacts artifacts: "mozilla-release/${objDir}/dist/*.win64.zip"
             archiveArtifacts artifacts: "mozilla-release/browser/config/version*"
+
+            stash name: name, includes: [
+                "mozilla-release/${artifactGlob}",
+                "mozilla-release/browser/config/version.txt",
+                "mozilla-release/other-licenses/7zstub/firefox/*",
+                "mozilla-release/browser/installer/windows/*",
+            ].join(',')
+
+            sh "rm -rf mozilla-release/$objDir/dist/update"
+        }
+    }
+
+    if (shouldRelease) {
+        signmatrix["Sign ${name}"] = helpers.windows_signing(name, objDir, artifactGlob)
+    }
+}
+
+if (params.WindowsARM) {
+    def name = 'WindowsARM'
+    def objDir = 'obj-aarch64-windows-mingw32'
+    def artifactGlob = "$objDir/dist/install/**/*"
+
+    buildmatrix[name] = {
+        node('docker && magrathea') {
+            helpers.build(name, 'WindowsARM.dockerfile', 'win64-aarch64', objDir, params, buildId)()
+
+            archiveArtifacts artifacts: "mozilla-release/$objDir/dist/update/*.mar"
+            archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
 
             stash name: name, includes: [
                 "mozilla-release/${artifactGlob}",

@@ -19,7 +19,7 @@ def build(name, dockerFile, targetPlatform, objDir, params, buildId, buildEnv=[]
             docker.build("ua-build-${name.toLowerCase()}", "-f build/${dockerFile} ./build --build-arg IPFS_GATEWAY=http://kria.cliqz:8080")
         }
 
-        image.inside("-v /mnt/vfat/vs2017_15.8.4/:/builds/worker/fetches/vs2017_15.8.4") {
+        image.inside("-v /mnt/vfat/vs2017_15.9.29/:/builds/worker/fetches/vs2017_15.9.29") {
             withEnv(["MACH_USE_SYSTEM_PYTHON=1", "MOZCONFIG=${env.WORKSPACE}/mozconfig", "MOZ_BUILD_DATE=${buildId}"]) {
                 stage('prepare mozilla-release') {
                     sh 'npm ci'

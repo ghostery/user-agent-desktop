@@ -5,7 +5,7 @@ export LLVM_CONFIG="${MOZ_FETCHES_DIR}/clang/bin/llvm-config"
 
 WINCHECKSEC="${MOZ_FETCHES_DIR}/winchecksec/winchecksec"
 
-ac_add_options --target=x86_64-pc-mingw32
+ac_add_options --target=aarch64-windows-mingw32
 ac_add_options --enable-application=browser
 
 # build/mozconfig.common
@@ -58,7 +58,8 @@ if [ -f "${UPX}" ]; then
     chmod +x "${UPX}"
 fi
 export WINE=${MOZ_FETCHES_DIR}/wine/bin/wine64
-mk_add_options "export PATH=${VSPATH}/VC/bin/Hostx64/x64:${MOZ_FETCHES_DIR}/nsis-3.01:${PATH}"
+mk_add_options "export PATH=${VSPATH}/VC/bin/Hostx64/arm64:${MOZ_FETCHES_DIR}/nsis-3.01:${PATH}"
+mk_add_options "export WINEPATH=${VSPATH}/VC/bin/Hostx64/x64"
 
 unset VC_PATH
 
@@ -93,13 +94,6 @@ export ENABLE_CLANG_PLUGIN=1
 
 # disable tests for this build
 ac_add_options --disable-tests
-
-if [ -n "$PGO_PROFILE_USE" ]; then
-    export MOZ_LTO=cross
-    ac_add_options --enable-profile-use=cross
-    ac_add_options --with-pgo-jarlog=$WORKSPACE/mozilla-release/en-US.log
-    ac_add_options --with-pgo-profile-path=$WORKSPACE/mozilla-release/merged.profdata
-fi
 
 if [ -n "$PGO_PROFILE_GENERATE" ]; then
     ac_add_options --enable-profile-generate=cross

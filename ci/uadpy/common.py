@@ -19,6 +19,7 @@ build_target_to_platform = {
     'Darwin_x86_64-gcc3': 'mac',
     'WINNT_x86_64-msvc-x64': 'win64',
     'Linux_x86_64-gcc3': 'linux-x86_64',
+    'WINNT_aarch64-msvc-aarch64': 'win64-aarch64',
 }
 platform_to_build_target = {
     v: k for k, v in build_target_to_platform.items()

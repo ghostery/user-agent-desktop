@@ -4,7 +4,7 @@ set -e
 set -x
 
 ARTIFACT_PATH="/c/build"
-package="vs2017_15.9.10"
+package="vs2017_15.9.29"
 
 mkdir -p $ARTIFACT_PATH
 

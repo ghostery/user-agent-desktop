@@ -184,6 +184,19 @@ async function generate(artifactBaseDir) {
         "macosx.yml"
       ),
     },
+    {
+      name: "WindowsARM",
+      key: "win64-aarch64/opt",
+      arch: 'arm64',
+      buildPath: path.join(
+        root,
+        "mozilla-release",
+        "taskcluster",
+        "ci",
+        "build",
+        "windows.yml"
+      ),
+    },
   ];
   // Collect the toolchains required for each build from it's specification in taskcluster configs.
   const buildInfos = await Promise.all(
