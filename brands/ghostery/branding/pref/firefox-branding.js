@@ -158,3 +158,9 @@ pref("browser.safebrowsing.provider.mozilla.updateURL", "https://get.ghosterybro
 
 // Firefox Monitor
 pref("extensions.fxmonitor.enabled", false);
+
+// Enable HTTPS only mode (#367)
+pref("dom.security.https_only_mode", true);
+
+// Microphone and camera kill switch (#370)
+pref("privacy.webrtc.globalMuteToggles", true);
