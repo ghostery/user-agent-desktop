@@ -168,7 +168,7 @@ stage('publish to github') {
 
                 unarchive mapping: ["mozilla-release/" : "artifacts"]
 
-                def artifacts = sh(returnStdout: true, script: 'find artifacts -type f').trim().split("\\r?\\n")
+                def artifacts = sh(returnStdout: true, script: 'find artifacts -type f \( -iname \*.mar -o -iname *-signed\.dmg -o -iname \*.exe -o -iname \*.tar.bz2 \)').trim().split("\\r?\\n")
 
                 for(String artifactPath in artifacts) {
                     def artifactName = artifactPath.split('/').last()
