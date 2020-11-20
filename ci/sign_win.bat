@@ -1,28 +1,33 @@
 SET CQZ_WORKSPACE=%CD%
 SET TOOLTOOL_DIR=c:\build
 SET MOZ_FETCHES_DIR=c:\build
-SET CLZ_SIGNTOOL_PATH=%TOOLTOOL_DIR%\vs2017_15.9.10\SDK\bin\10.0.17763.0\x64\signtool.exe
+SET CLZ_SIGNTOOL_PATH=%TOOLTOOL_DIR%\vs2017_15.9.29\SDK\bin\10.0.17134.0\x64\signtool.exe
 SET BUILD_SHELL=c:\mozilla-build\start-shell.bat
 SET APP_NAME=Ghostery
 SET lang=en-US
 
 ECHO cd $CQZ_WORKSPACE ^^^&^^^& ./ci/bootstrap_windows.sh | call %BUILD_SHELL%
-cd %CQZ_WORKSPACE%\mozilla-release\obj-x86_64-pc-mingw32\
 
 set ff_version=''
 set archivator_exe=c:\mozilla-build\bin\7z.exe
-for /F %%f in (..\browser\config\version.txt) do set ff_version=%%f
+for /F %%f in (%CQZ_WORKSPACE%\mozilla-release\browser\config\version.txt) do set ff_version=%%f
 set ff_exe=%ff_version%.en-US
 echo %ff_exe%
 if NOT "%lang%" == "" set ff_exe=%ff_version%.%lang%
 echo %ff_exe%
 echo %lang%
 
+if exist %CQZ_WORKSPACE%\mozilla-release\obj-aarch64-windows-mingw32\dist\install\sea\%APP_NAME%-%ff_exe%.win64-aarch64.installer%STUB_PREFIX%.exe (
+  set platform_prefix=win64-aarch64
+  cd %CQZ_WORKSPACE%\mozilla-release\obj-aarch64-windows-mingw32\
+) else (
+  set platform_prefix=win64
+  cd %CQZ_WORKSPACE%\mozilla-release\obj-x86_64-pc-mingw32\
+)
+
 set timestamp_server_sha1=http://timestamp.verisign.com/scripts/timstamp.dll
 set timestamp_server_sha256=http://sha256timestamp.ws.symantec.com/sha256/timestamp
 echo %CLZ_SIGNTOOL_PATH%
-
-SET platform_prefix=win64
 
 if exist ./pkg%STUB_PREFIX%_%lang% rmdir /q /s "pkg%STUB_PREFIX%_%lang%"
 
