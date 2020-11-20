@@ -1,7 +1,7 @@
 SET CQZ_WORKSPACE=%CD%
 SET TOOLTOOL_DIR=c:\build
 SET MOZ_FETCHES_DIR=c:\build
-SET CLZ_SIGNTOOL_PATH=%TOOLTOOL_DIR%\vs2017_15.9.10\SDK\bin\10.0.17763.0\x64\signtool.exe
+SET CLZ_SIGNTOOL_PATH=%TOOLTOOL_DIR%\vs2017_15.9.29\SDK\bin\10.0.17134.0\x64\signtool.exe
 SET BUILD_SHELL=c:\mozilla-build\start-shell.bat
 SET APP_NAME=Ghostery
 SET lang=en-US
