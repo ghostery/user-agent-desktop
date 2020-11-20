@@ -14,12 +14,12 @@
 !define URLInfoAbout          "https://www.ghostery.com"
 !define HelpLink              "https://www.ghostery.com/support/"
 
-!define URLStubDownloadX86 "https://www.ghostery.com/products/?os=win&lang=${AB_CD}&product=firefox-latest"
-!define URLStubDownloadAMD64 "https://www.ghostery.com/products/?os=win64&lang=${AB_CD}&product=firefox-latest"
-!define URLStubDownloadAArch64 "https://www.ghostery.com/products/?os=win64-aarch64&lang=${AB_CD}&product=firefox-latest"
-!define URLManualDownload "https://www.ghostery.com/products/?installer_lang=${AB_CD}"
+!define URLStubDownloadX86 "https://get.ghosterybrowser.com/download/win64-installer"
+!define URLStubDownloadAMD64 "https://get.ghosterybrowser.com/download/win64-installer"
+!define URLStubDownloadAArch64 "https://get.ghosterybrowser.com/download/win64-aarch64-installer"
+!define URLManualDownload "https://get.ghosterybrowser.com/download/win"
 !define URLSystemRequirements "https://www.ghostery.com/products/"
-!define Channel "ghostery"
+!define Channel "release"
 
 # The installer's certificate name and issuer expected by the stub installer
 !define CertNameDownload   "Ghostery, Inc."
