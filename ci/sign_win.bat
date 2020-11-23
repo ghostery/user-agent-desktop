@@ -62,7 +62,8 @@ goto sign_installer
 
 :prepare_stub_installer
 del stub.7z
-%archivator_exe% a -t7z stub.7z setup-stub.exe -mx -m0=BCJ2 -m1=LZMA:d21 -m2=LZMA:d17 -m3=LZMA:d17 -mb0:1 -mb0s1:2 -mb0s2:3
+copy setup-stub.exe setup.exe
+%archivator_exe% a -t7z stub.7z setup.exe -mx -m0=BCJ2 -m1=LZMA:d21 -m2=LZMA:d17 -m3=LZMA:d17 -mb0:1 -mb0s1:2 -mb0s2:3
 cd ..
 copy /b ..\other-licenses\7zstub\firefox\7zSD.Win32.sfx + ..\browser\installer\windows\instgen\stub.tag + pkg%STUB_PREFIX%_%lang%\stub.7z dist\install\sea\%APP_NAME%-%ff_exe%.%platform_prefix%.installer-stub.exe
 
