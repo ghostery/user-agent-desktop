@@ -34,7 +34,8 @@ if exist ./pkg%STUB_PREFIX%_%lang% rmdir /q /s "pkg%STUB_PREFIX%_%lang%"
 dir /b %TOOLTOOL_DIR%
 dir /b c:\mozilla-build
 
-for %STUB_PREFIX% IN ("", "-stub") do (
+for %%p IN ("", "-stub") do (
+  set STUB_PREFIX=%%p
   %archivator_exe% l dist\install\sea\%APP_NAME%-%ff_exe%.%platform_prefix%.installer%STUB_PREFIX%.exe
   %archivator_exe% x -opkg%STUB_PREFIX%_%lang% -y dist\install\sea\%APP_NAME%-%ff_exe%.%platform_prefix%.installer%STUB_PREFIX%.exe
   if not exist ./pkg%STUB_PREFIX%_%lang% (goto :error)
