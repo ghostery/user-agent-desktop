@@ -17,7 +17,7 @@
 !define URLStubDownloadX86 "https://get.ghosterybrowser.com/download/win64-installer"
 !define URLStubDownloadAMD64 "https://get.ghosterybrowser.com/download/win64-installer"
 !define URLStubDownloadAArch64 "https://get.ghosterybrowser.com/download/win64-aarch64-installer"
-!define URLManualDownload "https://get.ghosterybrowser.com/download/win"
+!define URLManualDownload "https://get.ghosterybrowser.com/download/landing"
 !define URLSystemRequirements "https://www.ghostery.com/products/"
 !define Channel "release"
 
