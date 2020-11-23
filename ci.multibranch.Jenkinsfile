@@ -72,6 +72,7 @@ if (params.Windows64) {
                 "mozilla-release/browser/config/version.txt",
                 "mozilla-release/other-licenses/7zstub/firefox/*",
                 "mozilla-release/browser/installer/windows/*",
+                "mozilla-release/browser/installer/windows/instgen/*",
             ].join(',')
 
             sh "rm -rf mozilla-release/$objDir/dist/update"
