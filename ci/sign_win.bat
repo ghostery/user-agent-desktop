@@ -17,7 +17,7 @@ if NOT "%lang%" == "" set ff_exe=%ff_version%.%lang%
 echo %ff_exe%
 echo %lang%
 
-if exist %CQZ_WORKSPACE%\mozilla-release\obj-aarch64-windows-mingw32\dist\install\sea\%APP_NAME%-%ff_exe%.win64-aarch64.installer%STUB_PREFIX%.exe (
+if exist %CQZ_WORKSPACE%\mozilla-release\obj-aarch64-windows-mingw32\dist\install\sea\%APP_NAME%-%ff_exe%.win64-aarch64.installer.exe (
   set platform_prefix=win64-aarch64
   cd %CQZ_WORKSPACE%\mozilla-release\obj-aarch64-windows-mingw32\
 ) else (
@@ -52,12 +52,22 @@ for /R %%f in (
   if ERRORLEVEL 1 (goto :error)
 )
 
+if defined STUB_PREFIX goto prepare_stub_installer
 rem Prepare usual installer
 del installer.7z
 %archivator_exe% a -r -t7z installer.7z -mx -m0=BCJ2 -m1=LZMA:d25 -m2=LZMA:d19 -m3=LZMA:d1 -mb0:1 -mb0s1:2 -mb0s2:3
 cd ..
-copy /b ..\other-licenses\7zstub\firefox\7zSD.Win32.sfx + mozilla-release\browser\installer\windows\app.tag + pkg_%lang%\installer.7z dist\install\sea\%APP_NAME%-%ff_exe%.%platform_prefix%.installer.exe
+copy /b ..\other-licenses\7zstub\firefox\7zSD.Win32.sfx + ..\browser\installer\windows\app.tag + pkg_%lang%\installer.7z dist\install\sea\%APP_NAME%-%ff_exe%.%platform_prefix%.installer.exe
+goto sign_installer
 
+:prepare_stub_installer
+del stub.7z
+copy setup-stub.exe setup.exe
+%archivator_exe% a -t7z stub.7z setup.exe -mx -m0=BCJ2 -m1=LZMA:d21 -m2=LZMA:d17 -m3=LZMA:d17 -mb0:1 -mb0s1:2 -mb0s2:3
+cd ..
+copy /b ..\other-licenses\7zstub\firefox\7zSD.Win32.sfx + ..\browser\installer\windows\instgen\stub.tag + pkg%STUB_PREFIX%_%lang%\stub.7z dist\install\sea\%APP_NAME%-%ff_exe%.%platform_prefix%.installer-stub.exe
+
+:sign_installer
 "%CLZ_SIGNTOOL_PATH%" sign /t %timestamp_server_sha1% /f %WIN_CERT% /p %WIN_CERT_PASS% dist\install\sea\%APP_NAME%-%ff_exe%.%platform_prefix%.installer%STUB_PREFIX%.exe
 "%CLZ_SIGNTOOL_PATH%" sign /fd sha256 /tr %timestamp_server_sha256% /td sha256 /f %WIN_CERT% /p %WIN_CERT_PASS% /as dist\install\sea\%APP_NAME%-%ff_exe%.%platform_prefix%.installer%STUB_PREFIX%.exe
 "%CLZ_SIGNTOOL_PATH%" verify /pa dist\install\sea\%APP_NAME%-%ff_exe%.%platform_prefix%.installer%STUB_PREFIX%.exe

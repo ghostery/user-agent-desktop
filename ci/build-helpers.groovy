@@ -151,7 +151,12 @@ def windows_signing(name, objDir, artifactGlob) {
                     file(credentialsId: "7da7d2de-5a10-45e6-9ffd-4e49f83753a8", variable: 'WIN_CERT'),
                     string(credentialsId: "33b3705c-1c2e-4462-9354-56a76bbb164c", variable: 'WIN_CERT_PASS'),
                 ]) {
+                    // full installer signing
                     bat 'ci/sign_win.bat'
+                    // stub installer signing
+                    withEnv(['STUB_PREFIX=-stub']) {
+                        bat 'ci/sign_win.bat'
+                    }
                 }
             }
             stage('Publish') {
