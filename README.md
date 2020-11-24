@@ -12,6 +12,7 @@ features are:
 The Ghostery browser is available for the following platforms:
 
  * [Windows (64bit)](https://get.ghosterybrowser.com/download/win)
+ * [Windows (ARM)](https://get.ghosterybrowser.com/download/winarm)
  * [Mac OSX](https://get.ghosterybrowser.com/download/mac)
  * [Linux (64bit)](https://get.ghosterybrowser.com/download/linux)
 
