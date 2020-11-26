@@ -69,6 +69,8 @@ if (params.Windows64) {
                 ].join(',')
                 windows_sign_dir(stash_name, bin_dir)
                 unstash name: "${stash_name}_signed"
+                sh "rm -rf mozilla-release/${objDir}/dist/Ghostery.zip"
+                sh "rm -rf mozilla-release/${objDir}/dist/install"
             })()
 
             archiveArtifacts artifacts: "mozilla-release/$objDir/dist/update/*.mar"

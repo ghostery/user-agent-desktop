@@ -1,5 +1,5 @@
 
-def build(name, dockerFile, targetPlatform, objDir, params, buildId, buildEnv=[], Closure prepackage={}, Closure archiving={}) {
+def build(name, dockerFile, targetPlatform, objDir, params, buildId, buildEnv=[], Closure postpackage={}, Closure archiving={}) {
     return {
         stage('checkout') {
             checkout scm
@@ -57,12 +57,16 @@ def build(name, dockerFile, targetPlatform, objDir, params, buildId, buildEnv=[]
                             }
                             sh './mach build'
                         }
+
+                        stage("${name}: mach package") {
+                            sh './mach package'
+                        }
                     }
                 } //dir
             } //withEnv
-        }//inside
+        } //inside
 
-        prepackage()
+        postpackage()
 
         image.inside(dockerOpts) {
             withEnv(defaultEnv) {
