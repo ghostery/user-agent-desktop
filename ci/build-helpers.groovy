@@ -14,7 +14,7 @@ def build(name, dockerFile, targetPlatform, objDir, params, buildId, buildEnv=[]
             }
         }
 
-        image = stage('docker build base') {
+        def image = stage('docker build base') {
             docker.build('ua-build-base', '-f build/Base.dockerfile ./build/ --build-arg user=`whoami` --build-arg UID=`id -u` --build-arg GID=`id -g`')
             docker.build("ua-build-${name.toLowerCase()}", "-f build/${dockerFile} ./build --build-arg IPFS_GATEWAY=http://kria.cliqz:8080")
         }
