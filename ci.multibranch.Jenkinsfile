@@ -67,7 +67,7 @@ if (params.Windows64) {
                     "${bin_dir}/*",
                     "${bin_dir}/**/*",
                 ].join(',')
-                windows_sign_dir(stash_name, bin_dir)
+                helpers.windows_sign_dir(stash_name, bin_dir)
                 unstash name: "${stash_name}_signed"
                 sh "rm -rf mozilla-release/${objDir}/dist/Ghostery.zip"
                 sh "rm -rf mozilla-release/${objDir}/dist/install"
