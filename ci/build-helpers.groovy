@@ -1,5 +1,5 @@
 
-def build(name, dockerFile, targetPlatform, objDir, params, buildId, buildEnv=[], Closure archiving={}) {
+def build(name, dockerFile, targetPlatform, objDir, params, buildId, buildEnv=[], Closure prepackage={}, Closure archiving={}) {
     return {
         stage('checkout') {
             checkout scm
@@ -19,8 +19,11 @@ def build(name, dockerFile, targetPlatform, objDir, params, buildId, buildEnv=[]
             docker.build("ua-build-${name.toLowerCase()}", "-f build/${dockerFile} ./build --build-arg IPFS_GATEWAY=http://kria.cliqz:8080")
         }
 
-        image.inside("-v /mnt/vfat/vs2017_15.9.29/:/builds/worker/fetches/vs2017_15.9.29") {
-            withEnv(["MACH_USE_SYSTEM_PYTHON=1", "MOZCONFIG=${env.WORKSPACE}/mozconfig", "MOZ_BUILD_DATE=${buildId}"]) {
+        def defaultEnv = ["MACH_USE_SYSTEM_PYTHON=1", "MOZCONFIG=${env.WORKSPACE}/mozconfig", "MOZ_BUILD_DATE=${buildId}"]
+        def dockerOpts = "-v /mnt/vfat/vs2017_15.9.29/:/builds/worker/fetches/vs2017_15.9.29"
+
+        image.inside(dockerOpts) {
+            withEnv(defaultEnv) {
                 stage('prepare mozilla-release') {
                     sh 'npm ci'
                     if (params.Reset) {
@@ -54,23 +57,31 @@ def build(name, dockerFile, targetPlatform, objDir, params, buildId, buildEnv=[]
                             }
                             sh './mach build'
                         }
+                    }
+                } //dir
+            } //withEnv
+        }//inside
 
-                        stage("${name}: mach package") {
-                            sh './mach package'
-                        }
+        prepackage()
 
-                        stage("${name}: make update-packaging") {
-                            dir(objDir) {
-                                withEnv([
-                                    "ACCEPTED_MAR_CHANNEL_IDS=firefox-ghostery-release",
-                                    "MAR_CHANNEL_ID=firefox-ghostery-release",
-                                ]) {
-                                    sh 'make update-packaging'
-                                }
+        image.inside(dockerOpts) {
+            withEnv(defaultEnv) {
+                dir('mozilla-release') {
+                    stage("${name}: mach package") {
+                        sh './mach package'
+                    }
+
+                    stage("${name}: make update-packaging") {
+                        dir(objDir) {
+                            withEnv([
+                                "ACCEPTED_MAR_CHANNEL_IDS=firefox-ghostery-release",
+                                "MAR_CHANNEL_ID=firefox-ghostery-release",
+                            ]) {
+                                sh 'make update-packaging'
                             }
                         }
-                        archiving()
                     }
+                    archiving()
                 }
             }
         }
@@ -161,6 +172,25 @@ def windows_signing(name, objDir, artifactGlob) {
             }
             stage('Publish') {
                 archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
+            }
+        }
+    }
+}
+
+def windows_sign_dir(name, dir) {
+    return {
+        node('windows') {
+            stage('Sign') {
+                checkout scm
+                bat 'del /s /q mozilla-release'
+                unstash name
+                withCredentials([
+                    file(credentialsId: "7da7d2de-5a10-45e6-9ffd-4e49f83753a8", variable: 'WIN_CERT'),
+                    string(credentialsId: "33b3705c-1c2e-4462-9354-56a76bbb164c", variable: 'WIN_CERT_PASS'),
+                ]) {
+                    bat "ci/win_signer.bat ${dir}"
+                }
+                stash name: "${name}_signed", includes: "${dir}/*,${dir}/**/*"
             }
         }
     }
