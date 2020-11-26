@@ -150,6 +150,19 @@ def signmar() {
     }
 }
 
+// signs packaged artifacts for repackaging
+def windows_signed_packaging(name, objDir, appName='Ghostery') {
+    def stash_name = "${name}_packaging"
+    def bin_dir = "mozilla-release/${objDir}/dist/${appName}"
+    stash name: stash_name, includes: [
+        "${bin_dir}/*",
+        "${bin_dir}/**/*",
+    ].join(',')
+    unstash name: windows_sign_dir(stash_name, bin_dir)()
+    sh "rm -rf mozilla-release/${objDir}/dist/${appName}-*.zip"
+    sh "rm -rf mozilla-release/${objDir}/dist/install"
+}
+
 // Sign windows installers
 def windows_signing(name, objDir, artifactGlob) {
     return {

@@ -61,15 +61,9 @@ if (params.Windows64) {
         // we have to run windows builds on magrathea because that is where the vssdk mount is.
         node('docker && magrathea') {
             helpers.build(name, 'Windows.dockerfile', 'win64', objDir, params, buildId, [], {
-                def stash_name = "${name}_prepackage"
-                def bin_dir = "mozilla-release/${objDir}/dist/Ghostery"
-                stash name: stash_name, includes: [
-                    "${bin_dir}/*",
-                    "${bin_dir}/**/*",
-                ].join(',')
-                unstash name: helpers.windows_sign_dir(stash_name, bin_dir)()
-                sh "rm -rf mozilla-release/${objDir}/dist/Ghostery.zip"
-                sh "rm -rf mozilla-release/${objDir}/dist/install"
+                if (shouldRelease) {
+                    helpers.windows_signed_packaging(name, objDir)
+                }
             })()
 
             archiveArtifacts artifacts: "mozilla-release/$objDir/dist/update/*.mar"
@@ -89,7 +83,7 @@ if (params.Windows64) {
         }
     }
 
-    if (true) {
+    if (shouldRelease) {
         signmatrix["Sign ${name}"] = helpers.windows_signing(name, objDir, artifactGlob)
     }
 }
@@ -101,7 +95,11 @@ if (params.WindowsARM) {
 
     buildmatrix[name] = {
         node('docker && magrathea') {
-            helpers.build(name, 'WindowsARM.dockerfile', 'win64-aarch64', objDir, params, buildId)()
+            helpers.build(name, 'WindowsARM.dockerfile', 'win64-aarch64', objDir, params, buildId, [],  {
+                if (shouldRelease) {
+                    helpers.windows_signed_packaging(name, objDir)
+                }
+            })()
 
             archiveArtifacts artifacts: "mozilla-release/$objDir/dist/update/*.mar"
             archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
