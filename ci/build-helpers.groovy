@@ -1,5 +1,5 @@
 
-def build(name, dockerFile, targetPlatform, objDir, params, buildId, buildEnv=[], Closure archiving={}) {
+def build(name, dockerFile, targetPlatform, objDir, params, buildId, buildEnv=[], Closure postpackage={}, Closure archiving={}) {
     return {
         stage('checkout') {
             checkout scm
@@ -14,13 +14,16 @@ def build(name, dockerFile, targetPlatform, objDir, params, buildId, buildEnv=[]
             }
         }
 
-        image = stage('docker build base') {
+        def image = stage('docker build base') {
             docker.build('ua-build-base', '-f build/Base.dockerfile ./build/ --build-arg user=`whoami` --build-arg UID=`id -u` --build-arg GID=`id -g`')
             docker.build("ua-build-${name.toLowerCase()}", "-f build/${dockerFile} ./build --build-arg IPFS_GATEWAY=http://kria.cliqz:8080")
         }
 
-        image.inside("-v /mnt/vfat/vs2017_15.9.29/:/builds/worker/fetches/vs2017_15.9.29") {
-            withEnv(["MACH_USE_SYSTEM_PYTHON=1", "MOZCONFIG=${env.WORKSPACE}/mozconfig", "MOZ_BUILD_DATE=${buildId}"]) {
+        def defaultEnv = ["MACH_USE_SYSTEM_PYTHON=1", "MOZCONFIG=${env.WORKSPACE}/mozconfig", "MOZ_BUILD_DATE=${buildId}"]
+        def dockerOpts = "-v /mnt/vfat/vs2017_15.9.29/:/builds/worker/fetches/vs2017_15.9.29"
+
+        image.inside(dockerOpts) {
+            withEnv(defaultEnv) {
                 stage('prepare mozilla-release') {
                     sh 'npm ci'
                     if (params.Reset) {
@@ -58,19 +61,31 @@ def build(name, dockerFile, targetPlatform, objDir, params, buildId, buildEnv=[]
                         stage("${name}: mach package") {
                             sh './mach package'
                         }
+                    }
+                } //dir
+            } //withEnv
+        } //inside
 
-                        stage("${name}: make update-packaging") {
-                            dir(objDir) {
-                                withEnv([
-                                    "ACCEPTED_MAR_CHANNEL_IDS=firefox-ghostery-release",
-                                    "MAR_CHANNEL_ID=firefox-ghostery-release",
-                                ]) {
-                                    sh 'make update-packaging'
-                                }
+        postpackage()
+
+        image.inside(dockerOpts) {
+            withEnv(defaultEnv) {
+                dir('mozilla-release') {
+                    stage("${name}: mach package") {
+                        sh './mach package'
+                    }
+
+                    stage("${name}: make update-packaging") {
+                        dir(objDir) {
+                            withEnv([
+                                "ACCEPTED_MAR_CHANNEL_IDS=firefox-ghostery-release",
+                                "MAR_CHANNEL_ID=firefox-ghostery-release",
+                            ]) {
+                                sh 'make update-packaging'
                             }
                         }
-                        archiving()
                     }
+                    archiving()
                 }
             }
         }
@@ -135,6 +150,20 @@ def signmar() {
     }
 }
 
+// signs packaged artifacts for repackaging
+def windows_signed_packaging(name, objDir, appName='Ghostery') {
+    def stash_name = "${name}_packaging"
+    def bin_dir = "mozilla-release/${objDir}/dist/${appName}"
+    stash name: stash_name, includes: [
+        "${bin_dir}/*",
+        "${bin_dir}/**/*",
+    ].join(',')
+    unstash name: windows_sign_dir(stash_name, bin_dir)()
+    sh "rm -rf mozilla-release/${objDir}/dist/${appName}-*.zip"
+    sh "rm -rf mozilla-release/${objDir}/dist/install"
+}
+
+// Sign windows installers
 def windows_signing(name, objDir, artifactGlob) {
     return {
         node('windows') {
@@ -161,6 +190,28 @@ def windows_signing(name, objDir, artifactGlob) {
             }
             stage('Publish') {
                 archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
+            }
+        }
+    }
+}
+
+// Sign binaries and libraries in a stashed folder
+def windows_sign_dir(name, dir) {
+    return {
+        node('windows') {
+            stage('Sign') {
+                def signed_name = "${name}_signed"
+                checkout scm
+                bat 'del /s /q mozilla-release'
+                unstash name
+                withCredentials([
+                    file(credentialsId: "7da7d2de-5a10-45e6-9ffd-4e49f83753a8", variable: 'WIN_CERT'),
+                    string(credentialsId: "33b3705c-1c2e-4462-9354-56a76bbb164c", variable: 'WIN_CERT_PASS'),
+                ]) {
+                    bat "ci/win_signer.bat ${dir}"
+                }
+                stash name: signed_name, includes: "${dir}/*,${dir}/**/*"
+                signed_name
             }
         }
     }

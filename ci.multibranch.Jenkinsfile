@@ -60,7 +60,11 @@ if (params.Windows64) {
     buildmatrix[name] = {
         // we have to run windows builds on magrathea because that is where the vssdk mount is.
         node('docker && magrathea') {
-            helpers.build(name, 'Windows.dockerfile', 'win64', objDir, params, buildId)()
+            helpers.build(name, 'Windows.dockerfile', 'win64', objDir, params, buildId, [], {
+                if (shouldRelease) {
+                    helpers.windows_signed_packaging(name, objDir)
+                }
+            })()
 
             archiveArtifacts artifacts: "mozilla-release/$objDir/dist/update/*.mar"
             archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
@@ -91,7 +95,11 @@ if (params.WindowsARM) {
 
     buildmatrix[name] = {
         node('docker && magrathea') {
-            helpers.build(name, 'WindowsARM.dockerfile', 'win64-aarch64', objDir, params, buildId)()
+            helpers.build(name, 'WindowsARM.dockerfile', 'win64-aarch64', objDir, params, buildId, [],  {
+                if (shouldRelease) {
+                    helpers.windows_signed_packaging(name, objDir)
+                }
+            })()
 
             archiveArtifacts artifacts: "mozilla-release/$objDir/dist/update/*.mar"
             archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
