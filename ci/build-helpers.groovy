@@ -150,6 +150,7 @@ def signmar() {
     }
 }
 
+// Sign windows installers
 def windows_signing(name, objDir, artifactGlob) {
     return {
         node('windows') {
@@ -181,10 +182,12 @@ def windows_signing(name, objDir, artifactGlob) {
     }
 }
 
+// Sign binaries and libraries in a stashed folder
 def windows_sign_dir(name, dir) {
     return {
         node('windows') {
             stage('Sign') {
+                def signed_name = "${name}_signed"
                 checkout scm
                 bat 'del /s /q mozilla-release'
                 unstash name
@@ -194,7 +197,8 @@ def windows_sign_dir(name, dir) {
                 ]) {
                     bat "ci/win_signer.bat ${dir}"
                 }
-                stash name: "${name}_signed", includes: "${dir}/*,${dir}/**/*"
+                stash name: signed_name, includes: "${dir}/*,${dir}/**/*"
+                signed_name
             }
         }
     }
