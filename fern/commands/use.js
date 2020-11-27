@@ -8,6 +8,7 @@ const {
 } = require("../core/workspace.js");
 const addons = require("../core/addons.js");
 const firefox = require("../core/firefox.js");
+const l10n = require("../core/l10n.js");
 
 module.exports = (program) => {
   program
@@ -67,6 +68,10 @@ module.exports = (program) => {
           {
             title: `Setup Addons`,
             task: () => addons.use(workspace.addons),
+          },
+          {
+            title: `Setup Locales`,
+            task: async () => await l10n.use(workspace.locales),
           },
           {
             title: "Persist Workspace",
