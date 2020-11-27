@@ -93,7 +93,7 @@ def build(name, dockerFile, targetPlatform, objDir, params, buildId, buildEnv=[]
                             stage("${name}: make update-packaging") {
                                 sh 'make update-packaging'
                             }
-                            stage("${name}: localized updates")
+                            stage("${name}: localized updates") {
                                 for (String locale in locales) {
                                     sh "make -C ./tools/update-packaging full-update AB_CD=${locale} PACKAGE_BASE_DIR=`pwd`/dist/l10n-stage"
                                 }
