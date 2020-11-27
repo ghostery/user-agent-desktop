@@ -19,11 +19,15 @@ def build(name, dockerFile, targetPlatform, objDir, params, buildId, buildEnv=[]
             docker.build("ua-build-${name.toLowerCase()}", "-f build/${dockerFile} ./build --build-arg IPFS_GATEWAY=http://kria.cliqz:8080")
         }
 
-        def defaultEnv = ["MACH_USE_SYSTEM_PYTHON=1", "MOZCONFIG=${env.WORKSPACE}/mozconfig", "MOZ_BUILD_DATE=${buildId}"]
+        def defaultEnv = [
+            "MACH_USE_SYSTEM_PYTHON=1",
+            "MOZCONFIG=${env.WORKSPACE}/mozconfig",
+            "MOZ_BUILD_DATE=${buildId}",
+            "ACCEPTED_MAR_CHANNEL_IDS=firefox-ghostery-release",
+            "MAR_CHANNEL_ID=firefox-ghostery-release"
+        ]
         def dockerOpts = "-v /mnt/vfat/vs2017_15.9.29/:/builds/worker/fetches/vs2017_15.9.29"
-        echo "${params.locales}"
-        def locales = params.locales ? params.locales.split(',') : []
-        echo "${locales}"
+        def locales = params.Locales ? params.Locales.split(',') : []
 
         image.inside(dockerOpts) {
             withEnv(defaultEnv) {
@@ -78,24 +82,17 @@ def build(name, dockerFile, targetPlatform, objDir, params, buildId, buildEnv=[]
                         sh './mach package'
                     }
 
-                    stage("${name}: localized installers") {
-                        for (String locale in locales) {
-                            sh "./mach build installers-${locale}"
+                    stage("${name}: make update-packaging") {
+                        dir(objDir) {
+                            sh 'make update-packaging'
                         }
                     }
 
-                    dir(objDir) {
-                        withEnv([
-                            "ACCEPTED_MAR_CHANNEL_IDS=firefox-ghostery-release",
-                            "MAR_CHANNEL_ID=firefox-ghostery-release",
-                        ]) {
-                            stage("${name}: make update-packaging") {
-                                sh 'make update-packaging'
-                            }
-                            stage("${name}: localized updates") {
-                                for (String locale in locales) {
-                                    sh "make -C ./tools/update-packaging full-update AB_CD=${locale} PACKAGE_BASE_DIR=`pwd`/dist/l10n-stage"
-                                }
+                    for (String locale in locales) {
+                        stage("${name}: repackaging locale ${locale}") {
+                            sh "./mach build installers-${locale}"
+                            dir(objDir) {
+                                sh "make -C ./tools/update-packaging full-update AB_CD=${locale} PACKAGE_BASE_DIR=`pwd`/dist/l10n-stage"
                             }
                         }
                     }
