@@ -75,6 +75,10 @@ def build(name, dockerFile, targetPlatform, objDir, params, buildId, buildEnv=[]
                         sh './mach package'
                     }
 
+                    stage("${name}: Localized repacks") {
+                        sh './mach build installers-de'
+                    }
+
                     stage("${name}: make update-packaging") {
                         dir(objDir) {
                             withEnv([
