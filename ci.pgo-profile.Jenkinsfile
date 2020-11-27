@@ -24,7 +24,7 @@ if (params.Linux64) {
 
   buildmatrix[name] = {
     node('docker && !magrathea') {
-      helpers.build(name, 'Linux.dockerfile', 'linux', objDir, buildParams, buildId, ['PGO_PROFILE_GENERATE=1'], {
+      helpers.build(name, 'Linux.dockerfile', 'linux', objDir, buildParams, buildId, ['PGO_PROFILE_GENERATE=1'], {}, {
         stage('run profileserver') {
           sh "BINARY=${objDir}/dist/Ghostery/Ghostery bash ${env.WORKSPACE}/ci/linux_profileserver.sh"
           sh "mkdir -p $WORKSPACE/${name}/"
