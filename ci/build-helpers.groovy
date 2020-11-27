@@ -21,10 +21,9 @@ def build(name, dockerFile, targetPlatform, objDir, params, buildId, buildEnv=[]
 
         def defaultEnv = ["MACH_USE_SYSTEM_PYTHON=1", "MOZCONFIG=${env.WORKSPACE}/mozconfig", "MOZ_BUILD_DATE=${buildId}"]
         def dockerOpts = "-v /mnt/vfat/vs2017_15.9.29/:/builds/worker/fetches/vs2017_15.9.29"
-        def locales = []
-        if (params.locales) {
-            locales = params.locales.split(',')
-        }
+        echo "${params.locales}"
+        def locales = params.locales ? params.locales.split(',') : []
+        echo "${locales}"
 
         image.inside(dockerOpts) {
             withEnv(defaultEnv) {
