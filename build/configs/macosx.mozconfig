@@ -78,6 +78,3 @@ fi
 if [ -n "$PGO_PROFILE_GENERATE" ]; then
     ac_add_options --enable-profile-generate=cross
 fi
-
-# l10n base directory
-ac_add_options --with-l10n-base=$WORKSPACE/l10n

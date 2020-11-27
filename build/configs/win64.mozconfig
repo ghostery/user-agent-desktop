@@ -107,6 +107,3 @@ fi
 
 # Create the stub installer
 export MOZ_STUB_INSTALLER=1
-
-# l10n base directory
-ac_add_options --with-l10n-base=$WORKSPACE/l10n

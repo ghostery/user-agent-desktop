@@ -52,6 +52,3 @@ export MOZ_PACKAGE_JSSHELL=1
 
 # disable tests for this build
 ac_add_options --disable-tests
-
-# l10n base directory
-ac_add_options --with-l10n-base=$WORKSPACE/l10n
