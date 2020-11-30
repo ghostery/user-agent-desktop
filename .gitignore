@@ -6,3 +6,4 @@ logs
 build/configs/mozconfig
 /mozconfig
 /local.mozconfig
+l10n

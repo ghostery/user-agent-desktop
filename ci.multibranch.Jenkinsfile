@@ -11,6 +11,7 @@ properties([
         booleanParam(name: 'PGO', defaultValue: false, description: 'Enable Profile Guided Optimization'),
         string(name: 'PGOProfiles', defaultValue: 'http://kria.cliqz:8080/ipfs/QmfMit6M4bjz51y3p8Kykw4CMp9pw2ueraZ8sBRHmUw6uq/83.0', description: 'Base URL for fetching PGO Profiles'),
         booleanParam(name: 'Instrument', defaultValue: false, description: 'Enable an instrumented build for generating profiles for PGO'),
+        string(name: 'Locales', defaultValue: 'de', description: 'Repack for these locales'),
     ]),
 ])
 
@@ -19,6 +20,7 @@ def signmatrix = [:]
 def shouldRelease = params.ReleaseName?.trim()
 def helpers
 def buildId = new Date().format('yyyyMMddHHmmss')
+def locales = params.Locales ? params.Locales.split(',') : []
 
 node('master') {
     checkout scm
@@ -33,9 +35,21 @@ if (params.Linux64) {
 
     buildmatrix[name] = {
         node('docker && !magrathea') {
-            helpers.build(name, 'Linux.dockerfile', 'linux', objDir, params, buildId)()
+            helpers.build([
+                name: name,
+                dockerFile: 'Linux.dockerfile',
+                targetPlatform: 'linux',
+                objDir: objDir,
+                artifactGlob: artifactGlob,
+                locales: locales,
+                buildId: buildId,
+                Reset: params.Reset,
+                Clobber: params.Clobber,
+                PGO: params.PGO,
+                Instrument: params.Instrument,
+            ])()
 
-            archiveArtifacts artifacts: "mozilla-release/$objDir/dist/update/*.mar"
+            archiveArtifacts artifacts: "mozilla-release/${objDir}/dist/update/*.mar"
             archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
             archiveArtifacts artifacts: "mozilla-release/browser/config/version*"
 
@@ -60,13 +74,25 @@ if (params.Windows64) {
     buildmatrix[name] = {
         // we have to run windows builds on magrathea because that is where the vssdk mount is.
         node('docker && magrathea') {
-            helpers.build(name, 'Windows.dockerfile', 'win64', objDir, params, buildId, [], {
+            helpers.build([
+                name: name,
+                dockerFile: 'Windows.dockerfile',
+                targetPlatform: 'win64',
+                objDir: objDir,
+                artifactGlob: artifactGlob,
+                locales: locales,
+                buildId: buildId,
+                Reset: params.Reset,
+                Clobber: params.Clobber,
+                PGO: params.PGO,
+                Instrument: params.Instrument,
+            ], {
                 if (shouldRelease) {
                     helpers.windows_signed_packaging(name, objDir)
                 }
             })()
 
-            archiveArtifacts artifacts: "mozilla-release/$objDir/dist/update/*.mar"
+            archiveArtifacts artifacts: "mozilla-release/${objDir}/dist/update/*.mar"
             archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
             archiveArtifacts artifacts: "mozilla-release/${objDir}/dist/*.win64.zip"
             archiveArtifacts artifacts: "mozilla-release/browser/config/version*"
@@ -79,12 +105,12 @@ if (params.Windows64) {
                 "mozilla-release/browser/installer/windows/instgen/*",
             ].join(',')
 
-            sh "rm -rf mozilla-release/$objDir/dist/update"
+            sh "rm -rf mozilla-release/${objDir}/dist/update"
         }
     }
 
     if (shouldRelease) {
-        signmatrix["Sign ${name}"] = helpers.windows_signing(name, objDir, artifactGlob)
+        signmatrix["Sign ${name}"] = helpers.windows_signing(name, objDir, artifactGlob, locales + "en-US")
     }
 }
 
@@ -95,13 +121,25 @@ if (params.WindowsARM) {
 
     buildmatrix[name] = {
         node('docker && magrathea') {
-            helpers.build(name, 'WindowsARM.dockerfile', 'win64-aarch64', objDir, params, buildId, [],  {
+            helpers.build([
+                name: name,
+                dockerFile: 'WindowsARM.dockerfile',
+                targetPlatform: 'win64-aarch64',
+                objDir: objDir,
+                artifactGlob: artifactGlob,
+                locales: locales,
+                buildId: buildId,
+                Reset: params.Reset,
+                Clobber: params.Clobber,
+                PGO: params.PGO,
+                Instrument: params.Instrument,
+            ],  {
                 if (shouldRelease) {
                     helpers.windows_signed_packaging(name, objDir)
                 }
             })()
 
-            archiveArtifacts artifacts: "mozilla-release/$objDir/dist/update/*.mar"
+            archiveArtifacts artifacts: "mozilla-release/${objDir}/dist/update/*.mar"
             archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
 
             stash name: name, includes: [
@@ -111,7 +149,7 @@ if (params.WindowsARM) {
                 "mozilla-release/browser/installer/windows/*",
             ].join(',')
 
-            sh "rm -rf mozilla-release/$objDir/dist/update"
+            sh "rm -rf mozilla-release/${objDir}/dist/update"
         }
     }
 
@@ -124,11 +162,24 @@ if (params.MacOSX64) {
     def name = 'MacOSX64'
     def objDir = 'obj-x86_64-apple-darwin'
     def artifactGlob = "$objDir/dist/Ghostery-*"
+
     buildmatrix[name] = {
         node('docker && !magrathea') {
-            helpers.build(name, 'MacOSX.dockerfile', 'macosx', objDir, params, buildId)()
+            helpers.build([
+                name: name,
+                dockerFile: 'MacOSX.dockerfile',
+                targetPlatform: 'macosx',
+                objDir: objDir,
+                artifactGlob: artifactGlob,
+                locales: locales,
+                buildId: buildId,
+                Reset: params.Reset,
+                Clobber: params.Clobber,
+                PGO: params.PGO,
+                Instrument: params.Instrument,
+            ])()
 
-            archiveArtifacts artifacts: "mozilla-release/$objDir/dist/update/*.mar"
+            archiveArtifacts artifacts: "mozilla-release/${objDir}/dist/update/*.mar"
             archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
             archiveArtifacts artifacts: "mozilla-release/browser/config/version*"
 
@@ -138,7 +189,7 @@ if (params.MacOSX64) {
                 "mozilla-release/security/mac/hardenedruntime/*",
             ].join(',')
 
-            sh "rm -rf mozilla-release/$objDir/dist/update"
+            sh "rm -rf mozilla-release/${objDir}/dist/update"
         }
     }
 

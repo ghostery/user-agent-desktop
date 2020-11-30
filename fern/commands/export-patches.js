@@ -9,9 +9,9 @@ module.exports = (program) => {
     .description("Export patches from 'mozilla-release' to 'patches'")
     .action(async () => {
       const root = await workspace.getRoot();
-      const { firefox: firefoxVersion } = await workspace.load();
+      const { firefox: firefoxVersion, locales } = await workspace.load();
 
-      const tasks = exportPatches(root, firefoxVersion);
+      const tasks = exportPatches(root, firefoxVersion, locales);
 
       try {
         await tasks.run();

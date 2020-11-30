@@ -1,5 +1,5 @@
 
-def build(name, dockerFile, targetPlatform, objDir, params, buildId, buildEnv=[], Closure postpackage={}, Closure archiving={}) {
+def build(opts, Closure postpackage={}, Closure archiving={}) {
     return {
         stage('checkout') {
             checkout scm
@@ -16,22 +16,29 @@ def build(name, dockerFile, targetPlatform, objDir, params, buildId, buildEnv=[]
 
         def image = stage('docker build base') {
             docker.build('ua-build-base', '-f build/Base.dockerfile ./build/ --build-arg user=`whoami` --build-arg UID=`id -u` --build-arg GID=`id -g`')
-            docker.build("ua-build-${name.toLowerCase()}", "-f build/${dockerFile} ./build --build-arg IPFS_GATEWAY=http://kria.cliqz:8080")
+            docker.build("ua-build-${opts.name.toLowerCase()}", "-f build/${opts.dockerFile} ./build --build-arg IPFS_GATEWAY=http://kria.cliqz:8080")
         }
 
-        def defaultEnv = ["MACH_USE_SYSTEM_PYTHON=1", "MOZCONFIG=${env.WORKSPACE}/mozconfig", "MOZ_BUILD_DATE=${buildId}"]
+        def defaultEnv = [
+            "MACH_USE_SYSTEM_PYTHON=1",
+            "MOZCONFIG=${env.WORKSPACE}/mozconfig",
+            "MOZ_BUILD_DATE=${opts.buildId}",
+            "ACCEPTED_MAR_CHANNEL_IDS=firefox-ghostery-release",
+            "MAR_CHANNEL_ID=firefox-ghostery-release"
+        ]
         def dockerOpts = "-v /mnt/vfat/vs2017_15.9.29/:/builds/worker/fetches/vs2017_15.9.29"
+        def buildEnv = opts.buildEnv ?: []
 
         image.inside(dockerOpts) {
             withEnv(defaultEnv) {
                 stage('prepare mozilla-release') {
                     sh 'npm ci'
-                    if (params.Reset) {
+                    if (opts.Reset) {
                         sh 'rm -rf .cache'
                     }
                     sh 'rm -rf mozilla-release'
                     sh "./fern.js use --ipfs-gateway=http://kria.cliqz:8080"
-                    sh "./fern.js config --print --force --platform ${targetPlatform} --brand ghostery"
+                    sh "./fern.js config --print --force --platform ${opts.targetPlatform} --brand ghostery"
                     sh "./fern.js reset"
                     sh './fern.js import-patches'
                 }
@@ -39,26 +46,26 @@ def build(name, dockerFile, targetPlatform, objDir, params, buildId, buildEnv=[]
                 dir('mozilla-release') {
                     sh 'rm -f `pwd`/MacOSX10.11.sdk; ln -s /builds/worker/fetches/MacOSX10.11.sdk `pwd`/MacOSX10.11.sdk'
 
-                    if (params.PGO) {
-                        stage("${name}: fetch profiles") {
+                    if (opts.PGO) {
+                        stage("${opts.name}: fetch profiles") {
                             sh 'mkdir -p /builds/worker/artifacts/'
-                            sh "wget -nv -O profdata.tar.xz ${params.PGOProfiles}/${name}/profdata.tar.xz"
+                            sh "wget -nv -O profdata.tar.xz ${opts.PGOProfiles}/${opts.name}/profdata.tar.xz"
                             sh "tar -xvf profdata.tar.xz"
                             buildEnv.add('PGO_PROFILE_USE=1')
                         }
-                    } else if (params.Instrument) {
+                    } else if (opts.Instrument) {
                         buildEnv.add('PGO_PROFILE_GENERATE=1')
                     }
 
                     withEnv(buildEnv) {
-                        stage("${name}: mach build") {
-                            if (params.Clobber) {
+                        stage("${opts.name}: mach build") {
+                            if (opts.Clobber) {
                                 sh './mach clobber'
                             }
                             sh './mach build'
                         }
 
-                        stage("${name}: mach package") {
+                        stage("${opts.name}: mach package") {
                             sh './mach package'
                         }
                     }
@@ -71,17 +78,21 @@ def build(name, dockerFile, targetPlatform, objDir, params, buildId, buildEnv=[]
         image.inside(dockerOpts) {
             withEnv(defaultEnv) {
                 dir('mozilla-release') {
-                    stage("${name}: mach package") {
+                    stage("${opts.name}: mach package") {
                         sh './mach package'
                     }
 
-                    stage("${name}: make update-packaging") {
-                        dir(objDir) {
-                            withEnv([
-                                "ACCEPTED_MAR_CHANNEL_IDS=firefox-ghostery-release",
-                                "MAR_CHANNEL_ID=firefox-ghostery-release",
-                            ]) {
-                                sh 'make update-packaging'
+                    stage("${opts.name}: make update-packaging") {
+                        dir(opts.objDir) {
+                            sh 'make update-packaging'
+                        }
+                    }
+
+                    for (String locale in opts.locales) {
+                        stage("${opts.name}: repackaging locale ${locale}") {
+                            sh "./mach build installers-${locale}"
+                            dir(opts.objDir) {
+                                sh "make -C ./tools/update-packaging full-update AB_CD=${locale} PACKAGE_BASE_DIR=`pwd`/dist/l10n-stage"
                             }
                         }
                     }
@@ -164,7 +175,7 @@ def windows_signed_packaging(name, objDir, appName='Ghostery') {
 }
 
 // Sign windows installers
-def windows_signing(name, objDir, artifactGlob) {
+def windows_signing(name, objDir, artifactGlob, locales) {
     return {
         node('windows') {
             stage("Checkout") {
@@ -180,11 +191,13 @@ def windows_signing(name, objDir, artifactGlob) {
                     file(credentialsId: "7da7d2de-5a10-45e6-9ffd-4e49f83753a8", variable: 'WIN_CERT'),
                     string(credentialsId: "33b3705c-1c2e-4462-9354-56a76bbb164c", variable: 'WIN_CERT_PASS'),
                 ]) {
-                    // full installer signing
-                    bat 'ci/sign_win.bat'
-                    // stub installer signing
-                    withEnv(['STUB_PREFIX=-stub']) {
-                        bat 'ci/sign_win.bat'
+                    for (String locale in locales) {
+                        // full installer signing
+                        bat "ci/sign_win.bat ${locale}"
+                        // stub installer signing
+                        withEnv(['STUB_PREFIX=-stub']) {
+                            bat "ci/sign_win.bat ${locale}"
+                        }
                     }
                 }
             }

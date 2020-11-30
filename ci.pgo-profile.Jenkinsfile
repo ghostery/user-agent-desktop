@@ -24,7 +24,17 @@ if (params.Linux64) {
 
   buildmatrix[name] = {
     node('docker && !magrathea') {
-      helpers.build(name, 'Linux.dockerfile', 'linux', objDir, buildParams, buildId, ['PGO_PROFILE_GENERATE=1'], {}, {
+      helpers.build([
+        name: name,
+        dockerFile: 'Linux.dockerfile',
+        targetPlatform: 'linux',
+        objDir: objDir,
+        artifactGlob: "$objDir/dist/Ghostery-*",
+        locales: [],
+        buildId: buildId,
+        Reset: true,
+        Instrument: true,
+      ], {}, {
         stage('run profileserver') {
           sh "BINARY=${objDir}/dist/Ghostery/Ghostery bash ${env.WORKSPACE}/ci/linux_profileserver.sh"
           sh "mkdir -p $WORKSPACE/${name}/"
@@ -42,7 +52,17 @@ if (params.Windows64) {
 
   buildmatrix[name] = {
     node('docker && magrathea') {
-      helpers.build(name, 'Windows.dockerfile', 'win64', objDir, buildParams, buildId, ['PGO_PROFILE_GENERATE=1'])()
+      helpers.build([
+        name: name,
+        dockerFile: 'Windows.dockerfile',
+        targetPlatform: 'win64',
+        objDir: objDir,
+        artifactGlob: "$objDir/dist/install/**/*",
+        locales: [],
+        buildId: buildId,
+        Reset: true,
+        Instrument: true,
+      ])()
       stash name: name, includes: "mozilla-release/${objDir}/dist/*.win64.zip"
     }
 
@@ -66,7 +86,17 @@ if (params.MacOSX64) {
 
   buildmatrix[name] = {
     node('docker && !magrathea') {
-      helpers.build(name, 'MacOSX.dockerfile', 'macosx', objDir, buildParams, buildId, ['PGO_PROFILE_GENERATE=1'])()
+      helpers.build([
+        name: name,
+        dockerFile: 'MacOSX.dockerfile',
+        targetPlatform: 'macosx',
+        objDir: objDir,
+        artifactGlob: "$objDir/dist/Ghostery-*",
+        locales: [],
+        buildId: buildId,
+        Reset: true,
+        Instrument: true,
+      ])()
       stash name: name, includes: "mozilla-release/${objDir}/dist/Ghostery-*.dmg"
     }
 
