@@ -21,10 +21,21 @@ node('master') {
 if (params.Linux64) {
   def name = 'Linux64'
   def objDir = 'obj-x86_64-pc-linux-gnu'
+  def opts = [
+    name: name,
+    dockerFile: 'Linux.dockerfile',
+    targetPlatform: 'linux',
+    objDir: objDir,
+    artifactGlob: "$objDir/dist/Ghostery-*",
+    locales: [],
+    buildId: buildId,
+    Reset: true,
+    Instrument: true,
+  ]
 
   buildmatrix[name] = {
     node('docker && !magrathea') {
-      helpers.build(name, 'Linux.dockerfile', 'linux', objDir, buildParams, buildId, ['PGO_PROFILE_GENERATE=1'], {}, {
+      helpers.build(opts, {}, {
         stage('run profileserver') {
           sh "BINARY=${objDir}/dist/Ghostery/Ghostery bash ${env.WORKSPACE}/ci/linux_profileserver.sh"
           sh "mkdir -p $WORKSPACE/${name}/"
@@ -39,10 +50,21 @@ if (params.Linux64) {
 if (params.Windows64) {
   def name = 'Windows64'
   def objDir = 'obj-x86_64-pc-mingw32'
+  def opts = [
+    name: name,
+    dockerFile: 'Windows.dockerfile',
+    targetPlatform: 'win64',
+    objDir: objDir,
+    artifactGlob: "$objDir/dist/install/**/*",
+    locales: [],
+    buildId: buildId,
+    Reset: true,
+    Instrument: true,
+  ]
 
   buildmatrix[name] = {
     node('docker && magrathea') {
-      helpers.build(name, 'Windows.dockerfile', 'win64', objDir, buildParams, buildId, ['PGO_PROFILE_GENERATE=1'])()
+      helpers.build(opts)()
       stash name: name, includes: "mozilla-release/${objDir}/dist/*.win64.zip"
     }
 
@@ -63,10 +85,21 @@ if (params.Windows64) {
 if (params.MacOSX64) {
   def name = 'MacOSX64'
   def objDir = 'obj-x86_64-apple-darwin'
+  def opts = [
+    name: 'MacOSX64',
+    dockerFile: 'MacOSX.dockerfile',
+    targetPlatform: 'macosx',
+    objDir: objDir,
+    artifactGlob: "$objDir/dist/Ghostery-*",
+    locales: [],
+    buildId: buildId,
+    Reset: true,
+    Instrument: true,
+  ]
 
   buildmatrix[name] = {
     node('docker && !magrathea') {
-      helpers.build(name, 'MacOSX.dockerfile', 'macosx', objDir, buildParams, buildId, ['PGO_PROFILE_GENERATE=1'])()
+      helpers.build(obj)()
       stash name: name, includes: "mozilla-release/${objDir}/dist/Ghostery-*.dmg"
     }
 
