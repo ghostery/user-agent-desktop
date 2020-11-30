@@ -32,31 +32,43 @@ async function use(locales) {
         },
         {
           title: "Git",
-          skip: () => folderExists(path.join(folder, '.git')),
+          skip: () => folderExists(path.join(folder, ".git")),
           task: () => setupGit(commit, folder),
         },
         {
           title: "Link",
           task: async () => {
-            const linkDir = path.join("l10n", locale)
-            if (!await folderExists("l10n")) {
+            const linkDir = path.join("l10n", locale);
+            if (!(await folderExists("l10n"))) {
               await fse.mkdir(path.join(root, "l10n"));
             }
             if (await symlinkExists(linkDir)) {
-              rimraf.sync(linkDir)
+              rimraf.sync(linkDir);
             }
             await fse.symlink(folder, linkDir);
-          }
-        }
+          },
+        },
       ]);
       return {
         title: locale,
         task: () => tasks,
-      }
+      };
+    })
+  );
+}
+
+async function reset(locales) {
+  return new Listr(
+    Object.keys(locales).map((locale) => {
+      return {
+        title: locale,
+        task: () => resetGit(locales[locale], `l10n/${locale}`),
+      };
     })
   );
 }
 
 module.exports = {
   use,
+  reset,
 };
