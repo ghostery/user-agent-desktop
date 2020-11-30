@@ -85,7 +85,7 @@ if (params.Windows64) {
         }
     }
 
-    if (shouldRelease) {
+    if (true) {
         signmatrix["Sign ${name}"] = helpers.windows_signing(name, objDir, artifactGlob, params.Locales + "en-US")
     }
 }
