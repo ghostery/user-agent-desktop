@@ -21,21 +21,20 @@ node('master') {
 if (params.Linux64) {
   def name = 'Linux64'
   def objDir = 'obj-x86_64-pc-linux-gnu'
-  def opts = [
-    name: name,
-    dockerFile: 'Linux.dockerfile',
-    targetPlatform: 'linux',
-    objDir: objDir,
-    artifactGlob: "$objDir/dist/Ghostery-*",
-    locales: [],
-    buildId: buildId,
-    Reset: true,
-    Instrument: true,
-  ]
 
   buildmatrix[name] = {
     node('docker && !magrathea') {
-      helpers.build(opts, {}, {
+      helpers.build([
+        name: name,
+        dockerFile: 'Linux.dockerfile',
+        targetPlatform: 'linux',
+        objDir: objDir,
+        artifactGlob: "$objDir/dist/Ghostery-*",
+        locales: [],
+        buildId: buildId,
+        Reset: true,
+        Instrument: true,
+      ], {}, {
         stage('run profileserver') {
           sh "BINARY=${objDir}/dist/Ghostery/Ghostery bash ${env.WORKSPACE}/ci/linux_profileserver.sh"
           sh "mkdir -p $WORKSPACE/${name}/"
@@ -50,21 +49,20 @@ if (params.Linux64) {
 if (params.Windows64) {
   def name = 'Windows64'
   def objDir = 'obj-x86_64-pc-mingw32'
-  def opts = [
-    name: name,
-    dockerFile: 'Windows.dockerfile',
-    targetPlatform: 'win64',
-    objDir: objDir,
-    artifactGlob: "$objDir/dist/install/**/*",
-    locales: [],
-    buildId: buildId,
-    Reset: true,
-    Instrument: true,
-  ]
 
   buildmatrix[name] = {
     node('docker && magrathea') {
-      helpers.build(opts)()
+      helpers.build([
+        name: name,
+        dockerFile: 'Windows.dockerfile',
+        targetPlatform: 'win64',
+        objDir: objDir,
+        artifactGlob: "$objDir/dist/install/**/*",
+        locales: [],
+        buildId: buildId,
+        Reset: true,
+        Instrument: true,
+      ])()
       stash name: name, includes: "mozilla-release/${objDir}/dist/*.win64.zip"
     }
 
@@ -85,21 +83,20 @@ if (params.Windows64) {
 if (params.MacOSX64) {
   def name = 'MacOSX64'
   def objDir = 'obj-x86_64-apple-darwin'
-  def opts = [
-    name: 'MacOSX64',
-    dockerFile: 'MacOSX.dockerfile',
-    targetPlatform: 'macosx',
-    objDir: objDir,
-    artifactGlob: "$objDir/dist/Ghostery-*",
-    locales: [],
-    buildId: buildId,
-    Reset: true,
-    Instrument: true,
-  ]
 
   buildmatrix[name] = {
     node('docker && !magrathea') {
-      helpers.build(obj)()
+      helpers.build([
+        name: name,
+        dockerFile: 'MacOSX.dockerfile',
+        targetPlatform: 'macosx',
+        objDir: objDir,
+        artifactGlob: "$objDir/dist/Ghostery-*",
+        locales: [],
+        buildId: buildId,
+        Reset: true,
+        Instrument: true,
+      ])()
       stash name: name, includes: "mozilla-release/${objDir}/dist/Ghostery-*.dmg"
     }
 
