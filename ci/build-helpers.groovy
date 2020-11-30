@@ -27,7 +27,7 @@ def build(name, dockerFile, targetPlatform, objDir, params, buildId, buildEnv=[]
             "MAR_CHANNEL_ID=firefox-ghostery-release"
         ]
         def dockerOpts = "-v /mnt/vfat/vs2017_15.9.29/:/builds/worker/fetches/vs2017_15.9.29"
-        def locales = params.Locales ? params.Locales.split(',') : []
+        def locales = params.Locales
 
         image.inside(dockerOpts) {
             withEnv(defaultEnv) {
@@ -175,7 +175,7 @@ def windows_signed_packaging(name, objDir, appName='Ghostery') {
 }
 
 // Sign windows installers
-def windows_signing(name, objDir, artifactGlob) {
+def windows_signing(name, objDir, artifactGlob, locales) {
     return {
         node('windows') {
             stage("Checkout") {
@@ -191,11 +191,13 @@ def windows_signing(name, objDir, artifactGlob) {
                     file(credentialsId: "7da7d2de-5a10-45e6-9ffd-4e49f83753a8", variable: 'WIN_CERT'),
                     string(credentialsId: "33b3705c-1c2e-4462-9354-56a76bbb164c", variable: 'WIN_CERT_PASS'),
                 ]) {
-                    // full installer signing
-                    bat 'ci/sign_win.bat'
-                    // stub installer signing
-                    withEnv(['STUB_PREFIX=-stub']) {
-                        bat 'ci/sign_win.bat'
+                    for (String locale in locales) {
+                        // full installer signing
+                        bat "ci/sign_win.bat ${locale}"
+                        // stub installer signing
+                        withEnv(['STUB_PREFIX=-stub']) {
+                            bat "ci/sign_win.bat ${locale}"
+                        }
                     }
                 }
             }

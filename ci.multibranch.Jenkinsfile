@@ -20,6 +20,7 @@ def signmatrix = [:]
 def shouldRelease = params.ReleaseName?.trim()
 def helpers
 def buildId = new Date().format('yyyyMMddHHmmss')
+params.Locales = params.Locales ? params.Locales.split(',') : []
 
 node('master') {
     checkout scm
@@ -85,7 +86,7 @@ if (params.Windows64) {
     }
 
     if (shouldRelease) {
-        signmatrix["Sign ${name}"] = helpers.windows_signing(name, objDir, artifactGlob)
+        signmatrix["Sign ${name}"] = helpers.windows_signing(name, objDir, artifactGlob, params.Locales + "en-US")
     }
 }
 
