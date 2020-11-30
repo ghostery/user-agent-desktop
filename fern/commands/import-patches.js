@@ -9,7 +9,7 @@ module.exports = (program) => {
     .description("Import patches from 'patches' to 'mozilla-release'")
     .action(async () => {
       const root = await workspace.getRoot();
-      const tasks = importPatches(root);
+      const tasks = await importPatches(root);
 
       try {
         await tasks.run();

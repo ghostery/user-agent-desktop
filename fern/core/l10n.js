@@ -10,6 +10,15 @@ const { getRoot } = require("./workspace.js");
 const { getCacheDir } = require("./caching.js");
 const { fileExists, folderExists, symlinkExists } = require("./utils.js");
 
+/**
+ * Converts a 40 char hex commit ID from mercurial to a name we can use as a git tag without
+ * conflicting with git commit ids.
+ * @param {*} commit
+ */
+function tagForCommit(commit) {
+  return `mozhg-${commit}`
+}
+
 async function use(locales) {
   const root = await getRoot();
   const cache = await getCacheDir("l10n");
@@ -33,7 +42,7 @@ async function use(locales) {
         {
           title: "Git",
           skip: () => folderExists(path.join(folder, ".git")),
-          task: () => setupGit(commit, folder),
+          task: () => setupGit(tagForCommit(commit), folder),
         },
         {
           title: "Link",
@@ -62,7 +71,7 @@ async function reset(locales) {
     Object.keys(locales).map((locale) => {
       return {
         title: locale,
-        task: () => resetGit(locales[locale], `l10n/${locale}`),
+        task: () => resetGit(tagForCommit(locales[locale]), `l10n/${locale}`),
       };
     })
   );
@@ -71,4 +80,5 @@ async function reset(locales) {
 module.exports = {
   use,
   reset,
+  tagForCommit,
 };

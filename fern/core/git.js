@@ -103,128 +103,171 @@ async function reset(version, folder) {
   ]);
 }
 
-function exportPatches(root, version) {
+async function exportPatchesToFolder(patchesFolder, startTag, offset = 0) {
+  // count number of back commits to the initial code dump. We use this to exclude a fixed number of commits that we added after the initial commit
+  const { stdout: commitCount } = await execa("git", [
+    "rev-list",
+    "--count",
+    `${startTag}..HEAD`,
+  ]);
+
+  await execa("git", [
+    "format-patch",
+    `HEAD~${parseInt(commitCount) - offset}`,
+    "--minimal", // Spend extra time to make sure the smallest possible diff is produced.
+    "--no-numbered", // Name output in [PATCH] format.
+    "--keep-subject", // Do not strip/add [PATCH] from the first line of the commit log message.
+    "--output-directory",
+    patchesFolder,
+  ]);
+
+  // Get list of patches
+  const patches = (await fs.promises.readdir(patchesFolder))
+    .filter((filename) => filename.endsWith(".patch"))
+    .sort();
+
+  // Normalize patches by removing the first line
+  await Promise.all(
+    patches.map(async (patchName) => {
+      const patchPath = path.join(patchesFolder, patchName);
+      const patch = await fs.promises.readFile(patchPath, "utf-8");
+      await fs.promises.writeFile(
+        patchPath,
+        patch.slice(patch.indexOf("\n") + 1),
+        "utf-8"
+      );
+    })
+  );
+
+  // Generate .index
+  await fs.promises.writeFile(
+    path.join(patchesFolder, ".index"),
+    patches.join("\n"),
+    "utf-8"
+  );
+}
+
+function exportPatches(root, version, locales) {
   const patchesFolder = path.join(root, "patches");
 
-  return new Listr([
+  const tasks = [
     {
       title: "Reset 'patches' folder",
       task: async () => {
-        rimraf.sync("patches");
-        await fs.promises.mkdir("patches");
+        rimraf.sync(patchesFolder);
+        await fs.promises.mkdir(patchesFolder);
       },
     },
     {
       title: "Export patches",
       task: () =>
-        withCwd("mozilla-release", async () => {
-          // count number of back commits to the initial code dump. We use this to exclude a fixed number of commits that we added after the initial commit
-          const { stdout: commitCount } = await execa("git", [
-            "rev-list",
-            "--count",
-            `${version}..HEAD`,
-          ]);
-
-          await execa("git", [
-            "format-patch",
-            `HEAD~${parseInt(commitCount) - managedPatches.length}`,
-            "--minimal", // Spend extra time to make sure the smallest possible diff is produced.
-            "--no-numbered", // Name output in [PATCH] format.
-            "--keep-subject", // Do not strip/add [PATCH] from the first line of the commit log message.
-            "--output-directory",
+        withCwd("mozilla-release", () =>
+          exportPatchesToFolder(
             patchesFolder,
-          ]);
-
-          // Get list of patches
-          const patches = (await fs.promises.readdir(patchesFolder))
-            .filter((filename) => filename.endsWith(".patch"))
-            .sort();
-
-          // Normalize patches by removing the first line
-          await Promise.all(
-            patches.map(async (patchName) => {
-              const patchPath = path.join(patchesFolder, patchName);
-              const patch = await fs.promises.readFile(patchPath, "utf-8");
-              await fs.promises.writeFile(
-                patchPath,
-                patch.slice(patch.indexOf("\n") + 1),
-                "utf-8"
-              );
-            })
-          );
-
-          // Generate .index
-          await fs.promises.writeFile(
-            path.join(patchesFolder, ".index"),
-            patches.join("\n"),
-            "utf-8"
-          );
-        }),
+            version,
+            managedPatches.length
+          )
+        ),
     },
-  ]);
+    {
+      title: "Reset 'l10n-patches' folders",
+      task: async () => {
+        const folder = path.join(root, "l10n-patches")
+        rimraf.sync(folder);
+        await fs.promises.mkdir(folder);
+        await Promise.all(Object.keys(locales).map((locale) => fs.promises.mkdir(path.join(folder, locale))));
+      },
+    },
+  ];
+  Object.keys(locales).forEach((locale) => {
+    tasks.push({
+      title: `Export translation patches: ${locale}`,
+      task: () =>
+        withCwd(`l10n/${locale}`, () =>
+          exportPatchesToFolder(
+            path.join(root, "l10n-patches", locale),
+            `mozhg-${locales[locale]}`
+          )
+        ),
+    });
+  });
+  return new Listr(tasks);
 }
 
-function importPatches(root) {
-  const patchesFolder = path.join(root, "patches");
+async function importFromPatchFiles(patchesFolder) {
   const patchesIndex = path.join(patchesFolder, ".index");
+  if ((await folderExists(patchesFolder)) === false) {
+    throw new Error("Patches folder does not exist.");
+  }
 
-  return new Listr([
+  if ((await fileExists(patchesIndex)) === false) {
+    throw new Error("Patches index file does not exist.");
+  }
+
+  const patches = (await fs.promises.readFile(patchesIndex, "utf-8"))
+    .trim()
+    .split("\n")
+    .map((filename) => path.join(patchesFolder, filename));
+
+  try {
+    await execa("git", [
+      "am",
+      "--ignore-space-change",
+      "--ignore-whitespace",
+      ...patches,
+    ]);
+  } catch (ex) {
+    // Catch error and raw exception with more details.
+    const { stdout: details } = await execa("git", [
+      "am",
+      "--show-current-patch=raw",
+    ]);
+
+    console.error();
+    console.error(chalk.bold(chalk.red("Error while importing patches...")));
+    console.error(ex.shortMessage);
+
+    const stdout = ex.stdout.trim();
+    if (stdout) {
+      console.error(chalk.bold(chalk.magenta("STDOUT")), ex.stdout.trim());
+    }
+
+    const stderr = ex.stderr.trim();
+    if (stderr) {
+      console.error(chalk.bold(chalk.red("STDERR")), ex.stderr.trim());
+    }
+
+    console.error(chalk.bold(chalk.yellow("PATCH:")), details.trim());
+
+    throw ex;
+  }
+}
+
+async function importPatches(root) {
+  const ws = await workspace.load();
+  const tasks = [
     {
       title: "Import patches managed by fern",
-      task: async () => applyManagedPatches(await workspace.load()),
+      task: async () => applyManagedPatches(ws),
     },
     {
       title: "Import patches managed by minions",
       task: () =>
-        withCwd("mozilla-release", async () => {
-          if ((await folderExists(patchesFolder)) === false) {
-            throw new Error("Patches folder does not exist.");
-          }
-
-          if ((await fileExists(patchesIndex)) === false) {
-            throw new Error("Patches index file does not exist.");
-          }
-
-          const patches = (await fs.promises.readFile(patchesIndex, "utf-8"))
-            .trim()
-            .split("\n")
-            .map((filename) => path.join(patchesFolder, filename));
-
-          try {
-            await execa("git", [
-              "am",
-              "--ignore-space-change",
-              "--ignore-whitespace",
-              ...patches,
-            ]);
-          } catch (ex) {
-            // Catch error and raw exception with more details.
-            const { stdout: details } = await execa("git", [
-              "am",
-              "--show-current-patch=raw",
-            ]);
-
-            console.error();
-            console.error(chalk.bold(chalk.red("Error while importing patches...")));
-            console.error(ex.shortMessage);
-
-            const stdout = ex.stdout.trim();
-            if (stdout) {
-              console.error(chalk.bold(chalk.magenta("STDOUT")), ex.stdout.trim());
-            }
-
-            const stderr = ex.stderr.trim();
-            if (stderr) {
-              console.error(chalk.bold(chalk.red("STDERR")), ex.stderr.trim());
-            }
-
-            console.error(chalk.bold(chalk.yellow("PATCH:")), details.trim());
-
-            throw ex;
-          }
-        }),
+        withCwd("mozilla-release", () =>
+          importFromPatchFiles(path.join(root, "patches"))
+        ),
     },
-  ]);
+  ];
+  Object.keys(ws.locales).forEach((locale) => {
+    const patchPath = path.join(root, "l10n-patches", locale);
+    tasks.push({
+      title: `Import translation patches for locale: ${locale}`,
+      skip: async () => !(await folderExists(patchPath)),
+      task: () =>
+        withCwd(`l10n/${locale}`, () => importFromPatchFiles(patchPath)),
+    });
+  });
+  return new Listr(tasks);
 }
 
 module.exports = {
