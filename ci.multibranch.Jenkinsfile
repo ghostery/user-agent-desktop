@@ -47,6 +47,7 @@ if (params.Linux64) {
                 Clobber: params.Clobber,
                 PGO: params.PGO,
                 Instrument: params.Instrument,
+                PGOProfiles: params.PGOProfiles,
             ])()
 
             archiveArtifacts artifacts: "mozilla-release/${objDir}/dist/update/*.mar"
@@ -86,6 +87,7 @@ if (params.Windows64) {
                 Clobber: params.Clobber,
                 PGO: params.PGO,
                 Instrument: params.Instrument,
+                PGOProfiles: params.PGOProfiles,
             ], {
                 if (shouldRelease) {
                     helpers.windows_signed_packaging(name, objDir)
@@ -133,6 +135,7 @@ if (params.WindowsARM) {
                 Clobber: params.Clobber,
                 PGO: params.PGO,
                 Instrument: params.Instrument,
+                PGOProfiles: params.PGOProfiles,
             ],  {
                 if (shouldRelease) {
                     helpers.windows_signed_packaging(name, objDir)
@@ -154,7 +157,7 @@ if (params.WindowsARM) {
     }
 
     if (shouldRelease) {
-        signmatrix["Sign ${name}"] = helpers.windows_signing(name, objDir, artifactGlob)
+        signmatrix["Sign ${name}"] = helpers.windows_signing(name, objDir, artifactGlob, locales + "en-US")
     }
 }
 
@@ -177,6 +180,7 @@ if (params.MacOSX64) {
                 Clobber: params.Clobber,
                 PGO: params.PGO,
                 Instrument: params.Instrument,
+                PGOProfiles: params.PGOProfiles,
             ])()
 
             archiveArtifacts artifacts: "mozilla-release/${objDir}/dist/update/*.mar"

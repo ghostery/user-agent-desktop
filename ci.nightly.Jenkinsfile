@@ -48,5 +48,6 @@ if (!tagExists) {
         booleanParam(name: 'WindowsARM', value: true),
         booleanParam(name: 'Nightly', value: true),
         booleanParam(name: 'PGO',  value: true),
+        string(name: 'Locales', value: 'de'),
     ], propagate: false, wait: false
 }
