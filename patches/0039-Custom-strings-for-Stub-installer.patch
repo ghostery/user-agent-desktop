@@ -3,11 +3,11 @@ Date: Mon, 23 Nov 2020 10:55:27 +0100
 Subject: Custom strings for Stub installer
 
 ---
- browser/locales/en-US/installer/nsisstrings.properties | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ browser/locales/en-US/installer/nsisstrings.properties | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/browser/locales/en-US/installer/nsisstrings.properties b/browser/locales/en-US/installer/nsisstrings.properties
-index 2ea1cd655f..3acaf1535d 100644
+index 2ea1cd655f..f06e499196 100644
 --- a/browser/locales/en-US/installer/nsisstrings.properties
 +++ b/browser/locales/en-US/installer/nsisstrings.properties
 @@ -27,10 +27,10 @@ STUB_CLEANUP_CHECKBOX_LABEL2=Restore default settings and remove old add-ons for
@@ -16,10 +16,11 @@ index 2ea1cd655f..3acaf1535d 100644
  STUB_INSTALLING_BODY2=$BrandShortName will be ready in just a few moments.
 -STUB_BLURB_FIRST1=The fastest, most responsive $BrandShortName yet
 -STUB_BLURB_SECOND1=Faster page loading and tab switching
-+STUB_BLURB_FIRST1=Ghostery tracker blocking built in
-+STUB_BLURB_SECOND1=Ad-free private search
- STUB_BLURB_THIRD1=Powerful private browsing
+-STUB_BLURB_THIRD1=Powerful private browsing
 -STUB_BLURB_FOOTER2=Built for people, not for profit
++STUB_BLURB_FIRST1=Tracker protection and ad-free private search, all under one roof
++STUB_BLURB_SECOND1=Tracker protection and ad-free private search, all under one roof
++STUB_BLURB_THIRD1=Tracker protection and ad-free private search, all under one roof
 +STUB_BLURB_FOOTER2=We Make Privacy Easy
  
  WARN_MIN_SUPPORTED_OSVER_MSG=Sorry, $BrandShortName can’t be installed. This version of $BrandShortName requires ${MinSupportedVer} or newer. Please click the OK button for additional information.
