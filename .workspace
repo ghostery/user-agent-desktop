@@ -1,6 +1,6 @@
 {
   "addons": {
-    "ghostery": "https://s3.amazonaws.com/ghostery-deployments/ghostery-extension/8.5.4.84635166/ghostery-firefox-v8.5.4.84635166.xpi",
+    "ghostery": "https://s3.amazonaws.com/ghostery-deployments/ghostery-extension/8.5.4/ghostery-firefox-v8.5.4.xpi",
     "ghostery-search": "https://github.com/ghostery/ghostery-search-extension/releases/download/v0.1.17/ghostery_search-0.1.17.zip"
   },
   "firefox": "83.0",
