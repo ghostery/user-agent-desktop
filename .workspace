@@ -4,7 +4,7 @@
     "ghostery-search": "https://github.com/ghostery/ghostery-search-extension/releases/download/v0.1.17/ghostery_search-0.1.17.zip"
   },
   "firefox": "83.0",
-  "app": "2020.11.0",
+  "app": "2020.11.1",
   "ipfsAddr": "/ipfs/QmTt1LqU8x9cmFHb7kGULTnioAab4pyY9XBTGuo2ctoGbp",
   "locales": {
     "de": "de1025e5e9a9f831271dc1aa8437aba18a631662"
