@@ -14,10 +14,10 @@
 !define URLInfoAbout          "https://www.ghostery.com"
 !define HelpLink              "https://www.ghostery.com/support/"
 
-!define URLStubDownloadX86 "https://get.ghosterybrowser.com/download/win64-installer"
-!define URLStubDownloadAMD64 "https://get.ghosterybrowser.com/download/win64-installer"
-!define URLStubDownloadAArch64 "https://get.ghosterybrowser.com/download/win64-aarch64-installer"
-!define URLManualDownload "https://get.ghosterybrowser.com/download/landing"
+!define URLStubDownloadX86 "https://get.ghosterybrowser.com/download/win64-installer/${AB_CD}"
+!define URLStubDownloadAMD64 "https://get.ghosterybrowser.com/download/win64-installer/${AB_CD}"
+!define URLStubDownloadAArch64 "https://get.ghosterybrowser.com/download/win64-aarch64-installer/${AB_CD}"
+!define URLManualDownload "https://get.ghosterybrowser.com/download/landing/${AB_CD}"
 !define URLSystemRequirements "https://www.ghostery.com/products/"
 !define Channel "release"
 
