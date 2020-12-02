@@ -2,6 +2,7 @@ properties([
     parameters([
       string(name: 'from', defaultValue: '', description: 'Release to update from'),
       string(name: 'to', defaultValue: '', description: 'Release to update to'),
+      booleanParam(name: 'nightly', defaultValue: true, description: 'Is this a nightly update'),
     ]),
 ])
 
@@ -37,7 +38,8 @@ node('docker && magrathea') {
                     --to ${params.to} \
                     --client-id "$AUTH0_M2M_CLIENT_ID" \
                     --client-secret "$AUTH0_M2M_CLIENT_SECRET" \
-                    --mar-dir ./dist/
+                    --mar-dir ./dist/ \
+                    ${params.nightly ? '--nightly' : ''}
               """
           }
         }

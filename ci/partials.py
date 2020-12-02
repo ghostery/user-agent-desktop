@@ -13,6 +13,7 @@ parser.add_argument("--to", help="New release")
 parser.add_argument("--client-id", help="M2M Client ID for auth")
 parser.add_argument("--client-secret", help="M2M Client secret for auth")
 parser.add_argument("--mar-dir", help="Location to put/find partial mars")
+parser.add_argument("--nightly", help="Treat this as a nightly partial", action="store_true")
 args = parser.parse_args()
 
 balrog_opts = balrog_api_opts(args.client_id, args.client_secret)
@@ -61,7 +62,7 @@ for partial in partials:
     # so we can tell the difference between different partials.
     from_version = partial['fromVersion']
     to_version = partial['toVersion']
-    if from_version == to_version:
+    if from_version == to_version or args.nightly:
         from_version = partial['fromBuildId']
         to_version = partial['buildId']
     mar_name = f'{PRODUCT_NAME}-{to_version}-{from_version}.{partial["locale"]}.{get_platform_for_build_target(partial["platform"])}.partial.mar'
