@@ -1,0 +1,44 @@
+From: Sam Macbeth <sam@cliqz.com>
+Date: Thu, 3 Dec 2020 13:55:50 +0100
+Subject: OpenURL on buildID changes
+
+---
+ browser/components/BrowserContentHandler.jsm | 10 ++--------
+ 1 file changed, 2 insertions(+), 8 deletions(-)
+
+diff --git a/browser/components/BrowserContentHandler.jsm b/browser/components/BrowserContentHandler.jsm
+index 706962c9f6..1ef8961f0e 100644
+--- a/browser/components/BrowserContentHandler.jsm
++++ b/browser/components/BrowserContentHandler.jsm
+@@ -673,13 +673,13 @@ nsBrowserContentHandler.prototype = {
+             // we may open the startPage in addition to restoring the session.
+             willRestoreSession = SessionStartup.isAutomaticRestoreEnabled();
+ 
++          case OVERRIDE_NEW_BUILD_ID:
+             overridePage = Services.urlFormatter.formatURLPref(
+               "startup.homepage_override_url"
+             );
+             let update = UpdateManager.readyUpdate;
+             if (
+-              update &&
+-              Services.vc.compare(update.appVersion, old_mstone) > 0
++              update
+             ) {
+               overridePage = getPostUpdateOverridePage(update, overridePage);
+               // Send the update ping to signal that the update was successful.
+@@ -688,12 +688,6 @@ nsBrowserContentHandler.prototype = {
+ 
+             overridePage = overridePage.replace("%OLD_VERSION%", old_mstone);
+             break;
+-          case OVERRIDE_NEW_BUILD_ID:
+-            if (UpdateManager.readyUpdate) {
+-              // Send the update ping to signal that the update was successful.
+-              UpdatePing.handleUpdateSuccess(old_mstone, old_buildId);
+-            }
+-            break;
+         }
+       }
+     } catch (ex) {}
+-- 
+2.29.2
+
