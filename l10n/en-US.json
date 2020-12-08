@@ -10,7 +10,12 @@
       "string": "Tracker protection and ad-free private search, all under one roof"
     },
     "STUB_BLURB_FOOTER2": {
-      "string": ""
+      "string": "We Make Privacy Easy"
+    }
+  },
+  "browser/installer/custom.properties": {
+    "UN_SURVEY_CHECKBOX_LABEL": {
+      "string": "Tell us why you uninstalled $BrandShortName"
     }
   },
   "browser/browser/aboutDialog.ftl": {
@@ -28,10 +33,10 @@
   },
   "browser/browser/browser.ftl": {
     "identity-custom-root": {
-      "string": "Connection verified by a certificate issuer that is not recognized by Ghostery."
+      "string": "Connection verified by a certificate issuer that is not recognized by { -brand-short-name }."
     },
     "identity-description-custom-root": {
-      "string": "Ghostery does not recognize this certificate issuer. It may have been added from your operating system or by an administrator. <label data-l10n-name=\"link\">Learn More</label>"
+      "string": "{ -brand-short-name } does not recognize this certificate issuer. It may have been added from your operating system or by an administrator. <label data-l10n-name=\"link\">Learn More</label>"
     }
   },
   "browser/browser/aboutLogins.ftl": {
