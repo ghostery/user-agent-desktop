@@ -1,0 +1,36 @@
+From: Sam Macbeth <sam@cliqz.com>
+Date: Tue, 8 Dec 2020 18:11:46 +0100
+Subject: Default bookmarks
+
+---
+ browser/profile/bookmarks.inc | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+
+diff --git a/browser/profile/bookmarks.inc b/browser/profile/bookmarks.inc
+index cd52e6c..0e1baa7 100644
+--- a/browser/profile/bookmarks.inc
++++ b/browser/profile/bookmarks.inc
+@@ -69,4 +69,20 @@
+ # Nightly builds only, link title for https://planet.mozilla.org/
+ #define planet Planet Mozilla (englisch)
+ 
++# LOCALIZATION NOTE (ghostery_heading):
++# Ghostery links folder name
++#define ghostery_heading Ghostery
++
++# LOCALIZATION NOTE (ghostery_help):
++# link title for https://www.ghostery.com/support/
++#define ghostery_help Hilfe
++
++# LOCALIZATION NOTE (ghostery_plans):
++# link title for https://www.ghostery.com/pricing/
++#define ghostery_plans Ghostery Plans
++
++# LOCALIZATION NOTE (ghostery_about_us):
++# link title for https://www.ghostery.com/about-ghostery/
++#define ghostery_about_us Über uns
++
+ #unfilter emptyLines
+-- 
+2.29.2
+
