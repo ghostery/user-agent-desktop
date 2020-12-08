@@ -3,9 +3,8 @@ Date: Thu, 10 Sep 2020 17:52:19 +0200
 Subject: Update text in about dialog
 
 ---
- browser/base/content/aboutDialog.xhtml        | 6 +++---
- browser/locales/en-US/browser/aboutDialog.ftl | 4 ++--
- 2 files changed, 5 insertions(+), 5 deletions(-)
+ browser/base/content/aboutDialog.xhtml | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/browser/base/content/aboutDialog.xhtml b/browser/base/content/aboutDialog.xhtml
 index 69cbf846bb..e8d8bd6b5d 100644
@@ -35,22 +34,6 @@ index 69cbf846bb..e8d8bd6b5d 100644
        </hbox>
        <description id="trademark" data-l10n-id="trademarkInfo"></description>
      </vbox>
-diff --git a/browser/locales/en-US/browser/aboutDialog.ftl b/browser/locales/en-US/browser/aboutDialog.ftl
-index 157ab9470b..640aa92b37 100644
---- a/browser/locales/en-US/browser/aboutDialog.ftl
-+++ b/browser/locales/en-US/browser/aboutDialog.ftl
-@@ -39,9 +39,9 @@ warningDesc-version = { -brand-short-name } is experimental and may be unstable.
- 
- community-exp = <label data-l10n-name="community-exp-mozillaLink">{ -vendor-short-name }</label> is a <label data-l10n-name="community-exp-creditsLink">global community</label> working together to keep the Web open, public and accessible to all.
- 
--community-2 = { -brand-short-name } is designed by <label data-l10n-name="community-mozillaLink">{ -vendor-short-name }</label>, a <label data-l10n-name="community-creditsLink">global community</label> working together to keep the Web open, public and accessible to all.
-+community-2 = { -brand-short-name } is designed by <label data-l10n-name="community-mozillaLink">{ -vendor-short-name }</label>, based on code from Mozilla Firefox.
- 
--helpus = Want to help? <label data-l10n-name="helpus-donateLink">Make a donation</label> or <label data-l10n-name="helpus-getInvolvedLink">get involved!</label>
-+helpus = Want to help? Check out our code on <label data-l10n-name="helpus-getInvolvedLink">Github!</label>
- 
- bottomLinks-license = Licensing Information
- bottomLinks-rights = End-User Rights
 -- 
 2.29.2
 

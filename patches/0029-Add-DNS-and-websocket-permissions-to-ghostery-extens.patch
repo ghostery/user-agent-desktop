@@ -7,10 +7,10 @@ Subject: Add DNS and websocket permissions to ghostery extension
  1 file changed, 4 insertions(+), 1 deletion(-)
 
 diff --git a/browser/extensions/ghostery/manifest.json b/browser/extensions/ghostery/manifest.json
-index ebd67505c5..746f8c5287 100644
+index df35b0145c..361e0d559c 100644
 --- a/browser/extensions/ghostery/manifest.json
 +++ b/browser/extensions/ghostery/manifest.json
-@@ -86,7 +86,10 @@
+@@ -87,7 +87,10 @@
  		"tabs",
  		"http://*/*",
  		"https://*/*",

@@ -1,0 +1,25 @@
+From: Sam Macbeth <sam@cliqz.com>
+Date: Mon, 23 Nov 2020 14:11:18 +0100
+Subject: Remove Firefox strings for new install page
+
+---
+ browser/locales/en-US/chrome/browser/newInstall.dtd | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/browser/locales/en-US/chrome/browser/newInstall.dtd b/browser/locales/en-US/chrome/browser/newInstall.dtd
+index dba3f712c2..3019d6deba 100644
+--- a/browser/locales/en-US/chrome/browser/newInstall.dtd
++++ b/browser/locales/en-US/chrome/browser/newInstall.dtd
+@@ -9,7 +9,7 @@
+ 
+ <!ENTITY window.title "Important News">
+ <!ENTITY window.style "width: 490px">
+-<!ENTITY sync "To sync information you’ve already saved to Firefox with this installation of &brandShortName;, sign in with your &syncBrand.fxAccount.label;.">
++<!ENTITY sync ".">
+ <!ENTITY continue-button "Continue">
+ 
+-<!ENTITY mainText "This installation of &brandShortName; has a new profile. It does not share bookmarks, passwords, and user preferences with other installations of Firefox (including Firefox, Firefox ESR, Firefox Beta, Firefox Developer Edition, and Firefox Nightly) on this computer.">
++<!ENTITY mainText "This installation of &brandShortName; has a new profile. It does not share bookmarks, passwords, and user preferences with other installations on this computer.">
+-- 
+2.29.2
+
