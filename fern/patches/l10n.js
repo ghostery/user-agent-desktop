@@ -4,7 +4,7 @@ const { getRoot } = require("../core/workspace.js");
 
 const replacePaths = [
   ["browser", "chrome", "overrides", "appstrings.properties"],
-  ["devtools", "startup", "aboutDevtools.ftl"],
+  ["devtools", "startup", "aboutDevTools.ftl"],
   ["browser", "chrome", "browser", "newInstall.dtd"],
 ];
 
