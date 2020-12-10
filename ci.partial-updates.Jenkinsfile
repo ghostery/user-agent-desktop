@@ -81,7 +81,8 @@ node('docker && magrathea') {
                     --to ${params.to} \
                     --client-id "$AUTH0_M2M_CLIENT_ID" \
                     --client-secret "$AUTH0_M2M_CLIENT_SECRET" \
-                    --mar-dir ./dist/
+                    --mar-dir ./dist/ \
+                    ${params.nightly ? '--nightly' : ''}
               """
           }
         }
