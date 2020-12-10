@@ -10,7 +10,7 @@ const l10n = require("../patches/l10n.js");
 
 const { withCwd } = require("./utils.js");
 
-const PATCHES = [version, addons, branding, certificates, hardcoded];
+const PATCHES = [version, addons, branding, certificates, hardcoded, l10n];
 
 async function commitChanges(patch, wd = "mozilla-release") {
   await withCwd(wd, async () => {
