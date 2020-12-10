@@ -5,7 +5,6 @@ const { getRoot } = require("../core/workspace.js");
 const replacePaths = [
   ["browser", "chrome", "overrides", "appstrings.properties"],
   ["devtools", "startup", "aboutDevTools.ftl"],
-  ["browser", "chrome", "browser", "newInstall.dtd"],
 ];
 
 function getPathToLocaleFile(filePath, locale, root) {
@@ -49,7 +48,7 @@ function patchStrings(replacements, content, format) {
 }
 
 module.exports = ({ locale = "en-US" }) => ({
-  name: "Update localized strings",
+  name: "Rewrite localized strings",
   paths: ["./*"],
   skip: async () => false,
   apply: async () => {
