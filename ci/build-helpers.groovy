@@ -37,7 +37,7 @@ def build(opts, Closure postpackage={}, Closure archiving={}) {
                         sh 'rm -rf .cache'
                     }
                     sh 'rm -rf mozilla-release'
-                    sh "./fern.js use --ipfs-gateway=http://kria.cliqz:8080"
+                    sh "./fern.js use"
                     sh "./fern.js config --print --force --platform ${opts.targetPlatform} --brand ghostery"
                     sh "./fern.js reset"
                     sh './fern.js import-patches'

@@ -3,7 +3,7 @@
     "ghostery": "https://ghostery-deployments.s3.amazonaws.com/ghostery-extension/8.5.4.2790b4d/ghostery-firefox-v8.5.4.zip",
     "ghostery-search": "https://github.com/ghostery/ghostery-search-extension/releases/download/v0.1.21/ghostery_search-0.1.21.zip"
   },
-  "firefox": "83.0",
+  "firefox": "84.0b8",
   "app": "2020.11.2",
   "ipfsAddr": "/ipfs/QmTt1LqU8x9cmFHb7kGULTnioAab4pyY9XBTGuo2ctoGbp",
   "locales": {
