@@ -10,7 +10,7 @@ Subject: Change new tab page and home page url
  4 files changed, 4 insertions(+), 16 deletions(-)
 
 diff --git a/browser/app/profile/firefox.js b/browser/app/profile/firefox.js
-index adbada08c2..a344345f0a 100644
+index f8f11b8ba6..5fcb19e91e 100644
 --- a/browser/app/profile/firefox.js
 +++ b/browser/app/profile/firefox.js
 @@ -253,7 +253,7 @@ pref("browser.defaultbrowser.notificationbar.checklimit", 10000);
@@ -19,14 +19,14 @@ index adbada08c2..a344345f0a 100644
  pref("browser.startup.page",                1);
 -pref("browser.startup.homepage",            "about:home");
 +pref("browser.startup.homepage",            "https://ghosterysearch.com/");
- pref("browser.startup.homepage.abouthome_cache.enabled", false);
- 
- // Whether we should skip the homepage when opening the first-run page
+ #ifdef NIGHTLY_BUILD
+ pref("browser.startup.homepage.abouthome_cache.enabled", true);
+ #else
 diff --git a/browser/base/content/browser.js b/browser/base/content/browser.js
-index 28a68dba90..87e93042f8 100644
+index 9f9822eb1c..b0f0114bcb 100644
 --- a/browser/base/content/browser.js
 +++ b/browser/base/content/browser.js
-@@ -622,6 +622,7 @@ var gInitialPages = [
+@@ -635,6 +635,7 @@ var gInitialPages = [
    "about:sessionrestore",
    "about:welcome",
    "about:newinstall",
@@ -35,10 +35,10 @@ index 28a68dba90..87e93042f8 100644
  
  function isInitialPage(url) {
 diff --git a/browser/components/newtab/AboutNewTabService.jsm b/browser/components/newtab/AboutNewTabService.jsm
-index c65e25ea58..371b48f551 100644
+index a11f69cf16..a35201a9c6 100644
 --- a/browser/components/newtab/AboutNewTabService.jsm
 +++ b/browser/components/newtab/AboutNewTabService.jsm
-@@ -327,20 +327,7 @@ class BaseAboutNewTabService {
+@@ -350,20 +350,7 @@ class BaseAboutNewTabService {
     * the newtab page has no effect on the result of this function.
     */
    get defaultURL() {

@@ -265,7 +265,7 @@ index 0000000000..5056642d8e
 +  }
 +}
 diff --git a/toolkit/components/search/SearchEngineSelector.jsm b/toolkit/components/search/SearchEngineSelector.jsm
-index b1578a17a5..d9e34295df 100644
+index 9f61477182..b0f7ffdd71 100644
 --- a/toolkit/components/search/SearchEngineSelector.jsm
 +++ b/toolkit/components/search/SearchEngineSelector.jsm
 @@ -94,6 +94,67 @@ class SearchEngineSelector {

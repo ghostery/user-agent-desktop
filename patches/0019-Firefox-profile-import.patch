@@ -3,12 +3,12 @@ Date: Thu, 17 Sep 2020 15:36:45 +0200
 Subject: Firefox profile import
 
 ---
- .../migration/FirefoxProfileMigrator.jsm      | 335 +++++++++++++++++-
+ .../migration/FirefoxProfileMigrator.jsm      | 337 +++++++++++++++++-
  browser/components/migration/moz.build        |   5 +-
- 2 files changed, 323 insertions(+), 17 deletions(-)
+ 2 files changed, 324 insertions(+), 18 deletions(-)
 
 diff --git a/browser/components/migration/FirefoxProfileMigrator.jsm b/browser/components/migration/FirefoxProfileMigrator.jsm
-index bba617374f..eddecbe584 100644
+index bba617374f..ab7d30b6d2 100644
 --- a/browser/components/migration/FirefoxProfileMigrator.jsm
 +++ b/browser/components/migration/FirefoxProfileMigrator.jsm
 @@ -17,6 +17,7 @@ const { MigrationUtils, MigratorPrototype } = ChromeUtils.import(
@@ -19,10 +19,10 @@ index bba617374f..eddecbe584 100644
  
  ChromeUtils.defineModuleGetter(
    this,
-@@ -39,6 +40,75 @@ ChromeUtils.defineModuleGetter(
-   "ProfileAge",
+@@ -40,6 +41,76 @@ ChromeUtils.defineModuleGetter(
    "resource://gre/modules/ProfileAge.jsm"
  );
+ 
 +ChromeUtils.defineModuleGetter(this, "PlacesUtils",
 +                               "resource://gre/modules/PlacesUtils.jsm");
 +ChromeUtils.defineModuleGetter(this, "Sqlite",
@@ -92,10 +92,11 @@ index bba617374f..eddecbe584 100644
 +  if (invalidSchemes.indexOf(url.scheme) >= 0) return false;
 +  return true;
 +}
- 
++
  function FirefoxProfileMigrator() {
    this.wrappedJSObject = this; // for testing...
-@@ -47,22 +117,46 @@ function FirefoxProfileMigrator() {
+ }
+@@ -47,22 +118,45 @@ function FirefoxProfileMigrator() {
  FirefoxProfileMigrator.prototype = Object.create(MigratorPrototype);
  
  FirefoxProfileMigrator.prototype._getAllProfiles = function() {
@@ -145,13 +146,13 @@ index bba617374f..eddecbe584 100644
 +      }
 +
 +      profiles.set(iniParser.getString(section, "Name"), profileDir);
-+    }
+     }
+-  }
+-  return allProfiles;
 +    catch (e) {
 +      dump("Profiles.ini section: '" + section + "', error: " + e + "\n");
-     }
-   }
--  return allProfiles;
-+
++     }
++   }
 +  return profiles;
  };
  
@@ -175,116 +176,116 @@ index bba617374f..eddecbe584 100644
    }
  
 +  let getHistoryAndBookmarksResource = function(aFileName) {
-+    let placesFile = this._getFileObject(sourceProfileDir, aFileName);
-+    if (!placesFile)
-+      return null;
++  let placesFile = this._getFileObject(sourceProfileDir, aFileName);
++  if (!placesFile)
++    return null;
 +
-+    return {
-+      type: MigrationUtils.resourceTypes.HISTORY,
-+      migrate: async (aCallback) => {
-+        let db;
-+        try {
-+          db = await Sqlite.openConnection({
-+            path: placesFile.path
-+          });
-+          // IMPORT BOOKMARKS
-+          const topBookmarkFolderGuids = [
-+                                          "menu________",
-+                                          "toolbar_____",
-+                                          "unfiled_____"
-+                                          ];
-+          let parentGuid = PlacesUtils.bookmarks.menuGuid;
-+          // Create Firefox bookmarks folder on Bookmarks Menu
-+          parentGuid = (await PlacesUtils.bookmarks.insert({
-+            parentGuid,
-+            type: PlacesUtils.bookmarks.TYPE_FOLDER,
-+            title: "Firefox",
-+          })).guid;
-+          // Create top bookmarks folders on Firefox bookmarks folder and recursively insert child bookmarks
-+          for (let guid of topBookmarkFolderGuids) {
-+            let query = `SELECT b.id, b.title
-+                        FROM moz_bookmarks b
-+                        WHERE b.type = 2 AND b.guid = '${guid}'
-+                        ORDER BY b.position`;
-+            let rows = await db.execute(query);
-+            if (rows.length > 0) {
-+              let title = rows[0].getResultByName("title");
-+              let id = rows[0].getResultByName("id");
-+              let folderGuid = (await PlacesUtils.bookmarks.insert({
-+                parentGuid,
-+                type: PlacesUtils.bookmarks.TYPE_FOLDER,
-+                title,
-+              })).guid;
-+              await insertWholeBookmarkFolder(db, id, folderGuid);
-+            }
++  return {
++    type: MigrationUtils.resourceTypes.HISTORY,
++    migrate: async (aCallback) => {
++      let db;
++      try {
++        db = await Sqlite.openConnection({
++          path: placesFile.path
++        });
++        // IMPORT BOOKMARKS
++        const topBookmarkFolderGuids = [
++                                        "menu________",
++                                        "toolbar_____",
++                                        "unfiled_____"
++                                        ];
++        let parentGuid = PlacesUtils.bookmarks.menuGuid;
++        // Create Firefox bookmarks folder on Bookmarks Menu
++        parentGuid = (await PlacesUtils.bookmarks.insert({
++          parentGuid,
++          type: PlacesUtils.bookmarks.TYPE_FOLDER,
++          title: "Firefox",
++        })).guid;
++        // Create top bookmarks folders on Firefox bookmarks folder and recursively insert child bookmarks
++        for (let guid of topBookmarkFolderGuids) {
++          let query = `SELECT b.id, b.title
++                      FROM moz_bookmarks b
++                      WHERE b.type = 2 AND b.guid = '${guid}'
++                      ORDER BY b.position`;
++          let rows = await db.execute(query);
++          if (rows.length > 0) {
++            let title = rows[0].getResultByName("title");
++            let id = rows[0].getResultByName("id");
++            let folderGuid = (await PlacesUtils.bookmarks.insert({
++              parentGuid,
++              type: PlacesUtils.bookmarks.TYPE_FOLDER,
++              title,
++            })).guid;
++            await insertWholeBookmarkFolder(db, id, folderGuid);
 +          }
-+
-+          // IMPORT HISTORY
-+          let rows = await db.execute(`SELECT h.url, h.title, v.visit_type, h.last_visit_date, h.typed
-+                                      FROM moz_places h JOIN moz_historyvisits v
-+                                      ON h.id = v.place_id
-+                                      WHERE v.visit_type <= 3;`);
-+          let pageInfos = [];
-+          for (let row of rows) {
-+            try {
-+              // CLIQZ-SPECIAL: hack to transform date in required format when importing from FF
-+              let timeStamp = row.getResultByName("last_visit_date");
-+              try {
-+                timeStamp = new Date(Math.floor(timeStamp/1000));
-+              } catch(e) {
-+                console.log('Erro in histry import')
-+              }
-+
-+              // if having typed_count, we changes transition type to typed.
-+              let transition = PlacesUtils.history.TRANSITIONS.LINK;
-+              if (row.getResultByName("typed") > 0)
-+                transition = PlacesUtils.history.TRANSITIONS.TYPED;
-+              pageInfos.push({
-+                title: row.getResultByName("title"),
-+                isFPMigrator: true,
-+                url: new URL(row.getResultByName("url")),
-+                visits: [{
-+                  transition,
-+                  date: timeStamp,
-+                }],
-+              });
-+            } catch (e) {
-+              Cu.reportError(e);
-+            }
-+          }
-+
-+          if (pageInfos.length > 0) {
-+            await MigrationUtils.insertVisitsWrapper(pageInfos);
-+          }
-+        } catch(e){
-+          Cu.reportError(e);
-+          aCallback(true);
-+        } finally {
-+          if(db) {
-+            await db.close();
-+          }
-+          aCallback(true);
-+          return;
 +        }
++
++        // IMPORT HISTORY
++        let rows = await db.execute(`SELECT h.url, h.title, v.visit_type, h.last_visit_date, h.typed
++                                    FROM moz_places h JOIN moz_historyvisits v
++                                    ON h.id = v.place_id
++                                    WHERE v.visit_type <= 3;`);
++        let pageInfos = [];
++        for (let row of rows) {
++          try {
++            // CLIQZ-SPECIAL: hack to transform date in required format when importing from FF
++            let timeStamp = row.getResultByName("last_visit_date");
++            try {
++              timeStamp = new Date(Math.floor(timeStamp/1000));
++            } catch(e) {
++              console.log('Erro in histry import')
++            }
++
++            // if having typed_count, we changes transition type to typed.
++            let transition = PlacesUtils.history.TRANSITIONS.LINK;
++            if (row.getResultByName("typed") > 0)
++              transition = PlacesUtils.history.TRANSITIONS.TYPED;
++            pageInfos.push({
++              title: row.getResultByName("title"),
++              isFPMigrator: true,
++              url: new URL(row.getResultByName("url")),
++              visits: [{
++                transition,
++                date: timeStamp,
++              }],
++            });
++          } catch (e) {
++            Cu.reportError(e);
++          }
++        }
++
++        if (pageInfos.length > 0) {
++          await MigrationUtils.insertVisitsWrapper(pageInfos);
++        }
++      } catch(e){
++        Cu.reportError(e);
++        aCallback(true);
++      } finally {
++        if(db) {
++          await db.close();
++        }
++        aCallback(true);
++        return;
 +      }
-+    };
-+  }.bind(this);
++    }
++  };
++}.bind(this);
 +
-+  let getCookiesResource = function(aFileName) {
-+    let cookiesFile = this._getFileObject(sourceProfileDir, aFileName);
-+    if (!cookiesFile)
-+      return null;
++let getCookiesResource = function(aFileName) {
++  let cookiesFile = this._getFileObject(sourceProfileDir, aFileName);
++  if (!cookiesFile)
++    return null;
 +
-+    return {
-+      type: MigrationUtils.resourceTypes.COOKIES,
++  return {
++    type: MigrationUtils.resourceTypes.COOKIES,
 +
-+      migrate: async (aCallback) => {
-+        let db;
++    migrate: async (aCallback) => {
++      let db;
 +
-+        try {
-+          db = await Sqlite.openConnection({
-+            path: cookiesFile.path
-+          });
++      try {
++        db = await Sqlite.openConnection({
++          path: cookiesFile.path
++        });
 +          let rows = await db.execute(`SELECT name, value,
 +                                              host, path,
 +                                              expiry, isSecure,
@@ -391,24 +392,24 @@ index bba617374f..eddecbe584 100644
  
  FirefoxProfileMigrator.prototype.classDescription = "Firefox Profile Migrator";
 diff --git a/browser/components/migration/moz.build b/browser/components/migration/moz.build
-index e56a3329dc..6c55b9ee6b 100644
+index 778c7f938b..0c63e7f6de 100644
 --- a/browser/components/migration/moz.build
 +++ b/browser/components/migration/moz.build
-@@ -19,11 +19,14 @@ XPIDL_MODULE = 'migration'
+@@ -19,11 +19,14 @@ XPIDL_MODULE = "migration"
  EXTRA_JS_MODULES += [
-     'ChromeMigrationUtils.jsm',
-     'ChromeProfileMigrator.jsm',
--    'FirefoxProfileMigrator.jsm',
-     'MigrationUtils.jsm',
-     'ProfileMigrator.jsm',
+     "ChromeMigrationUtils.jsm",
+     "ChromeProfileMigrator.jsm",
+-    "FirefoxProfileMigrator.jsm",
+     "MigrationUtils.jsm",
+     "ProfileMigrator.jsm",
  ]
  
 +EXTRA_PP_JS_MODULES += [
 +    'FirefoxProfileMigrator.jsm',
 +]
 +
- if CONFIG['OS_ARCH'] == 'WINNT':
-     if CONFIG['ENABLE_TESTS']:
+ if CONFIG["OS_ARCH"] == "WINNT":
+     if CONFIG["ENABLE_TESTS"]:
          DIRS += [
 -- 
 2.29.2

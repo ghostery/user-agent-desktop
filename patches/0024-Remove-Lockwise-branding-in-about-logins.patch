@@ -3,16 +3,16 @@ Date: Wed, 14 Oct 2020 17:54:25 +0200
 Subject: Remove Lockwise branding in about:logins
 
 ---
- .../components/aboutlogins/content/aboutLogins.html    |  6 ++++++
+ .../components/aboutlogins/content/aboutLogins.html    |  4 ++++
  .../aboutlogins/content/components/login-intro.js      | 10 +++++-----
  browser/themes/shared/preferences/privacy.css          |  4 ++++
- 3 files changed, 15 insertions(+), 5 deletions(-)
+ 3 files changed, 13 insertions(+), 5 deletions(-)
 
 diff --git a/browser/components/aboutlogins/content/aboutLogins.html b/browser/components/aboutlogins/content/aboutLogins.html
-index fe23a90d9f..a2e3f6d702 100644
+index 2f38ef3ce0..fb4cb5de6c 100644
 --- a/browser/components/aboutlogins/content/aboutLogins.html
 +++ b/browser/components/aboutlogins/content/aboutLogins.html
-@@ -133,6 +133,7 @@
+@@ -132,6 +132,7 @@
        <img class="illustration" src="chrome://browser/content/aboutlogins/icons/intro-illustration.svg"/>
        <h1 class="heading" data-l10n-id="about-logins-login-intro-heading-logged-out"></h1>
        <section>
@@ -20,7 +20,7 @@ index fe23a90d9f..a2e3f6d702 100644
          <p class="description" data-l10n-id="login-intro-description"></p>
          <ul>
            <li data-l10n-id="login-intro-instruction-fxa"></li>
-@@ -141,13 +142,16 @@
+@@ -140,13 +141,16 @@
              <a data-l10n-name="help-link" class="intro-help-link" target="_blank" rel="noreferrer"></a>
            </li>
          </ul>
@@ -36,19 +36,7 @@ index fe23a90d9f..a2e3f6d702 100644
 +        -->
        </section>
      </template>
- 
-@@ -281,9 +285,11 @@
-         <button role="menuitem" class="menuitem-button menuitem-preferences ghost-button" data-event-name="AboutLoginsOpenPreferences" data-l10n-id="menu-menuitem-preferences"></button>
-         <hr role="separator" class="menuitem-separator"></hr>
-         <button role="menuitem" class="menuitem-button menuitem-help ghost-button" data-event-name="AboutLoginsGetHelp" data-l10n-id="about-logins-menu-menuitem-help"></button>
-+        <!--
-         <hr role="separator" class="menuitem-separator"></hr>
-         <button role="menuitem" class="menuitem-button menuitem-mobile menuitem-mobile-android ghost-button" data-event-name="AboutLoginsOpenMobileAndroid" data-l10n-id="menu-menuitem-android-app"></button>
-         <button role="menuitem" class="menuitem-button menuitem-mobile menuitem-mobile-ios ghost-button" data-event-name="AboutLoginsOpenMobileIos" data-l10n-id="menu-menuitem-iphone-app"></button>
-+        -->
-       </ul>
-     </template>
- 
+
 diff --git a/browser/components/aboutlogins/content/components/login-intro.js b/browser/components/aboutlogins/content/components/login-intro.js
 index a0cd1d8cd1..10d72b3a94 100644
 --- a/browser/components/aboutlogins/content/components/login-intro.js
@@ -56,7 +44,7 @@ index a0cd1d8cd1..10d72b3a94 100644
 @@ -50,11 +50,11 @@ export default class LoginIntro extends HTMLElement {
        .querySelector(".illustration")
        .classList.toggle("logged-in", syncState.loggedIn);
- 
+
 -    let supportURL =
 -      window.AboutLoginsUtils.supportBaseURL + "firefox-lockwise";
 -    this.shadowRoot
@@ -67,24 +55,24 @@ index a0cd1d8cd1..10d72b3a94 100644
 +    // this.shadowRoot
 +    //   .querySelector(".intro-help-link")
 +    //   .setAttribute("href", supportURL);
- 
+
      let importClass = window.AboutLoginsUtils.fileImportEnabled
        ? ".intro-import-text.file-import"
 diff --git a/browser/themes/shared/preferences/privacy.css b/browser/themes/shared/preferences/privacy.css
-index a53a914f1c..1d52de99a6 100644
+index 71c672d860..ede89f8096 100644
 --- a/browser/themes/shared/preferences/privacy.css
 +++ b/browser/themes/shared/preferences/privacy.css
 @@ -4,6 +4,10 @@
- 
+
  /* Permissions */
- 
+
 +#breachAlertsBox {
 +  display: none;
 +}
 +
- .content-blocking-icon,
- .permission-icon,
- .content-blocking-checkbox {
--- 
+ #trackingGroup {
+   --section-highlight-background-color: rgba(69, 161, 255, 0.2);
+ }
+--
 2.29.2
 
