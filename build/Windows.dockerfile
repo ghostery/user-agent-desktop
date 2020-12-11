@@ -33,7 +33,7 @@ RUN wget -O /builds/worker/fetches/clang.tar.zst $IPFS_GATEWAY/ipfs/QmNS8jkq9w9D
     tar -xf clang.tar.zst && \
     rm clang.tar.zst
 
-RUN wget -O /builds/worker/fetches/rustc.tar.zst $IPFS_GATEWAY/ipfs/QmPvD66SV7nZKExzrPSR4m4VCvMQtBGahg1vN5Crv3i87C && \
+RUN wget -O /builds/worker/fetches/rustc.tar.zst $IPFS_GATEWAY/ipfs/QmaNV4jRCzbvov8Twpr9yihknak6wqn5xVhNxsdqwZdM9z && \
     cd /builds/worker/fetches/ && \
     tar -xf rustc.tar.zst && \
     rm rustc.tar.zst
@@ -63,7 +63,7 @@ RUN wget -O /builds/worker/fetches/sccache.tar.xz $IPFS_GATEWAY/ipfs/QmeB7fo2FuA
     tar -xf sccache.tar.xz && \
     rm sccache.tar.xz
 
-RUN wget -O /builds/worker/fetches/dump_syms.tar.xz $IPFS_GATEWAY/ipfs/QmNqhTYRQjunm9kduj8vnoWy6zMteMPy6H7fvHi3PPRVHp && \
+RUN wget -O /builds/worker/fetches/dump_syms.tar.xz $IPFS_GATEWAY/ipfs/QmcBFu6XXN7qQbw8WDxdSqaX1F34ieScEbevhkQP4HGfZZ && \
     cd /builds/worker/fetches/ && \
     tar -xf dump_syms.tar.xz && \
     rm dump_syms.tar.xz
@@ -83,7 +83,7 @@ RUN wget -O /builds/worker/fetches/winchecksec.tar.bz2 $IPFS_GATEWAY/ipfs/QmZkQu
     tar -xf winchecksec.tar.bz2 && \
     rm winchecksec.tar.bz2
 
-RUN wget -O /builds/worker/fetches/dump_syms.tar.bz2 $IPFS_GATEWAY/ipfs/QmQt7EGMeedRrif1dhn44paKMYWCniWqXCARi1TyQo6fWA && \
+RUN wget -O /builds/worker/fetches/dump_syms.tar.bz2 $IPFS_GATEWAY/ipfs/QmWnwBGT8cL9JqFHuW8mjZXTdGaC9mfBRqGPaZaq6Mpc9d && \
     cd /builds/worker/fetches/ && \
     tar -xf dump_syms.tar.bz2 && \
     rm dump_syms.tar.bz2
