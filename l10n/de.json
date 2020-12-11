@@ -49,7 +49,7 @@
   },
   "browser/browser/aboutPrivateBrowsing.ftl": {
     "about-private-browsing-search-placeholder": {
-      "string": "Privat Suchen"
+      "string": "Search Privately"
     }
   },
   "browser/browser/newInstallPage.ftl": {
