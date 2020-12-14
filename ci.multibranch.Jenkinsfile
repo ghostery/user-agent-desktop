@@ -6,6 +6,7 @@ properties([
         booleanParam(name: 'Windows64', defaultValue: true, description: ''),
         booleanParam(name: 'WindowsARM', defaultValue: false, description: ''),
         booleanParam(name: 'MacOSX64', defaultValue: true, description: ''),
+        booleanParam(name: 'MacOSARM', defaultValue: true, description: ''),
         string(name: 'ReleaseName', defaultValue: '', description: ''),
         booleanParam(name: 'Nightly', defaultValue: false, description: 'Push release to nightly'),
         booleanParam(name: 'PGO', defaultValue: false, description: 'Enable Profile Guided Optimization'),
@@ -172,6 +173,47 @@ if (params.MacOSX64) {
                 name: name,
                 dockerFile: 'MacOSX.dockerfile',
                 targetPlatform: 'macosx',
+                objDir: objDir,
+                artifactGlob: artifactGlob,
+                locales: locales,
+                buildId: buildId,
+                Reset: params.Reset,
+                Clobber: params.Clobber,
+                PGO: params.PGO,
+                Instrument: params.Instrument,
+                PGOProfiles: params.PGOProfiles,
+            ])()
+
+            archiveArtifacts artifacts: "mozilla-release/${objDir}/dist/update/*.mar"
+            archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
+            archiveArtifacts artifacts: "mozilla-release/browser/config/version*"
+
+            stash name: name, includes: [
+                "mozilla-release/${artifactGlob}",
+                "mozilla-release/build/package/mac_osx/unpack-diskimage",
+                "mozilla-release/security/mac/hardenedruntime/*",
+            ].join(',')
+
+            sh "rm -rf mozilla-release/${objDir}/dist/update"
+        }
+    }
+
+    if (shouldRelease) {
+        signmatrix["Sign MacOSX64"] = helpers.mac_signing(name, objDir, artifactGlob)
+    }
+}
+
+if (params.MacOSARM) {
+    def name = 'MacOSARM'
+    def objDir = 'obj-aarch64-apple-darwin'
+    def artifactGlob = "$objDir/dist/Ghostery-*"
+
+    buildmatrix[name] = {
+        node('docker && !magrathea') {
+            helpers.build([
+                name: name,
+                dockerFile: 'MacOSARM.dockerfile',
+                targetPlatform: 'macosx-aarch64',
                 objDir: objDir,
                 artifactGlob: artifactGlob,
                 locales: locales,
