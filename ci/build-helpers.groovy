@@ -12,6 +12,9 @@ def build(opts, Closure postpackage={}, Closure archiving={}) {
             if (!fileExists('./build/MacOSX10.11.sdk.tar.bz2')) {
                 sh 'wget -nv -O ./build/MacOSX10.11.sdk.tar.bz2 ftp://cliqznas.cliqz/cliqz-browser-build-artifacts/MacOSX10.11.sdk.tar.bz2'
             }
+            if (!fileExists('./build/MacOSX11.0.sdk.tar.bz2')) {
+                sh 'wget -nv -O ./build/MacOSX11.0.sdk.tar.bz2 ftp://cliqznas.cliqz/cliqz-browser-build-artifacts/MacOSX11.0.sdk.tar.bz2'
+            }
         }
 
         def image = stage('docker build base') {
