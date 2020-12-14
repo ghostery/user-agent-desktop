@@ -6,4 +6,5 @@ logs
 build/configs/mozconfig
 /mozconfig
 /local.mozconfig
-l10n
+i10n/*
+!i10n/*.json

@@ -1,0 +1,11 @@
+[main]
+host = https://www.transifex.com
+lang_map = en: en-US
+
+[ghostery-desktop-browser.en-us-json]
+file_filter = l10n/<lang>.json
+minimum_perc = 0
+source_file = l10n/en-US.json
+source_lang = en
+type = STRUCTURED_JSON
+

@@ -1,0 +1,69 @@
+{
+  "browser/installer/nsisstrings.properties": {
+    "STUB_BLURB_FIRST1": {
+      "string": "Tracker protection and ad-free private search, all under one roof"
+    },
+    "STUB_BLURB_SECOND1": {
+      "string": "Tracker protection and ad-free private search, all under one roof"
+    },
+    "STUB_BLURB_THIRD1": {
+      "string": "Tracker protection and ad-free private search, all under one roof"
+    },
+    "STUB_BLURB_FOOTER2": {
+      "string": "We Make Privacy Easy"
+    }
+  },
+  "browser/installer/custom.properties": {
+    "UN_SURVEY_CHECKBOX_LABEL": {
+      "string": "Tell us why you uninstalled $BrandShortName"
+    }
+  },
+  "browser/browser/aboutDialog.ftl": {
+    "community-2": {
+      "string": "{ -brand-short-name } is designed by <label data-l10n-name=\"community-mozillaLink\">{ -vendor-short-name }</label>, based on code from Mozilla Firefox."
+    },
+    "helpus": {
+      "string": "Want to help? Check out our code on <label data-l10n-name=\"helpus-getInvolvedLink\">Github!</label>"
+    }
+  },
+  "browser/browser/preferences/preferences.ftl": {
+    "home-mode-choice-default": {
+      "string": "Ghostery-Startseite (Standard)"
+    }
+  },
+  "browser/browser/browser.ftl": {
+    "identity-custom-root": {
+      "string": "Die Verbindung wurde durch eine Zertifizierungsstelle bestätigt, welche standardmäßig nicht von { -brand-short-name } anerkannt wird."
+    },
+    "identity-description-custom-root": {
+      "string": "{ -brand-short-name } erkennt diese Zertifizierungsstelle standardmäßig nicht an. Sie wurde eventuell vom Betriebssystem oder durch einen Administrator importiert. <label data-l10n-name=\"link\">Weitere Informationen</label>"
+    }
+  },
+  "browser/browser/aboutLogins.ftl": {
+    "about-logins-login-intro-heading-logged-out": {
+      "string": "Looking for your saved logins? You can import them."
+    },
+    "about-logins-intro-import": {
+      "string": "If your logins are saved in another browser, you can <a data-l10n-name=\"import-link\">import them</a>"
+    }
+  },
+  "browser/browser/aboutPrivateBrowsing.ftl": {
+    "about-private-browsing-search-placeholder": {
+      "string": "Search Privately"
+    }
+  },
+  "browser/browser/newInstallPage.ftl": {
+    "changed-desc-profiles": {
+      "string": "Diese Installation von { -brand-short-name } nutzt jetzt ein neues Profil. Ein Profil ist eine Gruppe von Dateien, in welchen Daten wie Lesezeichen, Passwörter und vom Benutzer geänderte Einstellungen gespeichert werden."
+    },
+    "changed-desc-dedicated": {
+      "string": ""
+    },
+    "lost": {
+      "string": "<b>Es sind keine persönlichen Daten oder Anpassungen verloren gegangen.</b>"
+    },
+    "options-use-sync": {
+      "string": ""
+    }
+  }
+}

@@ -11,6 +11,7 @@ const { withCwd, folderExists, fileExists } = require("./utils.js");
 const {
   patches: managedPatches,
   applyManagedPatches,
+  applyManagedLocalePatches,
 } = require("./managed-patches.js");
 
 async function abortPendingGitOperations() {
@@ -162,20 +163,20 @@ function exportPatches(root, version, locales) {
       title: "Export patches",
       task: () =>
         withCwd("mozilla-release", () =>
-          exportPatchesToFolder(
-            patchesFolder,
-            version,
-            managedPatches.length
-          )
+          exportPatchesToFolder(patchesFolder, version, managedPatches.length)
         ),
     },
     {
       title: "Reset 'l10n-patches' folders",
       task: async () => {
-        const folder = path.join(root, "l10n-patches")
+        const folder = path.join(root, "l10n-patches");
         rimraf.sync(folder);
         await fs.promises.mkdir(folder);
-        await Promise.all(Object.keys(locales).map((locale) => fs.promises.mkdir(path.join(folder, locale))));
+        await Promise.all(
+          Object.keys(locales).map((locale) =>
+            fs.promises.mkdir(path.join(folder, locale))
+          )
+        );
       },
     },
   ];
@@ -186,7 +187,8 @@ function exportPatches(root, version, locales) {
         withCwd(`l10n/${locale}`, () =>
           exportPatchesToFolder(
             path.join(root, "l10n-patches", locale),
-            `mozhg-${locales[locale]}`
+            `mozhg-${locales[locale]}`,
+            1
           )
         ),
     });
@@ -261,7 +263,11 @@ async function importPatches(root) {
   Object.keys(ws.locales).forEach((locale) => {
     const patchPath = path.join(root, "l10n-patches", locale);
     tasks.push({
-      title: `Import translation patches for locale: ${locale}`,
+      title: `Import translations: ${locale}`,
+      task: async () => applyManagedLocalePatches({ ...ws, locale }),
+    });
+    tasks.push({
+      title: `Import translation patches: ${locale}`,
       skip: async () => !(await folderExists(patchPath)),
       task: () =>
         withCwd(`l10n/${locale}`, () => importFromPatchFiles(patchPath)),

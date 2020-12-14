@@ -3,7 +3,6 @@ const fsExtra = require("fs-extra");
 const { getRoot } = require("../core/workspace.js");
 
 const files = [
-  ["browser", "locales", "en-US", "chrome", "overrides", "appstrings.properties"],
   ["browser", "app", "firefox.exe.manifest"]
 ]
 
