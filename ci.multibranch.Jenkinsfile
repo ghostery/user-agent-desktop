@@ -244,20 +244,32 @@ if (params.MacOSARM) {
         postbuildmatrix["MacOS Unified DMG"] = {
             node('docker && kria') {
                 checkout scm
+                // use linux build image - this ensures that the correct environment variables are set in docker.
                 docker.build('ua-build-base', '-f build/Base.dockerfile ./build/ --build-arg user=`whoami` --build-arg UID=`id -u` --build-arg GID=`id -g`')
-                docker.image('ua-build-base').inside() {
+                image = docker.build("ua-build-${name.toLowerCase()}", '-f build/MacOSARM.dockerfile ./build/ --build-arg IPFS_GATEWAY=http://kria.cliqz:8080')
+                image.inside("ua-build-${name.toLowerCase()}").inside() {
                     unarchive mapping: ["mozilla-release/" : "."]
-                    sh '''#!/bin/bash
-                        set -x
-                        set -e
-                        export MOZ_FETCHES="{}"
-                        export UPLOAD_DIR=mozilla-release/obj-x86_64-apple-darwin/dist/
-                        mkdir -p $MOZ_FETCHES_DIR/aarch64
-                        mkdir -p $MOZ_FETCHES_DIR/x64
-                        cp mozilla-release/obj-aarch64-apple-darwin/dist/Ghostery-*.en-US.mac.dmg $MOZ_FETCHES_DIR/aarch64/target.dmg
-                        cp mozilla-release/obj-x86_64-apple-darwin/dist/Ghostery-*.en-US.mac.dmg $MOZ_FETCHES_DIR/x64/target.dmg
-                        ./taskcluster/scripts/misc/unify.sh
+                    sh '''
+                        export PATH=$MOZ_FETCHES_DIR/cctools/bin:$PATH
                     '''
+                    withEnv([
+                        'MOZ_FETCHES="{}"',
+                        'MACH_USE_SYSTEM_PYTHON=1',
+                        'UPLOAD_DIR=obj-x86_64-apple-darwin/dist/',
+                        'LANG=en-US'
+                    ]) {
+                        dir('mozilla-release') {
+                            sh """#!/bin/bash
+                                set -x
+                                set -e
+                                mkdir -p $MOZ_FETCHES_DIR/aarch64
+                                mkdir -p $MOZ_FETCHES_DIR/x64
+                                cp obj-aarch64-apple-darwin/dist/Ghostery-*.${LANG}.mac.dmg $MOZ_FETCHES_DIR/aarch64/target.dmg
+                                cp obj-x86_64-apple-darwin/dist/Ghostery-*.${LANG}.mac.dmg $MOZ_FETCHES_DIR/x64/target.dmg
+                                ./taskcluster/scripts/misc/unify.sh
+                            """
+                        }
+                    }
                 }
             }
         }

@@ -60,7 +60,7 @@ RUN wget -O /builds/worker/fetches/wasi-sysroot.tar.xz $IPFS_GATEWAY/ipfs/QmUkv5
     rm wasi-sysroot.tar.xz
 
 ENV MOZ_FETCHES_DIR=/builds/worker/fetches/ \
-    GECKO_PATH=/builds/worker/workspace \
+    GECKO_PATH=/builds/worker/workspace/mozilla-release \
     WORKSPACE=/builds/worker/workspace \
     TOOLTOOL_DIR=/builds/worker/fetches/ \
     LANG=en_US.UTF-8 \
