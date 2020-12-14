@@ -221,22 +221,15 @@ if (params.MacOSARM) {
                 buildId: buildId,
                 Reset: params.Reset,
                 Clobber: params.Clobber,
-                PGO: params.PGO,
+                PGO: false,
                 Instrument: params.Instrument,
                 PGOProfiles: params.PGOProfiles,
             ])()
 
+            // archive mar
             archiveArtifacts artifacts: "mozilla-release/${objDir}/dist/update/*.mar"
-            archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
-            archiveArtifacts artifacts: "mozilla-release/browser/config/version*"
-
-            stash name: name, includes: [
-                "mozilla-release/${artifactGlob}",
-                "mozilla-release/build/package/mac_osx/unpack-diskimage",
-                "mozilla-release/security/mac/hardenedruntime/*",
-            ].join(',')
-
-            sh "rm -rf mozilla-release/${objDir}/dist/update"
+            // the DMG is stashed - this build will then be unified with the x86_64 build
+            stash name: name, includes: "mozilla-release/${artifactGlob}"
         }
     }
 
@@ -247,29 +240,11 @@ if (params.MacOSARM) {
                 // use linux build image - this ensures that the correct environment variables are set in docker.
                 docker.build('ua-build-base', '-f build/Base.dockerfile ./build/ --build-arg user=`whoami` --build-arg UID=`id -u` --build-arg GID=`id -g`')
                 image = docker.build("ua-build-${name.toLowerCase()}", '-f build/MacOSARM.dockerfile ./build/ --build-arg IPFS_GATEWAY=http://kria.cliqz:8080')
-                image.inside("ua-build-${name.toLowerCase()}").inside() {
+                image.inside() {
                     unarchive mapping: ["mozilla-release/" : "."]
-                    sh '''
-                        export PATH=$MOZ_FETCHES_DIR/cctools/bin:$PATH
-                    '''
-                    withEnv([
-                        'MOZ_FETCHES="{}"',
-                        'MACH_USE_SYSTEM_PYTHON=1',
-                        'UPLOAD_DIR=obj-x86_64-apple-darwin/dist/',
-                        'LANG=en-US'
-                    ]) {
-                        dir('mozilla-release') {
-                            sh """#!/bin/bash
-                                set -x
-                                set -e
-                                mkdir -p $MOZ_FETCHES_DIR/aarch64
-                                mkdir -p $MOZ_FETCHES_DIR/x64
-                                cp obj-aarch64-apple-darwin/dist/Ghostery-*.${LANG}.mac.dmg $MOZ_FETCHES_DIR/aarch64/target.dmg
-                                cp obj-x86_64-apple-darwin/dist/Ghostery-*.${LANG}.mac.dmg $MOZ_FETCHES_DIR/x64/target.dmg
-                                ./taskcluster/scripts/misc/unify.sh
-                            """
-                        }
-                    }
+                    unstash name
+                    sh 'ci/unify_mac_dmg.sh'
+                    archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
                 }
             }
         }

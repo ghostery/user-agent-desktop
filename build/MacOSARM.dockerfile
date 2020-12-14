@@ -78,7 +78,7 @@ RUN cd /builds/worker/fetches/ && \
     rm MacOSX11.0.sdk.tar.bz2
 
 ENV MOZ_FETCHES_DIR=/builds/worker/fetches/ \
-    GECKO_PATH=/builds/worker/workspace \
+    GECKO_PATH=/builds/worker/workspace/mozilla-release \
     WORKSPACE=/builds/worker/workspace \
     TOOLTOOL_DIR=/builds/worker/fetches/ \
     LANG=en_US.UTF-8 \
