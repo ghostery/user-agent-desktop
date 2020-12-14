@@ -17,6 +17,7 @@ properties([
 ])
 
 def buildmatrix = [:]
+def postbuildmatrix = [:]
 def signmatrix = [:]
 def shouldRelease = params.ReleaseName?.trim()
 def helpers
@@ -199,7 +200,7 @@ if (params.MacOSX64) {
     }
 
     if (shouldRelease) {
-        signmatrix["Sign MacOSX64"] = helpers.mac_signing(name, objDir, artifactGlob)
+        signmatrix["Sign Mac"] = helpers.mac_signing(name, objDir, artifactGlob)
     }
 }
 
@@ -239,12 +240,32 @@ if (params.MacOSARM) {
         }
     }
 
-    if (shouldRelease) {
-        signmatrix["Sign MacOSX64"] = helpers.mac_signing(name, objDir, artifactGlob)
+    if (params.MacOSX64) {
+        postbuildmatrix["MacOS Unified DMG"] = {
+            node('docker && kria') {
+                checkout scm
+                docker.build('ua-build-base', '-f build/Base.dockerfile ./build/ --build-arg user=`whoami` --build-arg UID=`id -u` --build-arg GID=`id -g`')
+                docker.image('ua-build-base').inside() {
+                    unarchive mapping: ["mozilla-release/" : "."]
+                    sh '''#!/bin/bash
+                        set -x
+                        set -e
+                        export MOZ_FETCHES="{}"
+                        export UPLOAD_DIR=mozilla-release/obj-x86_64-apple-darwin/dist/
+                        mkdir -p $MOZ_FETCHES_DIR/aarch64
+                        mkdir -p $MOZ_FETCHES_DIR/x64
+                        cp mozilla-release/obj-aarch64-apple-darwin/dist/Ghostery-*.en-US.mac.dmg $MOZ_FETCHES_DIR/aarch64/target.dmg
+                        cp mozilla-release/obj-x86_64-apple-darwin/dist/Ghostery-*.en-US.mac.dmg $MOZ_FETCHES_DIR/x64/target.dmg
+                        ./taskcluster/scripts/misc/unify.sh
+                    '''
+                }
+            }
+        }
     }
 }
 
 parallel buildmatrix
+parallel postbuildmatrix
 parallel signmatrix
 
 stage('Sign MAR') {
