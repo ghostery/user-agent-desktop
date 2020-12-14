@@ -3,8 +3,6 @@
 # . "$topsrcdir/build/mozconfig.common"
 mk_add_options AUTOCLOBBER=1
 
-ac_add_options --enable-crashreporter
-
 # Enable enforcing that add-ons are signed by the trusted root
 MOZ_REQUIRE_SIGNING=${MOZ_REQUIRE_SIGNING-1}
 
@@ -22,6 +20,8 @@ mk_add_options "export PATH=$MOZ_FETCHES_DIR/cctools/bin:$MOZ_FETCHES_DIR/binuti
 # dsymutil needs a libstdc++ more recent than what's on the system.
 mk_add_options "export LD_LIBRARY_PATH=$MOZ_FETCHES_DIR/clang/lib"
 
+CROSS_SYSROOT=$MOZ_FETCHES_DIR/MacOSX11.0.sdk
+
 export CC="$MOZ_FETCHES_DIR/clang/bin/clang"
 export CXX="$MOZ_FETCHES_DIR/clang/bin/clang++"
 export CFLAGS="$CFLAGS -fcrash-diagnostics-dir=${UPLOAD_PATH}"
@@ -37,7 +37,7 @@ export HOST_CFLAGS="-g"
 export HOST_CXXFLAGS="-g"
 export HOST_LDFLAGS="-g"
 
-ac_add_options --target=x86_64-apple-darwin
+ac_add_options --target=aarch64-apple-darwin
 export MACOS_SDK_DIR=$MOZ_FETCHES_DIR/MacOSX11.0.sdk
 
 if [ "x$MOZ_PKG_SPECIAL" != "xasan" -a -z "$MOZ_AUTOMATION_ARTIFACT_BUILDS" ]; then
@@ -60,7 +60,7 @@ export CXXFLAGS="$CXXFLAGS -mcpu=apple-a12"
 #. $topsrcdir/build/mozconfig.wasm-sandboxing
 
 # disable tests for this build
-#ac_add_options --disable-tests
+ac_add_options --disable-tests
 
 if [ -n "$PGO_PROFILE_USE" ]; then
     export LLVM_PROFDATA="$MOZ_FETCHES_DIR/clang/bin/llvm-profdata"
