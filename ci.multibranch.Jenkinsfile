@@ -6,6 +6,7 @@ properties([
         booleanParam(name: 'Windows64', defaultValue: true, description: ''),
         booleanParam(name: 'WindowsARM', defaultValue: false, description: ''),
         booleanParam(name: 'MacOSX64', defaultValue: true, description: ''),
+        booleanParam(name: 'MacOSARM', defaultValue: false, description: ''),
         string(name: 'ReleaseName', defaultValue: '', description: ''),
         booleanParam(name: 'Nightly', defaultValue: false, description: 'Push release to nightly'),
         booleanParam(name: 'PGO', defaultValue: false, description: 'Enable Profile Guided Optimization'),
@@ -16,6 +17,7 @@ properties([
 ])
 
 def buildmatrix = [:]
+def postbuildmatrix = [:]
 def signmatrix = [:]
 def shouldRelease = params.ReleaseName?.trim()
 def helpers
@@ -198,11 +200,54 @@ if (params.MacOSX64) {
     }
 
     if (shouldRelease) {
-        signmatrix["Sign MacOSX64"] = helpers.mac_signing(name, objDir, artifactGlob)
+        signmatrix["Sign Mac"] = helpers.mac_signing(name, objDir, artifactGlob)
+    }
+}
+
+if (params.MacOSARM) {
+    def name = 'MacOSARM'
+    def objDir = 'obj-aarch64-apple-darwin'
+    def artifactGlob = "$objDir/dist/Ghostery-*"
+
+    buildmatrix[name] = {
+        node('docker && !magrathea') {
+            helpers.build([
+                name: name,
+                dockerFile: 'MacOSARM.dockerfile',
+                targetPlatform: 'macosx-aarch64',
+                objDir: objDir,
+                artifactGlob: artifactGlob,
+                locales: locales,
+                buildId: buildId,
+                Reset: params.Reset,
+                Clobber: params.Clobber,
+                PGO: false,
+                Instrument: params.Instrument,
+                PGOProfiles: params.PGOProfiles,
+            ])()
+
+            // the DMG is stashed - this build will then be unified with the x86_64 build
+            stash name: name, includes: [
+                "mozilla-release/${artifactGlob}",
+                "mozilla-release/${objDir}/dist/update/*.mar"
+            ].join(',')
+        }
+    }
+
+    // if x86_64 build is also being done, make a fat multi-arch dmg and mar
+    if (params.MacOSX64) {
+        postbuildmatrix["MacOS Unified DMG"] = {
+            stage('Unify Mac DMG') {
+                node('docker && kria') {
+                    helpers.mac_unified_dmg()
+                }
+            }
+        }
     }
 }
 
 parallel buildmatrix
+parallel postbuildmatrix
 parallel signmatrix
 
 stage('Sign MAR') {

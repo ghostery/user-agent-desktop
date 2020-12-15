@@ -10,7 +10,7 @@ const { getRoot } = require("./workspace.js");
 
 const MOZ_FETCHES_DIR = "/builds/worker/fetches/";
 
-const SKIP_TOOLCHAINS = new Set(['win64-pdbstr'])
+const SKIP_TOOLCHAINS = new Set(['win64-pdbstr', 'macosx64-sdk-11.0'])
 
 async function loadFetches(root) {
   return yaml.safeLoad(
@@ -104,7 +104,7 @@ async function generateDockerFile({ key, fetches, job, name, toolchains }) {
 
   for (const { filename, hash } of toolchains) {
     statements.push([
-      `RUN wget -O /builds/worker/fetches/${filename} $IPFS_GATEWAY/ipfs/${hash} &&`,
+      `RUN wget -nv -O /builds/worker/fetches/${filename} $IPFS_GATEWAY/ipfs/${hash} &&`,
       `cd /builds/worker/fetches/ &&`,
       `tar -xf ${filename} &&`,
       `rm ${filename}`
@@ -197,6 +197,19 @@ async function generate(artifactBaseDir) {
         "windows.yml"
       ),
     },
+    {
+      name: "MacOSARM",
+      key: "macosx64-aarch64-shippable/opt",
+      arch: 'arm64',
+      buildPath: path.join(
+        root,
+        "mozilla-release",
+        "taskcluster",
+        "ci",
+        "build",
+        "macosx.yml"
+      ),
+    }
   ];
   // Collect the toolchains required for each build from it's specification in taskcluster configs.
   const buildInfos = await Promise.all(

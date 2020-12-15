@@ -14,7 +14,7 @@ RUN wget -O /builds/worker/fetches/clang.tar.zst $IPFS_GATEWAY/ipfs/QmakFK3Q9mKP
     tar -xf clang.tar.zst && \
     rm clang.tar.zst
 
-RUN wget -O /builds/worker/fetches/rustc.tar.zst $IPFS_GATEWAY/ipfs/QmShjomK31LqKs5VjmHYj1igi1XCxsbL9tCU6hJ9FS4erq && \
+RUN wget -O /builds/worker/fetches/rustc.tar.zst $IPFS_GATEWAY/ipfs/QmSjKXFeYFfsYyqN4JLDLC5UeP9MtnQ7Svrioyumkx8HAW && \
     cd /builds/worker/fetches/ && \
     tar -xf rustc.tar.zst && \
     rm rustc.tar.zst
@@ -29,7 +29,7 @@ RUN wget -O /builds/worker/fetches/cbindgen.tar.xz $IPFS_GATEWAY/ipfs/QmVbXdagSv
     tar -xf cbindgen.tar.xz && \
     rm cbindgen.tar.xz
 
-RUN wget -O /builds/worker/fetches/dump_syms.tar.xz $IPFS_GATEWAY/ipfs/QmNqhTYRQjunm9kduj8vnoWy6zMteMPy6H7fvHi3PPRVHp && \
+RUN wget -O /builds/worker/fetches/dump_syms.tar.xz $IPFS_GATEWAY/ipfs/QmcBFu6XXN7qQbw8WDxdSqaX1F34ieScEbevhkQP4HGfZZ && \
     cd /builds/worker/fetches/ && \
     tar -xf dump_syms.tar.xz && \
     rm dump_syms.tar.xz
@@ -54,13 +54,13 @@ RUN wget -O /builds/worker/fetches/lucetc.tar.xz $IPFS_GATEWAY/ipfs/QmWjh2TadXMW
     tar -xf lucetc.tar.xz && \
     rm lucetc.tar.xz
 
-RUN wget -O /builds/worker/fetches/wasi-sysroot.tar.xz $IPFS_GATEWAY/ipfs/QmVHARn5VnwKa2x8PPP2g4YagneCFsZfDxUY5BqZBZALY3 && \
+RUN wget -O /builds/worker/fetches/wasi-sysroot.tar.xz $IPFS_GATEWAY/ipfs/QmUkv5Rarn1p9TZkMMt1u46xNX7LVJs7NC4duoMmV4whPF && \
     cd /builds/worker/fetches/ && \
     tar -xf wasi-sysroot.tar.xz && \
     rm wasi-sysroot.tar.xz
 
 ENV MOZ_FETCHES_DIR=/builds/worker/fetches/ \
-    GECKO_PATH=/builds/worker/workspace \
+    GECKO_PATH=/builds/worker/workspace/mozilla-release \
     WORKSPACE=/builds/worker/workspace \
     TOOLTOOL_DIR=/builds/worker/fetches/ \
     LANG=en_US.UTF-8 \

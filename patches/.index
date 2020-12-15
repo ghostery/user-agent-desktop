@@ -35,3 +35,4 @@
 0035-Hide-learn-more-link-on-network-error-pages.patch
 0036-Remove-Firefox-strings-for-new-install-page.patch
 0037-OpenURL-on-buildID-changes.patch
+0038-Ignore-the-glinter.patch

@@ -9,10 +9,10 @@ Subject: Remove tracking protection panel from url bar
  3 files changed, 18 insertions(+), 16 deletions(-)
 
 diff --git a/browser/base/content/browser-siteIdentity.js b/browser/base/content/browser-siteIdentity.js
-index f012228e57..3c2f9c1660 100644
+index abdb814995..9a145dc781 100644
 --- a/browser/base/content/browser-siteIdentity.js
 +++ b/browser/base/content/browser-siteIdentity.js
-@@ -1047,10 +1047,10 @@ var gIdentityHandler = {
+@@ -1053,10 +1053,10 @@ var gIdentityHandler = {
      this._refreshPermissionIcons();
  
      // Hide the shield icon if it is a chrome page.
@@ -28,19 +28,19 @@ index f012228e57..3c2f9c1660 100644
  
    /**
 diff --git a/browser/base/content/browser.js b/browser/base/content/browser.js
-index 87e93042f8..9b27d3133a 100644
+index b0f0114bcb..c27b8288bf 100644
 --- a/browser/base/content/browser.js
 +++ b/browser/base/content/browser.js
-@@ -1986,7 +1986,7 @@ var gBrowserInit = {
+@@ -2010,7 +2010,7 @@ var gBrowserInit = {
+ 
      BookmarkingUI.init();
      BrowserSearch.delayedStartupInit();
-     AutoShowBookmarksToolbar.init();
 -    gProtectionsHandler.init();
 +    // gProtectionsHandler.init();
      HomePage.delayedStartup().catch(Cu.reportError);
  
      let safeMode = document.getElementById("helpSafeMode");
-@@ -2550,7 +2550,7 @@ var gBrowserInit = {
+@@ -2574,7 +2574,7 @@ var gBrowserInit = {
        Services.prefs.removeObserver(ctrlTab.prefName, ctrlTab);
        ctrlTab.uninit();
        gBrowserThumbnails.uninit();
@@ -49,7 +49,7 @@ index 87e93042f8..9b27d3133a 100644
        FullZoom.destroy();
  
        Services.obs.removeObserver(gIdentityHandler, "perm-changed");
-@@ -5246,7 +5246,7 @@ var XULBrowserWindow = {
+@@ -5273,7 +5273,7 @@ var XULBrowserWindow = {
      const nsIWebProgressListener = Ci.nsIWebProgressListener;
  
      let browser = gBrowser.selectedBrowser;
@@ -58,7 +58,7 @@ index 87e93042f8..9b27d3133a 100644
  
      if (
        aStateFlags & nsIWebProgressListener.STATE_START &&
-@@ -5377,7 +5377,7 @@ var XULBrowserWindow = {
+@@ -5416,7 +5416,7 @@ var XULBrowserWindow = {
  
        gIdentityHandler.onLocationChange();
  
@@ -67,7 +67,7 @@ index 87e93042f8..9b27d3133a 100644
  
        BrowserPageActions.onLocationChange();
  
-@@ -5526,12 +5526,12 @@ var XULBrowserWindow = {
+@@ -5565,12 +5565,12 @@ var XULBrowserWindow = {
        );
      }
  
@@ -87,7 +87,7 @@ index 87e93042f8..9b27d3133a 100644
      // We need the state of the previous content blocking event, so update
      // event after onContentBlockingEvent is called.
 diff --git a/browser/base/content/browser.xhtml b/browser/base/content/browser.xhtml
-index 7ce329b833..b563193388 100644
+index 3107b45cbe..2a44ed59a5 100644
 --- a/browser/base/content/browser.xhtml
 +++ b/browser/base/content/browser.xhtml
 @@ -71,7 +71,7 @@
@@ -108,22 +108,22 @@ index 7ce329b833..b563193388 100644
  #include ../../components/downloads/content/downloadsPanel.inc.xhtml
  #include ../../../devtools/startup/enableDevToolsPopup.inc.xhtml
  #include browser-allTabsMenu.inc.xhtml
-@@ -1726,6 +1726,7 @@
-                    class="chromeclass-toolbar-additional"/>
-               <!-- Use onclick instead of normal popup= syntax since the popup
-                    code fires onmousedown, and hence eats our favicon drag events. -->
-+              <!--
-               <box id="tracking-protection-icon-container" align="center"
-                    role="button"
-                    onclick="gProtectionsHandler.handleProtectionsButtonEvent(event);"
-@@ -1743,6 +1744,7 @@
-                   <description id="tracking-protection-icon-tooltip-label" class="tooltip-label"/>
-                 </tooltip>
-               </box>
-+              -->
-               <box id="identity-box" role="button"
-                    align="center"
-                    data-l10n-id="urlbar-identity-button"
+@@ -762,6 +762,7 @@
+                         oncommand="gSync.toggleAccountPanel('PanelUI-fxa', this, event)"/>
+         </toolbaritem>
+         <toolbarseparator class="sync-ui-item"/>
++        <!--
+         <toolbaritem>
+           <toolbarbutton id="appMenu-protection-report-button"
+                class="subviewbutton subviewbutton-iconic"
+@@ -773,6 +774,7 @@
+             </label>
+           </toolbarbutton>
+         </toolbaritem>
++        -->
+         <toolbarseparator id="appMenu-tp-separator"/>
+         <toolbarbutton id="appMenu-new-window-button"
+                        class="subviewbutton subviewbutton-iconic"
 -- 
 2.29.2
 

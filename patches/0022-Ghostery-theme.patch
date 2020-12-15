@@ -17,7 +17,7 @@ Subject: Ghostery theme
  create mode 100644 toolkit/mozapps/extensions/default-theme/background-gradient.svg
 
 diff --git a/toolkit/modules/LightweightThemeConsumer.jsm b/toolkit/modules/LightweightThemeConsumer.jsm
-index 039aeb93c7..c3e3428fac 100644
+index 52da2fe9a7..c13073a9d8 100644
 --- a/toolkit/modules/LightweightThemeConsumer.jsm
 +++ b/toolkit/modules/LightweightThemeConsumer.jsm
 @@ -6,7 +6,7 @@ var EXPORTED_SYMBOLS = ["LightweightThemeConsumer"];
@@ -110,10 +110,10 @@ index 05d6e0e19a..313378f316 100644
    }
  }
 diff --git a/toolkit/mozapps/extensions/internal/XPIProvider.jsm b/toolkit/mozapps/extensions/internal/XPIProvider.jsm
-index 2d79d9b68a..e9b8f5ac8d 100644
+index b7d1ff6ac8..c25ab31300 100644
 --- a/toolkit/mozapps/extensions/internal/XPIProvider.jsm
 +++ b/toolkit/mozapps/extensions/internal/XPIProvider.jsm
-@@ -2460,7 +2460,7 @@ var XPIProvider = {
+@@ -2469,7 +2469,7 @@ var XPIProvider = {
  
        this.maybeInstallBuiltinAddon(
          "default-theme@mozilla.org",

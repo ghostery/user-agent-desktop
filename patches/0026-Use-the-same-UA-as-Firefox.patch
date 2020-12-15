@@ -7,7 +7,7 @@ Subject: Use the same UA as Firefox
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/netwerk/protocol/http/nsHttpHandler.cpp b/netwerk/protocol/http/nsHttpHandler.cpp
-index 72a52a4fa3..a092d4ac06 100644
+index 9ad4e2bfaa..da45e3d1b6 100644
 --- a/netwerk/protocol/http/nsHttpHandler.cpp
 +++ b/netwerk/protocol/http/nsHttpHandler.cpp
 @@ -971,7 +971,7 @@ void nsHttpHandler::BuildUserAgent() {

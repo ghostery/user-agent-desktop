@@ -3,29 +3,49 @@ Date: Fri, 16 Oct 2020 15:47:47 +0200
 Subject: Hide Protection Dashboard link from right burger menu
 
 ---
- browser/base/content/browser.xhtml | 2 ++
- 1 file changed, 2 insertions(+)
+ browser/base/content/browser.xhtml | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
 diff --git a/browser/base/content/browser.xhtml b/browser/base/content/browser.xhtml
-index b563193388..ccb996d820 100644
+index 2a44ed59a5..bb6e53bf13 100644
 --- a/browser/base/content/browser.xhtml
 +++ b/browser/base/content/browser.xhtml
-@@ -761,6 +761,7 @@
+@@ -761,8 +761,8 @@
                          closemenu="none"
                          oncommand="gSync.toggleAccountPanel('PanelUI-fxa', this, event)"/>
          </toolbaritem>
-+        <!--
-         <toolbarseparator class="sync-ui-item"/>
+-        <toolbarseparator class="sync-ui-item"/>
+         <!--
++        <toolbarseparator class="sync-ui-item"/>
          <toolbaritem>
            <toolbarbutton id="appMenu-protection-report-button"
-@@ -774,6 +775,7 @@
+                class="subviewbutton subviewbutton-iconic"
+@@ -774,8 +774,8 @@
+             </label>
            </toolbarbutton>
          </toolbaritem>
+-        -->
          <toolbarseparator id="appMenu-tp-separator"/>
 +        -->
          <toolbarbutton id="appMenu-new-window-button"
                         class="subviewbutton subviewbutton-iconic"
                         label="&newNavigatorCmd.label;"
+@@ -1728,6 +1728,7 @@
+                    class="chromeclass-toolbar-additional"/>
+               <!-- Use onclick instead of normal popup= syntax since the popup
+                    code fires onmousedown, and hence eats our favicon drag events. -->
++              <!--
+               <box id="tracking-protection-icon-container" align="center"
+                    role="button"
+                    onclick="gProtectionsHandler.handleProtectionsButtonEvent(event);"
+@@ -1745,6 +1746,7 @@
+                   <description id="tracking-protection-icon-tooltip-label" class="tooltip-label"/>
+                 </tooltip>
+               </box>
++              -->
+               <box id="identity-box" role="button"
+                    align="center"
+                    data-l10n-id="urlbar-identity-button"
 -- 
 2.29.2
 

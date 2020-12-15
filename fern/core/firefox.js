@@ -16,7 +16,7 @@ const { fileExists, folderExists, symlinkExists } = require("./utils.js");
 async function use(version, ipfsGateway, ipfsAddr) {
   const root = await getRoot();
   const cache = await getCacheDir("firefox", `${version}`);
-  const folder = path.join(cache, `firefox-${version}`);
+  const folder = path.join(cache, `firefox-${version.split('b')[0]}`);
   const archive = path.join(cache, `firefox-${version}.source.tar.xz`);
   const git = path.join(folder, ".git");
   const baseUrl = ipfsGateway ? `${ipfsGateway}${ipfsAddr}` : "https://archive.mozilla.org/pub";

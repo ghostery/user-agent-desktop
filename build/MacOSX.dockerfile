@@ -19,7 +19,7 @@ RUN wget -O /builds/worker/fetches/sccache.tar.xz $IPFS_GATEWAY/ipfs/QmeB7fo2FuA
     tar -xf sccache.tar.xz && \
     rm sccache.tar.xz
 
-RUN wget -O /builds/worker/fetches/wasi-sysroot.tar.xz $IPFS_GATEWAY/ipfs/QmVHARn5VnwKa2x8PPP2g4YagneCFsZfDxUY5BqZBZALY3 && \
+RUN wget -O /builds/worker/fetches/wasi-sysroot.tar.xz $IPFS_GATEWAY/ipfs/QmUkv5Rarn1p9TZkMMt1u46xNX7LVJs7NC4duoMmV4whPF && \
     cd /builds/worker/fetches/ && \
     tar -xf wasi-sysroot.tar.xz && \
     rm wasi-sysroot.tar.xz
@@ -29,7 +29,7 @@ RUN wget -O /builds/worker/fetches/binutils.tar.xz $IPFS_GATEWAY/ipfs/QmfTyFzy9f
     tar -xf binutils.tar.xz && \
     rm binutils.tar.xz
 
-RUN wget -O /builds/worker/fetches/dump_syms.tar.xz $IPFS_GATEWAY/ipfs/QmNqhTYRQjunm9kduj8vnoWy6zMteMPy6H7fvHi3PPRVHp && \
+RUN wget -O /builds/worker/fetches/dump_syms.tar.xz $IPFS_GATEWAY/ipfs/QmcBFu6XXN7qQbw8WDxdSqaX1F34ieScEbevhkQP4HGfZZ && \
     cd /builds/worker/fetches/ && \
     tar -xf dump_syms.tar.xz && \
     rm dump_syms.tar.xz
@@ -49,7 +49,7 @@ RUN wget -O /builds/worker/fetches/llvm-dsymutil.tar.xz $IPFS_GATEWAY/ipfs/QmT3s
     tar -xf llvm-dsymutil.tar.xz && \
     rm llvm-dsymutil.tar.xz
 
-RUN wget -O /builds/worker/fetches/rustc.tar.zst $IPFS_GATEWAY/ipfs/QmbpZYDKzc2ZBagnCNMMzMZNNNC1e5vvqcUY7ULaiAnJAG && \
+RUN wget -O /builds/worker/fetches/rustc.tar.zst $IPFS_GATEWAY/ipfs/QmV4jatYsQdujPUmg1j2bESpjmPZgwjiyAxWPN7pYsErFS && \
     cd /builds/worker/fetches/ && \
     tar -xf rustc.tar.zst && \
     rm rustc.tar.zst
