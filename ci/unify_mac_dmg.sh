@@ -23,7 +23,7 @@ do
   ./mozilla-release/taskcluster/scripts/misc/unify.sh
   mv $UPLOAD_DIR/target.dmg $DMG_PATH
   # create unified mar
-  $GECKO_PATH/tools/update-packaging/make_full_update.sh $UPLOAD_DIR/update/${DMG%.dmg}.complete.mar x64/
+  $GECKO_PATH/tools/update-packaging/make_full_update.sh $UPLOAD_DIR/update/${DMG%.dmg}.complete.mar x64/*.app
 done
 
 rm -rf ./aarch64
