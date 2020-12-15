@@ -236,6 +236,7 @@ if (params.MacOSARM) {
     if (params.MacOSX64) {
         postbuildmatrix["MacOS Unified DMG"] = {
             node('docker && kria') {
+                def x86ObjDir = "obj-x86_64-apple-darwin"
                 checkout scm
                 // use linux build image - this ensures that the correct environment variables are set in docker.
                 docker.build('ua-build-base', '-f build/Base.dockerfile ./build/ --build-arg user=`whoami` --build-arg UID=`id -u` --build-arg GID=`id -g`')
@@ -245,7 +246,9 @@ if (params.MacOSARM) {
                     unstash name
                     withEnv(["MOZCONFIG=${env.WORKSPACE}/mozconfig"]) {
                         sh 'ci/unify_mac_dmg.sh'
-                        archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
+                        // the unify script replaces the .dmg and .mar files for x86_64 with fat ones, so we rearchive to replace them
+                        archiveArtifacts artifacts: "mozilla-release/${x86ObjDir}/dist/Ghostery-*"
+                        archiveArtifacts artifacts: "mozilla-release/${x86ObjDir}/dist/update/*.mar"
                     }
                 }
             }
