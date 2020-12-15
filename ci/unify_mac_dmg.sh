@@ -14,8 +14,13 @@ mkdir -p $MOZ_FETCHES_DIR/x64
 for DMG_PATH in ${UPLOAD_DIR}*.dmg
 do
   DMG=$(basename $DMG_PATH)
+  rm -r ./aarch64
+  rm -r ./x64
   cp mozilla-release/obj-aarch64-apple-darwin/dist/$DMG $MOZ_FETCHES_DIR/aarch64/target.dmg
   cp mozilla-release/obj-x86_64-apple-darwin/dist/$DMG $MOZ_FETCHES_DIR/x64/target.dmg
   ./mozilla-release/taskcluster/scripts/misc/unify.sh
   mv $UPLOAD_DIR/target.dmg $DMG_PATH
 done
+
+rm -r ./aarch64
+rm -r ./x64

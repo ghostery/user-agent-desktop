@@ -243,8 +243,10 @@ if (params.MacOSARM) {
                 image.inside() {
                     unarchive mapping: ["mozilla-release/" : "."]
                     unstash name
-                    sh 'ci/unify_mac_dmg.sh'
-                    archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
+                    withEnv(["MOZCONFIG=${env.WORKSPACE}/mozconfig"]) {
+                        sh 'ci/unify_mac_dmg.sh'
+                        archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
+                    }
                 }
             }
         }
