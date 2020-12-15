@@ -10,7 +10,7 @@ properties([
         string(name: 'ReleaseName', defaultValue: '', description: ''),
         booleanParam(name: 'Nightly', defaultValue: false, description: 'Push release to nightly'),
         booleanParam(name: 'PGO', defaultValue: false, description: 'Enable Profile Guided Optimization'),
-        string(name: 'PGOProfiles', defaultValue: 'http://kria.cliqz:8080/ipfs/QmfMit6M4bjz51y3p8Kykw4CMp9pw2ueraZ8sBRHmUw6uq/83.0', description: 'Base URL for fetching PGO Profiles'),
+        string(name: 'PGOProfiles', defaultValue: 'http://kria.cliqz:8080/ipfs/QmXRhSG8nhDbwSgUdbVkqtZ76thuJgAXEa7m7H9Nuga763/84.0', description: 'Base URL for fetching PGO Profiles'),
         booleanParam(name: 'Instrument', defaultValue: false, description: 'Enable an instrumented build for generating profiles for PGO'),
         string(name: 'Locales', defaultValue: 'de', description: 'Repack for these locales'),
     ]),
@@ -221,7 +221,7 @@ if (params.MacOSARM) {
                 buildId: buildId,
                 Reset: params.Reset,
                 Clobber: params.Clobber,
-                PGO: false,
+                PGO: params.PGO,
                 Instrument: params.Instrument,
                 PGOProfiles: params.PGOProfiles,
             ])()
