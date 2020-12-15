@@ -35,15 +35,7 @@ def build(opts, Closure postpackage={}, Closure archiving={}) {
         image.inside(dockerOpts) {
             withEnv(defaultEnv) {
                 stage('prepare mozilla-release') {
-                    sh 'npm ci'
-                    if (opts.Reset) {
-                        sh 'rm -rf .cache'
-                    }
-                    // sh 'rm -rf mozilla-release'
-                    // sh "./fern.js use --ipfs-gateway=http://kria.cliqz:8080"
-                    sh "./fern.js config --print --force --platform ${opts.targetPlatform} --brand ghostery"
-                    // sh "./fern.js reset"
-                    // sh './fern.js import-patches'
+                    prepare_workspace(opts.Reset, opts.targetPlatform, true)
                 }
 
                 dir('mozilla-release') {
@@ -103,6 +95,20 @@ def build(opts, Closure postpackage={}, Closure archiving={}) {
                 }
             }
         }
+    }
+}
+
+def prepare_workspace(reset, targetPlatform, skipPatches) {
+    sh 'npm ci'
+    if (reset) {
+        sh 'rm -rf .cache'
+    }
+    sh 'rm -rf mozilla-release'
+    sh "./fern.js use --ipfs-gateway=http://kria.cliqz:8080"
+    sh "./fern.js config --print --force --platform ${targetPlatform} --brand ghostery"
+    if (!skipPatches) {
+        sh "./fern.js reset"
+        sh './fern.js import-patches'
     }
 }
 
@@ -313,6 +319,25 @@ def mac_signing(name, objDir, artifactGlob) {
             stage('publish artifacts') {
                 archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
             }
+        }
+    }
+}
+
+def mac_unified_dmg() {
+    def name = 'MacOSARM'
+    def x86ObjDir = "obj-x86_64-apple-darwin"
+    checkout scm
+    docker.build('ua-build-base', '-f build/Base.dockerfile ./build/ --build-arg user=`whoami` --build-arg UID=`id -u` --build-arg GID=`id -g`')
+    image = docker.build("ua-build-macosarm", '-f build/MacOSARM.dockerfile ./build/ --build-arg IPFS_GATEWAY=http://kria.cliqz:8080')
+    image.inside() {
+        prepare_workspace(false, 'macosx-aarch64', true)
+        unarchive mapping: ["mozilla-release/" : "."]
+        unstash name
+        withEnv(["MOZCONFIG=${env.WORKSPACE}/mozconfig"]) {
+            sh 'ci/unify_mac_dmg.sh'
+            // the unify script replaces the .dmg and .mar files for x86_64 with fat ones, so we rearchive to replace them
+            archiveArtifacts artifacts: "mozilla-release/${x86ObjDir}/dist/Ghostery-*"
+            archiveArtifacts artifacts: "mozilla-release/${x86ObjDir}/dist/update/*.mar"
         }
     }
 }

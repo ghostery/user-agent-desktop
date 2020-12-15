@@ -226,30 +226,20 @@ if (params.MacOSARM) {
                 PGOProfiles: params.PGOProfiles,
             ])()
 
-            // archive mar
-            archiveArtifacts artifacts: "mozilla-release/${objDir}/dist/update/*.mar"
             // the DMG is stashed - this build will then be unified with the x86_64 build
-            stash name: name, includes: "mozilla-release/${artifactGlob}"
+            stash name: name, includes: [
+                "mozilla-release/${artifactGlob}",
+                "mozilla-release/${objDir}/dist/update/*.mar"
+            ].join(',')
         }
     }
 
+    // if x86_64 build is also being done, make a fat multi-arch dmg and mar
     if (params.MacOSX64) {
         postbuildmatrix["MacOS Unified DMG"] = {
-            node('docker && kria') {
-                def x86ObjDir = "obj-x86_64-apple-darwin"
-                checkout scm
-                // use linux build image - this ensures that the correct environment variables are set in docker.
-                docker.build('ua-build-base', '-f build/Base.dockerfile ./build/ --build-arg user=`whoami` --build-arg UID=`id -u` --build-arg GID=`id -g`')
-                image = docker.build("ua-build-${name.toLowerCase()}", '-f build/MacOSARM.dockerfile ./build/ --build-arg IPFS_GATEWAY=http://kria.cliqz:8080')
-                image.inside() {
-                    unarchive mapping: ["mozilla-release/" : "."]
-                    unstash name
-                    withEnv(["MOZCONFIG=${env.WORKSPACE}/mozconfig"]) {
-                        sh 'ci/unify_mac_dmg.sh'
-                        // the unify script replaces the .dmg and .mar files for x86_64 with fat ones, so we rearchive to replace them
-                        archiveArtifacts artifacts: "mozilla-release/${x86ObjDir}/dist/Ghostery-*"
-                        archiveArtifacts artifacts: "mozilla-release/${x86ObjDir}/dist/update/*.mar"
-                    }
+            stage('Unify Mac DMG') {
+                node('docker && kria') {
+                    helpers.mac_unified_dmg()
                 }
             }
         }
