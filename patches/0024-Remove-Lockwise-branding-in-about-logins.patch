@@ -36,7 +36,7 @@ index 2f38ef3ce0..fb4cb5de6c 100644
 +        -->
        </section>
      </template>
-
+ 
 diff --git a/browser/components/aboutlogins/content/components/login-intro.js b/browser/components/aboutlogins/content/components/login-intro.js
 index a0cd1d8cd1..10d72b3a94 100644
 --- a/browser/components/aboutlogins/content/components/login-intro.js
@@ -44,7 +44,7 @@ index a0cd1d8cd1..10d72b3a94 100644
 @@ -50,11 +50,11 @@ export default class LoginIntro extends HTMLElement {
        .querySelector(".illustration")
        .classList.toggle("logged-in", syncState.loggedIn);
-
+ 
 -    let supportURL =
 -      window.AboutLoginsUtils.supportBaseURL + "firefox-lockwise";
 -    this.shadowRoot
@@ -55,7 +55,7 @@ index a0cd1d8cd1..10d72b3a94 100644
 +    // this.shadowRoot
 +    //   .querySelector(".intro-help-link")
 +    //   .setAttribute("href", supportURL);
-
+ 
      let importClass = window.AboutLoginsUtils.fileImportEnabled
        ? ".intro-import-text.file-import"
 diff --git a/browser/themes/shared/preferences/privacy.css b/browser/themes/shared/preferences/privacy.css
@@ -63,9 +63,9 @@ index 71c672d860..ede89f8096 100644
 --- a/browser/themes/shared/preferences/privacy.css
 +++ b/browser/themes/shared/preferences/privacy.css
 @@ -4,6 +4,10 @@
-
+ 
  /* Permissions */
-
+ 
 +#breachAlertsBox {
 +  display: none;
 +}
@@ -73,6 +73,6 @@ index 71c672d860..ede89f8096 100644
  #trackingGroup {
    --section-highlight-background-color: rgba(69, 161, 255, 0.2);
  }
---
+-- 
 2.29.2
 
