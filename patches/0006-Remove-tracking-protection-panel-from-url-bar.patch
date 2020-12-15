@@ -28,7 +28,7 @@ index abdb814995..9a145dc781 100644
  
    /**
 diff --git a/browser/base/content/browser.js b/browser/base/content/browser.js
-index b0f0114bcb..c27b8288bf 100644
+index 45ef5fa285..d7cea97169 100644
 --- a/browser/base/content/browser.js
 +++ b/browser/base/content/browser.js
 @@ -2010,7 +2010,7 @@ var gBrowserInit = {
