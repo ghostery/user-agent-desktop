@@ -45,6 +45,7 @@ if (!tagExists) {
         booleanParam(name: 'Linux64', value: true),
         booleanParam(name: 'Windows64', value: true),
         booleanParam(name: 'MacOSX64', value: true),
+        booleanParam(name: 'MacOSARM', value: true),
         booleanParam(name: 'WindowsARM', value: true),
         booleanParam(name: 'Nightly', value: true),
         booleanParam(name: 'PGO',  value: true),

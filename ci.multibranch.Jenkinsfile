@@ -6,7 +6,7 @@ properties([
         booleanParam(name: 'Windows64', defaultValue: true, description: ''),
         booleanParam(name: 'WindowsARM', defaultValue: false, description: ''),
         booleanParam(name: 'MacOSX64', defaultValue: true, description: ''),
-        booleanParam(name: 'MacOSARM', defaultValue: true, description: ''),
+        booleanParam(name: 'MacOSARM', defaultValue: false, description: ''),
         string(name: 'ReleaseName', defaultValue: '', description: ''),
         booleanParam(name: 'Nightly', defaultValue: false, description: 'Push release to nightly'),
         booleanParam(name: 'PGO', defaultValue: false, description: 'Enable Profile Guided Optimization'),
