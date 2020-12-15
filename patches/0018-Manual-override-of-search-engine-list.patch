@@ -125,7 +125,7 @@ index 0000000000..16ed15b645
 +      "name": "StartPage",
 +      "search_url": "https://www.startpage.com/do/dsearch",
 +      "search_form": "https://www.startpage.com/do/dsearch?query={searchTerms}",
-+      "search_url_get_params": "query={searchTerms}"
++      "search_url_get_params": "query={searchTerms}&segment=startpage.ghostery"
 +    }
 +  }
 +}
@@ -271,7 +271,7 @@ index 9f61477182..b0f7ffdd71 100644
 @@ -94,6 +94,67 @@ class SearchEngineSelector {
      this._changeListener = listener;
    }
- 
+
 +  get _configuration() {
 +    return [{
 +      "appliesTo": [{
@@ -336,6 +336,6 @@ index 9f61477182..b0f7ffdd71 100644
    /**
     * Handles getting the configuration from remote settings.
     */
--- 
+--
 2.29.2
 
