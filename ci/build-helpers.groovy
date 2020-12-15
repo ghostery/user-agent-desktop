@@ -338,6 +338,12 @@ def mac_unified_dmg() {
             // the unify script replaces the .dmg and .mar files for x86_64 with fat ones, so we rearchive to replace them
             archiveArtifacts artifacts: "mozilla-release/${x86ObjDir}/dist/Ghostery-*"
             archiveArtifacts artifacts: "mozilla-release/${x86ObjDir}/dist/update/*.mar"
+            // restash MacOSX64 artifacts
+            stash name: 'MacOSX64', includes: [
+                "mozilla-release/${x86ObjDir}/dist/Ghostery-*",
+                "mozilla-release/build/package/mac_osx/unpack-diskimage",
+                "mozilla-release/security/mac/hardenedruntime/*",
+            ].join(',')
         }
     }
 }
