@@ -4,31 +4,27 @@ Subject: Ghostery theme
 
 ---
  browser/components/BrowserGlue.jsm            |  2 +
- .../customizableui/CustomizeMode.jsm          |  4 ++
+ .../customizableui/CustomizeMode.jsm          |  3 ++
  .../background-gradient-dark.svg              |  1 +
  .../ghostery-dynamic/background-gradient.svg  |  1 +
  .../themes/addons/ghostery-dynamic/icon.svg   | 14 ++++++
  .../addons/ghostery-dynamic/manifest.json     | 43 +++++++++++++++++++
- .../addons/ghostery-private/experiment.css    |  6 +++
- .../themes/addons/ghostery-private/icon.svg   | 14 ++++++
- .../addons/ghostery-private/manifest.json     | 43 +++++++++++++++++++
- browser/themes/addons/jar.mn                  |  8 ++++
- .../mozapps/extensions/content/aboutaddons.js | 10 +++++
+ browser/themes/addons/jar.mn                  |  4 ++
+ .../global/global-extension-fields.properties |  4 +-
+ toolkit/modules/LightweightThemeConsumer.jsm  |  2 +-
+ .../mozapps/extensions/content/aboutaddons.js |  8 +++-
  .../extensions/content/ghostery-dynamic.svg   | 21 +++++++++
- .../extensions/internal/AddonSettings.jsm     |  3 ++
- .../extensions/internal/XPIProvider.jsm       | 31 +++++++++++++
+ .../extensions/default-theme/manifest.json    | 11 ++---
+ .../extensions/internal/XPIProvider.jsm       | 25 ++++++++++-
  toolkit/mozapps/extensions/jar.mn             |  1 +
  toolkit/themes/linux/global/toolbarbutton.css |  2 +-
  toolkit/themes/osx/global/toolbarbutton.css   |  2 +-
  .../themes/windows/global/toolbarbutton.css   |  2 +-
- 18 files changed, 205 insertions(+), 3 deletions(-)
+ 17 files changed, 131 insertions(+), 15 deletions(-)
  create mode 100644 browser/themes/addons/ghostery-dynamic/background-gradient-dark.svg
  create mode 100644 browser/themes/addons/ghostery-dynamic/background-gradient.svg
  create mode 100644 browser/themes/addons/ghostery-dynamic/icon.svg
  create mode 100644 browser/themes/addons/ghostery-dynamic/manifest.json
- create mode 100644 browser/themes/addons/ghostery-private/experiment.css
- create mode 100644 browser/themes/addons/ghostery-private/icon.svg
- create mode 100644 browser/themes/addons/ghostery-private/manifest.json
  create mode 100644 toolkit/mozapps/extensions/content/ghostery-dynamic.svg
 
 diff --git a/browser/components/BrowserGlue.jsm b/browser/components/BrowserGlue.jsm
@@ -52,21 +48,19 @@ index 869a90ef40..49f4305926 100644
      if (AppConstants.MOZ_NORMANDY) {
        Normandy.init();
 diff --git a/browser/components/customizableui/CustomizeMode.jsm b/browser/components/customizableui/CustomizeMode.jsm
-index 9ce362d45d..813119a331 100644
+index 9ce362d45d..480409ba1c 100644
 --- a/browser/components/customizableui/CustomizeMode.jsm
 +++ b/browser/components/customizableui/CustomizeMode.jsm
-@@ -95,10 +95,14 @@ const DARK_THEME_ID = "firefox-compact-dark@mozilla.org";
- const ALPENGLOW_THEME_ID = "firefox-alpenglow@mozilla.org";
+@@ -96,9 +96,12 @@ const ALPENGLOW_THEME_ID = "firefox-alpenglow@mozilla.org";
  
  const _defaultImportantThemes = [
-+  /*
    DEFAULT_THEME_ID,
++  /*
    LIGHT_THEME_ID,
    DARK_THEME_ID,
    ALPENGLOW_THEME_ID,
 +  */
-+ "private-theme@ghostery.com",
-+ "dynamic-theme@ghostery.com",
++  "dynamic-theme@ghostery.com",
  ];
  
  var gDraggingInToolbars;
@@ -156,93 +150,11 @@ index 0000000000..5a012741b7
 +    }
 +  }
 +}
-diff --git a/browser/themes/addons/ghostery-private/experiment.css b/browser/themes/addons/ghostery-private/experiment.css
-new file mode 100644
-index 0000000000..e613c87b4c
---- /dev/null
-+++ b/browser/themes/addons/ghostery-private/experiment.css
-@@ -0,0 +1,6 @@
-+/* This Source Code Form is subject to the terms of the Mozilla Public
-+ * License, v. 2.0. If a copy of the MPL was not distributed with this
-+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
-+
-+/* Dark theme */
-+@import url("chrome://browser/skin/compacttheme.css");
-diff --git a/browser/themes/addons/ghostery-private/icon.svg b/browser/themes/addons/ghostery-private/icon.svg
-new file mode 100644
-index 0000000000..e68e62d147
---- /dev/null
-+++ b/browser/themes/addons/ghostery-private/icon.svg
-@@ -0,0 +1,14 @@
-+<!-- This Source Code Form is subject to the terms of the Mozilla Public
-+   - License, v. 2.0. If a copy of the MPL was not distributed with this
-+   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
-+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
-+  <path fill="#0c0c0d" d="M2 2h14v13H2z"/>
-+  <path fill="#323234" d="M16 2v13H2v15h28V2H16z"/>
-+  <rect x="1" y="1" width="30" height="30" rx="2" ry="2" fill="none" stroke="#08091a" stroke-opacity=".35" stroke-width="2"/>
-+  <circle cx="9.5" cy="22.5" r="6" fill="#474749" stroke="#08091a"/>
-+  <path d="M12.5 22H7.707l2.146-2.146a.5.5 0 0 0-.707-.707l-3 3a.5.5 0 0 0 0 .708l3 3a.5.5 0 1 0 .707-.707L7.707 23H12.5a.5.5 0 0 0 0-1z" fill="#f9f9fa" fill-opacity=".8"/>
-+  <path d="M20.5 20h4a.5.5 0 0 0 0-1h-4a.5.5 0 0 0 0 1zm4 2h-4a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1zm0 3h-4a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1z" fill="#f9f9fa" fill-opacity=".8"/>
-+  <path fill="#0a84ff" d="M16 2h14v1H16z"/>
-+  <path d="M26.354 8.646l-3.5-3.5a.5.5 0 0 0-.707 0l-3.5 3.5a.5.5 0 0 0 .707.707L20 8.707V11.5a.5.5 0 0 0 .5.5h4a.5.5 0 0 0 .5-.5V8.707l.646.646a.5.5 0 1 0 .707-.707zM24 11h-1V9h-1v2h-1V7.707l1.5-1.5 1.5 1.5z" fill="#f9f9fa" fill-opacity=".8"/>
-+  <path fill="#08091a" d="M15 2v12H2v1h14V2h-1z"/>
-+</svg>
-\ No newline at end of file
-diff --git a/browser/themes/addons/ghostery-private/manifest.json b/browser/themes/addons/ghostery-private/manifest.json
-new file mode 100644
-index 0000000000..5d116f0431
---- /dev/null
-+++ b/browser/themes/addons/ghostery-private/manifest.json
-@@ -0,0 +1,43 @@
-+{
-+  "manifest_version": 2,
-+
-+  "applications": {
-+    "gecko": {
-+      "id": "private-theme@ghostery.com"
-+    }
-+  },
-+
-+  "name": "Ghostery Private",
-+  "description": "",
-+  "author": "Ghostery",
-+  "version": "1.0",
-+
-+  "icons": {"32": "icon.svg"},
-+
-+  "theme": {
-+    "colors": {
-+      "tab_background_text": "rgb(249, 249, 250)",
-+      "icons": "rgb(249, 249, 250, 0.7)",
-+      "frame": "hsl(240, 5%, 5%)",
-+      "popup": "#4a4a4f",
-+      "popup_text": "rgb(249, 249, 250)",
-+      "popup_border": "#27272b",
-+      "tab_line": "#0a84ff",
-+      "toolbar": "hsl(240, 1%, 20%)",
-+      "toolbar_bottom_separator": "hsl(240, 5%, 5%)",
-+      "toolbar_field": "rgb(71, 71, 73)",
-+      "toolbar_field_border": "rgba(249, 249, 250, 0.2)",
-+      "toolbar_field_separator": "#5F6670",
-+      "toolbar_field_text": "rgb(249, 249, 250)",
-+      "ntp_background": "#2A2A2E",
-+      "ntp_text": "rgb(249, 249, 250)",
-+      "sidebar": "#38383D",
-+      "sidebar_text": "rgb(249, 249, 250)",
-+      "sidebar_border": "rgba(255, 255, 255, 0.1)"
-+    }
-+  },
-+
-+  "theme_experiment": {
-+    "stylesheet": "experiment.css"
-+  }
-+}
 diff --git a/browser/themes/addons/jar.mn b/browser/themes/addons/jar.mn
-index 5aa122b2ab..4b3f0c9177 100644
+index 5aa122b2ab..83349d2279 100644
 --- a/browser/themes/addons/jar.mn
 +++ b/browser/themes/addons/jar.mn
-@@ -15,3 +15,11 @@ browser.jar:
+@@ -15,3 +15,7 @@ browser.jar:
    content/builtin-themes/light                     (light/*.svg)
    content/builtin-themes/light                     (light/*.css)
    content/builtin-themes/light/manifest.json       (light/manifest.json)
@@ -250,31 +162,52 @@ index 5aa122b2ab..4b3f0c9177 100644
 +  content/builtin-themes/ghostery-dynamic                     (ghostery-dynamic/*.svg)
 +  content/builtin-themes/ghostery-dynamic                     (ghostery-dynamic/*.css)
 +  content/builtin-themes/ghostery-dynamic/manifest.json       (ghostery-dynamic/manifest.json)
-+
-+  content/builtin-themes/ghostery-private                     (ghostery-private/*.svg)
-+  content/builtin-themes/ghostery-private                     (ghostery-private/*.css)
-+  content/builtin-themes/ghostery-private/manifest.json       (ghostery-private/manifest.json)
+diff --git a/toolkit/locales/en-US/chrome/global/global-extension-fields.properties b/toolkit/locales/en-US/chrome/global/global-extension-fields.properties
+index 21c545bdd4..597e2d8816 100644
+--- a/toolkit/locales/en-US/chrome/global/global-extension-fields.properties
++++ b/toolkit/locales/en-US/chrome/global/global-extension-fields.properties
+@@ -3,6 +3,6 @@
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ 
+ # LOCALIZATION NOTE (extension.default-theme@mozilla.org.name, extension.default-theme@mozilla.org.description): This is displayed in about:addons -> Appearance
+-extension.default-theme@mozilla.org.name=Default
+-extension.default-theme@mozilla.org.description=A theme with the operating system color scheme.
++extension.default-theme@mozilla.org.name=Ghostery Private
++extension.default-theme@mozilla.org.description=
+ 
+diff --git a/toolkit/modules/LightweightThemeConsumer.jsm b/toolkit/modules/LightweightThemeConsumer.jsm
+index 52da2fe9a7..c13073a9d8 100644
+--- a/toolkit/modules/LightweightThemeConsumer.jsm
++++ b/toolkit/modules/LightweightThemeConsumer.jsm
+@@ -6,7 +6,7 @@ var EXPORTED_SYMBOLS = ["LightweightThemeConsumer"];
+ 
+ const { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
+ 
+-const DEFAULT_THEME_ID = "default-theme@mozilla.org";
++const DEFAULT_THEME_ID = "__DOES_NOT_APPLY__"; // in Ghostery Browser default theme is a lightweight theme
+ 
+ ChromeUtils.defineModuleGetter(
+   this,
 diff --git a/toolkit/mozapps/extensions/content/aboutaddons.js b/toolkit/mozapps/extensions/content/aboutaddons.js
-index f112877dcf..abed573059 100644
+index f112877dcf..ff4711688e 100644
 --- a/toolkit/mozapps/extensions/content/aboutaddons.js
 +++ b/toolkit/mozapps/extensions/content/aboutaddons.js
-@@ -85,6 +85,7 @@ const PLUGIN_ICON_URL = "chrome://global/skin/plugins/plugin.svg";
- const EXTENSION_ICON_URL =
-   "chrome://mozapps/skin/extensions/extensionGeneric.svg";
+@@ -87,8 +87,9 @@ const EXTENSION_ICON_URL =
  const BUILTIN_THEME_PREVIEWS = new Map([
-+  /*
    [
      "default-theme@mozilla.org",
-     "chrome://mozapps/content/extensions/default-theme.svg",
-@@ -101,6 +102,15 @@ const BUILTIN_THEME_PREVIEWS = new Map([
+-    "chrome://mozapps/content/extensions/default-theme.svg",
++    "chrome://mozapps/content/extensions/firefox-compact-dark.svg",
+   ],
++  /*
+   [
+     "firefox-compact-light@mozilla.org",
+     "chrome://mozapps/content/extensions/firefox-compact-light.svg",
+@@ -101,6 +102,11 @@ const BUILTIN_THEME_PREVIEWS = new Map([
      "firefox-alpenglow@mozilla.org",
      "chrome://mozapps/content/extensions/firefox-alpenglow.svg",
    ],
 +  */
-+  [
-+    "private-theme@ghostery.com",
-+    "chrome://mozapps/content/extensions/firefox-compact-dark.svg",
-+  ],
 +  [
 +    "dynamic-theme@ghostery.com",
 +    "chrome://mozapps/content/extensions/ghostery-dynamic.svg",
@@ -310,45 +243,44 @@ index 0000000000..223a0b63e1
 +  <rect id="Rectangle" fill="#FFFFFF" fill-rule="nonzero" x="630" y="67" width="18" height="2.67" rx="1.33" stroke="none" stroke-width="1"/>
 +</svg>
 \ No newline at end of file
-diff --git a/toolkit/mozapps/extensions/internal/AddonSettings.jsm b/toolkit/mozapps/extensions/internal/AddonSettings.jsm
-index 40c416668a..3f85271e9f 100644
---- a/toolkit/mozapps/extensions/internal/AddonSettings.jsm
-+++ b/toolkit/mozapps/extensions/internal/AddonSettings.jsm
-@@ -125,11 +125,14 @@ if (
-   makeConstant("EXPERIMENTS_ENABLED", false);
- }
+diff --git a/toolkit/mozapps/extensions/default-theme/manifest.json b/toolkit/mozapps/extensions/default-theme/manifest.json
+index 05d6e0e19a..55b57459fd 100644
+--- a/toolkit/mozapps/extensions/default-theme/manifest.json
++++ b/toolkit/mozapps/extensions/default-theme/manifest.json
+@@ -7,17 +7,14 @@
+     }
+   },
  
-+makeConstant("DEFAULT_THEME_ID", "private-theme@ghostery.com");
-+/*
- if (AppConstants.MOZ_DEV_EDITION) {
-   makeConstant("DEFAULT_THEME_ID", "firefox-compact-dark@mozilla.org");
- } else {
-   makeConstant("DEFAULT_THEME_ID", "default-theme@mozilla.org");
- }
-+*/
+-  "name": "Default",
+-  "description": "A theme with the operating system color scheme.",
+-  "author": "Mozilla",
+-  "version": "1.1",
++  "name": "Ghostery Private",
++  "description": "",
++  "author": "Ghostery",
++  "version": "1.3",
  
- // SCOPES_SIDELOAD is a bitflag for what scopes we will load new extensions from when we scan the directories.
- // If a build allows sideloading, or we're in automation, we'll also allow use of the preference.
+   "icons": {"32": "icon.svg"},
+ 
+   "theme": {
+-  },
+-
+-  "dark_theme": {
+     "colors": {
+       "tab_background_text": "rgb(249, 249, 250)",
+       "icons": "rgb(249, 249, 250, 0.7)",
 diff --git a/toolkit/mozapps/extensions/internal/XPIProvider.jsm b/toolkit/mozapps/extensions/internal/XPIProvider.jsm
-index b7d1ff6ac8..753be62e8b 100644
+index b7d1ff6ac8..2fcd3ec501 100644
 --- a/toolkit/mozapps/extensions/internal/XPIProvider.jsm
 +++ b/toolkit/mozapps/extensions/internal/XPIProvider.jsm
-@@ -2467,11 +2467,23 @@ var XPIProvider = {
+@@ -2469,9 +2469,14 @@ var XPIProvider = {
  
-       AddonManagerPrivate.markProviderSafe(this);
- 
-+      /*
        this.maybeInstallBuiltinAddon(
          "default-theme@mozilla.org",
-         "1.1",
+-        "1.1",
++        "1.3",
          "resource://default-theme/"
        );
-+      */
-+      this.maybeInstallBuiltinAddon(
-+        "private-theme@ghostery.com",
-+        "1.0",
-+        "resource://builtin-themes/ghostery-private/"
-+      );
 +      this.maybeInstallBuiltinAddon(
 +        "dynamic-theme@ghostery.com",
 +        "1.0",
@@ -357,19 +289,18 @@ index b7d1ff6ac8..753be62e8b 100644
  
        resolveProviderReady(Promise.all(this.startupPromises));
  
-@@ -2674,6 +2686,11 @@ var XPIProvider = {
+@@ -2674,6 +2679,10 @@ var XPIProvider = {
        logger.error("startup failed", e);
        AddonManagerPrivate.recordException("XPI", "startup failed", e);
      }
 +
-+    this.maybeUninstallBuiltinAddon("default-theme@mozilla.org");
 +    this.maybeUninstallBuiltinAddon("firefox-compact-light@mozilla.org");
 +    this.maybeUninstallBuiltinAddon("firefox-compact-dark@mozilla.org");
 +    this.maybeUninstallBuiltinAddon("firefox-alpenglow@mozilla.org");
    },
  
    /**
-@@ -2919,6 +2936,20 @@ var XPIProvider = {
+@@ -2919,6 +2928,20 @@ var XPIProvider = {
      return installed;
    },
  
