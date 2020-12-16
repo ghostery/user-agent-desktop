@@ -221,7 +221,7 @@ if (params.MacOSARM) {
                 buildId: buildId,
                 Reset: params.Reset,
                 Clobber: params.Clobber,
-                PGO: params.PGO,
+                PGO: false,
                 Instrument: params.Instrument,
                 PGOProfiles: params.PGOProfiles,
             ])()
