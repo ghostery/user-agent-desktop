@@ -56,6 +56,9 @@ if args.action == "release":
             },
             "Linux_x86_64-gcc3": {
                 "OS_BOUNCER": "linux-x86_64"
+            },
+            "Darwin_aarch64-gcc3": {
+                "alias": "Darwin_x86_64-gcc3"
             }
         }
     }
