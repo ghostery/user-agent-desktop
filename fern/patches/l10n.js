@@ -28,9 +28,21 @@ async function getLocaleStringOverrides(locale, root) {
   );
 }
 
+function replacementLine(key, value, format) {
+  if (format === ".ftl") {
+    return `${key} = ${value}`;
+  } else if (format === ".inc") {
+    // bookmarks.inc - uses #define
+    return `#define ${key} ${value}`
+  } else if (format === '.properties') {
+    return `${key}=${value}`
+  }
+  throw "Unknown file format"
+}
+
 function patchStrings(replacements, content, format) {
   const lines = content.split("\n");
-  const separator = format === ".ftl" ? " = " : "=";
+  const keys = new Set(Object.keys(replacements));
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
     const key = line.split("=")[0].trim();
@@ -40,9 +52,14 @@ function patchStrings(replacements, content, format) {
         i = i + 1;
         lines[i] = `${lines[i].split("=")[0]}= ${replacements[key].string}`;
       } else {
-        lines[i] = `${key}${separator}${replacements[key].string}`;
+        lines[i] = replacementLine(key, replacements[key].string, format);
       }
+      keys.delete(key);
     }
+  }
+  // add remaining at the end of the file\
+  for (const key of keys) {
+    lines.push(replacementLine(key, replacements[key].string, format));
   }
   return lines.join("\n");
 }

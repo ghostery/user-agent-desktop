@@ -3,35 +3,9 @@ Date: Mon, 21 Sep 2020 11:04:57 +0200
 Subject: Update default bookmarks to Ghostery-specific ones
 
 ---
- browser/locales/en-US/profile/bookmarks.inc      | 16 ++++++++++++++++
- .../locales/generic/profile/bookmarks.html.in    | 13 ++++++-------
- 2 files changed, 22 insertions(+), 7 deletions(-)
+ browser/locales/generic/profile/bookmarks.html.in | 13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
 
-diff --git a/browser/locales/en-US/profile/bookmarks.inc b/browser/locales/en-US/profile/bookmarks.inc
-index fbc69250bf..bc2b64c015 100644
---- a/browser/locales/en-US/profile/bookmarks.inc
-+++ b/browser/locales/en-US/profile/bookmarks.inc
-@@ -65,4 +65,20 @@
- # Nightly builds only, link title for https://planet.mozilla.org/
- #define planet Planet Mozilla
- 
-+# LOCALIZATION NOTE (ghostery_heading):
-+# Ghostery links folder name
-+#define ghostery_heading Ghostery
-+
-+# LOCALIZATION NOTE (ghostery_help):
-+# link title for https://www.ghostery.com/support/
-+#define ghostery_help Help
-+
-+# LOCALIZATION NOTE (ghostery_plans):
-+# link title for https://www.ghostery.com/pricing/
-+#define ghostery_plans Ghostery Plans
-+
-+# LOCALIZATION NOTE (ghostery_about_us):
-+# link title for https://www.ghostery.com/about-ghostery/
-+#define ghostery_about_us About Us
-+
- #unfilter emptyLines
 diff --git a/browser/locales/generic/profile/bookmarks.html.in b/browser/locales/generic/profile/bookmarks.html.in
 index 2d3c7b40f5..09a183849f 100644
 --- a/browser/locales/generic/profile/bookmarks.html.in
