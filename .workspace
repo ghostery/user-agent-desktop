@@ -7,6 +7,7 @@
   "app": "2020.12",
   "ipfsAddr": "/ipfs/QmZN8GirWy8YccugmM2mbbPhJC8QjXNDzqRVUKFDmsjawv",
   "locales": {
-    "de": "de1025e5e9a9f831271dc1aa8437aba18a631662"
+    "de": "de1025e5e9a9f831271dc1aa8437aba18a631662",
+    "es-ES": "03999023061f89bb1bf060582067b9ca42b497a3"
   }
 }
