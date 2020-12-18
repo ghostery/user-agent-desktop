@@ -57,10 +57,10 @@ function patchStrings(replacements, content, format) {
       keys.delete(key);
     }
   }
-  // add remaining at the end of the file\
-  for (const key of keys) {
-    lines.push(replacementLine(key, replacements[key].string, format));
-  }
+  // add remaining at the end of the file
+  // we insert two lines before the end for bookmarks.inc case
+  const extraLines = [...keys].map((key) => replacementLine(key, replacements[key].string, format));
+  lines.splice(lines.length - 2, 0, ...extraLines);
   return lines.join("\n");
 }
 
