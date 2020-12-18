@@ -65,5 +65,23 @@
     "options-use-sync": {
       "string": ""
     }
+  },
+  "browser/profile/bookmarks.inc": {
+    "ghostery_heading": {
+      "string": "Ghostery",
+      "context": "Ghostery links folder name"
+    },
+    "ghostery_help": {
+      "string": "Ayuda",
+      "context": "link title for https://www.ghostery.com/support/"
+    },
+    "ghostery_plans": {
+      "string": "Ghostery Plans",
+      "context": "link title for https://www.ghostery.com/pricing/"
+    },
+    "ghostery_about_us": {
+      "string": "Sobre nosotros",
+      "context": "link title for https://www.ghostery.com/about-ghostery/"
+    }
   }
 }
