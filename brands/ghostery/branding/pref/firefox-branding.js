@@ -154,7 +154,7 @@ pref("browser.privatebrowsing.vpnpromourl", "");
 pref("browser.urlbar.suggest.topsites", false);
 
 // Fetch shavar updates from Ghostery endpoint
-pref("browser.safebrowsing.provider.mozilla.updateURL", "https://get.ghosterybrowser.com/shavar/downloads?client=SAFEBROWSING_ID&appver=%MAJOR_VERSION%&pver=2.2");
+pref("browser.safebrowsing.provider.mozilla.updateURL", "https://get.ghosterybrowser.com/shavar/downloads?client=SAFEBROWSING_ID&pver=2.2");
 
 // Firefox Monitor
 pref("extensions.fxmonitor.enabled", false);
