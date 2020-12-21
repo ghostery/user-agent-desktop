@@ -1,0 +1,87 @@
+{
+  "browser/installer/nsisstrings.properties": {
+    "STUB_BLURB_FIRST1": {
+      "string": "Tracker protection and ad-free private search, all under one roof"
+    },
+    "STUB_BLURB_SECOND1": {
+      "string": "Tracker protection and ad-free private search, all under one roof"
+    },
+    "STUB_BLURB_THIRD1": {
+      "string": "Tracker protection and ad-free private search, all under one roof"
+    },
+    "STUB_BLURB_FOOTER2": {
+      "string": "We Make Privacy Easy"
+    }
+  },
+  "browser/installer/custom.properties": {
+    "UN_SURVEY_CHECKBOX_LABEL": {
+      "string": "Tell us why you uninstalled $BrandShortName"
+    }
+  },
+  "browser/browser/aboutDialog.ftl": {
+    "community-2": {
+      "string": "{ -brand-short-name } is designed by <label data-l10n-name=\"community-mozillaLink\">{ -vendor-short-name }</label>, based on code from Mozilla Firefox."
+    },
+    "helpus": {
+      "string": "Want to help? Check out our code on <label data-l10n-name=\"helpus-getInvolvedLink\">Github!</label>"
+    }
+  },
+  "browser/browser/preferences/preferences.ftl": {
+    "home-mode-choice-default": {
+      "string": "Ghostery Home (Default)"
+    }
+  },
+  "browser/browser/browser.ftl": {
+    "identity-custom-root": {
+      "string": "Connection verified by a certificate issuer that is not recognized by { -brand-short-name }."
+    },
+    "identity-description-custom-root": {
+      "string": "{ -brand-short-name } does not recognize this certificate issuer. It may have been added from your operating system or by an administrator. <label data-l10n-name=\"link\">Learn More</label>"
+    }
+  },
+  "browser/browser/aboutLogins.ftl": {
+    "about-logins-login-intro-heading-logged-out": {
+      "string": "Looking for your saved logins? You can import them."
+    },
+    "about-logins-intro-import": {
+      "string": "If your logins are saved in another browser, you can <a data-l10n-name=\"import-link\">import them</a>"
+    }
+  },
+  "browser/browser/aboutPrivateBrowsing.ftl": {
+    "about-private-browsing-search-placeholder": {
+      "string": "Search Privately"
+    }
+  },
+  "browser/browser/newInstallPage.ftl": {
+    "changed-desc-profiles": {
+      "string": "This installation of { -brand-short-name } has a new profile. A profile is the set of files where { -brand-short-name } saves information such as bookmarks, passwords, and user preferences."
+    },
+    "changed-desc-dedicated": {
+      "string": ""
+    },
+    "lost": {
+      "string": "<b>You have not lost any personal data or customizations.</b>"
+    },
+    "options-use-sync": {
+      "string": ""
+    }
+  },
+  "browser/profile/bookmarks.inc": {
+    "ghostery_heading": {
+      "string": "Ghostery",
+      "context": "Ghostery links folder name"
+    },
+    "ghostery_help": {
+      "string": "帮助",
+      "context": "link title for https://www.ghostery.com/support/"
+    },
+    "ghostery_plans": {
+      "string": "Ghostery Plans",
+      "context": "link title for https://www.ghostery.com/pricing/"
+    },
+    "ghostery_about_us": {
+      "string": "关于我们",
+      "context": "link title for https://www.ghostery.com/about-ghostery/"
+    }
+  }
+}
