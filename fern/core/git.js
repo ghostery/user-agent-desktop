@@ -259,20 +259,27 @@ async function importPatches(root) {
           importFromPatchFiles(path.join(root, "patches"))
         ),
     },
+    {
+      title: "Import translations",
+      task: () => {
+        const l10nTasks = []
+        Object.keys(ws.locales).forEach((locale) => {
+          const patchPath = path.join(root, "l10n-patches", locale);
+          l10nTasks.push({
+            title: `${locale}`,
+            task: async () => applyManagedLocalePatches({ ...ws, locale }),
+          });
+          l10nTasks.push({
+            title: `patches: ${locale}`,
+            skip: async () => !(await folderExists(patchPath)),
+            task: () =>
+              withCwd(`l10n/${locale}`, () => importFromPatchFiles(patchPath)),
+          });
+        });
+        return new Listr(l10nTasks)
+      }
+    }
   ];
-  Object.keys(ws.locales).forEach((locale) => {
-    const patchPath = path.join(root, "l10n-patches", locale);
-    tasks.push({
-      title: `Import translations: ${locale}`,
-      task: async () => applyManagedLocalePatches({ ...ws, locale }),
-    });
-    tasks.push({
-      title: `Import translation patches: ${locale}`,
-      skip: async () => !(await folderExists(patchPath)),
-      task: () =>
-        withCwd(`l10n/${locale}`, () => importFromPatchFiles(patchPath)),
-    });
-  });
   return new Listr(tasks);
 }
 

@@ -23,9 +23,16 @@ function getPathToLocaleFile(filePath, locale, root) {
 }
 
 async function getLocaleStringOverrides(locale, root) {
-  return JSON.parse(
-    await fsExtra.readFile(path.join(root, "l10n", `${locale}.json`))
-  );
+  try {
+    return JSON.parse(
+      await fsExtra.readFile(path.join(root, "l10n", `${locale}.json`))
+    );
+  } catch (e) {
+    // allow an underscore instead of a - in locale name
+    return JSON.parse(
+      await fsExtra.readFile(path.join(root, "l10n", `${locale.replace('-', '_')}.json`))
+    );
+  }
 }
 
 function replacementLine(key, value, format) {
