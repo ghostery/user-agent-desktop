@@ -1,29 +1,29 @@
 {
   "browser/installer/nsisstrings.properties": {
     "STUB_BLURB_FIRST1": {
-      "string": "Tracker protection and ad-free private search, all under one roof"
+      "string": "Tracker-Schutz und private Suche ohne Werbung - alles unter einem Dach"
     },
     "STUB_BLURB_SECOND1": {
-      "string": "Tracker protection and ad-free private search, all under one roof"
+      "string": "Tracker-Schutz und private Suche ohne Werbung - alles unter einem Dach"
     },
     "STUB_BLURB_THIRD1": {
-      "string": "Tracker protection and ad-free private search, all under one roof"
+      "string": "Tracker-Schutz und private Suche ohne Werbung - alles unter einem Dach"
     },
     "STUB_BLURB_FOOTER2": {
-      "string": "We Make Privacy Easy"
+      "string": "Mit uns ist Datenschutz ein Kinderspiel"
     }
   },
   "browser/installer/custom.properties": {
     "UN_SURVEY_CHECKBOX_LABEL": {
-      "string": "Tell us why you uninstalled $BrandShortName"
+      "string": "Teilen Sie uns mit, warum Sie $BrandShortName deinstalliert haben"
     }
   },
   "browser/browser/aboutDialog.ftl": {
     "community-2": {
-      "string": "{ -brand-short-name } is designed by <label data-l10n-name=\"community-mozillaLink\">{ -vendor-short-name }</label>, based on code from Mozilla Firefox."
+      "string": "{ -brand-short-name } wurde von <label data-l10n-name=\"community-mozillaLink\">{ -vendor-short-name }</label> basierend auf Code von Mozilla Firefox konzipiert."
     },
     "helpus": {
-      "string": "Want to help? Check out our code on <label data-l10n-name=\"helpus-getInvolvedLink\">Github!</label>"
+      "string": "Wollen Sie helfen? Sehen Sie sich unseren Code auf <label data-l10n-name=\"helpus-getInvolvedLink\">Github!</label> an"
     }
   },
   "browser/browser/preferences/preferences.ftl": {
@@ -41,15 +41,15 @@
   },
   "browser/browser/aboutLogins.ftl": {
     "about-logins-login-intro-heading-logged-out": {
-      "string": "Looking for your saved logins? You can import them."
+      "string": "Suchen Sie Ihre gespeicherten Logins? Sie können sie importieren."
     },
     "about-logins-intro-import": {
-      "string": "If your logins are saved in another browser, you can <a data-l10n-name=\"import-link\">import them</a>"
+      "string": "Wenn Ihre Logins in einem anderen Browser gespeichert sind, können Sie <a data-l10n-name=\"import-link\">sie importieren</a>"
     }
   },
   "browser/browser/aboutPrivateBrowsing.ftl": {
     "about-private-browsing-search-placeholder": {
-      "string": "Search Privately"
+      "string": "Private Suche"
     }
   },
   "browser/browser/newInstallPage.ftl": {
