@@ -35,7 +35,7 @@ def build(opts, Closure postpackage={}, Closure archiving={}) {
         image.inside(dockerOpts) {
             withEnv(defaultEnv) {
                 stage('prepare mozilla-release') {
-                    prepare_workspace(opts.Reset, opts.targetPlatform, false)
+                    prepare_workspace(opts.Reset, opts.targetPlatform, true)
                 }
 
                 dir('mozilla-release') {
