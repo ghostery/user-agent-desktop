@@ -44,7 +44,7 @@
       "string": "¿Estás buscando tus inicios de sesión guardados? Puedes importarlos."
     },
     "about-logins-intro-import": {
-      "string": "Si tus inicios de sesión están guardados en otro navegador, puedes <a data-l10n-name=\"import-link\">importarlos"
+      "string": "Si tus inicios de sesión están guardados en otro navegador, puedes <a data-l10n-name=\"import-link\">importarlos</a>"
     }
   },
   "browser/browser/aboutPrivateBrowsing.ftl": {
@@ -60,7 +60,7 @@
       "string": ""
     },
     "lost": {
-      "string": "<b>You have not lost any personal data or customizations.</b>"
+      "string": "<b>No has perdido ni datos personales ni personalizaciones realizadas.</b>"
     },
     "options-use-sync": {
       "string": ""
@@ -76,7 +76,7 @@
       "context": "link title for https://www.ghostery.com/support/"
     },
     "ghostery_plans": {
-      "string": "Ghostery Plans",
+      "string": "Planes de Ghostery",
       "context": "link title for https://www.ghostery.com/pricing/"
     },
     "ghostery_about_us": {

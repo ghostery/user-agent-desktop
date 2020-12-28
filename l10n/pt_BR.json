@@ -1,66 +1,66 @@
 {
   "browser/installer/nsisstrings.properties": {
     "STUB_BLURB_FIRST1": {
-      "string": "Tracker protection and ad-free private search, all under one roof"
+      "string": "Proteção de rastreador e pesquisa privada sem anúncios - tudo em um único local"
     },
     "STUB_BLURB_SECOND1": {
-      "string": "Tracker protection and ad-free private search, all under one roof"
+      "string": "Proteção de rastreador e pesquisa privada sem anúncios - tudo em um único local"
     },
     "STUB_BLURB_THIRD1": {
-      "string": "Tracker protection and ad-free private search, all under one roof"
+      "string": "Proteção de rastreador e pesquisa privada sem anúncios - tudo em um único local"
     },
     "STUB_BLURB_FOOTER2": {
-      "string": "We Make Privacy Easy"
+      "string": "Nós facilitamos a privacidade"
     }
   },
   "browser/installer/custom.properties": {
     "UN_SURVEY_CHECKBOX_LABEL": {
-      "string": "Tell us why you uninstalled $BrandShortName"
+      "string": "Diga-nos por que desinstalou $BrandShortName"
     }
   },
   "browser/browser/aboutDialog.ftl": {
     "community-2": {
-      "string": "{ -brand-short-name } is designed by <label data-l10n-name=\"community-mozillaLink\">{ -vendor-short-name }</label>, based on code from Mozilla Firefox."
+      "string": "O { -brand-short-name } foi criado pela <label data-l10n-name=\"community-mozillaLink\">{ -vendor-short-name }</label>, baseado em código do Mozilla Firefox."
     },
     "helpus": {
-      "string": "Want to help? Check out our code on <label data-l10n-name=\"helpus-getInvolvedLink\">Github!</label>"
+      "string": "Pretende ajudar? Confira o nosso código no <label data-l10n-name=\"helpus-getInvolvedLink\">Github!</label>"
     }
   },
   "browser/browser/preferences/preferences.ftl": {
     "home-mode-choice-default": {
-      "string": "Ghostery Home (Default)"
+      "string": "Página inicial do Ghostery (Predefinição)"
     }
   },
   "browser/browser/browser.ftl": {
     "identity-custom-root": {
-      "string": "Connection verified by a certificate issuer that is not recognized by { -brand-short-name }."
+      "string": "Conexão verificada por um emissor de certificados não reconhecido pelo { -brand-short-name }."
     },
     "identity-description-custom-root": {
-      "string": "{ -brand-short-name } does not recognize this certificate issuer. It may have been added from your operating system or by an administrator. <label data-l10n-name=\"link\">Learn More</label>"
+      "string": "O { -brand-short-name } não reconhece este emissor de certificados. Pode ter sido adicionado a partir de seu sistema operacional ou por um administrador. <label data-l10n-name=\"link\">Mais informações</label>"
     }
   },
   "browser/browser/aboutLogins.ftl": {
     "about-logins-login-intro-heading-logged-out": {
-      "string": "Looking for your saved logins? You can import them."
+      "string": "Está procurando os seus logins salvos? Você pode importá-los."
     },
     "about-logins-intro-import": {
-      "string": "If your logins are saved in another browser, you can <a data-l10n-name=\"import-link\">import them</a>"
+      "string": "Se os seus logins estiverem salvos em outro browser, você pode <a data-l10n-name=\"import-link\">importá-los</a>"
     }
   },
   "browser/browser/aboutPrivateBrowsing.ftl": {
     "about-private-browsing-search-placeholder": {
-      "string": "Search Privately"
+      "string": "Pesquise confidencialmente"
     }
   },
   "browser/browser/newInstallPage.ftl": {
     "changed-desc-profiles": {
-      "string": "This installation of { -brand-short-name } has a new profile. A profile is the set of files where { -brand-short-name } saves information such as bookmarks, passwords, and user preferences."
+      "string": "Essa instalação do { -brand-short-name } tem um novo perfil. Um perfil é um conjunto de arquivos onde o { -brand-short-name } salva informações como marcadores, senhas e preferências do usuário."
     },
     "changed-desc-dedicated": {
       "string": ""
     },
     "lost": {
-      "string": "<b>You have not lost any personal data or customizations.</b>"
+      "string": "<b>Você não perdeu dados pessoais nem personalizações.</b>"
     },
     "options-use-sync": {
       "string": ""
@@ -76,7 +76,7 @@
       "context": "link title for https://www.ghostery.com/support/"
     },
     "ghostery_plans": {
-      "string": "Ghostery Plans",
+      "string": "Planos do Ghostery",
       "context": "link title for https://www.ghostery.com/pricing/"
     },
     "ghostery_about_us": {

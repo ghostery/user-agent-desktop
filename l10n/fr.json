@@ -41,10 +41,10 @@
   },
   "browser/browser/aboutLogins.ftl": {
     "about-logins-login-intro-heading-logged-out": {
-      "string": "Looking for your saved logins? You can import them."
+      "string": "Vous cherchez vos identifiants de connexion enregistrés ? Vous pouvez les importer."
     },
     "about-logins-intro-import": {
-      "string": "If your logins are saved in another browser, you can <a data-l10n-name=\"import-link\">import them</a>"
+      "string": "Si vos identifiants de connexion sont enregistrés dans un autre navigateur, vous pouvez les <a data-l10n-name=\"import-link\">importer</a>"
     }
   },
   "browser/browser/aboutPrivateBrowsing.ftl": {
@@ -54,13 +54,13 @@
   },
   "browser/browser/newInstallPage.ftl": {
     "changed-desc-profiles": {
-      "string": "This installation of { -brand-short-name } has a new profile. A profile is the set of files where { -brand-short-name } saves information such as bookmarks, passwords, and user preferences."
+      "string": "Cette installation de { -brand-short-name } a un nouveau profil. Un profil est un ensemble de fichiers où { -brand-short-name } enregistre des informations telles que les favoris, les mots de passe et les préférences de l'utilisateur."
     },
     "changed-desc-dedicated": {
       "string": ""
     },
     "lost": {
-      "string": "<b>You have not lost any personal data or customizations.</b>"
+      "string": "<b>Vous n'avez perdu aucune donnée personnelle ni personnalisation.</b>"
     },
     "options-use-sync": {
       "string": ""

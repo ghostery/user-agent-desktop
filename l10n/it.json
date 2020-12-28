@@ -1,66 +1,66 @@
 {
   "browser/installer/nsisstrings.properties": {
     "STUB_BLURB_FIRST1": {
-      "string": "Tracker protection and ad-free private search, all under one roof"
+      "string": "Protezione da tracker e ricerca privata senza annunci, tutto nello stesso posto"
     },
     "STUB_BLURB_SECOND1": {
-      "string": "Tracker protection and ad-free private search, all under one roof"
+      "string": "Protezione da tracker e ricerca privata senza annunci, tutto nello stesso posto"
     },
     "STUB_BLURB_THIRD1": {
-      "string": "Tracker protection and ad-free private search, all under one roof"
+      "string": "Protezione da tracker e ricerca privata senza annunci, tutto nello stesso posto"
     },
     "STUB_BLURB_FOOTER2": {
-      "string": "We Make Privacy Easy"
+      "string": "Rendiamo la privacy semplice"
     }
   },
   "browser/installer/custom.properties": {
     "UN_SURVEY_CHECKBOX_LABEL": {
-      "string": "Tell us why you uninstalled $BrandShortName"
+      "string": "Facci sapere perché hai disinstallato $BrandShortName"
     }
   },
   "browser/browser/aboutDialog.ftl": {
     "community-2": {
-      "string": "{ -brand-short-name } is designed by <label data-l10n-name=\"community-mozillaLink\">{ -vendor-short-name }</label>, based on code from Mozilla Firefox."
+      "string": "{ -brand-short-name } è progettato da <label data-l10n-name=\"community-mozillaLink\">{ -vendor-short-name }</label> e si basa sul codice di Mozilla Firefox."
     },
     "helpus": {
-      "string": "Want to help? Check out our code on <label data-l10n-name=\"helpus-getInvolvedLink\">Github!</label>"
+      "string": "Vuoi offrire il tuo contributo? Guarda il nostro codice su <label data-l10n-name=\"helpus-getInvolvedLink\">Github!</label>"
     }
   },
   "browser/browser/preferences/preferences.ftl": {
     "home-mode-choice-default": {
-      "string": "Ghostery Home (Default)"
+      "string": "Ghostery Home (predefinito)"
     }
   },
   "browser/browser/browser.ftl": {
     "identity-custom-root": {
-      "string": "Connection verified by a certificate issuer that is not recognized by { -brand-short-name }."
+      "string": "Connessione verificata da un ente di certificazione non riconosciuto da { -brand-short-name }."
     },
     "identity-description-custom-root": {
-      "string": "{ -brand-short-name } does not recognize this certificate issuer. It may have been added from your operating system or by an administrator. <label data-l10n-name=\"link\">Learn More</label>"
+      "string": "{ -brand-short-name } non riconosce questo ente di certificazione. Potrebbe essere stato aggiunto dal tuo sistema operativo o da un amministratore. <label data-l10n-name=\"link\">Ulteriori informazioni</label>"
     }
   },
   "browser/browser/aboutLogins.ftl": {
     "about-logins-login-intro-heading-logged-out": {
-      "string": "Looking for your saved logins? You can import them."
+      "string": "Stai cercando le tue credenziali di accesso salvate? Le puoi importare."
     },
     "about-logins-intro-import": {
-      "string": "If your logins are saved in another browser, you can <a data-l10n-name=\"import-link\">import them</a>"
+      "string": "Se hai salvato le tue credenziali in un altro browser, puoi <a data-l10n-name=\"import-link\">importarle</a>"
     }
   },
   "browser/browser/aboutPrivateBrowsing.ftl": {
     "about-private-browsing-search-placeholder": {
-      "string": "Search Privately"
+      "string": "Cerca privatamente"
     }
   },
   "browser/browser/newInstallPage.ftl": {
     "changed-desc-profiles": {
-      "string": "This installation of { -brand-short-name } has a new profile. A profile is the set of files where { -brand-short-name } saves information such as bookmarks, passwords, and user preferences."
+      "string": "L'installazione di { -brand-short-name } ha un nuovo profilo. Un profilo corrisponde a un set di file in cui { -brand-short-name } salva informazioni come preferiti, password e preferenze dell'utente."
     },
     "changed-desc-dedicated": {
       "string": ""
     },
     "lost": {
-      "string": "<b>You have not lost any personal data or customizations.</b>"
+      "string": "<b>Non hai perso i tuoi dati o le tue personalizzazioni.</b>"
     },
     "options-use-sync": {
       "string": ""
