@@ -1,0 +1,87 @@
+{
+  "browser/installer/nsisstrings.properties": {
+    "STUB_BLURB_FIRST1": {
+      "string": "Proteção de rastreador e pesquisa privada sem anúncios - tudo em um único local"
+    },
+    "STUB_BLURB_SECOND1": {
+      "string": "Proteção de rastreador e pesquisa privada sem anúncios - tudo em um único local"
+    },
+    "STUB_BLURB_THIRD1": {
+      "string": "Proteção de rastreador e pesquisa privada sem anúncios - tudo em um único local"
+    },
+    "STUB_BLURB_FOOTER2": {
+      "string": "Nós facilitamos a privacidade"
+    }
+  },
+  "browser/installer/custom.properties": {
+    "UN_SURVEY_CHECKBOX_LABEL": {
+      "string": "Diga-nos por que desinstalou $BrandShortName"
+    }
+  },
+  "browser/browser/aboutDialog.ftl": {
+    "community-2": {
+      "string": "O { -brand-short-name } foi criado pela <label data-l10n-name=\"community-mozillaLink\">{ -vendor-short-name }</label>, baseado em código do Mozilla Firefox."
+    },
+    "helpus": {
+      "string": "Pretende ajudar? Confira o nosso código no <label data-l10n-name=\"helpus-getInvolvedLink\">Github!</label>"
+    }
+  },
+  "browser/browser/preferences/preferences.ftl": {
+    "home-mode-choice-default": {
+      "string": "Página inicial do Ghostery (Predefinição)"
+    }
+  },
+  "browser/browser/browser.ftl": {
+    "identity-custom-root": {
+      "string": "Conexão verificada por um emissor de certificados não reconhecido pelo { -brand-short-name }."
+    },
+    "identity-description-custom-root": {
+      "string": "O { -brand-short-name } não reconhece este emissor de certificados. Pode ter sido adicionado a partir de seu sistema operacional ou por um administrador. <label data-l10n-name=\"link\">Mais informações</label>"
+    }
+  },
+  "browser/browser/aboutLogins.ftl": {
+    "about-logins-login-intro-heading-logged-out": {
+      "string": "Está procurando os seus logins salvos? Você pode importá-los."
+    },
+    "about-logins-intro-import": {
+      "string": "Se os seus logins estiverem salvos em outro browser, você pode <a data-l10n-name=\"import-link\">importá-los</a>"
+    }
+  },
+  "browser/browser/aboutPrivateBrowsing.ftl": {
+    "about-private-browsing-search-placeholder": {
+      "string": "Pesquise confidencialmente"
+    }
+  },
+  "browser/browser/newInstallPage.ftl": {
+    "changed-desc-profiles": {
+      "string": "Essa instalação do { -brand-short-name } tem um novo perfil. Um perfil é um conjunto de arquivos onde o { -brand-short-name } salva informações como marcadores, senhas e preferências do usuário."
+    },
+    "changed-desc-dedicated": {
+      "string": ""
+    },
+    "lost": {
+      "string": "<b>Você não perdeu dados pessoais nem personalizações.</b>"
+    },
+    "options-use-sync": {
+      "string": ""
+    }
+  },
+  "browser/profile/bookmarks.inc": {
+    "ghostery_heading": {
+      "string": "Ghostery",
+      "context": "Ghostery links folder name"
+    },
+    "ghostery_help": {
+      "string": "Ajuda",
+      "context": "link title for https://www.ghostery.com/support/"
+    },
+    "ghostery_plans": {
+      "string": "Planos do Ghostery",
+      "context": "link title for https://www.ghostery.com/pricing/"
+    },
+    "ghostery_about_us": {
+      "string": "Sobre nós",
+      "context": "link title for https://www.ghostery.com/about-ghostery/"
+    }
+  }
+}

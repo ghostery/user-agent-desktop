@@ -23,14 +23,33 @@ function getPathToLocaleFile(filePath, locale, root) {
 }
 
 async function getLocaleStringOverrides(locale, root) {
-  return JSON.parse(
-    await fsExtra.readFile(path.join(root, "l10n", `${locale}.json`))
-  );
+  try {
+    return JSON.parse(
+      await fsExtra.readFile(path.join(root, "l10n", `${locale}.json`))
+    );
+  } catch (e) {
+    // allow an underscore instead of a - in locale name
+    return JSON.parse(
+      await fsExtra.readFile(path.join(root, "l10n", `${locale.replace('-', '_')}.json`))
+    );
+  }
+}
+
+function replacementLine(key, value, format) {
+  if (format === ".ftl") {
+    return `${key} = ${value}`;
+  } else if (format === ".inc") {
+    // bookmarks.inc - uses #define
+    return `#define ${key} ${value}`
+  } else if (format === '.properties') {
+    return `${key}=${value}`
+  }
+  throw "Unknown file format"
 }
 
 function patchStrings(replacements, content, format) {
   const lines = content.split("\n");
-  const separator = format === ".ftl" ? " = " : "=";
+  const keys = new Set(Object.keys(replacements));
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
     const key = line.split("=")[0].trim();
@@ -40,10 +59,15 @@ function patchStrings(replacements, content, format) {
         i = i + 1;
         lines[i] = `${lines[i].split("=")[0]}= ${replacements[key].string}`;
       } else {
-        lines[i] = `${key}${separator}${replacements[key].string}`;
+        lines[i] = replacementLine(key, replacements[key].string, format);
       }
+      keys.delete(key);
     }
   }
+  // add remaining at the end of the file
+  // we insert two lines before the end for bookmarks.inc case
+  const extraLines = [...keys].map((key) => replacementLine(key, replacements[key].string, format));
+  lines.splice(lines.length - 2, 0, ...extraLines);
   return lines.join("\n");
 }
 

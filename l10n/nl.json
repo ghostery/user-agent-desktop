@@ -1,0 +1,87 @@
+{
+  "browser/installer/nsisstrings.properties": {
+    "STUB_BLURB_FIRST1": {
+      "string": "Bescherming tegen trackers en privé zoeken zonder reclames, allemaal onder één dak"
+    },
+    "STUB_BLURB_SECOND1": {
+      "string": "Bescherming tegen trackers en privé zoeken zonder reclames, allemaal onder één dak"
+    },
+    "STUB_BLURB_THIRD1": {
+      "string": "Bescherming tegen trackers en privé zoeken zonder reclames, allemaal onder één dak"
+    },
+    "STUB_BLURB_FOOTER2": {
+      "string": "Wij maken privacy gemakkelijk"
+    }
+  },
+  "browser/installer/custom.properties": {
+    "UN_SURVEY_CHECKBOX_LABEL": {
+      "string": "Laat ons weten waarom je $BrandShortName hebt verwijderd"
+    }
+  },
+  "browser/browser/aboutDialog.ftl": {
+    "community-2": {
+      "string": "{ -brand-short-name } is ontworpen door <label data-l10n-name=\"community-mozillaLink\">{ -vendor-short-name }</label>, gebaseerd op code van Mozilla Firefox."
+    },
+    "helpus": {
+      "string": "Wil je helpen? Kijk dan eens naar onze code op <label data-l10n-name=\"helpus-getInvolvedLink\">Github!</label>"
+    }
+  },
+  "browser/browser/preferences/preferences.ftl": {
+    "home-mode-choice-default": {
+      "string": "Ghostery Home (standaard)"
+    }
+  },
+  "browser/browser/browser.ftl": {
+    "identity-custom-root": {
+      "string": "Verbinding geverifieerd door een certificaatverlener die niet wordt herkend door { -brand-short-name }."
+    },
+    "identity-description-custom-root": {
+      "string": "{ -brand-short-name } herkent deze certificaatuitgever niet. Deze kan door je besturingssysteem of een beheerder zijn toegevoegd. <label data-l10n-name=\"link\">Meer informatie</label>"
+    }
+  },
+  "browser/browser/aboutLogins.ftl": {
+    "about-logins-login-intro-heading-logged-out": {
+      "string": "Zoek je je opgeslagen logins? Je kunt ze importeren."
+    },
+    "about-logins-intro-import": {
+      "string": "Als je logins in een andere browser zijn opgeslagen, kun je <a data-l10n-name=\"import-link\">ze importeren</a>"
+    }
+  },
+  "browser/browser/aboutPrivateBrowsing.ftl": {
+    "about-private-browsing-search-placeholder": {
+      "string": "Privé zoeken"
+    }
+  },
+  "browser/browser/newInstallPage.ftl": {
+    "changed-desc-profiles": {
+      "string": "Deze installatie van { -brand-short-name } heeft een nieuw profiel. Een profiel is de set bestanden waarin { -brand-short-name } informatie opslaat, zoals bladwijzers, wachtwoorden en gebruikersvoorkeuren."
+    },
+    "changed-desc-dedicated": {
+      "string": ""
+    },
+    "lost": {
+      "string": "<b>Je hebt geen persoonlijke gegevens of aanpassingen verloren.</b>"
+    },
+    "options-use-sync": {
+      "string": ""
+    }
+  },
+  "browser/profile/bookmarks.inc": {
+    "ghostery_heading": {
+      "string": "Ghostery",
+      "context": "Ghostery links folder name"
+    },
+    "ghostery_help": {
+      "string": "Help",
+      "context": "link title for https://www.ghostery.com/support/"
+    },
+    "ghostery_plans": {
+      "string": "Ghostery Plans",
+      "context": "link title for https://www.ghostery.com/pricing/"
+    },
+    "ghostery_about_us": {
+      "string": "Over ons",
+      "context": "link title for https://www.ghostery.com/about-ghostery/"
+    }
+  }
+}

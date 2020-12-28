@@ -1,6 +1,6 @@
 [main]
 host = https://www.transifex.com
-lang_map = en: en-US
+lang_map = en: en-US, es: es-ES
 
 [ghostery-desktop-browser.en-us-json]
 file_filter = l10n/<lang>.json

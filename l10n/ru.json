@@ -1,0 +1,87 @@
+{
+  "browser/installer/nsisstrings.properties": {
+    "STUB_BLURB_FIRST1": {
+      "string": "Защита от трекеров и конфиденциальный поиск без рекламы в одном продукте"
+    },
+    "STUB_BLURB_SECOND1": {
+      "string": "Защита от трекеров и конфиденциальный поиск без рекламы в одном продукте"
+    },
+    "STUB_BLURB_THIRD1": {
+      "string": "Защита от трекеров и конфиденциальный поиск без рекламы в одном продукте"
+    },
+    "STUB_BLURB_FOOTER2": {
+      "string": "Конфиденциальность с нами - это просто."
+    }
+  },
+  "browser/installer/custom.properties": {
+    "UN_SURVEY_CHECKBOX_LABEL": {
+      "string": "Расскажите, почему вы удалили $BrandShortName"
+    }
+  },
+  "browser/browser/aboutDialog.ftl": {
+    "community-2": {
+      "string": "Продукт { -brand-short-name } разработан компанией <label data-l10n-name=\"community-mozillaLink\">{ -vendor-short-name }</label> на основе кода из Mozilla Firefox."
+    },
+    "helpus": {
+      "string": "Хотите помочь? Найдите код на <label data-l10n-name=\"helpus-getInvolvedLink\">Github!</label>"
+    }
+  },
+  "browser/browser/preferences/preferences.ftl": {
+    "home-mode-choice-default": {
+      "string": "Домашний экран Ghostery (по умолчанию)"
+    }
+  },
+  "browser/browser/browser.ftl": {
+    "identity-custom-root": {
+      "string": "Подключение проверено поставщиком сертификата, не признанным компанией { -brand-short-name }."
+    },
+    "identity-description-custom-root": {
+      "string": "{ -brand-short-name } не признает этого поставщика сертификата. Возможно, он был добавлен из вашей операционной системы или администратором. <label data-l10n-name=\"link\">Подробнее</label>"
+    }
+  },
+  "browser/browser/aboutLogins.ftl": {
+    "about-logins-login-intro-heading-logged-out": {
+      "string": "Не можете найти ваши сохраненные учетные данные? Их можно импортировать."
+    },
+    "about-logins-intro-import": {
+      "string": "Если ваши учетные данные сохранены в другом браузере, их можно <a data-l10n-name=\"import-link\">импортировать</a>"
+    }
+  },
+  "browser/browser/aboutPrivateBrowsing.ftl": {
+    "about-private-browsing-search-placeholder": {
+      "string": "Выполняйте поиск конфиденциально"
+    }
+  },
+  "browser/browser/newInstallPage.ftl": {
+    "changed-desc-profiles": {
+      "string": "У установки { -brand-short-name } есть новый профиль. Профиль представляет собой набор файлов, в которых { -brand-short-name } хранит такую информацию как закладки, пароли и настройки пользователя."
+    },
+    "changed-desc-dedicated": {
+      "string": ""
+    },
+    "lost": {
+      "string": "<b>Личные данные и настройки не потеряны.</b>"
+    },
+    "options-use-sync": {
+      "string": ""
+    }
+  },
+  "browser/profile/bookmarks.inc": {
+    "ghostery_heading": {
+      "string": "Ghostery",
+      "context": "Ghostery links folder name"
+    },
+    "ghostery_help": {
+      "string": "Справка",
+      "context": "link title for https://www.ghostery.com/support/"
+    },
+    "ghostery_plans": {
+      "string": "Планы Ghostery",
+      "context": "link title for https://www.ghostery.com/pricing/"
+    },
+    "ghostery_about_us": {
+      "string": "О нас",
+      "context": "link title for https://www.ghostery.com/about-ghostery/"
+    }
+  }
+}

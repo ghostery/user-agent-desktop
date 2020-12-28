@@ -1,0 +1,87 @@
+{
+  "browser/installer/nsisstrings.properties": {
+    "STUB_BLURB_FIRST1": {
+      "string": "トラッカー保護と広告なしのプライベート検索をまとめてご提供"
+    },
+    "STUB_BLURB_SECOND1": {
+      "string": "トラッカー保護と広告なしのプライベート検索をまとめてご提供"
+    },
+    "STUB_BLURB_THIRD1": {
+      "string": "トラッカー保護と広告なしのプライベート検索をまとめてご提供"
+    },
+    "STUB_BLURB_FOOTER2": {
+      "string": "プライバシー保護を容易に実現"
+    }
+  },
+  "browser/installer/custom.properties": {
+    "UN_SURVEY_CHECKBOX_LABEL": {
+      "string": "$BrandShortNameをアンインストールされた理由をお聞かせください"
+    }
+  },
+  "browser/browser/aboutDialog.ftl": {
+    "community-2": {
+      "string": "{ -brand-short-name }はMozilla Firefoxのコードに基づいて<label data-l10n-name=\"community-mozillaLink\">{ -vendor-short-name }</label>によって設計されています。"
+    },
+    "helpus": {
+      "string": "お手伝いいただけますか？<label data-l10n-name=\"helpus-getInvolvedLink\">Github</label>で当社のコードを確認してください。"
+    }
+  },
+  "browser/browser/preferences/preferences.ftl": {
+    "home-mode-choice-default": {
+      "string": "Ghosteryホーム（デフォルト）"
+    }
+  },
+  "browser/browser/browser.ftl": {
+    "identity-custom-root": {
+      "string": "{ -brand-short-name }が認識していない証明書発行者による接続が確認されました。"
+    },
+    "identity-description-custom-root": {
+      "string": "{ -brand-short-name }はこの証明発行者を認識していません。お使いのオペレーティング・システムまたは管理者によって追加された可能性があります。<label data-l10n-name=\"link\">詳細を見る</label>"
+    }
+  },
+  "browser/browser/aboutLogins.ftl": {
+    "about-logins-login-intro-heading-logged-out": {
+      "string": "保存したログイン情報をお探しですか？ログイン情報はインポートできます。"
+    },
+    "about-logins-intro-import": {
+      "string": "ログイン情報を別のブラウザに保存している場合は、<a data-l10n-name=\"import-link\">ログイン情報をインポート</a>できます"
+    }
+  },
+  "browser/browser/aboutPrivateBrowsing.ftl": {
+    "about-private-browsing-search-placeholder": {
+      "string": "プライベートに検索"
+    }
+  },
+  "browser/browser/newInstallPage.ftl": {
+    "changed-desc-profiles": {
+      "string": "この{ -brand-short-name }のインストールには新しいプロフィールが含まれています。プロフィールは、{ -brand-short-name }がブックマーク、パスワード、ユーザーの設定などの情報を保存するファイルのセットです。"
+    },
+    "changed-desc-dedicated": {
+      "string": ""
+    },
+    "lost": {
+      "string": "<b>個人データやカスタマイズデータは失われていません。</b>"
+    },
+    "options-use-sync": {
+      "string": ""
+    }
+  },
+  "browser/profile/bookmarks.inc": {
+    "ghostery_heading": {
+      "string": "Ghostery",
+      "context": "Ghostery links folder name"
+    },
+    "ghostery_help": {
+      "string": "ヘルプ",
+      "context": "link title for https://www.ghostery.com/support/"
+    },
+    "ghostery_plans": {
+      "string": "Ghostery Plans",
+      "context": "link title for https://www.ghostery.com/pricing/"
+    },
+    "ghostery_about_us": {
+      "string": "当社について",
+      "context": "link title for https://www.ghostery.com/about-ghostery/"
+    }
+  }
+}

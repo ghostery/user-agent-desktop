@@ -1,0 +1,87 @@
+{
+  "browser/installer/nsisstrings.properties": {
+    "STUB_BLURB_FIRST1": {
+      "string": "一次性獲得跟蹤器防護及無廣告隱私搜尋服務"
+    },
+    "STUB_BLURB_SECOND1": {
+      "string": "一次性獲得跟蹤器防護及無廣告隱私搜尋服務"
+    },
+    "STUB_BLURB_THIRD1": {
+      "string": "一次性獲得跟蹤器防護及無廣告隱私搜尋服務"
+    },
+    "STUB_BLURB_FOOTER2": {
+      "string": "讓我們協助您輕鬆保護隱私"
+    }
+  },
+  "browser/installer/custom.properties": {
+    "UN_SURVEY_CHECKBOX_LABEL": {
+      "string": "請分享您解除安裝 $BrandShortName 的原因"
+    }
+  },
+  "browser/browser/aboutDialog.ftl": {
+    "community-2": {
+      "string": "{ -brand-short-name } 是由 <label data-l10n-name=\"community-mozillaLink\">{ -vendor-short-name }</label> 所設計，基於來自 Mozilla Firefox 的代碼。"
+    },
+    "helpus": {
+      "string": "想要幫忙嗎？請查看我們在 <label data-l10n-name=\"helpus-getInvolvedLink\">Github</label> 上的代碼！"
+    }
+  },
+  "browser/browser/preferences/preferences.ftl": {
+    "home-mode-choice-default": {
+      "string": "Ghostery 首頁（預設）"
+    }
+  },
+  "browser/browser/browser.ftl": {
+    "identity-custom-root": {
+      "string": "{ -brand-short-name } 無法辨識的憑證頒發者所驗證的連線。"
+    },
+    "identity-description-custom-root": {
+      "string": "{ -brand-short-name } 無法辨識此憑證頒發者。它或許是從您的作業系統或由管理員所加入。<label data-l10n-name=\"link\">瞭解詳情</label>"
+    }
+  },
+  "browser/browser/aboutLogins.ftl": {
+    "about-logins-login-intro-heading-logged-out": {
+      "string": "想查看您儲存的登入資訊？您可以導入它們。"
+    },
+    "about-logins-intro-import": {
+      "string": "如果您的登入資訊儲存在其他瀏覽器中，您可以<a data-l10n-name=\"import-link\">導入它們</a>"
+    }
+  },
+  "browser/browser/aboutPrivateBrowsing.ftl": {
+    "about-private-browsing-search-placeholder": {
+      "string": "隱私搜尋"
+    }
+  },
+  "browser/browser/newInstallPage.ftl": {
+    "changed-desc-profiles": {
+      "string": "{ -brand-short-name } 的安裝有新的個人資料。{ -brand-short-name } 會將書籤、密碼及使用者偏好設定等資訊儲存在個人資料中。"
+    },
+    "changed-desc-dedicated": {
+      "string": ""
+    },
+    "lost": {
+      "string": "<b>您並未遺失任何個人資料或自訂設定。</b>"
+    },
+    "options-use-sync": {
+      "string": ""
+    }
+  },
+  "browser/profile/bookmarks.inc": {
+    "ghostery_heading": {
+      "string": "Ghostery",
+      "context": "Ghostery links folder name"
+    },
+    "ghostery_help": {
+      "string": "說明",
+      "context": "link title for https://www.ghostery.com/support/"
+    },
+    "ghostery_plans": {
+      "string": "Ghostery Plans",
+      "context": "link title for https://www.ghostery.com/pricing/"
+    },
+    "ghostery_about_us": {
+      "string": "關於我們",
+      "context": "link title for https://www.ghostery.com/about-ghostery/"
+    }
+  }
+}

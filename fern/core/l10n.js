@@ -25,8 +25,8 @@ async function use(locales) {
   return new Listr(
     Object.keys(locales).map((locale) => {
       const commit = locales[locale];
-      const folder = path.join(cache, `de-${commit}`);
-      const archive = path.join(cache, `de-${commit}.zip`);
+      const folder = path.join(cache, `${locale}-${commit}`);
+      const archive = path.join(cache, `${locale}-${commit}.zip`);
       const url = `https://hg.mozilla.org/l10n-central/${locale}/archive/${commit}.zip`;
       const tasks = new Listr([
         {

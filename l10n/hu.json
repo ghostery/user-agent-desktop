@@ -72,7 +72,7 @@
       "context": "Ghostery links folder name"
     },
     "ghostery_help": {
-      "string": "Help",
+      "string": "Súgó",
       "context": "link title for https://www.ghostery.com/support/"
     },
     "ghostery_plans": {
@@ -80,7 +80,7 @@
       "context": "link title for https://www.ghostery.com/pricing/"
     },
     "ghostery_about_us": {
-      "string": "About us",
+      "string": "Rólunk",
       "context": "link title for https://www.ghostery.com/about-ghostery/"
     }
   }
