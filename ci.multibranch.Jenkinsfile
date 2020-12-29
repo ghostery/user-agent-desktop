@@ -226,6 +226,8 @@ if (params.MacOSARM) {
                 PGOProfiles: params.PGOProfiles,
             ])()
 
+            sh "rename 's/.complete.mar/.arm.complete.mar/' mozilla-release/${objDir}/dist/update/*.mar"
+            archiveArtifacts artifacts: "mozilla-release/${objDir}/dist/update/*.mar"
             // the DMG is stashed - this build will then be unified with the x86_64 build
             stash name: name, includes: [
                 "mozilla-release/${artifactGlob}",
