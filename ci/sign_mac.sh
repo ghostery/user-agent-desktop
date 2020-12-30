@@ -3,6 +3,9 @@
 set -e
 set -x
 
+export MOZ_PRODUCT_VERSION=$(cat mozilla-release/browser/config/version.txt)
+export MAR_CHANNEL_ID=firefox-ghostery-release
+
 echo "***** MAC SIGNING AND NOTARY *****"
 
 PKG_DIR=ci/pkg
@@ -71,4 +74,8 @@ do
   fi
 
   node_modules/.bin/appdmg -v ci/$APP_NAME-dmg.json $SIGNED_DMG
+
+  # create mar update from dmg contents
+  DMG_NAME=$(basename $DMG)
+  mozilla-release/tools/update-packaging/make_full_update.sh $(dirname $DMG)/update/${DMG_NAME%.dmg}.complete.mar $PKG_DIR/$PKG_NAME.app
 done

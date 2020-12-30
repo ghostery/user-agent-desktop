@@ -318,6 +318,7 @@ def mac_signing(name, objDir, artifactGlob) {
             }
             stage('publish artifacts') {
                 archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
+                archiveArtifacts artifacts: "mozilla-release/${artifactGlob}/dist/update/*.mar"
             }
         }
     }
@@ -337,12 +338,13 @@ def mac_unified_dmg() {
             sh 'ci/unify_mac_dmg.sh'
             // the unify script replaces the .dmg and .mar files for x86_64 with fat ones, so we rearchive to replace them
             archiveArtifacts artifacts: "mozilla-release/${x86ObjDir}/dist/Ghostery-*"
-            archiveArtifacts artifacts: "mozilla-release/${x86ObjDir}/dist/update/*.mar"
             // restash MacOSX64 artifacts
             stash name: 'MacOSX64', includes: [
                 "mozilla-release/${x86ObjDir}/dist/Ghostery-*",
+                "mozilla-release/browser/config/version.txt",
                 "mozilla-release/build/package/mac_osx/unpack-diskimage",
                 "mozilla-release/security/mac/hardenedruntime/*",
+                "mozilla-release/tools/update-packaging/*"
             ].join(',')
         }
     }
