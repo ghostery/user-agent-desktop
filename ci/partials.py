@@ -6,6 +6,10 @@ from balrogclient import Release, SingleLocale, Rule
 from uadpy.common import balrog_api_opts, get_platform_for_build_target, get_file_hash
 from uadpy.const import PRODUCT_NAME, REPOSITORY_BASE_URL, RELEASE_CHANNELS, NIGHTLY_RULE_ID
 
+# locales and platforms to make partials for
+PARTIAL_LOCALES = ['en-US']
+PARTIAL_PLATFORMS = ['mac', 'win64']
+
 parser = argparse.ArgumentParser()
 parser.add_argument("action", help="'generate', or 'publish'")
 parser.add_argument("--old", help="Old release")
@@ -40,6 +44,8 @@ partials = []
 for platform, platform_info in target_release_data['platforms'].items():
     for locale, mars in platform_info.get('locales', {}).items():
         try:
+            if locale not in PARTIAL_LOCALES or get_platform_for_build_target(platform) not in PARTIAL_PLATFORMS:
+                continue
             from_mars = from_release_data['platforms'][platform]['locales'][locale]
             partials.append({
                 'buildId': mars['buildID'],
