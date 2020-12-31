@@ -191,8 +191,10 @@ if (params.MacOSX64) {
 
             stash name: name, includes: [
                 "mozilla-release/${artifactGlob}",
+                "mozilla-release/browser/config/version.txt",
                 "mozilla-release/build/package/mac_osx/unpack-diskimage",
                 "mozilla-release/security/mac/hardenedruntime/*",
+                "mozilla-release/tools/update-packaging/*"
             ].join(',')
 
             sh "rm -rf mozilla-release/${objDir}/dist/update"
