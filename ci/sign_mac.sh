@@ -77,6 +77,8 @@ do
 
   # create mar update from dmg contents
   DMG_NAME=$(basename $DMG)
-  mkdir -p $(dirname $DMG)/update
-  mozilla-release/tools/update-packaging/make_full_update.sh $(dirname $DMG)/update/${DMG_NAME%.dmg}.complete.mar "$PKG_DIR/$PKG_NAME.app"
+  MAR_PATH=$(dirname $DMG)/update/${DMG_NAME%.dmg}.complete.mar
+  mkdir -p $(basename $MAR_PATH)
+  mozilla-release/tools/update-packaging/make_full_update.sh $MAR_PATH "$PKG_DIR/$PKG_NAME.app"
+  mv output.mar $MAR_PATH
 done
