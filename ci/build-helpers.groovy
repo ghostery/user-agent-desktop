@@ -318,7 +318,7 @@ def mac_signing(name, objDir, artifactGlob) {
             }
             stage('publish artifacts') {
                 archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
-                archiveArtifacts artifacts: "mozilla-release/${artifactGlob}/dist/update/*.mar"
+                archiveArtifacts artifacts: "mozilla-release/obj-x86_64-apple-darwin/dist/update/*.mar"
             }
         }
     }
