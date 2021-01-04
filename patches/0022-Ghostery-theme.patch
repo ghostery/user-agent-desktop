@@ -4,24 +4,24 @@ Subject: Ghostery theme
 
 ---
  browser/components/BrowserGlue.jsm            |  2 +
- .../customizableui/CustomizeMode.jsm          |  3 ++
+ .../customizableui/CustomizeMode.jsm          |  3 +
  .../background-gradient-dark.svg              |  1 +
  .../ghostery-dynamic/background-gradient.svg  |  1 +
- .../themes/addons/ghostery-dynamic/icon.svg   | 14 +++++
- .../addons/ghostery-dynamic/manifest.json     | 43 +++++++++++++++
+ .../themes/addons/ghostery-dynamic/icon.svg   | 14 ++++
+ .../addons/ghostery-dynamic/manifest.json     | 43 ++++++++++++
  browser/themes/addons/jar.mn                  |  4 ++
  .../global/global-extension-fields.properties |  4 +-
  toolkit/modules/LightweightThemeConsumer.jsm  |  2 +-
  .../mozapps/extensions/content/aboutaddons.js |  8 ++-
- .../extensions/content/ghostery-dynamic.svg   | 21 ++++++++
- .../extensions/default-theme/experiment.css   | 53 +++++++++++++++++++
- .../extensions/default-theme/manifest.json    | 15 +++---
- .../extensions/internal/XPIProvider.jsm       | 25 ++++++++-
+ .../extensions/content/ghostery-dynamic.svg   | 21 ++++++
+ .../extensions/default-theme/experiment.css   | 67 +++++++++++++++++++
+ .../extensions/default-theme/manifest.json    | 15 +++--
+ .../extensions/internal/XPIProvider.jsm       | 25 ++++++-
  toolkit/mozapps/extensions/jar.mn             |  2 +
  toolkit/themes/linux/global/toolbarbutton.css |  2 +-
  toolkit/themes/osx/global/toolbarbutton.css   |  2 +-
  .../themes/windows/global/toolbarbutton.css   |  2 +-
- 18 files changed, 189 insertions(+), 15 deletions(-)
+ 18 files changed, 203 insertions(+), 15 deletions(-)
  create mode 100644 browser/themes/addons/ghostery-dynamic/background-gradient-dark.svg
  create mode 100644 browser/themes/addons/ghostery-dynamic/background-gradient.svg
  create mode 100644 browser/themes/addons/ghostery-dynamic/icon.svg
@@ -247,15 +247,25 @@ index 0000000000..223a0b63e1
 \ No newline at end of file
 diff --git a/toolkit/mozapps/extensions/default-theme/experiment.css b/toolkit/mozapps/extensions/default-theme/experiment.css
 new file mode 100644
-index 0000000000..9f32cf2618
+index 0000000000..a56b2e7cbe
 --- /dev/null
 +++ b/toolkit/mozapps/extensions/default-theme/experiment.css
-@@ -0,0 +1,53 @@
+@@ -0,0 +1,67 @@
 +/* This Source Code Form is subject to the terms of the Mozilla Public
 + * License, v. 2.0. If a copy of the MPL was not distributed with this
 + * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 +
 +@import url("chrome://browser/skin/compacttheme.css");
++
++:root:not([uidensity="compact"]) #back-button > .toolbarbutton-icon {
++  background-color: transparent;
++  border-color: transparent;
++}
++
++#urlbar {
++  padding-left: 7px;
++  padding-right: 7px;
++}
 +
 +#urlbar-background {
 +  border: 2px solid transparent;
@@ -273,6 +283,10 @@ index 0000000000..9f32cf2618
 +  margin: -2px;
 +  border-radius: inherit;
 +  z-index: -1;
++}
++
++#urlbar:not([focused="true"]):-moz-lwtheme > #urlbar-background {
++  border-color: transparent;
 +}
 +
 +#urlbar[focused="true"] > #urlbar-background {
