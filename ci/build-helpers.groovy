@@ -352,7 +352,7 @@ def mac_unified_dmg() {
 
 def withGithubRelease(Closure body) {
     docker.image('golang').inside("-u root") {
-        sh 'go get github.com/human-web/github-release'
+        sh 'go get github.com/ghostery/github-release'
         withCredentials([
             usernamePassword(
                 credentialsId: 'd60e38ae-4a5a-4eeb-ab64-32fd1fad4a28',
