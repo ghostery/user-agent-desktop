@@ -333,7 +333,7 @@ index 05d6e0e19a..6d8a733ec3 100644
 +  "name": "Ghostery Private",
 +  "description": "",
 +  "author": "Ghostery",
-+  "version": "1.4",
++  "version": "1.5",
  
    "icons": {"32": "icon.svg"},
  
@@ -363,7 +363,7 @@ index b7d1ff6ac8..a80c10e73c 100644
        this.maybeInstallBuiltinAddon(
          "default-theme@mozilla.org",
 -        "1.1",
-+        "1.4",
++        "1.5",
          "resource://default-theme/"
        );
 +      this.maybeInstallBuiltinAddon(
