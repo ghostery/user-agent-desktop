@@ -4,7 +4,7 @@
 
 -brand-shorter-name = Ghostery
 -brand-short-name = Ghostery
--brand-full-name = Ghostery Browser
+-brand-full-name = Ghostery Dawn
 -brand-product-name = Ghostery
 -vendor-short-name = Ghostery Inc
 trademarkInfo = Ghostery and the Ghostery logos are trademarks of the Ghostery Inc.
