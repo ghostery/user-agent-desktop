@@ -8,8 +8,8 @@
 
 # BrandFullNameInternal is used for some registry and file system values
 # instead of BrandFullName and typically should not be modified.
-!define BrandFullNameInternal "Ghostery Browser"
-!define BrandFullName         "Ghostery Browser"
+!define BrandFullNameInternal "Ghostery Dawn"
+!define BrandFullName         "Ghostery Dawn"
 !define CompanyName           "Ghostery Inc"
 !define URLInfoAbout          "https://www.ghostery.com"
 !define HelpLink              "https://www.ghostery.com/support/"
