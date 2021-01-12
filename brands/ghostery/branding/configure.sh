@@ -4,6 +4,6 @@
 
 MOZ_APP_VENDOR=Ghostery
 MOZ_APP_BASENAME=Ghostery
-MOZ_APP_DISPLAYNAME="Ghostery Browser"
+MOZ_APP_DISPLAYNAME="Ghostery Dawn"
 MOZ_MACBUNDLE_ID=com.ghostery.browser
 MOZ_DISTRIBUTION_ID=com.ghostery
