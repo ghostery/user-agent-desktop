@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/human-web/user-agent-desktop.git"
+    "url": "git+https://github.com/ghostery/user-agent-desktop.git"
   },
   "author": "",
   "license": "MPL-2.0",
   "bugs": {
-    "url": "https://github.com/human-web/user-agent-desktop/issues"
+    "url": "https://github.com/ghostery/user-agent-desktop/issues"
   },
-  "homepage": "https://github.com/human-web/user-agent-desktop#readme",
+  "homepage": "https://github.com/ghostery/user-agent-desktop#readme",
   "devDependencies": {
     "appdmg": "^0.6.0",
     "chalk": "^4.1.0",
