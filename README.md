@@ -70,7 +70,7 @@ Windows and Mac builds depend on platform frameworks being included. These shoul
 
 ## Development workflow
 
-After cloning the [repository](https://github.com/human-web/user-agent-desktop),
+After cloning the [repository](https://github.com/ghostery/user-agent-desktop),
 run the following commands to get started (Note that you will need `npm` and
 `node` to be installed on your system):
 
