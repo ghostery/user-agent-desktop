@@ -285,7 +285,7 @@ stage('publish to github') {
                     def artifactName = artifactPath.split('/').last()
                     sh """
                         github-release upload \
-                            --user human-web \
+                            --user ghostery \
                             --repo user-agent-desktop \
                             --tag "${params.ReleaseName}" \
                             --name "${artifactName}" \
