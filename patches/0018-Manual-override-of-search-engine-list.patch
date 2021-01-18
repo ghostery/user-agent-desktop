@@ -99,7 +99,7 @@ HcmV?d00001
 
 diff --git a/browser/components/search/extensions/startpage/manifest.json b/browser/components/search/extensions/startpage/manifest.json
 new file mode 100644
-index 0000000000..16ed15b645
+index 0000000000..ae154cdb7f
 --- /dev/null
 +++ b/browser/components/search/extensions/startpage/manifest.json
 @@ -0,0 +1,26 @@
@@ -271,7 +271,7 @@ index 9f61477182..b0f7ffdd71 100644
 @@ -94,6 +94,67 @@ class SearchEngineSelector {
      this._changeListener = listener;
    }
-
+ 
 +  get _configuration() {
 +    return [{
 +      "appliesTo": [{
@@ -336,6 +336,6 @@ index 9f61477182..b0f7ffdd71 100644
    /**
     * Handles getting the configuration from remote settings.
     */
---
+-- 
 2.29.2
 
