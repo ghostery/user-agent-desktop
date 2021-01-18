@@ -319,7 +319,7 @@ index 0000000000..a56b2e7cbe
 +  -webkit-text-fill-color: transparent;
 +}
 diff --git a/toolkit/mozapps/extensions/default-theme/manifest.json b/toolkit/mozapps/extensions/default-theme/manifest.json
-index 05d6e0e19a..6d8a733ec3 100644
+index 05d6e0e19a..53e36e1f73 100644
 --- a/toolkit/mozapps/extensions/default-theme/manifest.json
 +++ b/toolkit/mozapps/extensions/default-theme/manifest.json
 @@ -7,17 +7,14 @@
@@ -355,7 +355,7 @@ index 05d6e0e19a..6d8a733ec3 100644
    }
  }
 diff --git a/toolkit/mozapps/extensions/internal/XPIProvider.jsm b/toolkit/mozapps/extensions/internal/XPIProvider.jsm
-index b7d1ff6ac8..a80c10e73c 100644
+index b7d1ff6ac8..bcf825f9c8 100644
 --- a/toolkit/mozapps/extensions/internal/XPIProvider.jsm
 +++ b/toolkit/mozapps/extensions/internal/XPIProvider.jsm
 @@ -2469,9 +2469,14 @@ var XPIProvider = {

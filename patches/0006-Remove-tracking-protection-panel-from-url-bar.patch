@@ -28,10 +28,10 @@ index abdb814995..9a145dc781 100644
  
    /**
 diff --git a/browser/base/content/browser.js b/browser/base/content/browser.js
-index 45ef5fa285..d7cea97169 100644
+index 5ac65907a6..60c0715761 100644
 --- a/browser/base/content/browser.js
 +++ b/browser/base/content/browser.js
-@@ -2010,7 +2010,7 @@ var gBrowserInit = {
+@@ -2011,7 +2011,7 @@ var gBrowserInit = {
  
      BookmarkingUI.init();
      BrowserSearch.delayedStartupInit();
@@ -40,7 +40,7 @@ index 45ef5fa285..d7cea97169 100644
      HomePage.delayedStartup().catch(Cu.reportError);
  
      let safeMode = document.getElementById("helpSafeMode");
-@@ -2574,7 +2574,7 @@ var gBrowserInit = {
+@@ -2575,7 +2575,7 @@ var gBrowserInit = {
        Services.prefs.removeObserver(ctrlTab.prefName, ctrlTab);
        ctrlTab.uninit();
        gBrowserThumbnails.uninit();
@@ -49,7 +49,7 @@ index 45ef5fa285..d7cea97169 100644
        FullZoom.destroy();
  
        Services.obs.removeObserver(gIdentityHandler, "perm-changed");
-@@ -5273,7 +5273,7 @@ var XULBrowserWindow = {
+@@ -5274,7 +5274,7 @@ var XULBrowserWindow = {
      const nsIWebProgressListener = Ci.nsIWebProgressListener;
  
      let browser = gBrowser.selectedBrowser;
@@ -58,7 +58,7 @@ index 45ef5fa285..d7cea97169 100644
  
      if (
        aStateFlags & nsIWebProgressListener.STATE_START &&
-@@ -5416,7 +5416,7 @@ var XULBrowserWindow = {
+@@ -5417,7 +5417,7 @@ var XULBrowserWindow = {
  
        gIdentityHandler.onLocationChange();
  
@@ -67,7 +67,7 @@ index 45ef5fa285..d7cea97169 100644
  
        BrowserPageActions.onLocationChange();
  
-@@ -5565,12 +5565,12 @@ var XULBrowserWindow = {
+@@ -5566,12 +5566,12 @@ var XULBrowserWindow = {
        );
      }
  
