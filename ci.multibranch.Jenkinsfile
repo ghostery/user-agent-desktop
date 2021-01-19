@@ -303,7 +303,7 @@ stage('publish to github') {
                            -X POST \
                            --header "authorization: Bearer $GITHUB_TOKEN" \
                            -H "Accept: application/vnd.github.v3+json" \
-                           -H "Content-Type: $(file -b --mime-type $artifactPath)" \
+                           -H "Content-Type: application/octet-stream" \
                            --data-binary @$artifactPath \
                            "https://uploads.github.com/repos/ghostery/user-agent-desktop/releases/$id/assets?name=$artifactName"
                         """)
