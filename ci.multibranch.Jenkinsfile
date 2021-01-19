@@ -274,23 +274,39 @@ stage('Sign MAR') {
 stage('publish to github') {
     if (shouldRelease) {
         node('docker') {
-            helpers.withGithubRelease() {
+            docker.image('ua-build-base').inside() {
                 sh 'rm -rf artifacts'
 
                 unarchive mapping: ["mozilla-release/" : "artifacts"]
 
-                def artifacts = sh(returnStdout: true, script: "find artifacts -type f \\( -iname \\*.mar -o -iname *-signed.dmg -o -iname \\*.exe -o -iname \\*.tar.bz2 \\)").trim().split("\\r?\\n")
+                def artifacts = sh(returnStdout: true, script: "find artifacts -type f \\( -iname \\*.mar -o -iname *-signed.dmg -o -iname \\*.exe -o -iname \\*.tar.bz2 \\)").trim().split("\\r?\\n")'
 
-                for(String artifactPath in artifacts) {
-                    def artifactName = artifactPath.split('/').last()
-                    sh """
-                        github-release upload \
-                            --user ghostery \
-                            --repo user-agent-desktop \
-                            --tag "${params.ReleaseName}" \
-                            --name "${artifactName}" \
-                            --file "${artifactPath}"
-                    """
+                withCredentials([
+                    usernamePassword(
+                        credentialsId: 'd60e38ae-4a5a-4eeb-ab64-32fd1fad4a28',
+                        passwordVariable: 'GITHUB_TOKEN',
+                        usernameVariable: 'GITHUB_USERNAME'
+                    )
+                ]) {
+                    def id = sh(returnStdout: true, script: """
+                      curl \
+                        -H "Accept: application/vnd.github.v3+json" \
+                        --header "authorization: Bearer $GITHUB_TOKEN" \
+                        https://api.github.com/repos/ghostery/user-agent-desktop/releases/tags/${params.ReleaseName} \
+                      | jq .id
+                    """).trim()
+
+                    for(String artifactPath in artifacts) {
+                        def artifactName = artifactPath.split('/').last()
+                        sh("""
+                          curl \
+                           -X POST \
+                           --header "authorization: Bearer $GITHUB_TOKEN" \
+                           -H "Accept: application/vnd.github.v3+json" \
+                           -F 'file=@$artifactPath' \
+                           "https://uploads.github.com/repos/ghostery/user-agent-desktop/releases/$id/assets?name=$artifactName"
+                        """)
+                    }
                 }
 
                 sh 'rm -rf artifacts'
