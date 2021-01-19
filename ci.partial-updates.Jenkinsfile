@@ -77,7 +77,8 @@ node('docker && magrathea') {
                        -X POST \
                        --header "authorization: Bearer $GITHUB_TOKEN" \
                        -H "Accept: application/vnd.github.v3+json" \
-                       -F 'file=@$artifactPath' \
+                       -H "Content-Type: $(file -b --mime-type $artifactPath)" \
+                       --data-binary @$artifactPath \
                        "https://uploads.github.com/repos/ghostery/user-agent-desktop/releases/$id/assets?name=$artifactName"
                     """)
                 }
