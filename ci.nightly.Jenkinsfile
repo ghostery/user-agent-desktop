@@ -2,7 +2,7 @@ def VERSION_NAME
 def helpers
 def tagExists = false
 
-node() {
+node("docker") {
     VERSION_NAME = sh(returnStdout: true, script: 'date +%Y-%m-%d').trim()
 
     checkout scm
