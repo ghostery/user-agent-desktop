@@ -27,15 +27,17 @@ node("master") {
 }
 
 if (!tagExists) {
-    helpers.withGithubRelease() {
-        sh """
-            github-release release \
-                --user ghostery \
-                --repo user-agent-desktop \
-                --tag $VERSION_NAME \
-                --name $VERSION_NAME \
-                --pre-release
-        """
+    node("docker") {
+        helpers.withGithubRelease() {
+            sh """
+                github-release release \
+                    --user ghostery \
+                    --repo user-agent-desktop \
+                    --tag $VERSION_NAME \
+                    --name $VERSION_NAME \
+                    --pre-release
+            """
+        }
     }
 
     build job: 'user-agent/desktop/master', parameters: [
