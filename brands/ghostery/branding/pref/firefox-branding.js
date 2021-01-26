@@ -164,3 +164,6 @@ pref("dom.security.https_only_mode", true);
 
 // Microphone and camera kill switch (#370)
 pref("privacy.webrtc.globalMuteToggles", true);
+
+// Disable DOM battery API as it's a common factor in fingerprinting
+pref("dom.battery.enabled", false);
