@@ -173,4 +173,8 @@ pref("privacy.webrtc.globalMuteToggles", true);
 // [2] https://en.wikipedia.org/wiki/IDN_homograph_attack
 // [3] CVE-2017-5383: https://www.mozilla.org/security/advisories/mfsa2017-02/
 // [4] https://www.xudongz.com/blog/2017/idn-phishing/
-user_pref("network.IDN_show_punycode", true);
+pref("network.IDN_show_punycode", true);
+
+// Disable DOM battery API as it's a common factor in fingerprinting
+pref("dom.battery.enabled", false);
+
