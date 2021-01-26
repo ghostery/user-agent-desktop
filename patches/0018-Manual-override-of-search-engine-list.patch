@@ -122,7 +122,7 @@ index 0000000000..ae154cdb7f
 +  ],
 +  "chrome_settings_overrides": {
 +    "search_provider": {
-+      "name": "StartPage",
++      "name": "Startpage",
 +      "search_url": "https://www.startpage.com/do/dsearch",
 +      "search_form": "https://www.startpage.com/do/dsearch?query={searchTerms}",
 +      "search_url_get_params": "query={searchTerms}&segment=startpage.ghostery"
