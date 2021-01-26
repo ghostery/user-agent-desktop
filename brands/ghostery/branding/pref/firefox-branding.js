@@ -164,3 +164,13 @@ pref("dom.security.https_only_mode", true);
 
 // Microphone and camera kill switch (#370)
 pref("privacy.webrtc.globalMuteToggles", true);
+
+// PREF: Enforce Punycode for Internationalized Domain Names to eliminate possible spoofing
+// Firefox has some protections, but it is better to be safe than sorry.
+// [!] Might be undesirable for non-latin alphabet users since legitimate IDN's are also punycoded.
+// [TEST] https://www.xn--80ak6aa92e.com/ (www.apple.com)
+// [1] https://wiki.mozilla.org/IDN_Display_Algorithm
+// [2] https://en.wikipedia.org/wiki/IDN_homograph_attack
+// [3] CVE-2017-5383: https://www.mozilla.org/security/advisories/mfsa2017-02/
+// [4] https://www.xudongz.com/blog/2017/idn-phishing/
+user_pref("network.IDN_show_punycode", true);
