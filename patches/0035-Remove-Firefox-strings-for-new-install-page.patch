@@ -4,7 +4,8 @@ Subject: Remove Firefox strings for new install page
 
 ---
  browser/locales/en-US/chrome/browser/newInstall.dtd | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ browser/themes/shared/newInstallPage.css            | 4 ++++
+ 2 files changed, 6 insertions(+), 2 deletions(-)
 
 diff --git a/browser/locales/en-US/chrome/browser/newInstall.dtd b/browser/locales/en-US/chrome/browser/newInstall.dtd
 index dba3f712c2..3019d6deba 100644
@@ -20,6 +21,18 @@ index dba3f712c2..3019d6deba 100644
  
 -<!ENTITY mainText "This installation of &brandShortName; has a new profile. It does not share bookmarks, passwords, and user preferences with other installations of Firefox (including Firefox, Firefox ESR, Firefox Beta, Firefox Developer Edition, and Firefox Nightly) on this computer.">
 +<!ENTITY mainText "This installation of &brandShortName; has a new profile. It does not share bookmarks, passwords, and user preferences with other installations on this computer.">
+diff --git a/browser/themes/shared/newInstallPage.css b/browser/themes/shared/newInstallPage.css
+index 88dd8d78c2..4f64a513e6 100644
+--- a/browser/themes/shared/newInstallPage.css
++++ b/browser/themes/shared/newInstallPage.css
+@@ -103,3 +103,7 @@ p {
+   margin-inline: 4px; /* Align with input and button */
+   text-align: start;
+ }
++
++#sync {
++  display: none;
++}
 -- 
 2.29.2
 

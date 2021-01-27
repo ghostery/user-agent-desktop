@@ -5,6 +5,7 @@ const { getRoot } = require("../core/workspace.js");
 const replacePaths = [
   ["browser", "chrome", "overrides", "appstrings.properties"],
   ["devtools", "startup", "aboutDevTools.ftl"],
+  ["browser", "browser", "newInstallPage.ftl"]
 ];
 
 function getPathToLocaleFile(filePath, locale, root) {
@@ -84,7 +85,7 @@ module.exports = ({ locale = "en-US" }) => ({
         const contents = await fsExtra.readFile(filePath, "utf-8");
         return fsExtra.writeFile(
           filePath,
-          contents.replace(/Firefox/g, "Ghostery")
+          contents.replace(/Firefox/g, "Ghostery Dawn")
         );
       })
     );
