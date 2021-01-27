@@ -26,7 +26,7 @@
 0026-Use-the-same-UA-as-Firefox.patch
 0027-Fix-Windows-hidpi-issue.patch
 0028-Allow-update-channel-to-be-configured-via-prefs.patch
-0029-Add-DNS-and-websocket-permissions-to-ghostery-extens.patch
+0029-Add-DNS-search-and-websocket-permissions-to-ghostery.patch
 0030-Fix-compiler-error-on-optimised-windows-builds.patch
 0031-Update-text-on-about-license.patch
 0032-Hide-addon-recommendation-badge.patch
