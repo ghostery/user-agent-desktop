@@ -4,13 +4,12 @@ Subject: Change new tab page and home page url
 
 ---
  browser/app/profile/firefox.js                   |  2 +-
- browser/base/content/browser.js                  |  2 ++
  browser/components/newtab/AboutNewTabService.jsm | 15 +--------------
  browser/modules/HomePage.jsm                     |  2 +-
- 4 files changed, 5 insertions(+), 16 deletions(-)
+ 3 files changed, 3 insertions(+), 16 deletions(-)
 
 diff --git a/browser/app/profile/firefox.js b/browser/app/profile/firefox.js
-index 2588a53cf2..99b2127ca1 100644
+index 2588a53cf2..3537031a5b 100644
 --- a/browser/app/profile/firefox.js
 +++ b/browser/app/profile/firefox.js
 @@ -253,7 +253,7 @@ pref("browser.defaultbrowser.notificationbar.checklimit", 10000);
@@ -18,25 +17,12 @@ index 2588a53cf2..99b2127ca1 100644
  // The behavior of option 3 is detailed at: http://wiki.mozilla.org/Session_Restore
  pref("browser.startup.page",                1);
 -pref("browser.startup.homepage",            "about:home");
-+pref("browser.startup.homepage",            "https://glowstery.com/");
++pref("browser.startup.homepage",            "https://ghostery.com/");
  #ifdef NIGHTLY_BUILD
  pref("browser.startup.homepage.abouthome_cache.enabled", true);
  #else
-diff --git a/browser/base/content/browser.js b/browser/base/content/browser.js
-index 8d1b0d9d99..5ac65907a6 100644
---- a/browser/base/content/browser.js
-+++ b/browser/base/content/browser.js
-@@ -635,6 +635,8 @@ var gInitialPages = [
-   "about:sessionrestore",
-   "about:welcome",
-   "about:newinstall",
-+  "https://glowstery.com/",
-+  "https://ghosterysearch.com/",
- ];
-
- function isInitialPage(url) {
 diff --git a/browser/components/newtab/AboutNewTabService.jsm b/browser/components/newtab/AboutNewTabService.jsm
-index a11f69cf16..a35201a9c6 100644
+index a11f69cf16..c8c42c876d 100644
 --- a/browser/components/newtab/AboutNewTabService.jsm
 +++ b/browser/components/newtab/AboutNewTabService.jsm
 @@ -350,20 +350,7 @@ class BaseAboutNewTabService {
@@ -57,23 +43,23 @@ index a11f69cf16..a35201a9c6 100644
 -      this.privilegedAboutProcessEnabled ? "-noscripts" : "",
 -      ".html",
 -    ].join("");
-+    return "https://glowstery.com/";
++    return "https://ghostery.com/";
    }
-
+ 
    get welcomeURL() {
 diff --git a/browser/modules/HomePage.jsm b/browser/modules/HomePage.jsm
-index c903787fde..bbeff85841 100644
+index c903787fde..52b5b61ee5 100644
 --- a/browser/modules/HomePage.jsm
 +++ b/browser/modules/HomePage.jsm
 @@ -20,7 +20,7 @@ XPCOMUtils.defineLazyModuleGetters(this, {
  });
-
+ 
  const kPrefName = "browser.startup.homepage";
 -const kDefaultHomePage = "about:home";
-+const kDefaultHomePage = "https://glowstery.com/";
++const kDefaultHomePage = "https://ghostery.com/";
  const kExtensionControllerPref =
    "browser.startup.homepage_override.extensionControlled";
  const kHomePageIgnoreListId = "homepage-urls";
---
+-- 
 2.29.2
 

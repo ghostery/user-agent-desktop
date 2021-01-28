@@ -7,7 +7,7 @@ Subject: Include addons in browser bundle
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/browser/extensions/moz.build b/browser/extensions/moz.build
-index 0eb3c53e76..6f2bb59d8e 100644
+index 0eb3c53e76..b37208ee92 100644
 --- a/browser/extensions/moz.build
 +++ b/browser/extensions/moz.build
 @@ -4,4 +4,4 @@
@@ -15,7 +15,7 @@ index 0eb3c53e76..6f2bb59d8e 100644
  # file, You can obtain one at http://mozilla.org/MPL/2.0/.
  
 -DIRS += ["doh-rollout", "formautofill", "screenshots", "webcompat", "report-site-issue"]
-+DIRS += ["doh-rollout", "formautofill", "screenshots", "webcompat", "report-site-issue", "ghostery", "ghostery-search"]
++DIRS += ["doh-rollout", "formautofill", "screenshots", "webcompat", "report-site-issue", "ghostery", "ghostery-search", "ghostery-newtab"]
 -- 
 2.29.2
 

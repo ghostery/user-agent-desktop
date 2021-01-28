@@ -7,15 +7,15 @@ Subject: Remove bundled mozilla extensions
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/browser/extensions/moz.build b/browser/extensions/moz.build
-index 6f2bb59d8e..7b27ed61ab 100644
+index b37208ee92..0702dd747f 100644
 --- a/browser/extensions/moz.build
 +++ b/browser/extensions/moz.build
 @@ -4,4 +4,4 @@
  # License, v. 2.0. If a copy of the MPL was not distributed with this
  # file, You can obtain one at http://mozilla.org/MPL/2.0/.
  
--DIRS += ["doh-rollout", "formautofill", "screenshots", "webcompat", "report-site-issue", "ghostery", "ghostery-search"]
-+DIRS += ["webcompat", "report-site-issue", "ghostery", "ghostery-search"]
+-DIRS += ["doh-rollout", "formautofill", "screenshots", "webcompat", "report-site-issue", "ghostery", "ghostery-search", "ghostery-newtab"]
++DIRS += ["webcompat", "report-site-issue", "ghostery", "ghostery-search", "ghostery-newtab"]
 -- 
 2.29.2
 
