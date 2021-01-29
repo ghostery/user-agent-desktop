@@ -5,7 +5,7 @@
     "ghostery-newtab": "https://github.com/ghostery/ghostery-newtab-extension/releases/download/v0.0.2/ghostery_new_tab-0.0.2.zip"
  },
   "firefox": "84.0.2",
-  "app": "2021.01.2",
+  "app": "2021.01.3",
   "ipfsAddr": "/ipfs/QmNk1gRGTUy6hPtgtwew2q3kDdBgaEYvaWEGfbMUHi2roc",
   "locales": {
     "de": "de1025e5e9a9f831271dc1aa8437aba18a631662",
