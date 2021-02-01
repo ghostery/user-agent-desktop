@@ -7,7 +7,7 @@ Subject: Update uninstaller survey URL
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/browser/installer/windows/nsis/uninstaller.nsi b/browser/installer/windows/nsis/uninstaller.nsi
-index 04fc419762..2467ce901e 100755
+index fb07960089..7b2cb146f3 100755
 --- a/browser/installer/windows/nsis/uninstaller.nsi
 +++ b/browser/installer/windows/nsis/uninstaller.nsi
 @@ -150,7 +150,7 @@ OutFile "helper.exe"

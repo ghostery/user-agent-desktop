@@ -9,7 +9,7 @@ Subject: Remove tracking protection panel from url bar
  3 files changed, 18 insertions(+), 16 deletions(-)
 
 diff --git a/browser/base/content/browser-siteIdentity.js b/browser/base/content/browser-siteIdentity.js
-index abdb814995..9a145dc781 100644
+index 5850d7ceb4..a8ec991e18 100644
 --- a/browser/base/content/browser-siteIdentity.js
 +++ b/browser/base/content/browser-siteIdentity.js
 @@ -1053,10 +1053,10 @@ var gIdentityHandler = {
@@ -28,10 +28,10 @@ index abdb814995..9a145dc781 100644
  
    /**
 diff --git a/browser/base/content/browser.js b/browser/base/content/browser.js
-index 5ac65907a6..60c0715761 100644
+index 2601a6772a..b02194138d 100644
 --- a/browser/base/content/browser.js
 +++ b/browser/base/content/browser.js
-@@ -2011,7 +2011,7 @@ var gBrowserInit = {
+@@ -1936,7 +1936,7 @@ var gBrowserInit = {
  
      BookmarkingUI.init();
      BrowserSearch.delayedStartupInit();
@@ -40,7 +40,7 @@ index 5ac65907a6..60c0715761 100644
      HomePage.delayedStartup().catch(Cu.reportError);
  
      let safeMode = document.getElementById("helpSafeMode");
-@@ -2575,7 +2575,7 @@ var gBrowserInit = {
+@@ -2504,7 +2504,7 @@ var gBrowserInit = {
        Services.prefs.removeObserver(ctrlTab.prefName, ctrlTab);
        ctrlTab.uninit();
        gBrowserThumbnails.uninit();
@@ -49,7 +49,7 @@ index 5ac65907a6..60c0715761 100644
        FullZoom.destroy();
  
        Services.obs.removeObserver(gIdentityHandler, "perm-changed");
-@@ -5274,7 +5274,7 @@ var XULBrowserWindow = {
+@@ -5119,7 +5119,7 @@ var XULBrowserWindow = {
      const nsIWebProgressListener = Ci.nsIWebProgressListener;
  
      let browser = gBrowser.selectedBrowser;
@@ -58,7 +58,7 @@ index 5ac65907a6..60c0715761 100644
  
      if (
        aStateFlags & nsIWebProgressListener.STATE_START &&
-@@ -5417,7 +5417,7 @@ var XULBrowserWindow = {
+@@ -5262,7 +5262,7 @@ var XULBrowserWindow = {
  
        gIdentityHandler.onLocationChange();
  
@@ -67,7 +67,7 @@ index 5ac65907a6..60c0715761 100644
  
        BrowserPageActions.onLocationChange();
  
-@@ -5566,12 +5566,12 @@ var XULBrowserWindow = {
+@@ -5411,12 +5411,12 @@ var XULBrowserWindow = {
        );
      }
  
@@ -87,7 +87,7 @@ index 5ac65907a6..60c0715761 100644
      // We need the state of the previous content blocking event, so update
      // event after onContentBlockingEvent is called.
 diff --git a/browser/base/content/browser.xhtml b/browser/base/content/browser.xhtml
-index 3107b45cbe..2a44ed59a5 100644
+index 8f591d9a0c..73ab03f088 100644
 --- a/browser/base/content/browser.xhtml
 +++ b/browser/base/content/browser.xhtml
 @@ -71,7 +71,7 @@
