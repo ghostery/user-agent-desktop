@@ -2,14 +2,14 @@
 
 Firefox releases new version every month and it is important for forks to update the upstream source as soon as possible for security reasons. 
 
-Process of the update is manual as some of the matches managed by minions may have to be rewritten. 
+Process of the update is manual as some of the patches managed by minions may have to be rewritten. 
 
 Procedure is the following:
 * update `.workspace` file with latest version of Firefox. It typically make sense to also bump version of the browser, eg. from 2021.01 to 2021.02
 * run `./fern.js use` to download Firefox source and update `mozilla-release` folder with it
 * run `./fern.js import-patches` - *this step will likely fail*
 
-## That to do with failing import-patches?
+## What to do with failing import-patches?
 
 Fern imports all patches in a single operation but git will try to apply them one after other. In case of a failure git with exit with error but suggest next actions:
 1. check the failing patch with `git am --show-current-patch=diff` and decide what to do
