@@ -11,7 +11,7 @@ Procedure is the following:
 
 ## What to do with failing import-patches?
 
-Fern imports all patches in a single operation but git will try to apply them one after other. In case of a failure git with exit with error but suggest next actions:
+Fern imports all patches in a single operation but git will try to apply them one after other. In case of a failure git will exit with error but suggest next actions:
 1. check the failing patch with `git am --show-current-patch=diff` and decide what to do
     1. if the patch is simple you can try to recreate from scratch in the current working tree
     1. if the patch is complext you can try to apply it manuall with help of `git apply --verbose --reject ../patches/0018-Manual-override-of-search-engine-list.patch`
