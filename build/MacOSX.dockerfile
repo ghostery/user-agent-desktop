@@ -79,11 +79,11 @@ RUN wget -O /builds/worker/fetches/lucetc.tar.xz $IPFS_GATEWAY/ipfs/QmWjh2TadXMW
     tar -xf lucetc.tar.xz && \
     rm lucetc.tar.xz
 
-COPY MacOSX10.11.sdk.tar.bz2 /builds/worker/fetches/
+COPY MacOSX10.12.sdk.tar.bz2 /builds/worker/fetches/
 
 RUN cd /builds/worker/fetches/ && \
-    tar -xf MacOSX10.11.sdk.tar.bz2 && \
-    rm MacOSX10.11.sdk.tar.bz2
+    tar -xf MacOSX10.12.sdk.tar.bz2 && \
+    rm MacOSX10.12.sdk.tar.bz2
 
 ENV MOZ_FETCHES_DIR=/builds/worker/fetches/ \
     GECKO_PATH=/builds/worker/workspace \
