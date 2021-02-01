@@ -7,7 +7,7 @@ Subject: Hide 'Firefox Home Content' from preferences
  1 file changed, 5 insertions(+)
 
 diff --git a/browser/themes/shared/preferences/preferences.inc.css b/browser/themes/shared/preferences/preferences.inc.css
-index efc9dc169a..5cd43e4fab 100644
+index 1a928f005c..9d376353dc 100644
 --- a/browser/themes/shared/preferences/preferences.inc.css
 +++ b/browser/themes/shared/preferences/preferences.inc.css
 @@ -5,6 +5,11 @@

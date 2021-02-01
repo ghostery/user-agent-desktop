@@ -3,7 +3,8 @@ Date: Mon, 19 Oct 2020 12:13:51 +0200
 Subject: Manual override of search engine list
 
 ---
- .../search/extensions/bing/manifest.json      |  39 ++---------
+ .../search/extensions/bing/manifest.json      |  37 +----------
+ .../search/extensions/bing/manifest.json.rej  |  14 ++++
  .../search/extensions/startpage/favicon.ico   | Bin 0 -> 1150 bytes
  .../search/extensions/startpage/manifest.json |  26 ++++++++
  .../search/extensions/tailcat/favicon.ico     | Bin 0 -> 15086 bytes
@@ -11,7 +12,8 @@ Subject: Manual override of search engine list
  .../search/extensions/yahoo/favicon.ico       | Bin 0 -> 5430 bytes
  .../search/extensions/yahoo/manifest.json     |  26 ++++++++
  .../search/SearchEngineSelector.jsm           |  61 ++++++++++++++++++
- 8 files changed, 146 insertions(+), 35 deletions(-)
+ 9 files changed, 159 insertions(+), 34 deletions(-)
+ create mode 100644 browser/components/search/extensions/bing/manifest.json.rej
  create mode 100644 browser/components/search/extensions/startpage/favicon.ico
  create mode 100644 browser/components/search/extensions/startpage/manifest.json
  create mode 100644 browser/components/search/extensions/tailcat/favicon.ico
@@ -20,15 +22,11 @@ Subject: Manual override of search engine list
  create mode 100644 browser/components/search/extensions/yahoo/manifest.json
 
 diff --git a/browser/components/search/extensions/bing/manifest.json b/browser/components/search/extensions/bing/manifest.json
-index 3f490b4f16..bfbbc9b73d 100644
+index dc8afe1db2..0ad4fad0cf 100644
 --- a/browser/components/search/extensions/bing/manifest.json
 +++ b/browser/components/search/extensions/bing/manifest.json
-@@ -2,10 +2,10 @@
-   "name": "Bing",
-   "description": "Bing. Search by Microsoft.",
-   "manifest_version": 2,
--  "version": "1.2",
-+  "version": "1.1",
+@@ -5,7 +5,7 @@
+   "version": "1.3",
    "applications": {
      "gecko": {
 -      "id": "bing@search.mozilla.org"
@@ -81,6 +79,26 @@ index 3f490b4f16..bfbbc9b73d 100644
        ],
        "suggest_url": "https://www.bing.com/osjson.aspx",
        "suggest_url_get_params": "query={searchTerms}&form=OSDJAS&language={moz:locale}"
+diff --git a/browser/components/search/extensions/bing/manifest.json.rej b/browser/components/search/extensions/bing/manifest.json.rej
+new file mode 100644
+index 0000000000..b53b4b0811
+--- /dev/null
++++ b/browser/components/search/extensions/bing/manifest.json.rej
+@@ -0,0 +1,14 @@
++diff a/browser/components/search/extensions/bing/manifest.json b/browser/components/search/extensions/bing/manifest.json	(rejected hunks)
++@@ -2,10 +2,10 @@
++   "name": "Bing",
++   "description": "Bing. Search by Microsoft.",
++   "manifest_version": 2,
++-  "version": "1.2",
+++  "version": "1.1",
++   "applications": {
++     "gecko": {
++-      "id": "bing@search.mozilla.org"
+++      "id": "bing@search.ghostery.com"
++     }
++   },
++   "hidden": true,
 diff --git a/browser/components/search/extensions/startpage/favicon.ico b/browser/components/search/extensions/startpage/favicon.ico
 new file mode 100644
 index 0000000000000000000000000000000000000000..19991e7478b0c727b34e192486287cefdff658a4
@@ -99,7 +117,7 @@ HcmV?d00001
 
 diff --git a/browser/components/search/extensions/startpage/manifest.json b/browser/components/search/extensions/startpage/manifest.json
 new file mode 100644
-index 0000000000..ae154cdb7f
+index 0000000000..6bb2075d88
 --- /dev/null
 +++ b/browser/components/search/extensions/startpage/manifest.json
 @@ -0,0 +1,26 @@

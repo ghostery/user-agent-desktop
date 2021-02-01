@@ -9,10 +9,10 @@ Subject: Replace New Tab with Ghostery New Tab Addon
  3 files changed, 12 insertions(+), 1 deletion(-)
 
 diff --git a/browser/components/extensions/parent/ext-url-overrides.js b/browser/components/extensions/parent/ext-url-overrides.js
-index 5933552a98..ec8c30579e 100644
+index af2c367e1f..5447fd1a2a 100644
 --- a/browser/components/extensions/parent/ext-url-overrides.js
 +++ b/browser/components/extensions/parent/ext-url-overrides.js
-@@ -74,7 +74,7 @@ XPCOMUtils.defineLazyGetter(this, "newTabPopup", () => {
+@@ -76,7 +76,7 @@ XPCOMUtils.defineLazyGetter(this, "newTabPopup", () => {
  });
  
  function setNewTabURL(extensionId, url) {
@@ -22,7 +22,7 @@ index 5933552a98..ec8c30579e 100644
      let policy = ExtensionParent.WebExtensionPolicy.getByID(extensionId);
      Services.prefs.setBoolPref(
 diff --git a/browser/components/urlbar/UrlbarInput.jsm b/browser/components/urlbar/UrlbarInput.jsm
-index 54ef157d1e..6cd9c126ba 100644
+index b654fc1210..4bc6d2b034 100644
 --- a/browser/components/urlbar/UrlbarInput.jsm
 +++ b/browser/components/urlbar/UrlbarInput.jsm
 @@ -347,6 +347,13 @@ class UrlbarInput {
@@ -40,10 +40,10 @@ index 54ef157d1e..6cd9c126ba 100644
        this.window.isInitialPage(value) &&
        BrowserUtils.checkEmptyPageOrigin(this.window.gBrowser.selectedBrowser)
 diff --git a/browser/themes/shared/preferences/preferences.inc.css b/browser/themes/shared/preferences/preferences.inc.css
-index 5cd43e4fab..ecd808b068 100644
+index 9d376353dc..3ff6aadb92 100644
 --- a/browser/themes/shared/preferences/preferences.inc.css
 +++ b/browser/themes/shared/preferences/preferences.inc.css
-@@ -1152,3 +1152,7 @@ richlistitem .text-link:hover {
+@@ -1156,3 +1156,7 @@ richlistitem .text-link:hover {
  .featureGateDescription {
    margin-inline-start: 28px;
  }
