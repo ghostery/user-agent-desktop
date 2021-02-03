@@ -3,26 +3,31 @@ Date: Fri, 30 Oct 2020 11:12:49 +0100
 Subject: Add DNS, search and websocket permissions to ghostery extension
 
 ---
- browser/extensions/ghostery/manifest.json | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ browser/extensions/ghostery/manifest.json | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
 diff --git a/browser/extensions/ghostery/manifest.json b/browser/extensions/ghostery/manifest.json
-index 3f4ceb797a..489384f729 100644
+index aa658e3a30..2d4518a448 100644
 --- a/browser/extensions/ghostery/manifest.json
 +++ b/browser/extensions/ghostery/manifest.json
-@@ -70,7 +70,11 @@
- 		"tabs",
- 		"http://*/*",
+@@ -72,7 +72,9 @@
  		"https://*/*",
+ 		"ws://*/*",
+ 		"wss://*/*",
 -		"storage"
 +		"storage",
-+		"dns",
 +		"search",
-+		"ws://*/*",
-+		"wss://*/*"
++		"dns"
  	],
  	"background": {
  		"scripts": [
+@@ -88,4 +90,4 @@
+ 	"web_accessible_resources": [
+ 		"app/images/*"
+ 	]
+-}
+\ No newline at end of file
++}
 -- 
-2.29.2
+2.30.0
 
