@@ -2,7 +2,7 @@
   "addons": {
     "ghostery": "https://ghostery-deployments.s3.amazonaws.com/ghostery-extension/8.5.5.71266e47/ghostery-dawn-v8.5.5.71266e47.xpi",
     "ghostery-search": "https://github.com/ghostery/ghostery-search-extension/releases/download/v0.2.4/ghostery_glow-0.2.4.zip",
-    "ghostery-newtab": "https://github.com/ghostery/ghostery-newtab-extension/releases/download/v0.0.4/ghostery_new_tab-0.0.4.zip"
+    "ghostery-newtab": "https://github.com/ghostery/ghostery-newtab-extension/releases/download/v0.1.0/ghostery_new_tab-0.1.0.zip"
   },
   "firefox": "85.0",
   "app": "2021.02",
