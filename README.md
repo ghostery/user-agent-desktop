@@ -149,3 +149,13 @@ You will need to install the Windows 10 SDK at version `10.0.17134.0`. Then run 
 ### Makecab.exe
 
 This is copied from a windows install at `C:\Windows\System32\makecab.exe`.
+
+## Community
+
+The User Agent projects aim to serve people's interests. We are open for communities to actively shape the future of our browsers and seek to get community feedback and opinions.
+
+Communities are taking an active role in the project decision making:
+
+* [Better-Fox](https://github.com/yokoffing/Better-Fox) - maintain an opinionated Firefox preferences list
+
+If you are interested in joining User Agent Community feel free to start the [discussion at Github](https://github.com/ghostery/user-agent-desktop/discussions).

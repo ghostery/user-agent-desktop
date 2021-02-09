@@ -1,0 +1,37 @@
+From: Krzysztof Jan Modras <chrmod@chrmod.net>
+Date: Mon, 8 Feb 2021 09:58:33 +0100
+Subject: Better-Fox integration
+
+---
+ browser/branding/branding-common.mozbuild | 2 ++
+ browser/installer/package-manifest.in     | 1 +
+ 2 files changed, 3 insertions(+)
+
+diff --git a/browser/branding/branding-common.mozbuild b/browser/branding/branding-common.mozbuild
+index 908553b8b9..b1951ed4bc 100644
+--- a/browser/branding/branding-common.mozbuild
++++ b/browser/branding/branding-common.mozbuild
+@@ -15,6 +15,8 @@ def FirefoxBranding():
+             'pref/firefox-branding.js',
+         ]
+ 
++    JS_PREFERENCE_FILES += ['pref/Better-Fox.js']
++
+     if CONFIG['MOZ_WIDGET_TOOLKIT'] == 'windows':
+         FINAL_TARGET_FILES['..'] += [
+             'firefox.VisualElementsManifest.xml',
+diff --git a/browser/installer/package-manifest.in b/browser/installer/package-manifest.in
+index 75c79a7168..416ac522a5 100644
+--- a/browser/installer/package-manifest.in
++++ b/browser/installer/package-manifest.in
+@@ -288,6 +288,7 @@
+ ; All the pref files must be part of base to prevent migration bugs
+ @RESPATH@/browser/@PREF_DIR@/firefox.js
+ @RESPATH@/browser/@PREF_DIR@/firefox-branding.js
++@RESPATH@/browser/@PREF_DIR@/Better-Fox.js
+ @RESPATH@/greprefs.js
+ @RESPATH@/defaults/autoconfig/prefcalls.js
+ @RESPATH@/browser/defaults/permissions
+-- 
+2.30.0
+
