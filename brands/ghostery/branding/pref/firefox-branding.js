@@ -55,6 +55,10 @@ pref("privacy.trackingprotection.cryptomining.enabled", false);
 pref("privacy.trackingprotection.fingerprinting.enabled", false);
 pref("privacy.trackingprotection.socialtracking.enabled", false);
 pref("privacy.socialtracking.block_cookies.enabled", false);
+pref("browser.contentblocking.database.enabled", false);
+pref("browser.contentblocking.allowlist.storage.enabled", false);
+pref("browser.contentblocking.cryptomining.preferences.ui.enabled", false);
+pref("browser.contentblocking.fingerprinting.preferences.ui.enabled", false);
 
 // Remove addons.mozilla.org from set of domains that extensions cannot access
 pref("extensions.webextensions.restrictedDomains", "accounts-static.cdn.mozilla.net,accounts.firefox.com,addons.cdn.mozilla.net,api.accounts.firefox.com,content.cdn.mozilla.net,discovery.addons.mozilla.org,install.mozilla.org,oauth.accounts.firefox.com,profile.accounts.firefox.com,support.mozilla.org,sync.services.mozilla.com");
@@ -85,6 +89,8 @@ pref("breakpad.reportURL", "");
 pref("browser.tabs.crashReporting.sendReport", false);
 pref("browser.crashReports.unsubmittedCheck.enabled", false);
 pref("browser.crashReports.unsubmittedCheck.autoSubmit2", false);
+pref("browser.newtabpage.activity-stream.feeds.telemetry", false);
+pref("browser.newtabpage.activity-stream.telemetry", false);
 pref("extensions.abuseReport.enabled", false);
 pref("corroborator.enabled", false)
 
