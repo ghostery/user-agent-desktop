@@ -4,7 +4,7 @@
     "ghostery-search": "https://github.com/ghostery/ghostery-search-extension/releases/download/v0.2.4/ghostery_glow-0.2.4.zip",
     "ghostery-newtab": "https://github.com/ghostery/ghostery-newtab-extension/releases/download/v0.1.3/ghostery_new_tab-0.1.3.zip"
   },
-  "firefox": "85.0",
+  "firefox": "85.0.2",
   "app": "2021.02",
   "ipfsAddr": "/ipfs/QmcuJSwiXpXqHR7aPmb4Z1bLKig9uv9AgPay82L5hfCodH",
   "locales": {
