@@ -63,6 +63,10 @@ pref("browser.contentblocking.fingerprinting.preferences.ui.enabled", false);
 // Remove addons.mozilla.org from set of domains that extensions cannot access
 pref("extensions.webextensions.restrictedDomains", "accounts-static.cdn.mozilla.net,accounts.firefox.com,addons.cdn.mozilla.net,api.accounts.firefox.com,content.cdn.mozilla.net,discovery.addons.mozilla.org,install.mozilla.org,oauth.accounts.firefox.com,profile.accounts.firefox.com,support.mozilla.org,sync.services.mozilla.com");
 
+// Disable System Addon updates
+// [NOTE] We currently don't use partial updates instead of system addon updates
+pref("extensions.systemAddon.update.url", "");
+
 /** TELEMETRY, STUDIES, EXPERIMENTS, CRASH REPORTS ***/
 // See https://github.com/yokoffing/Better-Fox/blob/a458e14a94ff67111868178639c188a5d08f7038/SecureFox.js#L510
 // for details.
@@ -76,6 +80,7 @@ pref("app.normandy.enabled", false);
 pref("app.normandy.api_url", "");
 pref("toolkit.telemetry.unified", false);
 pref("toolkit.telemetry.enabled", false);
+pref("toolkit.telemetry.server", "data:,");
 pref("toolkit.telemetry.archive.enabled", false);
 pref("toolkit.telemetry.newProfilePing.enabled", false);
 pref("toolkit.telemetry.shutdownPingSender.enabled", false);
@@ -83,6 +88,7 @@ pref("toolkit.telemetry.updatePing.enabled", false);
 pref("toolkit.telemetry.bhrPing.enabled", false);
 pref("toolkit.telemetry.firstShutdownPing.enabled", false);
 pref("toolkit.telemetry.coverage.opt-out", true);
+pref("toolkit.coverage.opt-out", true);
 pref("toolkit.coverage.endpoint.base", "");
 pref("browser.discovery.enabled", false);
 pref("breakpad.reportURL", "");
@@ -111,6 +117,9 @@ pref("browser.newtabpage.activity-stream.asrouter.userprefs.cfr.addons", false);
 pref("browser.newtabpage.activity-stream.asrouter.userprefs.cfr.features", false);
 pref("extensions.htmlaboutaddons.recommendations.enabled", false);
 pref("extensions.getAddons.showPane", false);
+
+// Disable System Addon updates
+pref("extensions.systemAddon.update.url", "");
 
 /** HOMEPAGE ***/
 pref("startup.homepage_override_url", "");
