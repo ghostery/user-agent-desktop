@@ -158,4 +158,4 @@ Communities are taking an active role in the project decision making:
 
 * [Better-Fox](https://github.com/yokoffing/Better-Fox) - maintain an opinionated Firefox preferences list
 
-If you are interested in joining User Agent Community feel free to start the [discussion at Github](https://github.com/ghostery/user-agent-desktop/discussions).
+If you are interested in joining User Agent Community feel free to start the [discussion at Github](https://github.com/ghostery/user-agent-desktop/discussions) or join our [Matrix chat](https://matrix.to/#/!BjMeHLSGpAyxnZVDcb:matrix.org?via=matrix.org) community.
