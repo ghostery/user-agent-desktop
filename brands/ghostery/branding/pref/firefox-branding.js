@@ -80,6 +80,8 @@ pref("toolkit.telemetry.shutdownPingSender.enabled", false);
 pref("toolkit.telemetry.updatePing.enabled", false);
 pref("toolkit.telemetry.bhrPing.enabled", false);
 pref("toolkit.telemetry.firstShutdownPing.enabled", false);
+
+// Corroborator (#141)
 pref("corroborator.enabled", false)
 
 // Telemetry Coverage
@@ -88,13 +90,16 @@ pref("toolkit.coverage.opt-out", true);
 pref("toolkit.coverage.endpoint.base", "");
 
 // Health Reports
-// Privacy & Security>Firefox Data Collection & Use>Allow Firefox to send technical data.
+// [SETTING] Privacy & Security>Firefox Data Collection & Use>Allow Firefox to send technical data.
 pref("datareporting.healthreport.uploadEnabled", false);
 
 // New data submission, master kill switch
+// If disabled, no policy is shown or upload takes place, ever
+// [1] https://bugzilla.mozilla.org/1195552 ***/
 pref("datareporting.policy.dataSubmissionEnabled", false);
 
 // Studies
+// [SETTING] Privacy & Security>Firefox Data Collection & Use>Allow Firefox to install and run studies
 pref("app.shield.optoutstudies.enabled", false);
 
 // Personalized Extension Recommendations in about:addons and AMO
