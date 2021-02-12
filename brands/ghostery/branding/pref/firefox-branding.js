@@ -118,9 +118,6 @@ pref("browser.newtabpage.activity-stream.asrouter.userprefs.cfr.features", false
 pref("extensions.htmlaboutaddons.recommendations.enabled", false);
 pref("extensions.getAddons.showPane", false);
 
-// Disable System Addon updates
-pref("extensions.systemAddon.update.url", "");
-
 /** HOMEPAGE ***/
 pref("startup.homepage_override_url", "");
 pref("startup.homepage_welcome_url", "");
