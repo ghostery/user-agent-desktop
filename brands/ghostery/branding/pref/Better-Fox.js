@@ -37,7 +37,7 @@ pref("browser.send_pings.require_same_host", true);
 // Disable sending additional analytics to web servers
 pref("beacon.enabled", false);
 
-// Disable battery status tracking
+//  Disable Battery API as it's a common factor in fingerprinting
 pref("dom.battery.enabled", false);
 
 // CRLite
@@ -52,6 +52,8 @@ pref("privacy.webrtc.globalMuteToggles", true);
 /** STORAGE ***/
 
 // Dynamic First-Party Isolation (dFPI)
+// Tracker storage partitioning - currently undocumented setting to partition browser storage for trackers in 3rd party contexts.
+// [1] https://bugzilla.mozilla.org/show_bug.cgi?id=1549587
 pref("network.cookie.cookieBehavior", 5);
 
 // Redirect tracking prevention + Purge site data of sites associated with tracking cookies automatically
@@ -164,7 +166,7 @@ pref("network.IDN_show_punycode", true);
 
 /** HTTPS-ONLY MODE ***/
 
-// HTTPS-only connections
+// HTTPS-only connections (#367)
 pref("dom.security.https_only_mode", true);
 pref("dom.security.https_only_mode_ever_enabled", true);
 
