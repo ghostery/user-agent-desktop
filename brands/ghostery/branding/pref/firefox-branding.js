@@ -64,20 +64,13 @@ pref("browser.contentblocking.fingerprinting.preferences.ui.enabled", false);
 pref("extensions.webextensions.restrictedDomains", "accounts-static.cdn.mozilla.net,accounts.firefox.com,addons.cdn.mozilla.net,api.accounts.firefox.com,content.cdn.mozilla.net,discovery.addons.mozilla.org,install.mozilla.org,oauth.accounts.firefox.com,profile.accounts.firefox.com,support.mozilla.org,sync.services.mozilla.com");
 
 // Disable System Addon updates
-// [NOTE] We currently don't use partial updates instead of system addon updates
+// [NOTE] We use partial updates instead of system addon updates.
 pref("extensions.systemAddon.update.url", "");
 
-/** TELEMETRY, STUDIES, EXPERIMENTS, CRASH REPORTS ***/
-// See https://github.com/yokoffing/Better-Fox/blob/a458e14a94ff67111868178639c188a5d08f7038/SecureFox.js#L510
-// for details.
-// [NOTE] We may need re-enable and/or redirect some of these for Ghostery Dawn.
-pref("datareporting.policy.dataSubmissionEnabled", false);
-pref("datareporting.healthreport.uploadEnabled", false);
-pref("browser.ping-centre.telemetry", false);
-pref("default-browser-agent.enabled", false);
-pref("app.shield.optoutstudies.enabled", false);
-pref("app.normandy.enabled", false);
-pref("app.normandy.api_url", "");
+
+/** TELEMETRY ***/
+
+// Telemtry
 pref("toolkit.telemetry.unified", false);
 pref("toolkit.telemetry.enabled", false);
 pref("toolkit.telemetry.server", "data:,");
@@ -87,18 +80,64 @@ pref("toolkit.telemetry.shutdownPingSender.enabled", false);
 pref("toolkit.telemetry.updatePing.enabled", false);
 pref("toolkit.telemetry.bhrPing.enabled", false);
 pref("toolkit.telemetry.firstShutdownPing.enabled", false);
+pref("corroborator.enabled", false)
+
+// Telemetry Coverage
 pref("toolkit.telemetry.coverage.opt-out", true);
 pref("toolkit.coverage.opt-out", true);
 pref("toolkit.coverage.endpoint.base", "");
+
+// Health Reports
+// Privacy & Security>Firefox Data Collection & Use>Allow Firefox to send technical data.
+pref("datareporting.healthreport.uploadEnabled", false);
+
+// New data submission, master kill switch
+pref("datareporting.policy.dataSubmissionEnabled", false);
+
+// Studies
+pref("app.shield.optoutstudies.enabled", false);
+
+// Personalized Extension Recommendations in about:addons and AMO
+// [NOTE] This pref has no effect when Health Reports are disabled.
+// [SETTING] Privacy & Security>Firefox Data Collection & Use>Allow Firefox to make personalized extension recommendations
 pref("browser.discovery.enabled", false);
+
+// Crash Reports
 pref("breakpad.reportURL", "");
 pref("browser.tabs.crashReporting.sendReport", false);
 pref("browser.crashReports.unsubmittedCheck.enabled", false);
+// backlogged crash reports
 pref("browser.crashReports.unsubmittedCheck.autoSubmit2", false);
+
+// disable Captive Portal detection
+// [1] https://www.eff.org/deeplinks/2017/08/how-captive-portals-interfere-wireless-security-and-privacy
+// [2] https://wiki.mozilla.org/Necko/CaptivePortal
+// user_pref("captivedetect.canonicalURL", "");
+// user_pref("network.captive-portal-service.enabled", false);
+
+// disable Network Connectivity checks
+// [1] https://bugzilla.mozilla.org/1460537
+// user_pref("network.connectivity-service.enabled", false);
+
+// Software that continually reports what default browser you are using
+pref("default-browser-agent.enabled", false);
+
+// Report extensions for abuse
+pref("extensions.abuseReport.enabled", false);
+
+// Normandy/Shield [extensions tracking]
+// Shield is an telemetry system (including Heartbeat) that can also push and test "recipes"
+pref("app.normandy.enabled", false);
+pref("app.normandy.api_url", "");
+
+// disable PingCentre telemetry (used in several System Add-ons)
+// Currently blocked by 'datareporting.healthreport.uploadEnabled'
+pref("browser.ping-centre.telemetry", false);
+
+// disable Activity Stream telemetry 
 pref("browser.newtabpage.activity-stream.feeds.telemetry", false);
 pref("browser.newtabpage.activity-stream.telemetry", false);
-pref("extensions.abuseReport.enabled", false);
-pref("corroborator.enabled", false)
+
 
 // Disable Firefox-specifc menus and products
 pref("browser.privatebrowsing.vpnpromourl", ""); // Mozilla VPN
@@ -107,12 +146,11 @@ pref("extensions.pocket.enabled", false); // Pocket Account
 pref("extensions.pocket.api"," ");
 pref("extensions.pocket.oAuthConsumerKey", " ");
 pref("extensions.pocket.site", " ");
-pref("identity.fxaccounts.enabled", false); // Firefox Accounts & Sync [FF60+] [RESTART]
+pref("identity.fxaccounts.enabled", false); // Firefox Accounts & Sync
 pref("extensions.fxmonitor.enabled", false); // Firefox Monitor
 pref("signon.management.page.breach-alerts.enabled", false); // Firefox Lockwise
 pref("signon.management.page.breachAlertUrl", "");
-// PREF: Disable Extension Recommendations (CFR: "Contextual Feature Recommender")
-// [1] https://support.mozilla.org/en-US/kb/extension-recommendations
+// Disable Extension Recommendations (CFR: "Contextual Feature Recommender")
 pref("browser.newtabpage.activity-stream.asrouter.userprefs.cfr.addons", false);
 pref("browser.newtabpage.activity-stream.asrouter.userprefs.cfr.features", false);
 pref("extensions.htmlaboutaddons.recommendations.enabled", false);
