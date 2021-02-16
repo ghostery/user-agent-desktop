@@ -82,7 +82,7 @@ pref("toolkit.telemetry.bhrPing.enabled", false);
 pref("toolkit.telemetry.firstShutdownPing.enabled", false);
 
 // Corroborator (#141)
-pref("corroborator.enabled", false)
+pref("corroborator.enabled", false);
 
 // Telemetry Coverage
 pref("toolkit.telemetry.coverage.opt-out", true);
