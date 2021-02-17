@@ -155,7 +155,7 @@ pref("signon.management.page.breachAlertUrl", "");
 pref("browser.contentblocking.report.lockwise.enabled", false);
 pref("browser.contentblocking.report.lockwise.how_it_works.url", "");
 pref("signon.generation.available", false); // Password Generator (doesn't work without Lockwise)
-pref("signon.generation.enabled", false);
+pref("signon.generation.enabled", false); // [SETTING] "Suggest and generate strong passwords"
 // Disable Extension Recommendations (CFR: "Contextual Feature Recommender")
 pref("browser.newtabpage.activity-stream.asrouter.userprefs.cfr.addons", false);
 pref("browser.newtabpage.activity-stream.asrouter.userprefs.cfr.features", false);
