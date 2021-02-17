@@ -67,9 +67,7 @@ pref("extensions.webextensions.restrictedDomains", "accounts-static.cdn.mozilla.
 // [NOTE] We use partial updates instead of system addon updates.
 pref("extensions.systemAddon.update.url", "");
 
-
 /** TELEMETRY ***/
-
 // Telemtry
 pref("toolkit.telemetry.unified", false);
 pref("toolkit.telemetry.enabled", false);
@@ -143,7 +141,6 @@ pref("browser.ping-centre.telemetry", false);
 pref("browser.newtabpage.activity-stream.feeds.telemetry", false);
 pref("browser.newtabpage.activity-stream.telemetry", false);
 
-
 // Disable Firefox-specifc menus and products
 pref("browser.privatebrowsing.vpnpromourl", ""); // Mozilla VPN
 pref("browser.messaging-system.whatsNewPanel.enabled", false); // What's New
@@ -155,6 +152,10 @@ pref("identity.fxaccounts.enabled", false); // Firefox Accounts & Sync
 pref("extensions.fxmonitor.enabled", false); // Firefox Monitor
 pref("signon.management.page.breach-alerts.enabled", false); // Firefox Lockwise
 pref("signon.management.page.breachAlertUrl", "");
+pref("browser.contentblocking.report.lockwise.enabled", false);
+pref("browser.contentblocking.report.lockwise.how_it_works.url", "");
+pref("signon.generation.available", false); // Password Generator (doesn't work without Lockwise)
+pref("signon.generation.enabled", false);
 // Disable Extension Recommendations (CFR: "Contextual Feature Recommender")
 pref("browser.newtabpage.activity-stream.asrouter.userprefs.cfr.addons", false);
 pref("browser.newtabpage.activity-stream.asrouter.userprefs.cfr.features", false);
