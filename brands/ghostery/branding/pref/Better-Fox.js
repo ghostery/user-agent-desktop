@@ -374,6 +374,9 @@ pref("browser.bookmarks.openInTabClosesMenu", false);
 pref("browser.tabs.loadBookmarksInBackground", true);
 pref("browser.tabs.loadBookmarksInTabs", true);
 
+// Hide bookmarks toolbar from new tab page (#473)
+pref("browser.toolbars.bookmarks.visibility", "never");
+
 // AVIF images
 pref("image.avif.enabled", true);
 
