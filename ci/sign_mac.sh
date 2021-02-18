@@ -73,7 +73,7 @@ do
       rm $SIGNED_DMG
   fi
 
-  node_modules/.bin/appdmg -v ci/$APP_NAME-dmg.json $SIGNED_DMG
+  npx appdmg -v ci/$APP_NAME-dmg.json $SIGNED_DMG
 
   # create mar update from dmg contents
   DMG_NAME=$(basename $DMG)
