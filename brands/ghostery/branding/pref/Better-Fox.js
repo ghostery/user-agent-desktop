@@ -67,7 +67,7 @@ pref("browser.cache.cache_isolation", true);
 // on a per-website basis rather than together in the same pool.
 pref("privacy.partition.network_state", true);
 
-// Enable Local Storage Next Generation (LSNG) (DOMStorage) 
+// Enable Local Storage Next Generation (LSNG) (DOMStorage)
 pref("dom.storage.next_gen", true);
 
 // Samesite Cookies /* experimental */
@@ -355,21 +355,8 @@ pref("devtools.debugger.ui.editor-wrapping", true);
 
 /** TAB BEHAVIOR ***/
 
-// Open links targeting new windows in a new tab instead
-// Pop-up windows are treated like regular tabs. You can still right-click
-// a link and open in a new window
-pref("browser.link.open_newwindow", 3);
-pref("browser.link.open_newwindow.restriction", 0);
-
 // Prevent scripts from moving and resizing open windows
 pref("dom.disable_window_move_resize", true);
-
-// Leave bookmarks menu open when selecting a site
-pref("browser.bookmarks.openInTabClosesMenu", false);
-
-// Load bookmarks in the background using Bookmarks Menu
-pref("browser.tabs.loadBookmarksInBackground", true);
-pref("browser.tabs.loadBookmarksInTabs", true);
 
 // AVIF images
 pref("image.avif.enabled", true);
