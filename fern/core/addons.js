@@ -1,7 +1,7 @@
 const stream = require("stream");
 const path = require("path");
 const fs = require("fs");
-const md5 = require("md5");
+const crypto = require("crypto");
 
 const got = require("got");
 const execa = require("execa");
@@ -11,7 +11,7 @@ const readdir = require("recursive-readdir");
 const { getCacheDir } = require("./caching.js");
 const { fileExists, folderExists, ensureFolderExists } = require("./utils.js");
 
-const getAddonUrlHash = md5;
+const getAddonUrlHash = url => crypto.createHash("md5").update(url).digest("hex");
 
 async function getPathToCachedAddon(addonName, url) {
   const addonUrlHash = getAddonUrlHash(url);
