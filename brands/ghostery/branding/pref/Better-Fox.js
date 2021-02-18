@@ -364,9 +364,6 @@ pref("browser.link.open_newwindow.restriction", 0);
 // Prevent scripts from moving and resizing open windows
 pref("dom.disable_window_move_resize", true);
 
-// Leave the browser window open even after you close the last tab
-pref("browser.tabs.closeWindowWithLastTab", false);
-
 // Leave bookmarks menu open when selecting a site
 pref("browser.bookmarks.openInTabClosesMenu", false);
 
