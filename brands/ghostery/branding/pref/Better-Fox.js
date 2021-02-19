@@ -341,6 +341,9 @@ pref("browser.display.show_image_placeholders", false);
 // Prevent scripts from moving and resizing open windows
 pref("dom.disable_window_move_resize", true);
 
+// Hide bookmarks toolbar from new tab page (#473)
+pref("browser.toolbars.bookmarks.visibility", "never");
+
 // AVIF images
 pref("image.avif.enabled", true);
 
