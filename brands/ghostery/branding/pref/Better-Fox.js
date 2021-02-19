@@ -301,8 +301,6 @@ pref("full-screen-api.warning.timeout", -1);
 
 // always ask where to download
 pref("browser.download.useDownloadDir", false);
-// adding downloads to the system's "recent documents" list
-pref("browser.download.manager.addToRecentDocs", false);
 // hide mime types (Options>General>Applications) not associated with a plugin
 pref("browser.download.hide_plugins_without_extensions", false);
 
@@ -331,48 +329,17 @@ pref("dom.push.enabled", false);
 // Autoplay
 pref("media.block-autoplay-until-in-foreground", true);
 
-// Disable ALT key toggling the menu bar
-// default=18
-pref("ui.key.menuAccessKey", 0);
-
 // Show all matches in Findbar
 pref("findbar.highlightAll", true);
-
-// Spell-check
-// 0=none, 1-multi-line, 2=multi-line & single-line
-pref("layout.spellcheckDefault", 2);
-
-// Limit the number of bookmark backups Firefox keeps
-pref("browser.bookmarks.max_backups", 2);
 
 // Hide image placeholders
 pref("browser.display.show_image_placeholders", false);
 
-// Text wrap
-pref("view_source.wrap_long_lines", true);
-pref("devtools.debugger.ui.editor-wrapping", true);
-
 
 /** TAB BEHAVIOR ***/
 
-// Open links targeting new windows in a new tab instead
-// Pop-up windows are treated like regular tabs. You can still right-click
-// a link and open in a new window
-pref("browser.link.open_newwindow", 3);
-pref("browser.link.open_newwindow.restriction", 0);
-
 // Prevent scripts from moving and resizing open windows
 pref("dom.disable_window_move_resize", true);
-
-// Leave the browser window open even after you close the last tab
-pref("browser.tabs.closeWindowWithLastTab", false);
-
-// Leave bookmarks menu open when selecting a site
-pref("browser.bookmarks.openInTabClosesMenu", false);
-
-// Load bookmarks in the background using Bookmarks Menu
-pref("browser.tabs.loadBookmarksInBackground", true);
-pref("browser.tabs.loadBookmarksInTabs", true);
 
 // Hide bookmarks toolbar from new tab page (#473)
 pref("browser.toolbars.bookmarks.visibility", "never");
