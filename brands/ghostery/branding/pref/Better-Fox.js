@@ -59,9 +59,6 @@ pref("network.cookie.cookieBehavior", 5);
 // Redirect tracking prevention + Purge site data of sites associated with tracking cookies automatically
 pref("privacy.purge_trackers.enabled", true);
 
-// Isolate cache per site
-pref("browser.cache.cache_isolation", true);
-
 // Network Partitioning
 // Allows the browser to save resources like the cache, favicons, CSS files, images, and more
 // on a per-website basis rather than together in the same pool.
