@@ -191,3 +191,5 @@ pref("devtools.selfxss.count", 0);
 // Disable "Firefox Suggest"
 pref("browser.urlbar.groupLabels.enabled", false);
 pref("browser.urlbar.quicksuggest.enabled", false);
+
+pref("app.update.channel", "experimental");
