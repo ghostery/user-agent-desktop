@@ -1,0 +1,33 @@
+From: Krzysztof Jan Modras <chrmod@chrmod.net>
+Date: Tue, 23 Feb 2021 15:31:44 +0100
+Subject: Default top sites
+
+fix #410
+---
+ browser/components/newtab/lib/DefaultSites.jsm | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/browser/components/newtab/lib/DefaultSites.jsm b/browser/components/newtab/lib/DefaultSites.jsm
+index 9bb9ef66ce..9494826954 100644
+--- a/browser/components/newtab/lib/DefaultSites.jsm
++++ b/browser/components/newtab/lib/DefaultSites.jsm
+@@ -4,6 +4,7 @@
+ 
+ "use strict";
+ 
++/*
+ const DEFAULT_SITES_MAP = new Map([
+   // This first item is the global list fallback for any unexpected geos
+   [
+@@ -43,6 +44,8 @@ const DEFAULT_SITES_MAP = new Map([
+     "https://www.baidu.com/,https://www.zhihu.com/,https://www.ifeng.com/,https://weibo.com/,https://www.ctrip.com/,https://www.iqiyi.com/",
+   ],
+ ]);
++*/
++const DEFAULT_SITES_MAP = new Map([["", "https://www.ghostery.com/,https://whotracks.me/,https://privacytools.io/,https://alternativeto.net/,https://addons.mozilla.org"]]);
+ 
+ this.EXPORTED_SYMBOLS = ["DEFAULT_SITES"];
+ 
+-- 
+2.30.0
+
