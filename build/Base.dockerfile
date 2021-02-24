@@ -1,4 +1,4 @@
-FROM debian:10
+FROM debian:9
 ENV DEBIAN_FRONTEND=noninteractive
 ENV XZ_OPT=-T0
 
@@ -79,8 +79,8 @@ RUN apt-get update && \
       linux-libc-dev:$ARCH \
       pkg-config \
       dpkg-dev \
-      libstdc++-8-dev \
-      libstdc++-8-dev:$ARCH \
+      libstdc++-6-dev \
+      libstdc++-6-dev:$ARCH \
       libdbus-glib-1-dev:$ARCH \
       libdrm-dev:$ARCH \
       libfontconfig1-dev:$ARCH \
@@ -94,14 +94,20 @@ RUN apt-get update && \
       libxt-dev:$ARCH \
       libglib2.0-dev \
       # extras
-      wine64 wine upx-ucl nodejs npm \
+      wine64 wine upx-ucl \
       python3-pip zstd \
       libasound2-dev libcurl4-openssl-dev \
       libnss3-tools \
       locales \
-      liblzma-dev
+      liblzma-dev \
+      curl \
+      xz-utils
 
 # custom
+RUN curl https://nodejs.org/dist/v14.16.0/node-v14.16.0-linux-x64.tar.xz -o /node.tar.xz
+RUN mkdir -p /node
+RUN tar -xf /node.tar.xz --strip-components=1 -C /node
+ENV PATH="/node/bin:${PATH}"
 RUN pip3 install zstandard importlib_metadata mar balrogclient
 ADD fetch-content /builds/worker/bin/fetch-content
 # mbsdiff and mar (built from martools on linux)
