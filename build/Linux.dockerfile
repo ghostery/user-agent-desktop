@@ -11,12 +11,12 @@ RUN wget -O /builds/worker/fetches/binutils.tar.xz $IPFS_GATEWAY/ipfs/QmfTyFzy9f
 
 RUN wget -O /builds/worker/fetches/clang.tar.zst $IPFS_GATEWAY/ipfs/QmakFK3Q9mKPPCFkJndQdi2oSv9CJCTSUxDZx655yDNpxz && \
     cd /builds/worker/fetches/ && \
-    tar -xf clang.tar.zst && \
+    tar -I zstd -xf clang.tar.zst && \
     rm clang.tar.zst
 
 RUN wget -O /builds/worker/fetches/rustc.tar.zst $IPFS_GATEWAY/ipfs/QmSjKXFeYFfsYyqN4JLDLC5UeP9MtnQ7Svrioyumkx8HAW && \
     cd /builds/worker/fetches/ && \
-    tar -xf rustc.tar.zst && \
+    tar -I zstd -xf rustc.tar.zst && \
     rm rustc.tar.zst
 
 RUN wget -O /builds/worker/fetches/rust-size.tar.xz $IPFS_GATEWAY/ipfs/QmaBFfnPsWcS1CFJ7ynd2fkkTcUTdg3nzLobVr67yicYub && \

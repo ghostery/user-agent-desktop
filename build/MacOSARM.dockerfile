@@ -13,7 +13,7 @@ RUN wget -nv -O /builds/worker/fetches/cctools.tar.xz $IPFS_GATEWAY/ipfs/QmaXYNb
 
 RUN wget -nv -O /builds/worker/fetches/clang.tar.zst $IPFS_GATEWAY/ipfs/QmUen9bvkjDe6FMdctLpjgV8ZfUSagzfxY1vpikRQwTWuF && \
     cd /builds/worker/fetches/ && \
-    tar -xf clang.tar.zst && \
+    tar -I zstd -xf clang.tar.zst && \
     rm clang.tar.zst
 
 RUN wget -nv -O /builds/worker/fetches/binutils.tar.xz $IPFS_GATEWAY/ipfs/QmfTyFzy9f61Est4wodKXvwKtPzDbsChWn6WknABjqXd99 && \
@@ -43,7 +43,7 @@ RUN wget -nv -O /builds/worker/fetches/llvm-dsymutil.tar.xz $IPFS_GATEWAY/ipfs/Q
 
 RUN wget -nv -O /builds/worker/fetches/rustc.tar.zst $IPFS_GATEWAY/ipfs/QmTsRYJbGPKz9ZCUB6gkVzU4fuJfqEndkNqURK14KT6rNy && \
     cd /builds/worker/fetches/ && \
-    tar -xf rustc.tar.zst && \
+    tar -I zstd -xf rustc.tar.zst && \
     rm rustc.tar.zst
 
 RUN wget -nv -O /builds/worker/fetches/rust-size.tar.xz $IPFS_GATEWAY/ipfs/QmaBFfnPsWcS1CFJ7ynd2fkkTcUTdg3nzLobVr67yicYub && \
