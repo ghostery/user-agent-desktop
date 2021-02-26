@@ -93,7 +93,6 @@ RUN apt-get update && \
       libx11-xcb-dev:$ARCH \
       libxt-dev:$ARCH \
       libglib2.0-dev \
-      //
       libreadline-gplv2-dev \
       libncursesw5-dev \
       libssl-dev \ 
