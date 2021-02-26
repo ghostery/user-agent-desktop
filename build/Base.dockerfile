@@ -108,7 +108,7 @@ RUN wget https://www.python.org/ftp/python/3.9.2/Python-3.9.2.tgz && \
   cd Python-3.9.2 && \
   ./configure --enable-optimizations && \
   make altinstall && \
-  update-alternatives --install /usr/local/bin/python3 python3 /usr/local/bin/python3.9 10 & \
+  update-alternatives --install /usr/local/bin/python3 python3 /usr/local/bin/python3.9 10 && \
   update-alternatives --install /usr/local/bin/pip3 pip3 /usr/local/bin/pip3.9 10 
 
 # custom
