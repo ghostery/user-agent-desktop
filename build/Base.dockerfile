@@ -105,7 +105,7 @@ RUN apt-get update && \
       
 RUN wget https://www.python.org/ftp/python/3.9.2/Python-3.9.2.tgz && \
   tar xzf Python-3.9.2.tgz && \
-  cd Python-3.9.2.0 && \
+  cd Python-3.9.2 && \
   ./configure --enable-optimizations && \
   make altinstall && \
   update-alternatives --install /usr/local/bin/python3 python3 /usr/local/bin/python3.9 10 & \
