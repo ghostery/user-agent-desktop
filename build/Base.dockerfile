@@ -109,7 +109,7 @@ RUN wget https://www.python.org/ftp/python/3.10.0/Python-3.10.0.tgz && \
   ./configure --enable-optimizations && \
   make altinstall && \
   update-alternatives --install /usr/local/bin/python3 python3 /usr/local/bin/python3.10 10 & \
-  update-alternatives --install /usr/local/bin/pip3 pip3 /usr/local/bin/pip3.9 10 
+  update-alternatives --install /usr/local/bin/pip3 pip3 /usr/local/bin/pip3.10 10 
 
 # custom
 RUN curl https://nodejs.org/dist/v14.16.0/node-v14.16.0-linux-x64.tar.xz -o /node.tar.xz
