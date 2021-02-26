@@ -103,13 +103,13 @@ RUN apt-get update && \
       curl \
       xz-utils
       
-RUN wget https://www.python.org/ftp/python/3.10.0/Python-3.10.0.tgz && \
-  tar xzf Python-3.10.0.tgz && \
-  cd Python-3.10.0 && \
+RUN wget https://www.python.org/ftp/python/3.9.2/Python-3.9.2.tgz && \
+  tar xzf Python-3.9.2.tgz && \
+  cd Python-3.9.2.0 && \
   ./configure --enable-optimizations && \
   make altinstall && \
-  update-alternatives --install /usr/local/bin/python3 python3 /usr/local/bin/python3.10 10 & \
-  update-alternatives --install /usr/local/bin/pip3 pip3 /usr/local/bin/pip3.10 10 
+  update-alternatives --install /usr/local/bin/python3 python3 /usr/local/bin/python3.9 10 & \
+  update-alternatives --install /usr/local/bin/pip3 pip3 /usr/local/bin/pip3.9 10 
 
 # custom
 RUN curl https://nodejs.org/dist/v14.16.0/node-v14.16.0-linux-x64.tar.xz -o /node.tar.xz
