@@ -14,6 +14,7 @@ module.exports = (program) => {
       try {
         await tasks.run();
       } catch (ex) {
+        console.error(ex);
         /* Handled by `tasks` */
         process.exit(1);
       }

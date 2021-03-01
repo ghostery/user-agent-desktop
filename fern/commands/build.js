@@ -360,6 +360,7 @@ module.exports = (program) => {
       try {
         await listr.run();
       } catch (ex) {
+        console.error(ex);
         /* Handled by `tasks` */
         process.exit(1);
       } finally {

@@ -38,12 +38,20 @@ async function getLocaleStringOverrides(locale, root) {
 
 function replacementLine(key, value, format) {
   if (format === ".ftl") {
+    if (Array.isArray(value)) {
+      return [
+        `${key} =`,
+        ...value.map(line => `    ${line}`)
+      ].join("\n");
+    }
     return `${key} = ${value}`;
   } else if (format === ".inc") {
     // bookmarks.inc - uses #define
-    return `#define ${key} ${value}`
+    return `#define ${key} ${value}`;
+  } else if (format === ".dtd") {
+    return `<!ENTITY ${key} "${value}">`
   } else if (format === '.properties') {
-    return `${key}=${value}`
+    return `${key}=${value}`;
   }
   throw "Unknown file format"
 }
@@ -53,13 +61,39 @@ function patchStrings(replacements, content, format) {
   const keys = new Set(Object.keys(replacements));
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i];
-    const key = line.split("=")[0].trim();
-    if (replacements[key]) {
-      // check for multiline with .label
-      if (format === ".ftl" && lines[i + 1].trim().startsWith(".label")) {
+    let key;
+    if (format === ".dtd") {
+      key = (line.split(" ")[1] || "").trim();
+    } else {
+      key = line.split("=")[0].trim();
+    }
+    if (key && replacements[key]) {
+      if (format === ".ftl" && !replacements[key].string) {
+        // TODO: below multiline with .label handing is a special case of .ftl key replacement
+        // this code should be handle it if the translation files will get updated to
+        // use nested structure.
+        while (lines[i + 1] && (lines[i + 1].startsWith('    .') || lines[i + 1].startsWith('  .'))) {
+          i = i + 1;
+          const subKeyMatch = /^ {2,4}\.(.*) =/.exec(lines[i]);
+          if (subKeyMatch) {
+            const subKey = subKeyMatch[1];
+            if (replacements[key][subKey]) {
+              lines[i] = `    .${subKey} = ${replacements[key][subKey].string}`;
+            }
+          }
+        }
+      } else if (format === ".ftl" && lines[i + 1].trim().startsWith(".label")) {
+        // check for multiline with .label
         i = i + 1;
         lines[i] = `${lines[i].split("=")[0]}= ${replacements[key].string}`;
       } else {
+        // TODO: this creates empty lines - we don't need them
+        if (format === ".ftl" && Array.isArray(replacements[key].string)) {
+          for (let k = 0; k < replacements[key].string.length; k++) {
+            lines[i] = "";
+            i = i + 1;
+          }
+        }
         lines[i] = replacementLine(key, replacements[key].string, format);
       }
       keys.delete(key);

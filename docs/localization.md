@@ -49,3 +49,7 @@ Our process is as follows:
 
 Once a language pack is configured by these steps, the fetching and patching of packs will be handled
 entirely by `fern`'s `use` and `import-patches` flow, as with other browser changes.
+
+## Notes
+
+Useful command to look for traslation string `rg "private window" mozilla-release -g "*.{properties,ftl,dtd,inc}" -i`
