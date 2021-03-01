@@ -52,6 +52,14 @@
     },
     "httpsonly-radio-enabled-pbm": {
       "string": "Enable HTTPS-Only Mode in Ghost Mode only"
+    },
+    "content-blocking-private-windows": {
+      "string": "Tracking content in Ghost Mode"
+    },
+    "content-blocking-option-private": {
+      "label": {
+        "string": "Only in Ghost Mode"
+      }
     }
   },
   "browser/browser/browser.ftl": {

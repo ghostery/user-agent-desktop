@@ -95,7 +95,6 @@ function patchStrings(replacements, content, format) {
           }
         }
         lines[i] = replacementLine(key, replacements[key].string, format);
-        i = i + 1;
       }
       keys.delete(key);
     }
