@@ -68,6 +68,25 @@
       "data-content-title-private": {
         "string": "{ $content-title } — (Ghost Mode)"
       }
+    },
+    "browser-main-window": {
+      "data-title-private": {
+        "string": "{ -brand-full-name } — (Ghost Mode)"
+      },
+      "data-content-title-private": {
+        "string": "{ $content-title } — { -brand-full-name } — (Ghost Mode)"
+      }
+    },
+    "search-one-offs-context-set-as-default-private": {
+      "label": {
+        "string": "Set as Default Search Engine for Ghost Mode"
+      }
+    },
+    "urlbar-result-action-search-in-private-w-engine": {
+      "string": "Search with { $engine } in a Ghost Mode"
+    },
+    "urlbar-result-action-search-in-private": {
+      "string": "Search in a Ghost Mode"
     }
   },
   "browser/browser/aboutLogins.ftl": {
@@ -96,6 +115,9 @@
     },
     "about-private-browsing-search-banner-title": {
       "string": "{ $engineName } is your default search engine in Ghost Mode"
+    },
+    "about-private-browsing-info-description": {
+      "string": "{ -brand-short-name } clears your search and browsing history when you quit the app or close all Ghost Mode tabs and windows. While this doesn’t make you anonymous to websites or your internet service provider, it makes it easier to keep what you do online private from anyone else who uses this computer."
     }
   },
   "browser/browser/newInstallPage.ftl": {
@@ -194,7 +216,9 @@
       ]
     },
     "addon-badge-private-browsing-allowed2": {
-      "string": "Allowed in private windows"
+      "title": {
+        "string": "Allowed in Ghost Mode"
+      }
     },
     "addon-detail-private-browsing-help": {
       "string": "When allowed, the extension will have access to your online activities while in Ghost Mode. <a data-l10n-name=\"learn-more\">Learn more</a>"
@@ -206,6 +230,83 @@
     },
     "contextMenuPrivateSearchOtherEngine": {
       "string": "Search with %S in a Ghost Mode"
+    }
+  },
+  "toolkit/toolkit/global/handlerDialog.ftl": {
+    "choose-dialog-privatebrowsing-disabled": {
+      "string": "Disabled in Ghost Mode"
+    }
+  },
+  "browser/browser/appMenuNotifications.ftl": {
+    "appmenu-update-restart-message": {
+      "string": "After a quick restart, { -brand-shorter-name } will restore all your open tabs and windows that are not in Ghost Mode."
+    },
+    "appmenu-addon-post-install-incognito-checkbox": {
+      "label": {
+        "string": "Allow this extension to run in Ghost Mode"
+      }
+    }
+  },
+  "browser/browser/newtab/newtab.ftl": {
+    "newtab-menu-open-new-private-window": {
+      "string": "Open in a New Ghost Mode Window"
+    }
+  },
+  "toolkit/chrome/mozapps/downloads/downloads.properties": {
+    "leavePrivateBrowsingWindowsCancelDownloadsAlertMsg2": {
+      "string": "If you close all Ghost Mode windows now, 1 download will be canceled. Are you sure you want to leave Ghost Mode?"
+    },
+    "leavePrivateBrowsingWindowsCancelDownloadsAlertMsgMultiple2": {
+      "string": "If you close all Ghost Mode windows now, %S downloads will be canceled. Are you sure you want to leave Ghost Mode?"
+    },
+    "dontLeavePrivateBrowsingButton2": {
+      "string": "Stay in Ghost Mode"
+    }
+  },
+  "devtools/client/performance.dtd": {
+    "performanceUI.unavailableNoticePB": {
+      "string": "Recording a profile is currently unavailable. Please close all Ghost Mode windows and try again."
+    }
+  },
+  "browser/chrome/browser/tabbrowser.properties": {
+    "tabs.closeWarningMultipleSessionRestore2": {
+      "string": ";You are about to close #1 tabs. Tabs in non-Ghost Mode windows will be restored when you restart. Are you sure you want to continue?"
+    },
+    "tabs.closeWarningMultipleWindowsSessionRestore2": {
+      "string": ";You are about to close #1 windows %S. Tabs in non-Ghost Mode windows will be restored when you restart. Are you sure you want to continue?"
+    },
+    "tabs.emptyPrivateTabTitle": {
+      "string": "Ghost Mode"
+    }
+  },
+  "browser/browser/policies/policies-descriptions.ftl": {
+    "policy-DisablePrivateBrowsing": {
+      "string": "Disable Ghost Mode."
+    }
+  },
+  "dom/chrome/dom/dom.properties": {
+    "ServiceWorkerRegisterStorageError": {
+      "string": "Failed to register/update a ServiceWorker for scope ‘%S’: Storage access is restricted in this context due to user settings or Ghost Mode."
+    },
+    "ServiceWorkerGetRegistrationStorageError": {
+      "string": "Failed to get service worker registration(s): Storage access is restricted in this context due to user settings or Ghost Mode."
+    },
+    "ServiceWorkerGetClientStorageError": {
+      "string": "Failed to get service worker’s client(s): Storage access is restricted in this context due to user settings or Ghost Mode."
+    },
+    "ServiceWorkerPostMessageStorageError": {
+      "string": "The ServiceWorker for scope ‘%S’ failed to execute ‘postMessage‘ because storage access is restricted in this context due to user settings or Ghost Mode."
+    },
+    "RegisterProtocolHandlerPrivateBrowsingWarning": {
+      "string": "Can’t use registerProtocolHandler inside Ghost Mode."
+    }
+  },
+  "browser/chrome/browser/taskbar.properties": {
+    "taskbar.tasks.newPrivateWindow.label": {
+      "string": "New Ghost Mode window"
+    },
+    "taskbar.tasks.newPrivateWindow.description": {
+      "string": "Open a new window in Ghost Mode."
     }
   }
 }

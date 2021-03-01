@@ -72,9 +72,9 @@ function patchStrings(replacements, content, format) {
         // TODO: below multiline with .label handing is a special case of .ftl key replacement
         // this code should be handle it if the translation files will get updated to
         // use nested structure.
-        while (lines[i + 1] && lines[i + 1].startsWith('    .')) {
+        while (lines[i + 1] && (lines[i + 1].startsWith('    .') || lines[i + 1].startsWith('  .'))) {
           i = i + 1;
-          const subKeyMatch = /^ {4}\.(.*) =/.exec(lines[i]);
+          const subKeyMatch = /^ {2,4}\.(.*) =/.exec(lines[i]);
           if (subKeyMatch) {
             const subKey = subKeyMatch[1];
             if (replacements[key][subKey]) {
@@ -87,6 +87,7 @@ function patchStrings(replacements, content, format) {
         i = i + 1;
         lines[i] = `${lines[i].split("=")[0]}= ${replacements[key].string}`;
       } else {
+        // TODO: this creates empty lines - we don't need them
         if (format === ".ftl" && Array.isArray(replacements[key].string)) {
           for (let k = 0; k < replacements[key].string.length; k++) {
             lines[i] = "";
@@ -94,6 +95,7 @@ function patchStrings(replacements, content, format) {
           }
         }
         lines[i] = replacementLine(key, replacements[key].string, format);
+        i = i + 1;
       }
       keys.delete(key);
     }
