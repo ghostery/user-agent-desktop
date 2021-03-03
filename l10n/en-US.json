@@ -107,16 +107,16 @@
   },
   "browser/browser/aboutPrivateBrowsing.ftl": {
     "about-private-browsing-search-placeholder": {
-      "string": "Search Privately"
+      "string": "Search privately with Ghostery"
     },
     "privatebrowsingpage-open-private-window-label": {
       "string": "Open a Ghost Mode Window"
     },
     "about-private-browsing-info-title": {
-      "string": "You’re in a Ghost Mode"
+      "string": "You’re Now Veiled in Ghost Mode"
     },
     "about-private-browsing-info-myths": {
-      "string": "Common myths about Ghost Mode (aka private browsing)"
+      "string": "Note that Ghost mode does not make you anonymous to websites, your internet service provider, and other third parties. <strong>Learn More</strong>"
     },
     "about-private-browsing-not-private": {
       "string": "You are currently not in a Ghost Mode window."
@@ -125,7 +125,7 @@
       "string": "{ $engineName } is your default search engine in Ghost Mode"
     },
     "about-private-browsing-info-description": {
-      "string": "{ -brand-short-name } clears your search and browsing history when you quit the app or close all Ghost Mode tabs and windows. While this doesn’t make you anonymous to websites or your internet service provider, it makes it easier to keep what you do online private from anyone else who uses this computer."
+      "string": "In Ghostery’s private browsing mode, your activity will be kept confidential from others who use this device. The following will be automatically erased from Ghostery Dawn at the end of this session: <em>Browsing history</em><em>Search history</em><em>Cookies</em><em>Download history</em>However, files you download will be retained by your device and pages you bookmark will be saved."
     }
   },
   "browser/browser/newInstallPage.ftl": {
