@@ -1,17 +1,173 @@
 
 html.private {
-  background:
-    url('chrome://branding/content/ghosty-tile.png') repeat,
-    linear-gradient(131deg, rgba(5, 5, 5, 0.99) 13%, #5f7c86 97%);
+  --in-content-page-background: #36393f;
+  background: #36393f;
+  background: linear-gradient(166deg, rgba(44,60,45,1) 0%, rgba(44,60,45,1) 9%, rgba(44,52,55,1) 21%, rgba(43,43,65,1) 43%, rgba(33,73,100,1) 100%);
 }
 
 .wordmark {
   background: url("chrome://branding/content/ghostery-wordmark-white.svg") no-repeat center center;
   width: 231px;
   height: 68px;
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  opacity: 0.45;
 }
 
 .logo {
   display: none;
 }
 
+.container {
+  max-width: 654px;
+}
+
+.search-inner-wrapper {
+  padding: 0;
+  margin-bottom: 24px;
+}
+
+.search-handoff-button, .search-handoff-button:active, .search-handoff-button:enabled:hover:active {
+  box-shadow: none;
+  border-radius: 6px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  box-sizing: border-box;
+}
+
+.search-handoff-button:before {
+  content: ' ';
+  position: absolute;
+  top: 0; right: 0; bottom: 0; left: 0;
+  z-index: -1;
+  margin: -2px; /* !importanté */
+  border-radius: inherit; /* !importanté */
+  background:  white;
+  z-index: -1;
+}
+
+.search-handoff-button.focused:before {
+  background: linear-gradient(to bottom right, #72b643, #00AEF0);
+}
+
+.search-handoff-button.focused {
+  border: 2px solid transparent;
+  box-shadow: initial;
+}
+
+.focused .fake-textbox {
+  text-align: left;
+  color: #cccfd2;
+  -webkit-text-fill-color: initial;
+}
+
+.fake-textbox {
+  text-align: center;
+  background: linear-gradient(to right, #72b643, #00AEF0);
+    background-clip: border-box;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  opacity: 1;
+  font-size: 17px;
+  position: relative;
+}
+
+.fake-textbox::after {
+  content: '';
+  background: url("chrome://branding/content/search.svg") no-repeat center center;
+  position: absolute;
+  right: -33px;
+  top: 2px;
+  width: 17px;
+  height: 17px;
+}
+
+.info {
+  background-color: #12121c;
+  display: grid;
+  grid-template-rows: auto;
+  grid-template-columns: auto 28%;
+  grid-template-areas:
+    "header header"
+    "main sidebar";
+  padding: 0;
+  padding-inline-start: 0;
+  background-image: none;
+}
+
+.info > h1 {
+  grid-area: header;
+  border-bottom: #282929 1px solid;
+  background-image: url("chrome://browser/skin/privatebrowsing/private-browsing.svg");
+  background-position: left 20px top 10px;
+  background-repeat: no-repeat;
+  background-size: 29px;
+  margin: 0;
+  padding: 10px 10px 10px 60px;
+  font-size: 17px;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.info > p {
+  grid-area: main;
+  margin: 0;
+  padding: 10px 20px 20px 60px;
+  font-size: 13.5px;
+  line-height: 20px;
+  font-weight: 500;
+  border-right: #282929 1px solid;
+}
+
+
+.info > p em {
+  display: block;
+  font-style: normal;
+  padding-left: 20px;
+  position: relative;
+}
+
+.info > p em:last-of-type {
+  margin-bottom: 10px;
+}
+
+.info > p em::before {
+  content: '';
+  position: absolute;
+  display: block;
+  background: white;
+  border-radius: 100%;
+  top: 11px;
+  left: 8px;
+  width: 4px;
+  height: 4px;
+}
+
+.info > #private-browsing-myths {
+  grid-area: sidebar;
+  padding: 14px 30px 20px 20px;
+  font-size: 12px;
+  color: #b0b0b0;
+  line-height: 17px;
+  text-decoration: none;
+}
+
+.info > #private-browsing-myths strong {
+  display: block;
+  margin-top: 8px;
+  position: relative;
+  font-weight: normal;
+}
+
+.info > #private-browsing-myths strong::after {
+  content: '›';
+  position: relative;
+  right: -3px;
+  top: 0px;
+}
+
+.info > #private-browsing-myths:hover strong {
+  color: white;
+}

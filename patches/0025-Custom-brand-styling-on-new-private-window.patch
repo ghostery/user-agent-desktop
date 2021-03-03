@@ -3,8 +3,9 @@ Date: Tue, 20 Oct 2020 16:48:54 +0200
 Subject: Custom brand styling on new private window
 
 ---
- .../components/privatebrowsing/content/aboutPrivateBrowsing.html | 1 +
- 1 file changed, 1 insertion(+)
+ .../privatebrowsing/content/aboutPrivateBrowsing.html           | 1 +
+ browser/themes/shared/tabs.inc.css                              | 2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/browser/components/privatebrowsing/content/aboutPrivateBrowsing.html b/browser/components/privatebrowsing/content/aboutPrivateBrowsing.html
 index 4d22812723..993438d22e 100644
@@ -18,6 +19,19 @@ index 4d22812723..993438d22e 100644
      <link rel="localization" href="branding/brand.ftl"/>
      <link rel="localization" href="browser/branding/brandings.ftl">
      <link rel="localization" href="browser/aboutPrivateBrowsing.ftl"/>
+diff --git a/browser/themes/shared/tabs.inc.css b/browser/themes/shared/tabs.inc.css
+index a0293328d4..4cf60cf374 100644
+--- a/browser/themes/shared/tabs.inc.css
++++ b/browser/themes/shared/tabs.inc.css
+@@ -35,7 +35,7 @@
+ 
+ :root[privatebrowsingmode=temporary] #tabbrowser-tabpanels {
+   /* Value for --in-content-page-background in aboutPrivateBrowsing.css */
+-  background-color: #25003e;
++  background-color: #36393f;
+ }
+ 
+ @media (prefers-color-scheme: dark) {
 -- 
-2.29.2
+2.30.0
 
