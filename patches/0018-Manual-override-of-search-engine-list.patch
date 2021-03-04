@@ -3,14 +3,14 @@ Date: Mon, 19 Oct 2020 12:13:51 +0200
 Subject: Manual override of search engine list
 
 ---
- .../search/extensions/bing/manifest.json      |  38 +-----
+ .../search/extensions/bing/manifest.json      |  38 +------
  .../search/extensions/bing/manifest.json.rej  |  14 +++
- .../search/extensions/ddg/manifest.json       |  32 +----
+ .../search/extensions/ddg/manifest.json       |  32 +-----
  .../search/extensions/ecosia/manifest.json    |   7 +-
  .../search/extensions/ekoru/favicon.ico       | Bin 0 -> 18338 bytes
- .../search/extensions/ekoru/manifest.json     |  27 ++++
+ .../search/extensions/ekoru/manifest.json     |  27 +++++
  .../search/extensions/gibiru/favicon.ico      | Bin 0 -> 5430 bytes
- .../search/extensions/gibiru/manifest.json    |  27 ++++
+ .../search/extensions/gibiru/manifest.json    |  27 +++++
  .../google/_locales/b-1-d/messages.json       |   6 +-
  .../google/_locales/b-1-e/messages.json       |   6 +-
  .../google/_locales/b-d/messages.json         |   6 +-
@@ -21,13 +21,11 @@ Subject: Manual override of search engine list
  .../onesearch/ui/img/Icon_128x128.png         | Bin 0 -> 3381 bytes
  .../search/extensions/qwant/manifest.json     |   5 +-
  .../search/extensions/startpage/favicon.ico   | Bin 0 -> 1150 bytes
- .../search/extensions/startpage/manifest.json |  27 ++++
- .../search/extensions/tailcat/favicon.ico     | Bin 0 -> 15086 bytes
- .../search/extensions/tailcat/manifest.json   |  30 +++++
+ .../search/extensions/startpage/manifest.json |  27 +++++
  .../search/extensions/yahoo/favicon.ico       | Bin 0 -> 5430 bytes
- .../search/extensions/yahoo/manifest.json     |  27 ++++
- .../search/SearchEngineSelector.jsm           | 115 ++++++++++++++++++
- 24 files changed, 319 insertions(+), 91 deletions(-)
+ .../search/extensions/yahoo/manifest.json     |  27 +++++
+ .../search/SearchEngineSelector.jsm           | 106 ++++++++++++++++++
+ 22 files changed, 280 insertions(+), 91 deletions(-)
  create mode 100644 browser/components/search/extensions/bing/manifest.json.rej
  create mode 100644 browser/components/search/extensions/ekoru/favicon.ico
  create mode 100644 browser/components/search/extensions/ekoru/manifest.json
@@ -37,8 +35,6 @@ Subject: Manual override of search engine list
  create mode 100644 browser/components/search/extensions/onesearch/ui/img/Icon_128x128.png
  create mode 100644 browser/components/search/extensions/startpage/favicon.ico
  create mode 100644 browser/components/search/extensions/startpage/manifest.json
- create mode 100644 browser/components/search/extensions/tailcat/favicon.ico
- create mode 100644 browser/components/search/extensions/tailcat/manifest.json
  create mode 100644 browser/components/search/extensions/yahoo/favicon.ico
  create mode 100644 browser/components/search/extensions/yahoo/manifest.json
 
@@ -980,84 +976,6 @@ index 0000000000..3810292e7d
 +    }
 +  }
 +}
-diff --git a/browser/components/search/extensions/tailcat/favicon.ico b/browser/components/search/extensions/tailcat/favicon.ico
-new file mode 100644
-index 0000000000000000000000000000000000000000..fde51f907c563e396d9f614b186289b0ebd6744e
-GIT binary patch
-literal 15086
-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
-KU;F(a*Y<zf>l3s9
-
-literal 0
-HcmV?d00001
-
-diff --git a/browser/components/search/extensions/tailcat/manifest.json b/browser/components/search/extensions/tailcat/manifest.json
-new file mode 100644
-index 0000000000..f92a5b8823
---- /dev/null
-+++ b/browser/components/search/extensions/tailcat/manifest.json
-@@ -0,0 +1,30 @@
-+{
-+  "name": "Tailcat",
-+  "description": "Search Tailcat",
-+  "manifest_version": 2,
-+  "version": "1.1",
-+  "applications": {
-+    "gecko": {
-+      "id": "tailcat@search.ghostery.com"
-+    }
-+  },
-+  "hidden": true,
-+  "icons": {
-+    "16": "favicon.ico"
-+  },
-+  "web_accessible_resources": [
-+    "favicon.ico"
-+  ],
-+  "chrome_settings_overrides": {
-+    "search_provider": {
-+      "name": "Tailcat",
-+      "keyword": "@tailcat",
-+      "search_url": "https://meow.tailcat.com/search",
-+      "search_form": "https://meow.tailcat.com/search?q={searchTerms}",
-+      "search_url_get_params": "q={searchTerms}",
-+      "params": [],
-+      "suggest_url": "https://meow.tailcat.com/api/suggest",
-+      "suggest_url_get_params": "q={searchTerms}"
-+    }
-+  }
-+}
 diff --git a/browser/components/search/extensions/yahoo/favicon.ico b/browser/components/search/extensions/yahoo/favicon.ico
 new file mode 100644
 index 0000000000000000000000000000000000000000..34a916ccde63c64fb92f109f0d238fe692fc0c3d
@@ -1117,10 +1035,10 @@ index 0000000000..4348f01068
 +  }
 +}
 diff --git a/toolkit/components/search/SearchEngineSelector.jsm b/toolkit/components/search/SearchEngineSelector.jsm
-index 9f61477182..00719a33b9 100644
+index 9f61477182..064cad4de9 100644
 --- a/toolkit/components/search/SearchEngineSelector.jsm
 +++ b/toolkit/components/search/SearchEngineSelector.jsm
-@@ -94,6 +94,121 @@ class SearchEngineSelector {
+@@ -94,6 +94,112 @@ class SearchEngineSelector {
      this._changeListener = listener;
    }
  
@@ -1224,15 +1142,6 @@ index 9f61477182..00719a33b9 100644
 +      }],
 +      "webExtension": {
 +        "id": "startpage@search.ghostery.com"
-+      }
-+    }, {
-+      "appliesTo": [{
-+        "included": {
-+          "everywhere": true
-+        },
-+      }],
-+      "webExtension": {
-+        "id": "tailcat@search.ghostery.com"
 +      }
 +    }]
 +  }
