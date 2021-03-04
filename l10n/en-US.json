@@ -215,13 +215,7 @@
       }
     },
     "private-browsing-description2": {
-      "string": [
-        "{ -brand-short-name } is changing how extensions work in Ghost Mode. Any new extensions you add to",
-        "{ -brand-short-name } won’t run by default in Ghost Mode Windows. Unless you allow it in settings, the",
-        "extension won’t work while in Ghost Mode, and won’t have access to your online activities",
-        "there. We’ve made this change to keep your Ghost Mode browsing private.",
-        "<label data-l10n-name=\"private-browsing-learn-more\">Learn how to manage extension settings</label>"
-      ]
+      "string": "{ -brand-short-name } is changing how extensions work in Ghost Mode. Any new extensions you add to\n{ -brand-short-name } won’t run by default in Ghost Mode Windows. Unless you allow it in settings, the\nextension won’t work while in Ghost Mode, and won’t have access to your online activities\nthere. We’ve made this change to keep your Ghost Mode browsing private.\n<label data-l10n-name=\"private-browsing-learn-more\">Learn how to manage extension settings</label>"
     },
     "addon-badge-private-browsing-allowed2": {
       "title": {

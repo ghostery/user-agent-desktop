@@ -88,13 +88,14 @@ function patchStrings(replacements, content, format) {
         lines[i] = `${lines[i].split("=")[0]}= ${replacements[key].string}`;
       } else {
         // TODO: this creates empty lines - we don't need them
-        if (format === ".ftl" && Array.isArray(replacements[key].string)) {
-          for (let k = 0; k < replacements[key].string.length; k++) {
+        const multipleLines = replacements[key].string.split("\n");
+        if (format === ".ftl" && multipleLines.length > 0) {
+          for (let k = 0; k < multipleLines.length; k++) {
             lines[i] = "";
             i = i + 1;
           }
         }
-        lines[i] = replacementLine(key, replacements[key].string, format);
+        lines[i] = replacementLine(key, multipleLines, format);
       }
       keys.delete(key);
     }
