@@ -2,7 +2,7 @@ SET CQZ_WORKSPACE=%CD%
 SET TOOLTOOL_DIR=c:\build
 SET CLZ_SIGNTOOL_PATH=%TOOLTOOL_DIR%\vs2017_15.9.29\SDK\bin\10.0.17134.0\x64\signtool.exe
 SET BUILD_SHELL=c:\mozilla-build\start-shell.bat
-set timestamp_server_sha1=http://timestamp.verisign.com/scripts/timstamp.dll
+set timestamp_server_sha1=http://timestamp.digicert.com
 set timestamp_server_sha256=http://sha256timestamp.ws.symantec.com/sha256/timestamp
 
 rem Ensure SDK signing tools are available
