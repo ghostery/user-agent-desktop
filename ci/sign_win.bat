@@ -25,7 +25,7 @@ if exist %CQZ_WORKSPACE%\mozilla-release\obj-aarch64-windows-mingw32\dist\instal
   cd %CQZ_WORKSPACE%\mozilla-release\obj-x86_64-pc-mingw32\
 )
 
-set timestamp_server_sha1=http://timestamp.verisign.com/scripts/timstamp.dll
+set timestamp_server_sha1=http://timestamp.digicert.com
 set timestamp_server_sha256=http://sha256timestamp.ws.symantec.com/sha256/timestamp
 echo %CLZ_SIGNTOOL_PATH%
 
