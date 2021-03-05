@@ -84,6 +84,7 @@ function patchStrings(replacements, content, format) {
         }
       } else if (format === ".ftl" && lines[i + 1].trim().startsWith(".label")) {
         // check for multiline with .label
+        i = i + 1;
         lines[i] = `${lines[i].split("=")[0]}= ${replacements[key].string}`;
       } else {
         // TODO: this creates empty lines - we don't need them
