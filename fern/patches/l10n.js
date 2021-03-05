@@ -84,18 +84,19 @@ function patchStrings(replacements, content, format) {
         }
       } else if (format === ".ftl" && lines[i + 1].trim().startsWith(".label")) {
         // check for multiline with .label
-        i = i + 1;
         lines[i] = `${lines[i].split("=")[0]}= ${replacements[key].string}`;
       } else {
         // TODO: this creates empty lines - we don't need them
         const multipleLines = replacements[key].string.split("\n");
-        if (format === ".ftl" && multipleLines.length > 0) {
+        if (format === ".ftl" && multipleLines.length > 1) {
           for (let k = 0; k < multipleLines.length; k++) {
             lines[i] = "";
             i = i + 1;
           }
+          lines[i] = replacementLine(key, multipleLines, format);
+        } else {
+          lines[i] = replacementLine(key, replacements[key].string, format);
         }
-        lines[i] = replacementLine(key, multipleLines, format);
       }
       keys.delete(key);
     }
