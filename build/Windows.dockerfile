@@ -53,7 +53,7 @@ RUN wget -nv -O /builds/worker/fetches/node.tar.xz $IPFS_GATEWAY/ipfs/QmcPrE765W
     tar -xf node.tar.xz && \
     rm node.tar.xz
 
-RUN wget -nv -O /builds/worker/fetches/cbindgen.tar.xz $IPFS_GATEWAY/ipfs/Qmdx5ruFmQVFBykwHKj6qhcUEqmQC7sJtXxSTt7gYrnV3M && \
+RUN wget -nv -O /builds/worker/fetches/cbindgen.tar.xz $IPFS_GATEWAY/ipfs/QmcRVCUDD3464tJ239X5XkbaTSFHDZnKPQbw2Rxp8Q4DvC && \
     cd /builds/worker/fetches/ && \
     tar -xf cbindgen.tar.xz && \
     rm cbindgen.tar.xz
