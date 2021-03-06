@@ -22,7 +22,7 @@ index af2c367e1f..5447fd1a2a 100644
      let policy = ExtensionParent.WebExtensionPolicy.getByID(extensionId);
      Services.prefs.setBoolPref(
 diff --git a/browser/components/urlbar/UrlbarInput.jsm b/browser/components/urlbar/UrlbarInput.jsm
-index b654fc1210..4bc6d2b034 100644
+index b003b5ff1e..d1f63e06c2 100644
 --- a/browser/components/urlbar/UrlbarInput.jsm
 +++ b/browser/components/urlbar/UrlbarInput.jsm
 @@ -347,6 +347,13 @@ class UrlbarInput {
@@ -40,10 +40,10 @@ index b654fc1210..4bc6d2b034 100644
        this.window.isInitialPage(value) &&
        BrowserUtils.checkEmptyPageOrigin(this.window.gBrowser.selectedBrowser)
 diff --git a/browser/themes/shared/preferences/preferences.inc.css b/browser/themes/shared/preferences/preferences.inc.css
-index 9d376353dc..3ff6aadb92 100644
+index 1200f9ec43..1f0c721656 100644
 --- a/browser/themes/shared/preferences/preferences.inc.css
 +++ b/browser/themes/shared/preferences/preferences.inc.css
-@@ -1156,3 +1156,7 @@ richlistitem .text-link:hover {
+@@ -1162,3 +1162,7 @@ richlistitem .text-link:hover {
  .featureGateDescription {
    margin-inline-start: 28px;
  }
@@ -52,5 +52,5 @@ index 9d376353dc..3ff6aadb92 100644
 +  display: none;
 +}
 -- 
-2.29.2
+2.25.1
 

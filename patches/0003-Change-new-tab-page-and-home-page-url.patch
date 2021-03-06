@@ -9,10 +9,10 @@ Subject: Change new tab page and home page url
  3 files changed, 3 insertions(+), 16 deletions(-)
 
 diff --git a/browser/app/profile/firefox.js b/browser/app/profile/firefox.js
-index 00f6e5c9cb..086e82bc2d 100644
+index 5aad2ddcf4..94b0525f0d 100644
 --- a/browser/app/profile/firefox.js
 +++ b/browser/app/profile/firefox.js
-@@ -253,7 +253,7 @@ pref("browser.defaultbrowser.notificationbar.checklimit", 10000);
+@@ -249,7 +249,7 @@ pref("browser.defaultbrowser.notificationbar.checklimit", 10000);
  // 0 = blank, 1 = home (browser.startup.homepage), 2 = last visited page, 3 = resume previous browser session
  // The behavior of option 3 is detailed at: http://wiki.mozilla.org/Session_Restore
  pref("browser.startup.page",                1);
@@ -61,5 +61,5 @@ index c903787fde..52b5b61ee5 100644
    "browser.startup.homepage_override.extensionControlled";
  const kHomePageIgnoreListId = "homepage-urls";
 -- 
-2.29.2
+2.25.1
 

@@ -7,7 +7,7 @@ Subject: Hide Protection Dashboard link from right burger menu
  1 file changed, 4 insertions(+), 2 deletions(-)
 
 diff --git a/browser/base/content/browser.xhtml b/browser/base/content/browser.xhtml
-index 73ab03f088..ad2e393a6c 100644
+index 5308ce4188..cf0f2c0cdd 100644
 --- a/browser/base/content/browser.xhtml
 +++ b/browser/base/content/browser.xhtml
 @@ -761,8 +761,8 @@
@@ -30,7 +30,7 @@ index 73ab03f088..ad2e393a6c 100644
          <toolbarbutton id="appMenu-new-window-button"
                         class="subviewbutton subviewbutton-iconic"
                         label="&newNavigatorCmd.label;"
-@@ -1731,6 +1731,7 @@
+@@ -1751,6 +1751,7 @@
                     class="chromeclass-toolbar-additional"/>
                <!-- Use onclick instead of normal popup= syntax since the popup
                     code fires onmousedown, and hence eats our favicon drag events. -->
@@ -38,7 +38,7 @@ index 73ab03f088..ad2e393a6c 100644
                <box id="tracking-protection-icon-container" align="center"
                     role="button"
                     onclick="gProtectionsHandler.handleProtectionsButtonEvent(event);"
-@@ -1748,6 +1749,7 @@
+@@ -1768,6 +1769,7 @@
                    <description id="tracking-protection-icon-tooltip-label" class="tooltip-label"/>
                  </tooltip>
                </box>
@@ -47,5 +47,5 @@ index 73ab03f088..ad2e393a6c 100644
                     align="center"
                     data-l10n-id="urlbar-identity-button"
 -- 
-2.29.2
+2.25.1
 
