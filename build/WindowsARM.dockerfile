@@ -96,7 +96,8 @@ ENV MOZ_FETCHES_DIR=/builds/worker/fetches/ \
     WORKSPACE=/builds/worker/workspace \
     TOOLTOOL_DIR=/builds/worker/fetches/ \
     LANG=en_US.UTF-8 \
-    LANGUAGE=en_US:en
+    LANGUAGE=en_US:en \
+    MOZ_AUTOMATION=1
 
 COPY configs /builds/worker/configs
 
