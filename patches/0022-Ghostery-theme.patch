@@ -3,25 +3,26 @@ Date: Mon, 19 Oct 2020 11:00:56 +0200
 Subject: Ghostery theme
 
 ---
- browser/components/BrowserGlue.jsm            |  2 +
- .../customizableui/CustomizeMode.jsm          |  3 +
- .../background-gradient-dark.svg              |  1 +
- .../ghostery-dynamic/background-gradient.svg  |  1 +
- .../themes/addons/ghostery-dynamic/icon.svg   | 14 ++++
- .../addons/ghostery-dynamic/manifest.json     | 43 ++++++++++++
- browser/themes/addons/jar.mn                  |  4 ++
- .../global/global-extension-fields.properties |  4 +-
- toolkit/modules/LightweightThemeConsumer.jsm  |  2 +-
- .../mozapps/extensions/content/aboutaddons.js |  8 ++-
- .../extensions/content/ghostery-dynamic.svg   | 21 ++++++
- .../extensions/default-theme/experiment.css   | 67 +++++++++++++++++++
- .../extensions/default-theme/manifest.json    | 15 +++--
- .../extensions/internal/XPIProvider.jsm       | 25 ++++++-
- toolkit/mozapps/extensions/jar.mn             |  2 +
- toolkit/themes/linux/global/toolbarbutton.css |  2 +-
- toolkit/themes/osx/global/toolbarbutton.css   |  2 +-
- .../themes/windows/global/toolbarbutton.css   |  2 +-
- 18 files changed, 203 insertions(+), 15 deletions(-)
+ browser/components/BrowserGlue.jsm            |   2 +
+ .../customizableui/CustomizeMode.jsm          |   3 +
+ .../background-gradient-dark.svg              |   1 +
+ .../ghostery-dynamic/background-gradient.svg  |   1 +
+ .../themes/addons/ghostery-dynamic/icon.svg   |  14 +++
+ .../addons/ghostery-dynamic/manifest.json     |  43 +++++++
+ browser/themes/addons/jar.mn                  |   4 +
+ .../themes/shared/urlbar-searchbar.inc.css    |   3 +-
+ .../global/global-extension-fields.properties |   4 +-
+ toolkit/modules/LightweightThemeConsumer.jsm  |   2 +-
+ .../mozapps/extensions/content/aboutaddons.js |   8 +-
+ .../extensions/content/ghostery-dynamic.svg   |  21 ++++
+ .../extensions/default-theme/experiment.css   | 109 ++++++++++++++++++
+ .../extensions/default-theme/manifest.json    |  27 ++---
+ .../extensions/internal/XPIProvider.jsm       |  25 +++-
+ toolkit/mozapps/extensions/jar.mn             |   2 +
+ toolkit/themes/linux/global/toolbarbutton.css |   2 +-
+ toolkit/themes/osx/global/toolbarbutton.css   |   2 +-
+ .../themes/windows/global/toolbarbutton.css   |   2 +-
+ 19 files changed, 253 insertions(+), 22 deletions(-)
  create mode 100644 browser/themes/addons/ghostery-dynamic/background-gradient-dark.svg
  create mode 100644 browser/themes/addons/ghostery-dynamic/background-gradient.svg
  create mode 100644 browser/themes/addons/ghostery-dynamic/icon.svg
@@ -164,6 +165,20 @@ index 5aa122b2ab..83349d2279 100644
 +  content/builtin-themes/ghostery-dynamic                     (ghostery-dynamic/*.svg)
 +  content/builtin-themes/ghostery-dynamic                     (ghostery-dynamic/*.css)
 +  content/builtin-themes/ghostery-dynamic/manifest.json       (ghostery-dynamic/manifest.json)
+diff --git a/browser/themes/shared/urlbar-searchbar.inc.css b/browser/themes/shared/urlbar-searchbar.inc.css
+index ea063ea7a3..9e35e65cf3 100644
+--- a/browser/themes/shared/urlbar-searchbar.inc.css
++++ b/browser/themes/shared/urlbar-searchbar.inc.css
+@@ -28,7 +28,8 @@
+ 
+ #urlbar-container,
+ #search-container {
+-  padding-block: 3px;
++  max-height: 34px;
++  padding-block: 0px;
+   margin-inline: @urlbarMarginInline@;
+ }
+ 
 diff --git a/toolkit/locales/en-US/chrome/global/global-extension-fields.properties b/toolkit/locales/en-US/chrome/global/global-extension-fields.properties
 index 21c545bdd4..597e2d8816 100644
 --- a/toolkit/locales/en-US/chrome/global/global-extension-fields.properties
@@ -247,15 +262,19 @@ index 0000000000..223a0b63e1
 \ No newline at end of file
 diff --git a/toolkit/mozapps/extensions/default-theme/experiment.css b/toolkit/mozapps/extensions/default-theme/experiment.css
 new file mode 100644
-index 0000000000..a56b2e7cbe
+index 0000000000..1ac92ef05b
 --- /dev/null
 +++ b/toolkit/mozapps/extensions/default-theme/experiment.css
-@@ -0,0 +1,67 @@
+@@ -0,0 +1,109 @@
 +/* This Source Code Form is subject to the terms of the Mozilla Public
 + * License, v. 2.0. If a copy of the MPL was not distributed with this
 + * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 +
 +@import url("chrome://browser/skin/compacttheme.css");
++
++:root {
++  --tab-min-height: 34px;
++}
 +
 +:root:not([uidensity="compact"]) #back-button > .toolbarbutton-icon {
 +  background-color: transparent;
@@ -283,10 +302,16 @@ index 0000000000..a56b2e7cbe
 +  margin: -2px;
 +  border-radius: inherit;
 +  z-index: -1;
++  box-shadow: none;
 +}
 +
-+#urlbar:not([focused="true"]):-moz-lwtheme > #urlbar-background {
-+  border-color: transparent;
++#urlbar:not([focused="true"]):hover > #urlbar-background,
++#searchbar:not(:focus-within):hover {
++  background-color: #53565B;
++}
++
++#urlbar:not([focused="true"]):-moz-lwtheme:hover > #urlbar-background, #navigator-toolbox #searchbar:not(:focus-within):-moz-lwtheme:hover {
++  border-color: #53565B;
 +}
 +
 +#urlbar[focused="true"] > #urlbar-background {
@@ -318,11 +343,43 @@ index 0000000000..a56b2e7cbe
 +  -webkit-background-clip: text;
 +  -webkit-text-fill-color: transparent;
 +}
++
++#urlbar, #searchbar {
++  min-height: 34px;
++}
++
++:root[uidensity="compact"] #urlbar, :root[uidensity="compact"] #searchbar {
++  min-height: 28px;
++}
++
++#urlbar-container, #search-container {
++  padding-block: 0;
++}
++
++:root:not([uidensity="compact"]) #back-button {
++  padding-block: 0;
++}
++
++#urlbar[breakout] {
++  top: 0px;
++}
++
++#navigator-toolbox {
++  border-bottom: none;
++}
++
++:root:not([inFullscreen], [tabsintitlebar]) #nav-bar:not([tabs-hidden="true"]), #nav-bar:not([tabs-hidden="true"]):-moz-lwtheme {
++  box-shadow: none;
++}
++
++#TabsToolbar .toolbarbutton-1, #tabbrowser-arrowscrollbox::part(scrollbutton-up), #tabbrowser-arrowscrollbox::part(scrollbutton-down) {
++  margin: 1px 0 0 0 !important;
++}
 diff --git a/toolkit/mozapps/extensions/default-theme/manifest.json b/toolkit/mozapps/extensions/default-theme/manifest.json
-index 05d6e0e19a..53e36e1f73 100644
+index 05d6e0e19a..900d8ae15b 100644
 --- a/toolkit/mozapps/extensions/default-theme/manifest.json
 +++ b/toolkit/mozapps/extensions/default-theme/manifest.json
-@@ -7,17 +7,14 @@
+@@ -7,29 +7,26 @@
      }
    },
  
@@ -333,7 +390,7 @@ index 05d6e0e19a..53e36e1f73 100644
 +  "name": "Ghostery Private",
 +  "description": "",
 +  "author": "Ghostery",
-+  "version": "1.5",
++  "version": "1.6",
  
    "icons": {"32": "icon.svg"},
  
@@ -344,6 +401,24 @@ index 05d6e0e19a..53e36e1f73 100644
      "colors": {
        "tab_background_text": "rgb(249, 249, 250)",
        "icons": "rgb(249, 249, 250, 0.7)",
+-      "frame": "hsl(240, 5%, 5%)",
++      "frame": "#12121c",
+       "popup": "#4a4a4f",
+       "popup_text": "rgb(249, 249, 250)",
+       "popup_border": "#27272b",
+-      "tab_line": "#0a84ff",
+-      "toolbar": "hsl(240, 1%, 20%)",
+-      "toolbar_bottom_separator": "hsl(240, 5%, 5%)",
+-      "toolbar_field": "rgb(71, 71, 73)",
+-      "toolbar_field_border": "rgba(249, 249, 250, 0.2)",
++      "tab_line": "#36393f",
++      "toolbar": "#36393f",
++      "toolbar_bottom_separator": "#12121c",
++      "toolbar_field": "#45484E",
++      "toolbar_field_border": "#45484E",
+       "toolbar_field_separator": "#5F6670",
+       "toolbar_field_text": "rgb(249, 249, 250)",
+       "ntp_background": "#2A2A2E",
 @@ -38,5 +35,9 @@
        "sidebar_text": "rgb(249, 249, 250)",
        "sidebar_border": "rgba(255, 255, 255, 0.1)"
@@ -355,7 +430,7 @@ index 05d6e0e19a..53e36e1f73 100644
    }
  }
 diff --git a/toolkit/mozapps/extensions/internal/XPIProvider.jsm b/toolkit/mozapps/extensions/internal/XPIProvider.jsm
-index 841137abf8..0154ebe047 100644
+index 841137abf8..7f0fed3573 100644
 --- a/toolkit/mozapps/extensions/internal/XPIProvider.jsm
 +++ b/toolkit/mozapps/extensions/internal/XPIProvider.jsm
 @@ -2477,9 +2477,14 @@ var XPIProvider = {
@@ -363,7 +438,7 @@ index 841137abf8..0154ebe047 100644
        this.maybeInstallBuiltinAddon(
          "default-theme@mozilla.org",
 -        "1.1",
-+        "1.5",
++        "1.6",
          "resource://default-theme/"
        );
 +      this.maybeInstallBuiltinAddon(
@@ -464,5 +539,5 @@ index ef827dedb5..6fa966f858 100644
    min-width: 14px;
    max-width: 24px;
 -- 
-2.29.2
+2.30.0
 
