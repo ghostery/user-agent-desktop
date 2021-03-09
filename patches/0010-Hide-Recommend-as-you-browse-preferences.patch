@@ -53,5 +53,5 @@ index acb15e6119..fb29d742c3 100644
      if (
        Services.prefs.getBoolPref(
 -- 
-2.25.1
+2.30.1
 

@@ -7,7 +7,7 @@ Subject: Set update URL
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/build/moz.build b/build/moz.build
-index 3d7aed0d56..8deee91034 100644
+index 59a5d56ce8..55483a2bb0 100644
 --- a/build/moz.build
 +++ b/build/moz.build
 @@ -84,7 +84,7 @@ if CONFIG["MOZ_APP_BASENAME"]:
@@ -20,5 +20,5 @@ index 3d7aed0d56..8deee91034 100644
          appini_defines["MOZ_APPUPDATE_HOST"] = CONFIG["MOZ_APPUPDATE_HOST"]
  
 -- 
-2.29.2
+2.30.1
 

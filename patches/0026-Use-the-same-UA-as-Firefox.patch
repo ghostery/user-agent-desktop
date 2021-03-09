@@ -20,5 +20,5 @@ index 3e86877ed0..27ce688830 100644
      // "Firefox/x.y" (compatibility) app token
      mUserAgent += ' ';
 -- 
-2.25.1
+2.30.1
 

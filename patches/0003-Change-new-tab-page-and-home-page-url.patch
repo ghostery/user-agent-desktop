@@ -61,5 +61,5 @@ index c903787fde..52b5b61ee5 100644
    "browser.startup.homepage_override.extensionControlled";
  const kHomePageIgnoreListId = "homepage-urls";
 -- 
-2.25.1
+2.30.1
 

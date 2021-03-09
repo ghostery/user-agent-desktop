@@ -25,5 +25,5 @@ index 8653bcbb16..935af4065a 100644
  with only_when(target_is_linux & compile_environment):
      option(env="MOZ_NO_PIE_COMPAT", help="Enable non-PIE wrapper")
 -- 
-2.29.2
+2.30.1
 
