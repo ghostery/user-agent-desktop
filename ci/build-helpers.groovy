@@ -61,7 +61,10 @@ def build(opts, Closure postpackage={}, Closure archiving={}) {
                         }
 
                         stage("${opts.name}: mach package") {
-                            sh 'MOZ_AUTOMATION=0 ./mach package'
+                            sh '''
+                                unset MOZ_AUTOMATION
+                                ./mach package
+                            '''
                         }
                     }
                 } //dir
