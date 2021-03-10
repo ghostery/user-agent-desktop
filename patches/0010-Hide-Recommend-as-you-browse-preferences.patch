@@ -28,10 +28,10 @@ index ec30d31cde..8dbe8398d9 100644
      <checkbox id="cfrRecommendations-features"
              class="tail-with-learn-more"
 diff --git a/browser/components/preferences/main.js b/browser/components/preferences/main.js
-index 3e101f9329..a1f39cddf6 100644
+index acb15e6119..fb29d742c3 100644
 --- a/browser/components/preferences/main.js
 +++ b/browser/components/preferences/main.js
-@@ -392,13 +392,13 @@ var gMainPane = {
+@@ -379,13 +379,13 @@ var gMainPane = {
      // listener for future menu changes.
      gMainPane.initDefaultZoomValues();
  
@@ -53,5 +53,5 @@ index 3e101f9329..a1f39cddf6 100644
      if (
        Services.prefs.getBoolPref(
 -- 
-2.29.2
+2.30.1
 

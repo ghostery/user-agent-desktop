@@ -7,7 +7,7 @@ Subject: Hide Library -> Synced Tabs from the menu panel
  1 file changed, 5 insertions(+)
 
 diff --git a/browser/themes/shared/menupanel.inc.css b/browser/themes/shared/menupanel.inc.css
-index c919f32a14..7663ec536e 100644
+index 5c16ad076f..2fc94c6346 100644
 --- a/browser/themes/shared/menupanel.inc.css
 +++ b/browser/themes/shared/menupanel.inc.css
 @@ -4,6 +4,11 @@
@@ -23,5 +23,5 @@ index c919f32a14..7663ec536e 100644
    list-style-image: url(chrome://browser/skin/new-window.svg);
  }
 -- 
-2.29.2
+2.30.1
 

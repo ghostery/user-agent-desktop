@@ -7,3 +7,4 @@ MOZ_APP_BASENAME=Ghostery
 MOZ_APP_DISPLAYNAME="Ghostery Dawn"
 MOZ_MACBUNDLE_ID=com.ghostery.browser
 MOZ_DISTRIBUTION_ID=com.ghostery
+MOZ_SOURCE_REPO="https://github.com/ghostery/user-agent-desktop"

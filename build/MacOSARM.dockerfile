@@ -11,7 +11,7 @@ RUN wget -nv -O /builds/worker/fetches/cctools.tar.xz $IPFS_GATEWAY/ipfs/QmaXYNb
     tar -xf cctools.tar.xz && \
     rm cctools.tar.xz
 
-RUN wget -nv -O /builds/worker/fetches/clang.tar.zst $IPFS_GATEWAY/ipfs/QmUen9bvkjDe6FMdctLpjgV8ZfUSagzfxY1vpikRQwTWuF && \
+RUN wget -nv -O /builds/worker/fetches/clang.tar.zst $IPFS_GATEWAY/ipfs/QmNp3Rb8vbgaztJMgsHWN75zyGtUkAESRYhf6eBm4eVfe7 && \
     cd /builds/worker/fetches/ && \
     tar -xf clang.tar.zst && \
     rm clang.tar.zst
@@ -41,7 +41,7 @@ RUN wget -nv -O /builds/worker/fetches/llvm-dsymutil.tar.xz $IPFS_GATEWAY/ipfs/Q
     tar -xf llvm-dsymutil.tar.xz && \
     rm llvm-dsymutil.tar.xz
 
-RUN wget -nv -O /builds/worker/fetches/rustc.tar.zst $IPFS_GATEWAY/ipfs/QmTsRYJbGPKz9ZCUB6gkVzU4fuJfqEndkNqURK14KT6rNy && \
+RUN wget -nv -O /builds/worker/fetches/rustc.tar.zst $IPFS_GATEWAY/ipfs/QmTqq47yy8NKArpfyZjCfUvJi8uS46r62qWTzyAVqXPUPJ && \
     cd /builds/worker/fetches/ && \
     tar -xf rustc.tar.zst && \
     rm rustc.tar.zst
@@ -51,7 +51,7 @@ RUN wget -nv -O /builds/worker/fetches/rust-size.tar.xz $IPFS_GATEWAY/ipfs/QmaBF
     tar -xf rust-size.tar.xz && \
     rm rust-size.tar.xz
 
-RUN wget -nv -O /builds/worker/fetches/cbindgen.tar.xz $IPFS_GATEWAY/ipfs/QmVbXdagSvuQcbV1qTCdoU2gDqg8pALckngYok2pz4ze5P && \
+RUN wget -nv -O /builds/worker/fetches/cbindgen.tar.xz $IPFS_GATEWAY/ipfs/QmcRVCUDD3464tJ239X5XkbaTSFHDZnKPQbw2Rxp8Q4DvC && \
     cd /builds/worker/fetches/ && \
     tar -xf cbindgen.tar.xz && \
     rm cbindgen.tar.xz
@@ -82,7 +82,8 @@ ENV MOZ_FETCHES_DIR=/builds/worker/fetches/ \
     WORKSPACE=/builds/worker/workspace \
     TOOLTOOL_DIR=/builds/worker/fetches/ \
     LANG=en_US.UTF-8 \
-    LANGUAGE=en_US:en
+    LANGUAGE=en_US:en \
+    MOZ_AUTOMATION=1
 
 COPY configs /builds/worker/configs
 

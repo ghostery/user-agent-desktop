@@ -5,6 +5,8 @@ def build(opts, Closure postpackage={}, Closure archiving={}) {
             checkout scm
         }
 
+        def triggeringCommitHash = sh(returnStdout: true, script: "git log -n 1 --pretty=format:'%h'").trim()
+
         stage('prepare') {
             if (!fileExists('./build/makecab.exe')) {
                 sh 'wget -nv -O ./build/makecab.exe ftp://cliqznas.cliqz/cliqz-browser-build-artifacts/makecab.exe '
@@ -27,7 +29,9 @@ def build(opts, Closure postpackage={}, Closure archiving={}) {
             "MOZCONFIG=${env.WORKSPACE}/mozconfig",
             "MOZ_BUILD_DATE=${opts.buildId}",
             "ACCEPTED_MAR_CHANNEL_IDS=firefox-ghostery-release",
-            "MAR_CHANNEL_ID=firefox-ghostery-release"
+            "MAR_CHANNEL_ID=firefox-ghostery-release",
+            "MH_BRANCH=${env.BRANCH_NAME}",
+            "MOZ_SOURCE_CHANGESET=${triggeringCommitHash}"
         ]
         def dockerOpts = "-v /mnt/vfat/vs2017_15.9.29/:/builds/worker/fetches/vs2017_15.9.29"
         def buildEnv = opts.buildEnv ?: []

@@ -1,6 +1,6 @@
 From: Krzysztof Jan Modras <chrmod@chrmod.net>
-Date: Mon, 19 Oct 2020 11:00:56 +0200
-Subject: Ghostery theme
+Date: Tue, 9 Mar 2021 15:08:27 +0100
+Subject: Ghostery Theme
 
 ---
  browser/components/BrowserGlue.jsm            |   2 +
@@ -31,23 +31,23 @@ Subject: Ghostery theme
  create mode 100644 toolkit/mozapps/extensions/default-theme/experiment.css
 
 diff --git a/browser/components/BrowserGlue.jsm b/browser/components/BrowserGlue.jsm
-index ec6b6a2afb..c80c731a24 100644
+index 0c73eeef2e..5a60368885 100644
 --- a/browser/components/BrowserGlue.jsm
 +++ b/browser/components/BrowserGlue.jsm
-@@ -1341,6 +1341,7 @@ BrowserGlue.prototype = {
- 
+@@ -1338,6 +1338,7 @@ BrowserGlue.prototype = {
+
      SessionStore.init();
- 
+
 +    /*
      AddonManager.maybeInstallBuiltinAddon(
        "firefox-compact-light@mozilla.org",
        "1.1",
-@@ -1356,6 +1357,7 @@ BrowserGlue.prototype = {
+@@ -1353,6 +1354,7 @@ BrowserGlue.prototype = {
        "1.2",
        "resource://builtin-themes/alpenglow/"
      );
 +    */
- 
+
      if (AppConstants.MOZ_NORMANDY) {
        Normandy.init();
 diff --git a/browser/components/customizableui/CustomizeMode.jsm b/browser/components/customizableui/CustomizeMode.jsm
@@ -55,7 +55,7 @@ index 16b33ae73b..5f2ba0b4a5 100644
 --- a/browser/components/customizableui/CustomizeMode.jsm
 +++ b/browser/components/customizableui/CustomizeMode.jsm
 @@ -96,9 +96,12 @@ const ALPENGLOW_THEME_ID = "firefox-alpenglow@mozilla.org";
- 
+
  const _defaultImportantThemes = [
    DEFAULT_THEME_ID,
 +  /*
@@ -65,7 +65,7 @@ index 16b33ae73b..5f2ba0b4a5 100644
 +  */
 +  "dynamic-theme@ghostery.com",
  ];
- 
+
  var gDraggingInToolbars;
 diff --git a/browser/themes/addons/ghostery-dynamic/background-gradient-dark.svg b/browser/themes/addons/ghostery-dynamic/background-gradient-dark.svg
 new file mode 100644
@@ -170,7 +170,7 @@ index ea063ea7a3..9e35e65cf3 100644
 --- a/browser/themes/shared/urlbar-searchbar.inc.css
 +++ b/browser/themes/shared/urlbar-searchbar.inc.css
 @@ -28,7 +28,8 @@
- 
+
  #urlbar-container,
  #search-container {
 -  padding-block: 3px;
@@ -178,35 +178,34 @@ index ea063ea7a3..9e35e65cf3 100644
 +  padding-block: 0px;
    margin-inline: @urlbarMarginInline@;
  }
- 
+
 diff --git a/toolkit/locales/en-US/chrome/global/global-extension-fields.properties b/toolkit/locales/en-US/chrome/global/global-extension-fields.properties
-index 21c545bdd4..597e2d8816 100644
+index 0fb1689b9f..eec3fd7cb3 100644
 --- a/toolkit/locales/en-US/chrome/global/global-extension-fields.properties
 +++ b/toolkit/locales/en-US/chrome/global/global-extension-fields.properties
-@@ -3,6 +3,6 @@
+@@ -3,5 +3,5 @@
  # file, You can obtain one at http://mozilla.org/MPL/2.0/.
- 
+
  # LOCALIZATION NOTE (extension.default-theme@mozilla.org.name, extension.default-theme@mozilla.org.description): This is displayed in about:addons -> Appearance
 -extension.default-theme@mozilla.org.name=Default
 -extension.default-theme@mozilla.org.description=A theme with the operating system color scheme.
 +extension.default-theme@mozilla.org.name=Ghostery Private
 +extension.default-theme@mozilla.org.description=
- 
 diff --git a/toolkit/modules/LightweightThemeConsumer.jsm b/toolkit/modules/LightweightThemeConsumer.jsm
 index 52da2fe9a7..c13073a9d8 100644
 --- a/toolkit/modules/LightweightThemeConsumer.jsm
 +++ b/toolkit/modules/LightweightThemeConsumer.jsm
 @@ -6,7 +6,7 @@ var EXPORTED_SYMBOLS = ["LightweightThemeConsumer"];
- 
+
  const { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
- 
+
 -const DEFAULT_THEME_ID = "default-theme@mozilla.org";
 +const DEFAULT_THEME_ID = "__DOES_NOT_APPLY__"; // in Ghostery Browser default theme is a lightweight theme
- 
+
  ChromeUtils.defineModuleGetter(
    this,
 diff --git a/toolkit/mozapps/extensions/content/aboutaddons.js b/toolkit/mozapps/extensions/content/aboutaddons.js
-index 9d938bb478..6b37e1b639 100644
+index 0ad41fd91c..8ad956c3e5 100644
 --- a/toolkit/mozapps/extensions/content/aboutaddons.js
 +++ b/toolkit/mozapps/extensions/content/aboutaddons.js
 @@ -87,8 +87,9 @@ const EXTENSION_ICON_URL =
@@ -230,7 +229,7 @@ index 9d938bb478..6b37e1b639 100644
 +    "chrome://mozapps/content/extensions/ghostery-dynamic.svg",
 +  ],
  ]);
- 
+
  const PERMISSION_MASKS = {
 diff --git a/toolkit/mozapps/extensions/content/ghostery-dynamic.svg b/toolkit/mozapps/extensions/content/ghostery-dynamic.svg
 new file mode 100644
@@ -382,7 +381,7 @@ index 05d6e0e19a..900d8ae15b 100644
 @@ -7,29 +7,26 @@
      }
    },
- 
+
 -  "name": "Default",
 -  "description": "A theme with the operating system color scheme.",
 -  "author": "Mozilla",
@@ -391,9 +390,9 @@ index 05d6e0e19a..900d8ae15b 100644
 +  "description": "",
 +  "author": "Ghostery",
 +  "version": "1.6",
- 
+
    "icons": {"32": "icon.svg"},
- 
+
    "theme": {
 -  },
 -
@@ -434,7 +433,7 @@ index 841137abf8..7f0fed3573 100644
 --- a/toolkit/mozapps/extensions/internal/XPIProvider.jsm
 +++ b/toolkit/mozapps/extensions/internal/XPIProvider.jsm
 @@ -2477,9 +2477,14 @@ var XPIProvider = {
- 
+
        this.maybeInstallBuiltinAddon(
          "default-theme@mozilla.org",
 -        "1.1",
@@ -446,9 +445,9 @@ index 841137abf8..7f0fed3573 100644
 +        "1.0",
 +        "resource://builtin-themes/ghostery-dynamic/"
 +      );
- 
+
        resolveProviderReady(Promise.all(this.startupPromises));
- 
+
 @@ -2682,6 +2687,10 @@ var XPIProvider = {
        logger.error("startup failed", e);
        AddonManagerPrivate.recordException("XPI", "startup failed", e);
@@ -458,12 +457,12 @@ index 841137abf8..7f0fed3573 100644
 +    this.maybeUninstallBuiltinAddon("firefox-compact-dark@mozilla.org");
 +    this.maybeUninstallBuiltinAddon("firefox-alpenglow@mozilla.org");
    },
- 
+
    /**
 @@ -2927,6 +2936,20 @@ var XPIProvider = {
      return installed;
    },
- 
+
 +  async maybeUninstallBuiltinAddon(aID) {
 +    if (enabledScopes & BuiltInLocation.scope) {
 +      let existing = BuiltInLocation.get(aID);
@@ -500,10 +499,10 @@ index 219ac50dab..1b92ca0ddd 100644
 +  content/mozapps/extensions/default-theme/experiment.css       (default-theme/experiment.css)
  #endif
 diff --git a/toolkit/themes/linux/global/toolbarbutton.css b/toolkit/themes/linux/global/toolbarbutton.css
-index 3e6169d75c..a54168f7d8 100644
+index 910e0a64b2..b6965ead5b 100644
 --- a/toolkit/themes/linux/global/toolbarbutton.css
 +++ b/toolkit/themes/linux/global/toolbarbutton.css
-@@ -76,7 +76,7 @@ toolbarbutton:-moz-lwtheme:not(:hover):not([checked="true"]):not([open="true"]):
+@@ -84,7 +84,7 @@ toolbarbutton:-moz-lwtheme:not(:hover, [checked="true"], [open="true"], [disable
    box-shadow: 0 1px 0 hsla(0, 100%, 100%, .2) inset,
                0 -1px 0 hsla(0, 0%, 0%, .1) inset,
                0 1px 0 hsla(206, 50%, 10%, .2);
@@ -513,7 +512,7 @@ index 3e6169d75c..a54168f7d8 100644
    min-width: 14px;
    max-width: 24px;
 diff --git a/toolkit/themes/osx/global/toolbarbutton.css b/toolkit/themes/osx/global/toolbarbutton.css
-index 5a0621d000..37158aa2b9 100644
+index 90c346456e..6bad5c7fd5 100644
 --- a/toolkit/themes/osx/global/toolbarbutton.css
 +++ b/toolkit/themes/osx/global/toolbarbutton.css
 @@ -47,7 +47,7 @@ toolbarbutton[disabled="true"] {
@@ -526,7 +525,7 @@ index 5a0621d000..37158aa2b9 100644
    min-width: 14px;
    max-width: 24px;
 diff --git a/toolkit/themes/windows/global/toolbarbutton.css b/toolkit/themes/windows/global/toolbarbutton.css
-index ef827dedb5..6fa966f858 100644
+index 14aa94d92a..c003b40168 100644
 --- a/toolkit/themes/windows/global/toolbarbutton.css
 +++ b/toolkit/themes/windows/global/toolbarbutton.css
 @@ -90,7 +90,7 @@ toolbarbutton[disabled="true"] {
@@ -538,6 +537,5 @@ index ef827dedb5..6fa966f858 100644
    margin-inline-end: -8px !important;
    min-width: 14px;
    max-width: 24px;
--- 
-2.30.0
-
+--
+2.30.1

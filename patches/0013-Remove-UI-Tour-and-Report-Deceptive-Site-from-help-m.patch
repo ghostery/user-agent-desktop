@@ -1,5 +1,5 @@
 From: Sam Macbeth <sam@cliqz.com>
-Date: Tue, 22 Sep 2020 12:09:25 +0200
+Date: Sat, 6 Mar 2021 13:31:26 +0100
 Subject: Remove UI Tour and Report Deceptive Site from help menubar
 
 ---
@@ -8,20 +8,22 @@ Subject: Remove UI Tour and Report Deceptive Site from help menubar
  2 files changed, 3 insertions(+)
 
 diff --git a/browser/base/content/browser-menubar.inc b/browser/base/content/browser-menubar.inc
-index b217216aab..7f2b49cae1 100644
+index 99a73e1632..3f0ba78cc9 100644
 --- a/browser/base/content/browser-menubar.inc
 +++ b/browser/base/content/browser-menubar.inc
-@@ -474,8 +474,10 @@
+@@ -471,10 +471,12 @@
  #else
                            />
  #endif
 +#if 0
                  <menuitem id="menu_openTour"
-                           oncommand="openTourPage();" data-l10n-id="menu-help-show-tour"/>
+                           oncommand="openTourPage();"
+                           data-l10n-id="menu-help-show-tour"
+                           appmenu-data-l10n-id="appmenu-help-show-tour"/>
 +#endif
                  <menuitem id="help_importFromAnotherBrowser"
-                           command="cmd_help_importFromAnotherBrowser" data-l10n-id="menu-help-import-from-another-browser"/>
-                 <menuitem id="menu_keyboardShortcuts"
+                           command="cmd_help_importFromAnotherBrowser"
+                           data-l10n-id="menu-help-import-from-another-browser"
 diff --git a/browser/base/content/browser-safebrowsing.js b/browser/base/content/browser-safebrowsing.js
 index 01d8063ffb..831569ffdb 100644
 --- a/browser/base/content/browser-safebrowsing.js
@@ -35,5 +37,5 @@ index 01d8063ffb..831569ffdb 100644
  
    /**
 -- 
-2.29.2
+2.30.1
 

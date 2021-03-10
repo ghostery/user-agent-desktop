@@ -19,7 +19,7 @@
 0019-Firefox-profile-import.patch
 0020-Hide-Library-Synced-Tabs-from-the-menu-panel.patch
 0021-Hide-Firefox-Home-Content-from-preferences.patch
-0022-Ghostery-theme.patch
+0022-Ghostery-Theme.patch
 0023-Move-Ghostery-icon-to-UrlBar.patch
 0024-Remove-Lockwise-branding-in-about-logins.patch
 0025-Custom-brand-styling-on-new-private-window.patch
@@ -37,3 +37,4 @@
 0037-Replace-New-Tab-with-Ghostery-New-Tab-Addon.patch
 0038-Better-Fox-integration.patch
 0039-Default-top-sites.patch
+0040-Disable-package-duplicates-detection.patch

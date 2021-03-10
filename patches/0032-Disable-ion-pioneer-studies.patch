@@ -8,10 +8,10 @@ fix #358
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/browser/components/BrowserGlue.jsm b/browser/components/BrowserGlue.jsm
-index c80c731a24..d7b511d335 100644
+index 5a60368885..a247cb3e3f 100644
 --- a/browser/components/BrowserGlue.jsm
 +++ b/browser/components/BrowserGlue.jsm
-@@ -2373,8 +2373,8 @@ BrowserGlue.prototype = {
+@@ -2370,8 +2370,8 @@ BrowserGlue.prototype = {
      this._monitorScreenshotsPref();
      this._monitorWebcompatReporterPref();
      this._monitorHTTPSOnlyPref();
@@ -23,5 +23,5 @@ index c80c731a24..d7b511d335 100644
      let pService = Cc["@mozilla.org/toolkit/profile-service;1"].getService(
        Ci.nsIToolkitProfileService
 -- 
-2.29.2
+2.30.1
 
