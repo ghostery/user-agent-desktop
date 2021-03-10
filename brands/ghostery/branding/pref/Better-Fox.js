@@ -298,8 +298,6 @@ pref("full-screen-api.warning.timeout", -1);
 
 // always ask where to download
 pref("browser.download.useDownloadDir", false);
-// hide mime types (Options>General>Applications) not associated with a plugin
-pref("browser.download.hide_plugins_without_extensions", false);
 
 
 /** VARIOUS ***/
