@@ -4,57 +4,57 @@ ARG IPFS_GATEWAY=https://cloudflare-ipfs.com
 
 ENV MOZ_AUTOMATION_PACKAGE_TESTS=1
 
-RUN wget -nv -O /builds/worker/fetches/cctools.tar.xz $IPFS_GATEWAY/ipfs/QmaXYNbf8gLDtBNJiK8U3HEkAdT3MADQ3oWFmvhA2vutnJ && \
+RUN wget -nv -O /builds/worker/fetches/cctools.tar.xz $IPFS_GATEWAY/ipfs/QmNbVHKmG3yib4LC3VVoscpFwCq2V7Ucubeg3bThP7QFrq && \
     cd /builds/worker/fetches/ && \
     tar -xf cctools.tar.xz && \
     rm cctools.tar.xz
 
-RUN wget -nv -O /builds/worker/fetches/clang.tar.zst $IPFS_GATEWAY/ipfs/QmNp3Rb8vbgaztJMgsHWN75zyGtUkAESRYhf6eBm4eVfe7 && \
+RUN wget -nv -O /builds/worker/fetches/clang.tar.zst $IPFS_GATEWAY/ipfs/QmdiWXsb2LFPgYDZ5dKPYWqwSh4RTTgjyd9CX1SQTdGwh2 && \
     cd /builds/worker/fetches/ && \
     tar -xf clang.tar.zst && \
     rm clang.tar.zst
 
-RUN wget -nv -O /builds/worker/fetches/sccache.tar.xz $IPFS_GATEWAY/ipfs/QmeB7fo2FuA9RNwK3fCRsHMD685HN9843HUfnHxw8S5iCt && \
+RUN wget -nv -O /builds/worker/fetches/sccache.tar.xz $IPFS_GATEWAY/ipfs/QmWEBpqfYwLhBfr66ASqaTkfY6tGSC5wLKYtj6DKDMRG6T && \
     cd /builds/worker/fetches/ && \
     tar -xf sccache.tar.xz && \
     rm sccache.tar.xz
 
-RUN wget -nv -O /builds/worker/fetches/wasi-sysroot.tar.xz $IPFS_GATEWAY/ipfs/QmUkv5Rarn1p9TZkMMt1u46xNX7LVJs7NC4duoMmV4whPF && \
+RUN wget -nv -O /builds/worker/fetches/wasi-sysroot.tar.xz $IPFS_GATEWAY/ipfs/QmWGe9oPQRpzSaFGKfoMRqFFy9a3Seo8v3zbzEzV6FDcHC && \
     cd /builds/worker/fetches/ && \
     tar -xf wasi-sysroot.tar.xz && \
     rm wasi-sysroot.tar.xz
 
-RUN wget -nv -O /builds/worker/fetches/binutils.tar.xz $IPFS_GATEWAY/ipfs/QmfTyFzy9f61Est4wodKXvwKtPzDbsChWn6WknABjqXd99 && \
+RUN wget -nv -O /builds/worker/fetches/binutils.tar.xz $IPFS_GATEWAY/ipfs/QmeFSdGiyZiCXeJHkdgnG5GnfN9HTUUMR9na2nU1jZHLyx && \
     cd /builds/worker/fetches/ && \
     tar -xf binutils.tar.xz && \
     rm binutils.tar.xz
 
-RUN wget -nv -O /builds/worker/fetches/dump_syms.tar.xz $IPFS_GATEWAY/ipfs/QmcBFu6XXN7qQbw8WDxdSqaX1F34ieScEbevhkQP4HGfZZ && \
+RUN wget -nv -O /builds/worker/fetches/dump_syms.tar.xz $IPFS_GATEWAY/ipfs/QmdLTjhbkCuUbN5TraCuLh41jdsF7QEy4ZmDhByziwcQoY && \
     cd /builds/worker/fetches/ && \
     tar -xf dump_syms.tar.xz && \
     rm dump_syms.tar.xz
 
-RUN wget -nv -O /builds/worker/fetches/hfsplus-tools.tar.xz $IPFS_GATEWAY/ipfs/QmWW2sbyn2raXW13JmXMfYkpAxcjJYfSLLFq1huKrvuYbk && \
+RUN wget -nv -O /builds/worker/fetches/hfsplus-tools.tar.xz $IPFS_GATEWAY/ipfs/QmV6Lh69TMC4Q4NNYseFA1jX9YtvsL5rwY8DXvQ8y7WTKt && \
     cd /builds/worker/fetches/ && \
     tar -xf hfsplus-tools.tar.xz && \
     rm hfsplus-tools.tar.xz
 
-RUN wget -nv -O /builds/worker/fetches/dmg.tar.xz $IPFS_GATEWAY/ipfs/QmchVhUdZ9sJcaAS6HBy47KMEqxrTyKdxcFafqVbNrCZWv && \
+RUN wget -nv -O /builds/worker/fetches/dmg.tar.xz $IPFS_GATEWAY/ipfs/QmenFYGVH67KZEg6V7MjvWu9wEPdT1jc5DFxcZmR3StWCQ && \
     cd /builds/worker/fetches/ && \
     tar -xf dmg.tar.xz && \
     rm dmg.tar.xz
 
-RUN wget -nv -O /builds/worker/fetches/llvm-dsymutil.tar.xz $IPFS_GATEWAY/ipfs/QmT3sLuWBehn5L89qRuKuhGiCiioZ7Wco2MgkSZw6ahvXP && \
+RUN wget -nv -O /builds/worker/fetches/llvm-dsymutil.tar.xz $IPFS_GATEWAY/ipfs/QmeykAY2YAUxbM6iro6SqDCEpLob9r757ERPLZt3ydGog8 && \
     cd /builds/worker/fetches/ && \
     tar -xf llvm-dsymutil.tar.xz && \
     rm llvm-dsymutil.tar.xz
 
-RUN wget -nv -O /builds/worker/fetches/rustc.tar.zst $IPFS_GATEWAY/ipfs/QmTqq47yy8NKArpfyZjCfUvJi8uS46r62qWTzyAVqXPUPJ && \
+RUN wget -nv -O /builds/worker/fetches/rustc.tar.zst $IPFS_GATEWAY/ipfs/QmVWmRTuYM7zY1mP6oVdCv8oFhHGuBxwwzE5nHWkH3xrf5 && \
     cd /builds/worker/fetches/ && \
     tar -xf rustc.tar.zst && \
     rm rustc.tar.zst
 
-RUN wget -nv -O /builds/worker/fetches/rust-size.tar.xz $IPFS_GATEWAY/ipfs/QmaBFfnPsWcS1CFJ7ynd2fkkTcUTdg3nzLobVr67yicYub && \
+RUN wget -nv -O /builds/worker/fetches/rust-size.tar.xz $IPFS_GATEWAY/ipfs/QmRnEqBQJLiJxpvSbrFQu8XrWwzdRGV73stsStUz4KgJPK && \
     cd /builds/worker/fetches/ && \
     tar -xf rust-size.tar.xz && \
     rm rust-size.tar.xz
@@ -64,17 +64,17 @@ RUN wget -nv -O /builds/worker/fetches/cbindgen.tar.xz $IPFS_GATEWAY/ipfs/QmcRVC
     tar -xf cbindgen.tar.xz && \
     rm cbindgen.tar.xz
 
-RUN wget -nv -O /builds/worker/fetches/nasm.tar.bz2 $IPFS_GATEWAY/ipfs/QmXkwK3DDQyUsJPRnaNG9mn74L2aMn2dWHWoC8d9CBiUTa && \
+RUN wget -nv -O /builds/worker/fetches/nasm.tar.bz2 $IPFS_GATEWAY/ipfs/QmRQxpSb2kM7BnG39FVGmKLcLZMr7ni87RC79m6UaVewgt && \
     cd /builds/worker/fetches/ && \
     tar -xf nasm.tar.bz2 && \
     rm nasm.tar.bz2
 
-RUN wget -nv -O /builds/worker/fetches/node.tar.xz $IPFS_GATEWAY/ipfs/QmcPrE765WnKHryAF1s5FPdnoW6E6yYq4VzzUnLdZ5yMB3 && \
+RUN wget -nv -O /builds/worker/fetches/node.tar.xz $IPFS_GATEWAY/ipfs/QmSgLsqyDiZrv5vTsVKqMNVk1Ai6mvZhL4GLKVFor6aotJ && \
     cd /builds/worker/fetches/ && \
     tar -xf node.tar.xz && \
     rm node.tar.xz
 
-RUN wget -nv -O /builds/worker/fetches/lucetc.tar.xz $IPFS_GATEWAY/ipfs/QmWjh2TadXMWYkXHYYDNQuBRCcS3AqvvVwGvvaGvH25tmU && \
+RUN wget -nv -O /builds/worker/fetches/lucetc.tar.xz $IPFS_GATEWAY/ipfs/QmbgnvNZ1PsQBKLBFaHcCS7C8LWqBaGEG2Pb3NvHGA72pD && \
     cd /builds/worker/fetches/ && \
     tar -xf lucetc.tar.xz && \
     rm lucetc.tar.xz
