@@ -30,8 +30,6 @@ def build(opts, Closure postpackage={}, Closure archiving={}) {
             "MOZ_BUILD_DATE=${opts.buildId}",
             "ACCEPTED_MAR_CHANNEL_IDS=firefox-ghostery-release",
             "MAR_CHANNEL_ID=firefox-ghostery-release",
-            "MH_BRANCH=${env.BRANCH_NAME}",
-            "MOZ_SOURCE_CHANGESET=${triggeringCommitHash}"
         ]
         def dockerOpts = "-v /mnt/vfat/vs2017_15.9.29/:/builds/worker/fetches/vs2017_15.9.29"
         def buildEnv = opts.buildEnv ?: []
@@ -61,7 +59,13 @@ def build(opts, Closure postpackage={}, Closure archiving={}) {
                             if (opts.Clobber) {
                                 sh './mach clobber'
                             }
-                            sh './mach build'
+                            withEnv([
+                                "MOZ_AUTOMATION=1",
+                                "MH_BRANCH=${env.BRANCH_NAME}",
+                                "MOZ_SOURCE_CHANGESET=${triggeringCommitHash}"
+                            ]) {
+                                sh './mach build'
+                            }
                         }
 
                         stage("${opts.name}: mach package") {
