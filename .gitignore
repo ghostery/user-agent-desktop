@@ -6,3 +6,5 @@ logs
 build/configs/mozconfig
 /mozconfig
 /local.mozconfig
+sb-gapi.data
+gls-gapi.data

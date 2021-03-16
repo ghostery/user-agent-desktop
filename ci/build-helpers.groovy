@@ -113,7 +113,29 @@ def prepare_workspace(reset, targetPlatform, skipPatches) {
     }
     sh 'rm -rf mozilla-release'
     sh "./fern.js use --ipfs-gateway=http://kria.cliqz:8080"
+
+    withCredentials([
+        [
+            $class: 'StringBinding',
+            credentialsId: '06ca2847-8bc4-425b-8208-c4ee5518dc08',
+            variable: 'GLS_GAPI_DATA',
+        ],
+        [
+            $class: 'StringBinding',
+            credentialsId: '9fa44cca-2ddb-41bf-b4a8-5a28114c9b4f',
+            variable: 'SB_GAPI_DATA',
+        ],
+    ]) {
+        writeFile file: "gls-gapi.data", text: GLS_GAPI_DATA
+        writeFile file: "sb-gapi.data", text: SB_GAPI_DATA
+        writeFile file: "local.mozconfig", text: """
+            ac_add_options --with-google-location-service-api-keyfile=$pwd/gls-gapi.data
+            ac_add_options --with-google-safebrowsing-api-keyfile=$pwd/sb-gapi.data
+        """
+    }
+
     sh "./fern.js config --print --force --platform ${targetPlatform} --brand ghostery"
+
     if (!skipPatches) {
         sh "./fern.js reset"
         sh './fern.js import-patches'
