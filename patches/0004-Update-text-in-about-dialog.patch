@@ -3,14 +3,14 @@ Date: Sat, 6 Mar 2021 13:22:52 +0100
 Subject: Update text in about dialog
 
 ---
- browser/base/content/aboutDialog.xhtml | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ browser/base/content/aboutDialog.xhtml | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/browser/base/content/aboutDialog.xhtml b/browser/base/content/aboutDialog.xhtml
-index fc6c382171..5b99626434 100644
+index fc6c382171..7b13172628 100644
 --- a/browser/base/content/aboutDialog.xhtml
 +++ b/browser/base/content/aboutDialog.xhtml
-@@ -142,12 +142,12 @@
+@@ -142,17 +142,17 @@
            <vbox id="experimental" hidden="true">
              <description class="text-blurb" id="warningDesc" data-l10n-id="warningDesc-version"></description>
              <description class="text-blurb" id="communityExperimentalDesc" data-l10n-id="community-exp">
@@ -21,10 +21,16 @@ index fc6c382171..5b99626434 100644
            </vbox>
            <description class="text-blurb" id="communityDesc" data-l10n-id="community-2">
 -            <label is="text-link" href="https://www.mozilla.org/?utm_source=firefox-browser&#38;utm_medium=firefox-desktop&#38;utm_campaign=about-dialog" data-l10n-name="community-mozillaLink"/>
-+            <label is="text-link" href="https://github.com/ghostery/user-agent-desktop" data-l10n-name="community-mozillaLink"/>
++            <label is="text-link" href="https://ghostery.com/" data-l10n-name="community-mozillaLink"/>
              <label is="text-link" useoriginprincipal="true" href="about:credits" data-l10n-name="community-creditsLink"/>
            </description>
            <description class="text-blurb" id="contributeDesc" data-l10n-id="helpus">
+             <label is="text-link" href="https://donate.mozilla.org/?utm_source=firefox&#38;utm_medium=referral&#38;utm_campaign=firefox_about&#38;utm_content=firefox_about" data-l10n-name="helpus-donateLink"/>
+-            <label is="text-link" href="https://www.mozilla.org/contribute/?utm_source=firefox-browser&#38;utm_medium=firefox-desktop&#38;utm_campaign=about-dialog" data-l10n-name="helpus-getInvolvedLink"/>
++            <label is="text-link" href="https://github.com/ghostery/user-agent-desktop" data-l10n-name="helpus-getInvolvedLink"/>
+           </description>
+         </vbox>
+       </vbox>
 @@ -161,7 +161,7 @@
        <hbox pack="center">
          <label is="text-link" class="bottom-link" useoriginprincipal="true" href="about:license" data-l10n-id="bottomLinks-license"/>
