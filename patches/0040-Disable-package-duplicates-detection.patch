@@ -1,0 +1,26 @@
+From: Krzysztof Jan Modras <chrmod@chrmod.net>
+Date: Wed, 10 Mar 2021 11:58:35 +0100
+Subject: Disable package duplicates detection
+
+---
+ toolkit/mozapps/installer/packager.mk | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/toolkit/mozapps/installer/packager.mk b/toolkit/mozapps/installer/packager.mk
+index a4b87438f1..d7c6e4458d 100644
+--- a/toolkit/mozapps/installer/packager.mk
++++ b/toolkit/mozapps/installer/packager.mk
+@@ -15,8 +15,8 @@ endif
+ 
+ ifdef MOZ_AUTOMATION
+ # This allows `RUN_{FIND_DUPES,MOZHARNESS_ZIP}=1 ./mach package` to test locally.
+-RUN_FIND_DUPES ?= $(MOZ_AUTOMATION)
+-RUN_MOZHARNESS_ZIP ?= $(MOZ_AUTOMATION)
++# RUN_FIND_DUPES ?= $(MOZ_AUTOMATION)
++# RUN_MOZHARNESS_ZIP ?= $(MOZ_AUTOMATION)
+ endif
+ 
+ export USE_ELF_HACK
+-- 
+2.30.1
+
