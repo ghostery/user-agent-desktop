@@ -29,6 +29,37 @@
   "browser/browser/preferences/preferences.ftl": {
     "home-mode-choice-default": {
       "string": "Strona główna Ghostery (domyślna)"
+    },
+    "search-engine-default-private-desc-2": {
+      "string": "Choose a different default search engine for Ghost Mode only"
+    },
+    "search-separate-default-engine": {
+      "label": {
+        "string": "Use this search engine in Ghost Mode"
+      }
+    },
+    "search-show-suggestions-private-windows": {
+      "string": "Show search suggestions in Ghost Mode"
+    },
+    "history-dontremember-description": {
+      "string": "{ -brand-short-name } will use the same settings in Ghost Mode, and will not remember any history as you browse the Web."
+    },
+    "history-private-browsing-permanent": {
+      "string": "Always use Ghost Mode"
+    },
+    "sitedata-delete-on-close-private-browsing": {
+      "string": "In permanent Ghost Mode, cookies and site data will always be cleared when { -brand-short-name } is closed."
+    },
+    "httpsonly-radio-enabled-pbm": {
+      "string": "Enable HTTPS-Only Mode in Ghost Mode only"
+    },
+    "content-blocking-private-windows": {
+      "string": "Tracking content in Ghost Mode"
+    },
+    "content-blocking-option-private": {
+      "label": {
+        "string": "Only in Ghost Mode"
+      }
     }
   },
   "browser/browser/browser.ftl": {
@@ -37,6 +68,33 @@
     },
     "identity-description-custom-root": {
       "string": "{ -brand-short-name } nie rozpoznaje wystawcy certyfikatu. Mógł zostać dodany przez Twój system operacyjny lub administratora. <label data-l10n-name=\"link\">Dowiedz się więcej</label>"
+    },
+    "browser-main-window-mac": {
+      "data-title-private": {
+        "string": "{ -brand-full-name } — (Ghost Mode)"
+      },
+      "data-content-title-private": {
+        "string": "{ $content-title } — (Ghost Mode)"
+      }
+    },
+    "browser-main-window": {
+      "data-title-private": {
+        "string": "{ -brand-full-name } — (Ghost Mode)"
+      },
+      "data-content-title-private": {
+        "string": "{ $content-title } — { -brand-full-name } — (Ghost Mode)"
+      }
+    },
+    "search-one-offs-context-set-as-default-private": {
+      "label": {
+        "string": "Set as Default Search Engine for Ghost Mode"
+      }
+    },
+    "urlbar-result-action-search-in-private-w-engine": {
+      "string": "Search with { $engine } in Ghost Mode"
+    },
+    "urlbar-result-action-search-in-private": {
+      "string": "Search in Ghost Mode"
     }
   },
   "browser/browser/aboutLogins.ftl": {
@@ -44,12 +102,30 @@
       "string": "Szukasz swoich zapisanych loginów? Możesz je zaimportować."
     },
     "about-logins-intro-import": {
-      "string": "Jeśli Twoje loginy są zapisane w innej przeglądarce, może <a data-l10n-name=\"import-link\">je zaimportować</a>"
+      "string": "Jeśli Twoje dane logowania są zapisane w innej przeglądarce, może <a data-l10n-name=\"import-link\">je zaimportować</a>"
     }
   },
   "browser/browser/aboutPrivateBrowsing.ftl": {
     "about-private-browsing-search-placeholder": {
-      "string": "Wyszukaj w trybie prywatnym"
+      "string": "Wyszukuj, zachowując prywatność dzięki Ghostery"
+    },
+    "privatebrowsingpage-open-private-window-label": {
+      "string": "Open a Ghost Mode Window"
+    },
+    "about-private-browsing-info-title": {
+      "string": "You’re Now Veiled in Ghost Mode"
+    },
+    "about-private-browsing-info-myths": {
+      "string": "Note that Ghost mode does not make you anonymous to websites, your internet service provider, and other third parties. <strong>Learn More</strong>"
+    },
+    "about-private-browsing-not-private": {
+      "string": "You are currently not in a Ghost Mode window."
+    },
+    "about-private-browsing-search-banner-title": {
+      "string": "{ $engineName } is your default search engine in Ghost Mode"
+    },
+    "about-private-browsing-info-description": {
+      "string": "In Ghostery’s private browsing mode, your activity will be kept confidential from others who use this device. The following will be automatically erased from Ghostery Dawn at the end of this session: <em>Browsing history</em><em>Search history</em><em>Cookies</em><em>Download history</em>However, files you download will be retained by your device and pages you bookmark will be saved."
     }
   },
   "browser/browser/newInstallPage.ftl": {
@@ -82,6 +158,157 @@
     "ghostery_about_us": {
       "string": "O nas",
       "context": "link title for https://www.ghostery.com/about-ghostery/"
+    }
+  },
+  "browser/browser/menubar.ftl": {
+    "menu-file-new-private-window": {
+      "string": "New Ghost Mode Window"
+    }
+  },
+  "browser/browser/browserContext.ftl": {
+    "main-context-menu-open-link-new-private-window": {
+      "string": "Open Link in New Ghost Mode Window"
+    }
+  },
+  "browser/browser/places.ftl": {
+    "places-open-private-window": {
+      "string": "Open in a New Ghost Mode Window"
+    }
+  },
+  "browser/chrome/browser/browser.dtd": {
+    "newPrivateWindow.label": {
+      "string": "New Ghost Mode Window"
+    }
+  },
+  "browser/chrome/browser/customizableui/customizableWidgets.properties": {
+    "privatebrowsing-button.label": {
+      "string": "New Ghost Mode Window"
+    },
+    "privatebrowsing-button.tooltiptext": {
+      "string": "Open a new Ghost Mode window (%S)"
+    }
+  },
+  "toolkit/toolkit/about/aboutAddons.ftl": {
+    "detail-private-browsing-label": {
+      "string": "Run in Ghost Mode Windows"
+    },
+    "detail-private-disallowed-label": {
+      "string": "Not Allowed in Ghost Mode Windows"
+    },
+    "detail-private-disallowed-description2": {
+      "string": "This extension does not run while in Ghost Mode. <a data-l10n-name=\"learn-more\">Learn more</a>"
+    },
+    "detail-private-required-label": {
+      "string": "Requires Access to Ghost Mode Windows"
+    },
+    "detail-private-required-description2": {
+      "string": "This extension has access to your online activities while in Ghost Mode. <a data-l10n-name=\"learn-more\">Learn more</a>"
+    },
+    "detail-private-browsing-on": {
+      "tooltiptext": {
+        "string": "Enable in Ghost Mode"
+      }
+    },
+    "detail-private-browsing-off": {
+      "tooltiptext": {
+        "string": "Disable in Ghost Mode"
+      }
+    },
+    "private-browsing-description2": {
+      "string": "{ -brand-short-name } is changing how extensions work in Ghost Mode. Any new extensions you add to\n{ -brand-short-name } won’t run by default in Ghost Mode Windows. Unless you allow it in settings, the\nextension won’t work while in Ghost Mode, and won’t have access to your online activities\nthere. We’ve made this change to keep your Ghost Mode browsing private.\n<label data-l10n-name=\"private-browsing-learn-more\">Learn how to manage extension settings</label>"
+    },
+    "addon-badge-private-browsing-allowed2": {
+      "title": {
+        "string": "Allowed in Ghost Mode"
+      }
+    },
+    "addon-detail-private-browsing-help": {
+      "string": "When allowed, the extension will have access to your online activities while in Ghost Mode. <a data-l10n-name=\"learn-more\">Learn more</a>"
+    }
+  },
+  "browser/chrome/browser/browser.properties": {
+    "contextMenuPrivateSearch": {
+      "string": "Search in Ghost Mode"
+    },
+    "contextMenuPrivateSearchOtherEngine": {
+      "string": "Search with %S in Ghost Mode"
+    }
+  },
+  "toolkit/toolkit/global/handlerDialog.ftl": {
+    "choose-dialog-privatebrowsing-disabled": {
+      "string": "Disabled in Ghost Mode"
+    }
+  },
+  "browser/browser/appMenuNotifications.ftl": {
+    "appmenu-update-restart-message": {
+      "string": "After a quick restart, { -brand-shorter-name } will restore all your open tabs and windows that are not in Ghost Mode."
+    },
+    "appmenu-addon-post-install-incognito-checkbox": {
+      "label": {
+        "string": "Allow this extension to run in Ghost Mode"
+      }
+    }
+  },
+  "browser/browser/newtab/newtab.ftl": {
+    "newtab-menu-open-new-private-window": {
+      "string": "Open in a New Ghost Mode Window"
+    }
+  },
+  "toolkit/chrome/mozapps/downloads/downloads.properties": {
+    "leavePrivateBrowsingWindowsCancelDownloadsAlertMsg2": {
+      "string": "If you close all Ghost Mode windows now, 1 download will be canceled. Are you sure you want to leave Ghost Mode?"
+    },
+    "leavePrivateBrowsingWindowsCancelDownloadsAlertMsgMultiple2": {
+      "string": "If you close all Ghost Mode windows now, %S downloads will be canceled. Are you sure you want to leave Ghost Mode?"
+    },
+    "dontLeavePrivateBrowsingButton2": {
+      "string": "Stay in Ghost Mode"
+    }
+  },
+  "devtools/client/performance.dtd": {
+    "performanceUI.unavailableNoticePB": {
+      "string": "Recording a profile is currently unavailable. Please close all Ghost Mode windows and try again."
+    }
+  },
+  "browser/chrome/browser/tabbrowser.properties": {
+    "tabs.closeWarningMultipleSessionRestore2": {
+      "string": ";You are about to close #1 tabs. Tabs in non-Ghost Mode windows will be restored when you restart. Are you sure you want to continue?"
+    },
+    "tabs.closeWarningMultipleWindowsSessionRestore2": {
+      "string": ";You are about to close #1 windows %S. Tabs in non-Ghost Mode windows will be restored when you restart. Are you sure you want to continue?"
+    },
+    "tabs.emptyPrivateTabTitle": {
+      "string": "Tryb Ghost"
+    }
+  },
+  "browser/browser/policies/policies-descriptions.ftl": {
+    "policy-DisablePrivateBrowsing": {
+      "string": "Disable Ghost Mode."
+    }
+  },
+  "dom/chrome/dom/dom.properties": {
+    "ServiceWorkerRegisterStorageError": {
+      "string": "Failed to register/update a ServiceWorker for scope ‘%S’: Storage access is restricted in this context due to user settings or Ghost Mode."
+    },
+    "ServiceWorkerGetRegistrationStorageError": {
+      "string": "Failed to get service worker registration(s): Storage access is restricted in this context due to user settings or Ghost Mode."
+    },
+    "ServiceWorkerGetClientStorageError": {
+      "string": "Failed to get service worker’s client(s): Storage access is restricted in this context due to user settings or Ghost Mode."
+    },
+    "ServiceWorkerPostMessageStorageError": {
+      "string": "The ServiceWorker for scope ‘%S’ failed to execute ‘postMessage‘ because storage access is restricted in this context due to user settings or Ghost Mode."
+    },
+    "RegisterProtocolHandlerPrivateBrowsingWarning": {
+      "string": "Can’t use registerProtocolHandler inside Ghost Mode."
+    }
+  },
+  "browser/chrome/browser/taskbar.properties": {
+    "taskbar.tasks.newPrivateWindow.label": {
+      "string": "New Ghost Mode window"
+    },
+    "taskbar.tasks.newPrivateWindow.description": {
+      "string": "Open a new window in Ghost Mode."
     }
   }
 }
