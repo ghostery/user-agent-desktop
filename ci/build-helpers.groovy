@@ -132,7 +132,7 @@ def prepare_workspace(reset, targetPlatform, skipPatches) {
         """
     }
 
-    sh "./fern.js config --print --force --platform ${targetPlatform} --brand ghostery"
+    sh "./fern.js config --print --force -l --platform ${targetPlatform} --brand ghostery"
 
     if (!skipPatches) {
         sh "./fern.js reset"
