@@ -127,8 +127,8 @@ def prepare_workspace(reset, targetPlatform, skipPatches) {
         writeFile file: "gls-gapi.data", text: GLS_GAPI_DATA
         writeFile file: "sb-gapi.data", text: SB_GAPI_DATA
         writeFile file: "local.mozconfig", text: """
-            ac_add_options --with-google-location-service-api-keyfile=$pwd/gls-gapi.data
-            ac_add_options --with-google-safebrowsing-api-keyfile=$pwd/sb-gapi.data
+            ac_add_options --with-google-location-service-api-keyfile=${pwd()}/gls-gapi.data
+            ac_add_options --with-google-safebrowsing-api-keyfile=${pwd()}/sb-gapi.data
         """
     }
 
