@@ -9,19 +9,19 @@ def build(opts, Closure postpackage={}, Closure archiving={}) {
 
         stage('prepare') {
             if (!fileExists('./build/makecab.exe')) {
-                sh 'wget -nv -O ./build/makecab.exe ftp://cliqznas.cliqz/cliqz-browser-build-artifacts/makecab.exe '
+                sh 'wget -nv -O ./build/makecab.exe ftp://10.180.244.36/cliqz-browser-build-artifacts/makecab.exe '
             }
             if (!fileExists('./build/MacOSX10.12.sdk.tar.bz2')) {
-                sh 'wget -nv -O ./build/MacOSX10.12.sdk.tar.bz2 ftp://cliqznas.cliqz/cliqz-browser-build-artifacts/MacOSX10.12.sdk.tar.bz2'
+                sh 'wget -nv -O ./build/MacOSX10.12.sdk.tar.bz2 ftp://10.180.244.36/cliqz-browser-build-artifacts/MacOSX10.12.sdk.tar.bz2'
             }
             if (!fileExists('./build/MacOSX11.0.sdk.tar.bz2')) {
-                sh 'wget -nv -O ./build/MacOSX11.0.sdk.tar.bz2 ftp://cliqznas.cliqz/cliqz-browser-build-artifacts/MacOSX11.0.sdk.tar.bz2'
+                sh 'wget -nv -O ./build/MacOSX11.0.sdk.tar.bz2 ftp://10.180.244.36/cliqz-browser-build-artifacts/MacOSX11.0.sdk.tar.bz2'
             }
         }
 
         def image = stage('docker build base') {
             docker.build('ua-build-base', '-f build/Base.dockerfile ./build/ --build-arg user=`whoami` --build-arg UID=`id -u` --build-arg GID=`id -g`')
-            docker.build("ua-build-${opts.name.toLowerCase()}", "-f build/${opts.dockerFile} ./build --build-arg IPFS_GATEWAY=http://kria.cliqz:8080")
+            docker.build("ua-build-${opts.name.toLowerCase()}", "-f build/${opts.dockerFile} ./build --build-arg IPFS_GATEWAY=http://10.180.244.30:8080")
         }
 
         def defaultEnv = [
@@ -110,7 +110,7 @@ def prepare_workspace(reset, targetPlatform, skipPatches) {
         sh 'rm -rf .cache'
     }
     sh 'rm -rf mozilla-release'
-    sh "./fern.js use --ipfs-gateway=http://kria.cliqz:8080"
+    sh "./fern.js use --ipfs-gateway=http://10.180.244.30:8080"
 
     withCredentials([
         [
@@ -143,14 +143,14 @@ def prepare_workspace(reset, targetPlatform, skipPatches) {
 def signmar() {
     // prepare signmar environment
     if (!fileExists('./signmar')) {
-        sh 'wget -O ./signmar ftp://cliqznas.cliqz/cliqz-browser-build-artifacts/mar/signmar'
+        sh 'wget -O ./signmar ftp://10.180.244.36/cliqz-browser-build-artifacts/mar/signmar'
         sh 'chmod a+x signmar'
     }
-    if (!fileExists('./libmozsqlite3.so')) { sh 'wget -O ./libmozsqlite3.so ftp://cliqznas.cliqz/cliqz-browser-build-artifacts/mar/libmozsqlite3.so' }
-    if (!fileExists('./libnss3.so')) { sh 'wget -O ./libnss3.so ftp://cliqznas.cliqz/cliqz-browser-build-artifacts/mar/libnss3.so' }
-    if (!fileExists('./libnspr4.so')) { sh 'wget -O ./libnspr4.so ftp://cliqznas.cliqz/cliqz-browser-build-artifacts/mar/libnspr4.so' }
-    if (!fileExists('./libfreeblpriv3.so')) { sh 'wget -O ./libfreeblpriv3.so ftp://cliqznas.cliqz/cliqz-browser-build-artifacts/mar/libfreeblpriv3.so' }
-    if (!fileExists('./libsoftokn3.so')) { sh 'wget -O ./libsoftokn3.so ftp://cliqznas.cliqz/cliqz-browser-build-artifacts/mar/libsoftokn3.so' }
+    if (!fileExists('./libmozsqlite3.so')) { sh 'wget -O ./libmozsqlite3.so ftp://10.180.244.36/cliqz-browser-build-artifacts/mar/libmozsqlite3.so' }
+    if (!fileExists('./libnss3.so')) { sh 'wget -O ./libnss3.so ftp://10.180.244.36/cliqz-browser-build-artifacts/mar/libnss3.so' }
+    if (!fileExists('./libnspr4.so')) { sh 'wget -O ./libnspr4.so ftp://10.180.244.36/cliqz-browser-build-artifacts/mar/libnspr4.so' }
+    if (!fileExists('./libfreeblpriv3.so')) { sh 'wget -O ./libfreeblpriv3.so ftp://10.180.244.36/cliqz-browser-build-artifacts/mar/libfreeblpriv3.so' }
+    if (!fileExists('./libsoftokn3.so')) { sh 'wget -O ./libsoftokn3.so ftp://10.180.244.36/cliqz-browser-build-artifacts/mar/libsoftokn3.so' }
 
     def mars = sh(returnStdout: true, script: "find . -type f -name '*.mar' | grep dist").trim().split("\\r?\\n")
     def pwd = sh(returnStdout: true, script: 'pwd').trim()
@@ -357,7 +357,7 @@ def mac_unified_dmg() {
     def x86ObjDir = "obj-x86_64-apple-darwin"
     checkout scm
     docker.build('ua-build-base', '-f build/Base.dockerfile ./build/ --build-arg user=`whoami` --build-arg UID=`id -u` --build-arg GID=`id -g`')
-    image = docker.build("ua-build-macosarm", '-f build/MacOSARM.dockerfile ./build/ --build-arg IPFS_GATEWAY=http://kria.cliqz:8080')
+    image = docker.build("ua-build-macosarm", '-f build/MacOSARM.dockerfile ./build/ --build-arg IPFS_GATEWAY=http://10.180.244.30:8080')
     image.inside() {
         prepare_workspace(false, 'macosx-aarch64', true)
         unarchive mapping: ["mozilla-release/" : "."]

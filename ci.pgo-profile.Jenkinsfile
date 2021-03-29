@@ -108,14 +108,14 @@ if (params.MacOSX64) {
           npm ci
           rm -rf mozilla-release
           rm -rf /tmp/*.app
-          ./fern.js use --ipfs-gateway=http://kria.cliqz:8080
+          ./fern.js use --ipfs-gateway=http://10.180.244.30:8080
         '''
       }
 
       stage('fetch toolchain') {
         sh '''#!/bin/bash
           set -x -e
-          wget -nv -O clang.tar.zst 'http://kria.cliqz:8080/ipfs/Qme6cUwu2zm5AiGGxUVP7yvspLaDkAEXszYox8VywiSPBB'
+          wget -nv -O clang.tar.zst 'http://10.180.244.30:8080/ipfs/Qme6cUwu2zm5AiGGxUVP7yvspLaDkAEXszYox8VywiSPBB'
           zstd -d clang.tar.zst
           tar -xf clang.tar
           rm clang.tar*
