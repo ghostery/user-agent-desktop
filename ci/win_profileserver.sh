@@ -4,7 +4,7 @@ set -x -e
 export WORKSPACE=`pwd`
 
 # fetch toolchain
-wget -nv -O clang.tar.gz 'http://kria.cliqz:8080/ipfs/QmchjJhoHRVuiWsM75TspdtTyiZieUkgF6MKMpzmoaHB7k'
+wget -nv -O clang.tar.gz 'http://10.180.244.30:8080/ipfs/QmchjJhoHRVuiWsM75TspdtTyiZieUkgF6MKMpzmoaHB7k'
 tar -xf clang.tar.gz
 rm clang.tar.gz
 
@@ -15,7 +15,7 @@ rm -rf mozilla-release/Ghostery
 # get Firefox source
 # TODO: Use fern here
 FIREFOX_VERSION=82.0.3
-wget -nv -O firefox.tar.xz http://kria.cliqz:8080/ipfs/QmUajsHzRDKSTzVhz8WtPnMxqv5dqADBrxHSbbp1RathRZ/firefox/releases/${FIREFOX_VERSION}/source/firefox-${FIREFOX_VERSION}.source.tar.xz
+wget -nv -O firefox.tar.xz http://10.180.244.30:8080/ipfs/QmUajsHzRDKSTzVhz8WtPnMxqv5dqADBrxHSbbp1RathRZ/firefox/releases/${FIREFOX_VERSION}/source/firefox-${FIREFOX_VERSION}.source.tar.xz
 tar -xf firefox.tar.xz
 mv firefox-${FIREFOX_VERSION} firefox
 rm firefox.tar.xz
