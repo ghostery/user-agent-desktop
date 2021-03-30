@@ -31,10 +31,10 @@ Subject: Ghostery Theme
  create mode 100644 toolkit/mozapps/extensions/default-theme/experiment7.css
 
 diff --git a/browser/components/BrowserGlue.jsm b/browser/components/BrowserGlue.jsm
-index 0c73eeef2e..5a60368885 100644
+index 81de0fb201..3d84f3207d 100644
 --- a/browser/components/BrowserGlue.jsm
 +++ b/browser/components/BrowserGlue.jsm
-@@ -1338,6 +1338,7 @@ BrowserGlue.prototype = {
+@@ -1355,6 +1355,7 @@ BrowserGlue.prototype = {
  
      SessionStore.init();
  
@@ -42,7 +42,7 @@ index 0c73eeef2e..5a60368885 100644
      AddonManager.maybeInstallBuiltinAddon(
        "firefox-compact-light@mozilla.org",
        "1.1",
-@@ -1353,6 +1354,7 @@ BrowserGlue.prototype = {
+@@ -1370,6 +1371,7 @@ BrowserGlue.prototype = {
        "1.2",
        "resource://builtin-themes/alpenglow/"
      );
@@ -51,7 +51,7 @@ index 0c73eeef2e..5a60368885 100644
      if (AppConstants.MOZ_NORMANDY) {
        Normandy.init();
 diff --git a/browser/components/customizableui/CustomizeMode.jsm b/browser/components/customizableui/CustomizeMode.jsm
-index 16b33ae73b..5f2ba0b4a5 100644
+index 7b97b88e79..8afdff69e0 100644
 --- a/browser/components/customizableui/CustomizeMode.jsm
 +++ b/browser/components/customizableui/CustomizeMode.jsm
 @@ -96,9 +96,12 @@ const ALPENGLOW_THEME_ID = "firefox-alpenglow@mozilla.org";
@@ -166,10 +166,10 @@ index 5aa122b2ab..83349d2279 100644
 +  content/builtin-themes/ghostery-dynamic                     (ghostery-dynamic/*.css)
 +  content/builtin-themes/ghostery-dynamic/manifest.json       (ghostery-dynamic/manifest.json)
 diff --git a/browser/themes/shared/urlbar-searchbar.inc.css b/browser/themes/shared/urlbar-searchbar.inc.css
-index 9cc5b6f556..0b25631bcb 100644
+index a01ddee72a..cdf279cee5 100644
 --- a/browser/themes/shared/urlbar-searchbar.inc.css
 +++ b/browser/themes/shared/urlbar-searchbar.inc.css
-@@ -28,7 +28,8 @@
+@@ -38,7 +38,8 @@
  
  #urlbar-container,
  #search-container {
@@ -205,7 +205,7 @@ index 52da2fe9a7..c13073a9d8 100644
  ChromeUtils.defineModuleGetter(
    this,
 diff --git a/toolkit/mozapps/extensions/content/aboutaddons.js b/toolkit/mozapps/extensions/content/aboutaddons.js
-index 0ad41fd91c..8ad956c3e5 100644
+index abab57dcb4..24ff99e14b 100644
 --- a/toolkit/mozapps/extensions/content/aboutaddons.js
 +++ b/toolkit/mozapps/extensions/content/aboutaddons.js
 @@ -87,8 +87,9 @@ const EXTENSION_ICON_URL =
@@ -449,10 +449,10 @@ index 05d6e0e19a..beeb290823 100644
    }
  }
 diff --git a/toolkit/mozapps/extensions/internal/XPIProvider.jsm b/toolkit/mozapps/extensions/internal/XPIProvider.jsm
-index 841137abf8..1ffc4effe8 100644
+index ac5bdacb6d..6732e49625 100644
 --- a/toolkit/mozapps/extensions/internal/XPIProvider.jsm
 +++ b/toolkit/mozapps/extensions/internal/XPIProvider.jsm
-@@ -2477,9 +2477,14 @@ var XPIProvider = {
+@@ -2470,9 +2470,14 @@ var XPIProvider = {
  
        this.maybeInstallBuiltinAddon(
          "default-theme@mozilla.org",
@@ -468,7 +468,7 @@ index 841137abf8..1ffc4effe8 100644
  
        resolveProviderReady(Promise.all(this.startupPromises));
  
-@@ -2682,6 +2687,10 @@ var XPIProvider = {
+@@ -2675,6 +2680,10 @@ var XPIProvider = {
        logger.error("startup failed", e);
        AddonManagerPrivate.recordException("XPI", "startup failed", e);
      }
@@ -479,7 +479,7 @@ index 841137abf8..1ffc4effe8 100644
    },
  
    /**
-@@ -2927,6 +2936,20 @@ var XPIProvider = {
+@@ -2920,6 +2929,20 @@ var XPIProvider = {
      return installed;
    },
  
@@ -501,10 +501,10 @@ index 841137abf8..1ffc4effe8 100644
      return Array.from(XPIDatabase.getAddons()).filter(addon =>
        addon.dependencies.includes(aAddon.id)
 diff --git a/toolkit/mozapps/extensions/jar.mn b/toolkit/mozapps/extensions/jar.mn
-index 219ac50dab..dc692b99e1 100644
+index eee530f7e8..7b59d4b203 100644
 --- a/toolkit/mozapps/extensions/jar.mn
 +++ b/toolkit/mozapps/extensions/jar.mn
-@@ -23,6 +23,7 @@ toolkit.jar:
+@@ -21,6 +21,7 @@ toolkit.jar:
    content/mozapps/extensions/firefox-compact-dark.svg           (content/firefox-compact-dark.svg)
    content/mozapps/extensions/firefox-compact-light.svg          (content/firefox-compact-light.svg)
    content/mozapps/extensions/firefox-alpenglow.svg              (content/firefox-alpenglow.svg)
@@ -512,7 +512,7 @@ index 219ac50dab..dc692b99e1 100644
    content/mozapps/extensions/message-bar.css                    (content/message-bar.css)
    content/mozapps/extensions/message-bar.js                     (content/message-bar.js)
    content/mozapps/extensions/named-deck.js                      (content/named-deck.js)
-@@ -35,4 +36,5 @@ toolkit.jar:
+@@ -34,4 +35,5 @@ toolkit.jar:
  % resource default-theme %content/mozapps/extensions/default-theme/
    content/mozapps/extensions/default-theme/icon.svg             (default-theme/icon.svg)
    content/mozapps/extensions/default-theme/manifest.json        (default-theme/manifest.json)
@@ -558,5 +558,5 @@ index 14aa94d92a..c003b40168 100644
    min-width: 14px;
    max-width: 24px;
 -- 
-2.30.1
+2.25.1
 

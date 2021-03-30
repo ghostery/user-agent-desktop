@@ -8,7 +8,7 @@ Subject: Hide "Recommend as you browse" preferences
  2 files changed, 9 insertions(+), 9 deletions(-)
 
 diff --git a/browser/components/preferences/main.inc.xhtml b/browser/components/preferences/main.inc.xhtml
-index ec30d31cde..8dbe8398d9 100644
+index 2d55e165c5..db445adec8 100644
 --- a/browser/components/preferences/main.inc.xhtml
 +++ b/browser/components/preferences/main.inc.xhtml
 @@ -650,13 +650,13 @@
@@ -28,10 +28,10 @@ index ec30d31cde..8dbe8398d9 100644
      <checkbox id="cfrRecommendations-features"
              class="tail-with-learn-more"
 diff --git a/browser/components/preferences/main.js b/browser/components/preferences/main.js
-index acb15e6119..fb29d742c3 100644
+index 32256f6c35..10edd70a7c 100644
 --- a/browser/components/preferences/main.js
 +++ b/browser/components/preferences/main.js
-@@ -379,13 +379,13 @@ var gMainPane = {
+@@ -383,13 +383,13 @@ var gMainPane = {
      // listener for future menu changes.
      gMainPane.initDefaultZoomValues();
  
@@ -53,5 +53,5 @@ index acb15e6119..fb29d742c3 100644
      if (
        Services.prefs.getBoolPref(
 -- 
-2.30.1
+2.25.1
 

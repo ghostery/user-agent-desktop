@@ -7,7 +7,7 @@ Subject: Hide 'Learn More' links in preferences
  1 file changed, 1 insertion(+)
 
 diff --git a/browser/themes/shared/preferences/preferences.inc.css b/browser/themes/shared/preferences/preferences.inc.css
-index 9258acbb09..5782c921e4 100644
+index 1ea62459f1..14284489dc 100644
 --- a/browser/themes/shared/preferences/preferences.inc.css
 +++ b/browser/themes/shared/preferences/preferences.inc.css
 @@ -141,6 +141,7 @@ button > hbox > label {
@@ -19,5 +19,5 @@ index 9258acbb09..5782c921e4 100644
    font-weight: normal;
    white-space: nowrap;
 -- 
-2.30.1
+2.25.1
 

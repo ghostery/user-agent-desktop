@@ -3,27 +3,34 @@ Date: Sat, 6 Mar 2021 13:31:26 +0100
 Subject: Remove UI Tour and Report Deceptive Site from help menubar
 
 ---
- browser/base/content/browser-menubar.inc     | 2 ++
+ browser/base/content/browser-menubar.inc     | 8 ++++++++
  browser/base/content/browser-safebrowsing.js | 1 +
- 2 files changed, 3 insertions(+)
+ 2 files changed, 9 insertions(+)
 
 diff --git a/browser/base/content/browser-menubar.inc b/browser/base/content/browser-menubar.inc
-index 99a73e1632..3f0ba78cc9 100644
+index 058c1e5835..b458e7b7e4 100644
 --- a/browser/base/content/browser-menubar.inc
 +++ b/browser/base/content/browser-menubar.inc
-@@ -471,10 +471,12 @@
+@@ -465,11 +465,19 @@
  #else
                            />
  #endif
++                <menuitem id="help_importFromAnotherBrowser"
++                          command="cmd_help_importFromAnotherBrowser"
++                          data-l10n-id="menu-help-import-from-another-browser"
++                          appmenu-data-l10n-id="appmenu-help-import-from-another-browser"/>
++                <menuitem id="menu_keyboardShortcuts"
++                          oncommand="openHelpLink('keyboard-shortcuts')"
 +#if 0
-                 <menuitem id="menu_openTour"
-                           oncommand="openTourPage();"
-                           data-l10n-id="menu-help-show-tour"
-                           appmenu-data-l10n-id="appmenu-help-show-tour"/>
+                 <menuitem id="feedbackPage"
+                           oncommand="openFeedbackPage()"
+                           onclick="checkForMiddleClick(this, event);"
+                           data-l10n-id="menu-help-feedback-page"
+                           appmenu-data-l10n-id="appmenu-help-feedback-page"/>
 +#endif
-                 <menuitem id="help_importFromAnotherBrowser"
-                           command="cmd_help_importFromAnotherBrowser"
-                           data-l10n-id="menu-help-import-from-another-browser"
+                 <menuitem id="troubleShooting"
+                           oncommand="openTroubleshootingPage()"
+                           onclick="checkForMiddleClick(this, event);"
 diff --git a/browser/base/content/browser-safebrowsing.js b/browser/base/content/browser-safebrowsing.js
 index 01d8063ffb..831569ffdb 100644
 --- a/browser/base/content/browser-safebrowsing.js
@@ -37,5 +44,5 @@ index 01d8063ffb..831569ffdb 100644
  
    /**
 -- 
-2.30.1
+2.25.1
 

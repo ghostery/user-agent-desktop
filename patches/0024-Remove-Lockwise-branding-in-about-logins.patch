@@ -9,7 +9,7 @@ Subject: Remove Lockwise branding in about:logins
  3 files changed, 13 insertions(+), 5 deletions(-)
 
 diff --git a/browser/components/aboutlogins/content/aboutLogins.html b/browser/components/aboutlogins/content/aboutLogins.html
-index 0db852b128..04a728b550 100644
+index 9fc32a2416..4c29dc67c6 100644
 --- a/browser/components/aboutlogins/content/aboutLogins.html
 +++ b/browser/components/aboutlogins/content/aboutLogins.html
 @@ -228,6 +228,7 @@
@@ -59,7 +59,7 @@ index a0cd1d8cd1..10d72b3a94 100644
      let importClass = window.AboutLoginsUtils.fileImportEnabled
        ? ".intro-import-text.file-import"
 diff --git a/browser/themes/shared/preferences/privacy.css b/browser/themes/shared/preferences/privacy.css
-index 71c672d860..ede89f8096 100644
+index 07da15a167..6d5d3dd3be 100644
 --- a/browser/themes/shared/preferences/privacy.css
 +++ b/browser/themes/shared/preferences/privacy.css
 @@ -4,6 +4,10 @@
@@ -74,5 +74,5 @@ index 71c672d860..ede89f8096 100644
    --section-highlight-background-color: rgba(69, 161, 255, 0.2);
  }
 -- 
-2.30.1
+2.25.1
 

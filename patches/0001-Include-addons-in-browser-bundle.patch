@@ -17,5 +17,5 @@ index 0eb3c53e76..b37208ee92 100644
 -DIRS += ["doh-rollout", "formautofill", "screenshots", "webcompat", "report-site-issue"]
 +DIRS += ["doh-rollout", "formautofill", "screenshots", "webcompat", "report-site-issue", "ghostery", "ghostery-search", "ghostery-newtab"]
 -- 
-2.30.1
+2.25.1
 
