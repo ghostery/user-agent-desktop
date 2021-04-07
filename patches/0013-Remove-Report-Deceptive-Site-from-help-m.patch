@@ -1,0 +1,23 @@
+From: Sam Macbeth <sam@cliqz.com>
+Date: Sat, 6 Mar 2021 13:31:26 +0100
+Subject: Remove Report Deceptive Site from help menubar
+
+---
+ browser/base/content/browser-safebrowsing.js | 1 +
+ 1 files changed, 1 insertions(+)
+
+diff --git a/browser/base/content/browser-safebrowsing.js b/browser/base/content/browser-safebrowsing.js
+index 01d8063ffb..831569ffdb 100644
+--- a/browser/base/content/browser-safebrowsing.js
++++ b/browser/base/content/browser-safebrowsing.js
+@@ -45,6 +45,7 @@ var gSafeBrowsing = {
+     } else {
+       reportErrorMenu.removeAttribute("disabled");
+     }
++    reportMenu.hidden = true;
+   },
+
+   /**
+--
+2.25.1
+
