@@ -7,10 +7,10 @@ Subject: Hide Protection Dashboard link from right burger menu
  1 file changed, 4 insertions(+), 2 deletions(-)
 
 diff --git a/browser/base/content/browser.xhtml b/browser/base/content/browser.xhtml
-index 5308ce4188..cf0f2c0cdd 100644
+index ded22553bd..92ef5635f7 100644
 --- a/browser/base/content/browser.xhtml
 +++ b/browser/base/content/browser.xhtml
-@@ -761,8 +761,8 @@
+@@ -762,8 +762,8 @@
                          closemenu="none"
                          oncommand="gSync.toggleAccountPanel('PanelUI-fxa', this, event)"/>
          </toolbaritem>
@@ -20,17 +20,17 @@ index 5308ce4188..cf0f2c0cdd 100644
          <toolbaritem>
            <toolbarbutton id="appMenu-protection-report-button"
                 class="subviewbutton subviewbutton-iconic"
-@@ -774,8 +774,8 @@
+@@ -775,8 +775,8 @@
              </label>
            </toolbarbutton>
          </toolbaritem>
 -        -->
          <toolbarseparator id="appMenu-tp-separator"/>
-+        -->
++	-->
          <toolbarbutton id="appMenu-new-window-button"
                         class="subviewbutton subviewbutton-iconic"
                         label="&newNavigatorCmd.label;"
-@@ -1751,6 +1751,7 @@
+@@ -1827,6 +1827,7 @@
                     class="chromeclass-toolbar-additional"/>
                <!-- Use onclick instead of normal popup= syntax since the popup
                     code fires onmousedown, and hence eats our favicon drag events. -->
@@ -38,14 +38,14 @@ index 5308ce4188..cf0f2c0cdd 100644
                <box id="tracking-protection-icon-container" align="center"
                     role="button"
                     onclick="gProtectionsHandler.handleProtectionsButtonEvent(event);"
-@@ -1768,6 +1769,7 @@
+@@ -1844,6 +1845,7 @@
                    <description id="tracking-protection-icon-tooltip-label" class="tooltip-label"/>
                  </tooltip>
                </box>
-+              -->
-               <box id="identity-box" role="button"
-                    align="center"
-                    data-l10n-id="urlbar-identity-button"
++	      -->
+               <box id="identity-box"
+                    pageproxystate="invalid"
+                    ondragstart="gIdentityHandler.onDragStart(event);">
 -- 
-2.30.1
+2.25.1
 

@@ -21,7 +21,7 @@ def build(opts, Closure postpackage={}, Closure archiving={}) {
 
         def image = stage('docker build base') {
             docker.build('ua-build-base', '-f build/Base.dockerfile ./build/ --build-arg user=`whoami` --build-arg UID=`id -u` --build-arg GID=`id -g`')
-            docker.build("ua-build-${opts.name.toLowerCase()}", "-f build/${opts.dockerFile} ./build --build-arg IPFS_GATEWAY=http://10.180.244.30:8080")
+            docker.build("ua-build-${opts.name.toLowerCase()}", "-f build/${opts.dockerFile} ./build --build-arg IPFS_GATEWAY=https://gateway.macbeth.cc")
         }
 
         def defaultEnv = [
@@ -110,7 +110,7 @@ def prepare_workspace(reset, targetPlatform, skipPatches) {
         sh 'rm -rf .cache'
     }
     sh 'rm -rf mozilla-release'
-    sh "./fern.js use --ipfs-gateway=http://10.180.244.30:8080"
+    sh "./fern.js use"
 
     withCredentials([
         [

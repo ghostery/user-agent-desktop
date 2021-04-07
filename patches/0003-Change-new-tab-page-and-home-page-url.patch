@@ -9,7 +9,7 @@ Subject: Change new tab page and home page url
  3 files changed, 3 insertions(+), 16 deletions(-)
 
 diff --git a/browser/app/profile/firefox.js b/browser/app/profile/firefox.js
-index 5aad2ddcf4..94b0525f0d 100644
+index ef44a16daa..735810381c 100644
 --- a/browser/app/profile/firefox.js
 +++ b/browser/app/profile/firefox.js
 @@ -249,7 +249,7 @@ pref("browser.defaultbrowser.notificationbar.checklimit", 10000);
@@ -22,10 +22,10 @@ index 5aad2ddcf4..94b0525f0d 100644
  pref("browser.startup.homepage.abouthome_cache.enabled", true);
  #else
 diff --git a/browser/components/newtab/AboutNewTabService.jsm b/browser/components/newtab/AboutNewTabService.jsm
-index 65e4d38b8d..6b3d049455 100644
+index 2f967030cb..cda9de3df7 100644
 --- a/browser/components/newtab/AboutNewTabService.jsm
 +++ b/browser/components/newtab/AboutNewTabService.jsm
-@@ -430,20 +430,7 @@ class BaseAboutNewTabService {
+@@ -425,20 +425,7 @@ class BaseAboutNewTabService {
     * the newtab page has no effect on the result of this function.
     */
    get defaultURL() {
@@ -61,5 +61,5 @@ index c903787fde..52b5b61ee5 100644
    "browser.startup.homepage_override.extensionControlled";
  const kHomePageIgnoreListId = "homepage-urls";
 -- 
-2.30.1
+2.25.1
 
