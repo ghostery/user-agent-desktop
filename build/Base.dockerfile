@@ -102,7 +102,7 @@ RUN apt-get update && \
       liblzma-dev
 
 # custom
-RUN pip3 install zstandard importlib_metadata mar balrogclient
+RUN pip3 install zstandard pip-tools==5.5.0 mar balrogclient
 ADD fetch-content /builds/worker/bin/fetch-content
 # mbsdiff and mar (built from martools on linux)
 ADD mbsdiff /builds/worker/bin/mbsdiff
