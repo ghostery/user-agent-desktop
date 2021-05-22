@@ -108,7 +108,6 @@ pref("browser.discovery.enabled", false);
 // Crash Reports
 pref("breakpad.reportURL", "");
 pref("browser.tabs.crashReporting.sendReport", false);
-pref("browser.crashReports.unsubmittedCheck.enabled", false);
 // backlogged crash reports
 pref("browser.crashReports.unsubmittedCheck.autoSubmit2", false);
 
@@ -170,7 +169,6 @@ pref("browser.aboutwelcome.enabled", false);
 
 /** NEW TAB PAGE & ACTIVITY STREAM ***/
 pref("browser.startup.page", 3);
-pref("browser.library.activity-stream.enabled", false);
 pref("browser.newtabpage.activity-stream.discoverystream.enabled", false);
 pref("browser.newtabpage.activity-stream.showSponsored", false);
 pref("browser.newtabpage.activity-stream.showSponsoredTopSites", false);
