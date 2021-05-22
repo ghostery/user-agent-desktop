@@ -36,6 +36,12 @@ pref("beacon.enabled", false);
 //  Disable Battery API as it's a common factor in fingerprinting
 pref("dom.battery.enabled", false);
 
+// PREF: set a default permission for Virtual Reality
+// 0=always ask (default), 1=allow, 2=block
+// [SETTING] to add site exceptions: Ctrl+I>Permissions>Access Virtual Reality Devices
+// [SETTING] to manage site exceptions: Options>Privacy & Security>Permissions>Virtual Reality>Settings
+user_pref("permissions.default.xr", 2);
+
 // CRLite
 // This will reduce the number of times an OCSP server needs to be contacted and therefore increase privacy.
 pref("security.pki.crlite_mode", 2);
@@ -207,6 +213,8 @@ pref("security.mixed_content.upgrade_display_content", true);
 pref("security.mixed_content.block_object_subrequest", true);
 // Block insecure downloads from secure sites
 pref("dom.block_download_insecure", true);
+// allow PDFs to load javascript
+user_pref("pdfjs.enableScripting", false);
 
 // 3rd party extension install prompts
 // [1] https://bugzilla.mozilla.org/buglist.cgi?bug_id=1659530,1681331
