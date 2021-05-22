@@ -72,7 +72,7 @@ pref("dom.storage.next_gen", true);
 // Samesite Cookies /* experimental */
 pref("network.cookie.sameSite.laxByDefault", true);
 pref("network.cookie.sameSite.noneRequiresSecure", true);
-// pref("network.cookie.sameSite.schemeful", true); /* test in future builds */
+pref("network.cookie.sameSite.schemeful", true);
 
 
 /** CLEARING HISTORY DEFAULTS (MANUALLY) ***/
