@@ -40,7 +40,7 @@ pref("dom.battery.enabled", false);
 // 0=always ask (default), 1=allow, 2=block
 // [SETTING] to add site exceptions: Ctrl+I>Permissions>Access Virtual Reality Devices
 // [SETTING] to manage site exceptions: Options>Privacy & Security>Permissions>Virtual Reality>Settings
-user_pref("permissions.default.xr", 2);
+pref("permissions.default.xr", 2);
 
 // CRLite
 // This will reduce the number of times an OCSP server needs to be contacted and therefore increase privacy.
@@ -92,7 +92,7 @@ pref("privacy.sanitize.timeSpan", 0);
 // Reset default 'Time range to clear' for 'Clear Recent History'.
 // Firefox remembers your last choice. This will reset the value when you start Firefox.
 // 0=everything, 1=last hour, 2=last two hours, 3=last four hours, 4=today
-user_pref("privacy.sanitize.timeSpan", 0);
+pref("privacy.sanitize.timeSpan", 0);
 
 
 /*** PRELOADING ***/
@@ -214,7 +214,7 @@ pref("security.mixed_content.block_object_subrequest", true);
 // Block insecure downloads from secure sites
 pref("dom.block_download_insecure", true);
 // allow PDFs to load javascript
-user_pref("pdfjs.enableScripting", false);
+pref("pdfjs.enableScripting", false);
 
 // 3rd party extension install prompts
 // [1] https://bugzilla.mozilla.org/buglist.cgi?bug_id=1659530,1681331
