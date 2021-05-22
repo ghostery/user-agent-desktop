@@ -30,10 +30,6 @@ pref("browser.startup.preXulSkeletonUI", false);
 
 /** TRACKING PROTECTION ***/
 
-// Disable Hyperlink Auditing (click tracking).
-pref("browser.send_pings", false);
-pref("browser.send_pings.require_same_host", true);
-
 // Disable sending additional analytics to web servers
 pref("beacon.enabled", false);
 
@@ -97,7 +93,6 @@ user_pref("privacy.sanitize.timeSpan", 0);
 
 // disable DNS prefetching
 pref("network.dns.disablePrefetch", true);
-pref("network.dns.disablePrefetchFromHTTPS", true); /* default */
 
 // Preload the autocomplete URL in the address bar.
 // Firefox preloads URLs that autocomplete when a user types into the address bar.
@@ -125,7 +120,6 @@ pref("network.preload", true); /* default */
 // be needed rather than wait for the document to link those resources.
 pref("network.predictor.enabled", true); /* default */
 pref("network.predictor.enable-hover-on-ssl", true);
-pref("network.predictor.enable-prefetch", false); /* default */
 
 // New tab preload
 pref("browser.newtab.preload", true); /* default */
