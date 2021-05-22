@@ -166,6 +166,7 @@ pref("startup.homepage_override_url", "");
 pref("startup.homepage_welcome_url", "");
 pref("startup.homepage_welcome_url.additional", "");
 pref("browser.aboutwelcome.enabled", false);
+pref("browser.startup.homepage_override.mstone", "ignore"); // master switch welcome & what's new notices
 
 /** NEW TAB PAGE & ACTIVITY STREAM ***/
 pref("browser.startup.page", 3);
