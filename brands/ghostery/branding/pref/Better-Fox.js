@@ -30,15 +30,17 @@ pref("browser.startup.preXulSkeletonUI", false);
 
 /** TRACKING PROTECTION ***/
 
-// Disable Hyperlink Auditing (click tracking).
-pref("browser.send_pings", false);
-pref("browser.send_pings.require_same_host", true);
-
 // Disable sending additional analytics to web servers
 pref("beacon.enabled", false);
 
 //  Disable Battery API as it's a common factor in fingerprinting
 pref("dom.battery.enabled", false);
+
+// PREF: set a default permission for Virtual Reality
+// 0=always ask (default), 1=allow, 2=block
+// [SETTING] to add site exceptions: Ctrl+I>Permissions>Access Virtual Reality Devices
+// [SETTING] to manage site exceptions: Options>Privacy & Security>Permissions>Virtual Reality>Settings
+pref("permissions.default.xr", 2);
 
 // CRLite
 // This will reduce the number of times an OCSP server needs to be contacted and therefore increase privacy.
@@ -70,7 +72,7 @@ pref("dom.storage.next_gen", true);
 // Samesite Cookies /* experimental */
 pref("network.cookie.sameSite.laxByDefault", true);
 pref("network.cookie.sameSite.noneRequiresSecure", true);
-// pref("network.cookie.sameSite.schemeful", true); /* test in future builds */
+pref("network.cookie.sameSite.schemeful", true);
 
 
 /** CLEARING HISTORY DEFAULTS (MANUALLY) ***/
@@ -90,14 +92,13 @@ pref("privacy.sanitize.timeSpan", 0);
 // Reset default 'Time range to clear' for 'Clear Recent History'.
 // Firefox remembers your last choice. This will reset the value when you start Firefox.
 // 0=everything, 1=last hour, 2=last two hours, 3=last four hours, 4=today
-user_pref("privacy.sanitize.timeSpan", 0);
+pref("privacy.sanitize.timeSpan", 0);
 
 
 /*** PRELOADING ***/
 
 // disable DNS prefetching
 pref("network.dns.disablePrefetch", true);
-pref("network.dns.disablePrefetchFromHTTPS", true); /* default */
 
 // Preload the autocomplete URL in the address bar.
 // Firefox preloads URLs that autocomplete when a user types into the address bar.
@@ -125,7 +126,6 @@ pref("network.preload", true); /* default */
 // be needed rather than wait for the document to link those resources.
 pref("network.predictor.enabled", true); /* default */
 pref("network.predictor.enable-hover-on-ssl", true);
-pref("network.predictor.enable-prefetch", false); /* default */
 
 // New tab preload
 pref("browser.newtab.preload", true); /* default */
@@ -213,6 +213,8 @@ pref("security.mixed_content.upgrade_display_content", true);
 pref("security.mixed_content.block_object_subrequest", true);
 // Block insecure downloads from secure sites
 pref("dom.block_download_insecure", true);
+// allow PDFs to load javascript
+pref("pdfjs.enableScripting", false);
 
 // 3rd party extension install prompts
 // [1] https://bugzilla.mozilla.org/buglist.cgi?bug_id=1659530,1681331
