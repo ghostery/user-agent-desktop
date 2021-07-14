@@ -128,20 +128,6 @@
       "string": "En mode de navigation privée Ghostery, votre activité ne sera pas connue des autres utilisateurs de l'appareil. Les éléments suivants seront automatiquement supprimés de Ghostery Dawn en fin de session : <em>Historique de navigation</em><em>Historique de recherche</em><em>Cookies</em><em>Historique de téléchargement</em>Cependant, les fichiers que vous avez téléchargés seront conservés par votre appareil et les pages pour lesquelles vous avez créé un signet seront enregistrées."
     }
   },
-  "browser/browser/newInstallPage.ftl": {
-    "changed-desc-profiles": {
-      "string": "Cette installation de { -brand-short-name } a un nouveau profil. Un profil est un ensemble de fichiers où { -brand-short-name } enregistre des informations telles que les favoris, les mots de passe et les préférences de l'utilisateur."
-    },
-    "changed-desc-dedicated": {
-      "string": ""
-    },
-    "lost": {
-      "string": "<b>Vous n'avez perdu aucune donnée personnelle ni personnalisation.</b>"
-    },
-    "options-use-sync": {
-      "string": ""
-    }
-  },
   "browser/profile/bookmarks.inc": {
     "ghostery_heading": {
       "string": "Ghostery",

@@ -128,20 +128,6 @@
       "string": "In Ghostery’s private browsing mode, your activity will be kept confidential from others who use this device. The following will be automatically erased from Ghostery Dawn at the end of this session: <em>Browsing history</em><em>Search history</em><em>Cookies</em><em>Download history</em>However, files you download will be retained by your device and pages you bookmark will be saved."
     }
   },
-  "browser/browser/newInstallPage.ftl": {
-    "changed-desc-profiles": {
-      "string": "У установки { -brand-short-name } есть новый профиль. Профиль представляет собой набор файлов, в которых { -brand-short-name } хранит такую информацию как закладки, пароли и настройки пользователя."
-    },
-    "changed-desc-dedicated": {
-      "string": ""
-    },
-    "lost": {
-      "string": "<b>Личные данные и настройки не потеряны.</b>"
-    },
-    "options-use-sync": {
-      "string": ""
-    }
-  },
   "browser/profile/bookmarks.inc": {
     "ghostery_heading": {
       "string": "Ghostery",
