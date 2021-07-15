@@ -7,7 +7,7 @@ Subject: Hide Library -> Synced Tabs from the menu panel
  1 file changed, 5 insertions(+)
 
 diff --git a/browser/themes/shared/menupanel.inc.css b/browser/themes/shared/menupanel.inc.css
-index 5a422bf5ab..83b94bc4da 100644
+index 26c0a1a0a0..c88dc70919 100644
 --- a/browser/themes/shared/menupanel.inc.css
 +++ b/browser/themes/shared/menupanel.inc.css
 @@ -4,6 +4,11 @@
@@ -19,9 +19,9 @@ index 5a422bf5ab..83b94bc4da 100644
 +  display: none;
 +}
 +
- @supports not -moz-bool-pref("browser.proton.appmenu.enabled") {
+ @media not (-moz-proton) {
  #appMenu-new-window-button {
-   list-style-image: url(chrome://browser/skin/new-window.svg);
+   list-style-image: url(chrome://browser/skin/window.svg);
 -- 
-2.25.1
+2.32.0
 

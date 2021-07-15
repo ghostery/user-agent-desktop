@@ -2,6 +2,7 @@ From: Krzysztof Jan Modras <chrmod@chrmod.net>
 Date: Tue, 9 Mar 2021 15:08:27 +0100
 Subject: Ghostery Theme
 
+Fix theme
 ---
  browser/components/BrowserGlue.jsm            |   2 +
  .../customizableui/CustomizeMode.jsm          |   3 +
@@ -16,13 +17,13 @@ Subject: Ghostery Theme
  .../mozapps/extensions/content/aboutaddons.js |   8 +-
  .../extensions/content/ghostery-dynamic.svg   |  21 +++
  .../extensions/default-theme/experiment7.css  | 129 ++++++++++++++++++
- .../extensions/default-theme/manifest.json    |  27 ++--
+ .../extensions/default-theme/manifest.json    |  53 ++-----
  .../extensions/internal/XPIProvider.jsm       |  25 +++-
  toolkit/mozapps/extensions/jar.mn             |   2 +
  toolkit/themes/linux/global/toolbarbutton.css |   2 +-
  toolkit/themes/osx/global/toolbarbutton.css   |   2 +-
  .../themes/windows/global/toolbarbutton.css   |   2 +-
- 19 files changed, 273 insertions(+), 22 deletions(-)
+ 19 files changed, 271 insertions(+), 50 deletions(-)
  create mode 100644 browser/themes/addons/ghostery-dynamic/background-gradient-dark.svg
  create mode 100644 browser/themes/addons/ghostery-dynamic/background-gradient.svg
  create mode 100644 browser/themes/addons/ghostery-dynamic/icon.svg
@@ -31,19 +32,19 @@ Subject: Ghostery Theme
  create mode 100644 toolkit/mozapps/extensions/default-theme/experiment7.css
 
 diff --git a/browser/components/BrowserGlue.jsm b/browser/components/BrowserGlue.jsm
-index 81de0fb201..3d84f3207d 100644
+index 3adabc3ccc..1d3b70855b 100644
 --- a/browser/components/BrowserGlue.jsm
 +++ b/browser/components/BrowserGlue.jsm
-@@ -1355,6 +1355,7 @@ BrowserGlue.prototype = {
+@@ -1361,6 +1361,7 @@ BrowserGlue.prototype = {
  
      SessionStore.init();
  
 +    /*
      AddonManager.maybeInstallBuiltinAddon(
        "firefox-compact-light@mozilla.org",
-       "1.1",
-@@ -1370,6 +1371,7 @@ BrowserGlue.prototype = {
        "1.2",
+@@ -1377,6 +1378,7 @@ BrowserGlue.prototype = {
+       "1.4",
        "resource://builtin-themes/alpenglow/"
      );
 +    */
@@ -51,10 +52,10 @@ index 81de0fb201..3d84f3207d 100644
      if (AppConstants.MOZ_NORMANDY) {
        Normandy.init();
 diff --git a/browser/components/customizableui/CustomizeMode.jsm b/browser/components/customizableui/CustomizeMode.jsm
-index 7b97b88e79..8afdff69e0 100644
+index 8a64ec807d..19095e1f32 100644
 --- a/browser/components/customizableui/CustomizeMode.jsm
 +++ b/browser/components/customizableui/CustomizeMode.jsm
-@@ -96,9 +96,12 @@ const ALPENGLOW_THEME_ID = "firefox-alpenglow@mozilla.org";
+@@ -97,9 +97,12 @@ const ALPENGLOW_THEME_ID = "firefox-alpenglow@mozilla.org";
  
  const _defaultImportantThemes = [
    DEFAULT_THEME_ID,
@@ -166,33 +167,33 @@ index 5aa122b2ab..83349d2279 100644
 +  content/builtin-themes/ghostery-dynamic                     (ghostery-dynamic/*.css)
 +  content/builtin-themes/ghostery-dynamic/manifest.json       (ghostery-dynamic/manifest.json)
 diff --git a/browser/themes/shared/urlbar-searchbar.inc.css b/browser/themes/shared/urlbar-searchbar.inc.css
-index a01ddee72a..cdf279cee5 100644
+index 89e77b8ce9..7e2cd07c6c 100644
 --- a/browser/themes/shared/urlbar-searchbar.inc.css
 +++ b/browser/themes/shared/urlbar-searchbar.inc.css
-@@ -38,7 +38,8 @@
+@@ -35,7 +35,8 @@
  
  #urlbar-container,
  #search-container {
--  padding-block: 3px;
+-  padding-block: 4px;
 +  max-height: 34px;
 +  padding-block: 0px;
    margin-inline: @urlbarMarginInline@;
  }
  
 diff --git a/toolkit/locales/en-US/chrome/global/global-extension-fields.properties b/toolkit/locales/en-US/chrome/global/global-extension-fields.properties
-index 0fb1689b9f..eec3fd7cb3 100644
+index 4585aec57d..eec3fd7cb3 100644
 --- a/toolkit/locales/en-US/chrome/global/global-extension-fields.properties
 +++ b/toolkit/locales/en-US/chrome/global/global-extension-fields.properties
 @@ -3,5 +3,5 @@
  # file, You can obtain one at http://mozilla.org/MPL/2.0/.
  
  # LOCALIZATION NOTE (extension.default-theme@mozilla.org.name, extension.default-theme@mozilla.org.description): This is displayed in about:addons -> Appearance
--extension.default-theme@mozilla.org.name=Default
--extension.default-theme@mozilla.org.description=A theme with the operating system color scheme.
+-extension.default-theme@mozilla.org.name=System theme
+-extension.default-theme@mozilla.org.description=Follow the operating system setting for buttons, menus, and windows.
 +extension.default-theme@mozilla.org.name=Ghostery Private
 +extension.default-theme@mozilla.org.description=
 diff --git a/toolkit/modules/LightweightThemeConsumer.jsm b/toolkit/modules/LightweightThemeConsumer.jsm
-index 52da2fe9a7..c13073a9d8 100644
+index 3ee394a5d9..dbedec5158 100644
 --- a/toolkit/modules/LightweightThemeConsumer.jsm
 +++ b/toolkit/modules/LightweightThemeConsumer.jsm
 @@ -6,7 +6,7 @@ var EXPORTED_SYMBOLS = ["LightweightThemeConsumer"];
@@ -201,11 +202,11 @@ index 52da2fe9a7..c13073a9d8 100644
  
 -const DEFAULT_THEME_ID = "default-theme@mozilla.org";
 +const DEFAULT_THEME_ID = "__DOES_NOT_APPLY__"; // in Ghostery Browser default theme is a lightweight theme
+ const LIGHT_THEME_ID = "firefox-compact-light@mozilla.org";
+ const DARK_THEME_ID = "firefox-compact-dark@mozilla.org";
  
- ChromeUtils.defineModuleGetter(
-   this,
 diff --git a/toolkit/mozapps/extensions/content/aboutaddons.js b/toolkit/mozapps/extensions/content/aboutaddons.js
-index abab57dcb4..24ff99e14b 100644
+index ba4b4ec6c3..64604a85d8 100644
 --- a/toolkit/mozapps/extensions/content/aboutaddons.js
 +++ b/toolkit/mozapps/extensions/content/aboutaddons.js
 @@ -87,8 +87,9 @@ const EXTENSION_ICON_URL =
@@ -395,19 +396,19 @@ index 0000000000..83eba2e10f
 +  height: 0;
 +}
 diff --git a/toolkit/mozapps/extensions/default-theme/manifest.json b/toolkit/mozapps/extensions/default-theme/manifest.json
-index 05d6e0e19a..beeb290823 100644
+index 9646010b54..eaf848075c 100644
 --- a/toolkit/mozapps/extensions/default-theme/manifest.json
 +++ b/toolkit/mozapps/extensions/default-theme/manifest.json
-@@ -7,29 +7,26 @@
+@@ -7,33 +7,30 @@
      }
    },
  
--  "name": "Default",
--  "description": "A theme with the operating system color scheme.",
+-  "name": "System theme",
+-  "description": "Follow the operating system setting for buttons, menus, and windows.",
 -  "author": "Mozilla",
--  "version": "1.1",
+-  "version": "1.2",
 +  "name": "Ghostery Private",
-+  "description": "",
++   "description": "",
 +  "author": "Ghostery",
 +  "version": "1.7",
  
@@ -418,46 +419,75 @@ index 05d6e0e19a..beeb290823 100644
 -
 -  "dark_theme": {
      "colors": {
-       "tab_background_text": "rgb(249, 249, 250)",
-       "icons": "rgb(249, 249, 250, 0.7)",
--      "frame": "hsl(240, 5%, 5%)",
+       "tab_background_text": "#fbfbfe",
+       "tab_selected": "rgb(66,65,77)",
+       "tab_text": "rgb(251,251,254)",
+       "icons": "rgb(251,251,254)",
+-      "frame": "#1c1b22",
 +      "frame": "#12121c",
-       "popup": "#4a4a4f",
-       "popup_text": "rgb(249, 249, 250)",
-       "popup_border": "#27272b",
--      "tab_line": "#0a84ff",
--      "toolbar": "hsl(240, 1%, 20%)",
+       "popup": "rgb(66,65,77)",
+       "popup_text": "rgb(251,251,254)",
+       "popup_border": "rgb(82,82,94)",
+       "popup_highlight": "rgb(43,42,51)",
+-      "tab_line": "transparent",
+-      "toolbar": "#2b2a33",
+-      "toolbar_top_separator": "transparent",
 -      "toolbar_bottom_separator": "hsl(240, 5%, 5%)",
--      "toolbar_field": "rgb(71, 71, 73)",
--      "toolbar_field_border": "rgba(249, 249, 250, 0.2)",
+-      "toolbar_field": "rgb(28,27,34)",
+-      "toolbar_field_border": "transparent",
 +      "tab_line": "#36393f",
 +      "toolbar": "#36393f",
++      "toolbar_top_separator": "#12121c",
 +      "toolbar_bottom_separator": "#12121c",
 +      "toolbar_field": "#45484E",
 +      "toolbar_field_border": "#45484E",
-       "toolbar_field_separator": "#5F6670",
-       "toolbar_field_text": "rgb(249, 249, 250)",
-       "ntp_background": "#2A2A2E",
-@@ -38,5 +35,9 @@
-       "sidebar_text": "rgb(249, 249, 250)",
-       "sidebar_border": "rgba(255, 255, 255, 0.1)"
-     }
-+  },
-+
-+  "theme_experiment": {
+       "toolbar_field_text": "rgb(251,251,254)",
+       "toolbar_field_focus": "rgb(66,65,77)",
+       "toolbar_text": "rgb(251, 251, 254)",
+@@ -71,32 +68,6 @@
+   },
+ 
+   "theme_experiment": {
+-    "colors": {
+-      "button": "--button-bgcolor",
+-      "button_hover": "--button-hover-bgcolor",
+-      "button_active": "--button-active-bgcolor",
+-      "button_primary": "--button-primary-bgcolor",
+-      "button_primary_hover": "--button-primary-hover-bgcolor",
+-      "button_primary_active": "--button-primary-active-bgcolor",
+-      "button_primary_color": "--button-primary-color",
+-      "error_text_color": "--error-text-color",
+-      "input_background": "--input-bgcolor",
+-      "input_color": "--input-color",
+-      "input_border": "--input-border-color",
+-      "input_border_error": "--input-error-border-color",
+-      "zoom_controls": "--zoom-controls-bgcolor",
+-      "autocomplete_popup_separator": "--autocomplete-popup-separator-color",
+-      "appmenu_update_icon_color": "--panel-banner-item-update-supported-bgcolor",
+-      "appmenu_warning_icon_color": "--panel-banner-item-warning-icon-bgcolor",
+-      "appmenu_info_icon_color": "--panel-banner-item-info-icon-bgcolor",
+-      "tab_icon_overlay_stroke": "--tab-icon-overlay-stroke",
+-      "tab_icon_overlay_fill": "--tab-icon-overlay-fill"
+-    },
+-    "properties": {
+-      "panel_hover": "--arrowpanel-dimmed",
+-      "panel_active": "--arrowpanel-dimmed-further",
+-      "panel_active_darker": "--arrowpanel-dimmed-even-further",
+-      "toolbar_field_icon_opacity": "--urlbar-icon-fill-opacity"
+-    }
 +    "stylesheet": "experiment7.css"
    }
  }
 diff --git a/toolkit/mozapps/extensions/internal/XPIProvider.jsm b/toolkit/mozapps/extensions/internal/XPIProvider.jsm
-index ac5bdacb6d..6732e49625 100644
+index 0599e221ed..797a995444 100644
 --- a/toolkit/mozapps/extensions/internal/XPIProvider.jsm
 +++ b/toolkit/mozapps/extensions/internal/XPIProvider.jsm
-@@ -2470,9 +2470,14 @@ var XPIProvider = {
+@@ -2473,9 +2473,14 @@ var XPIProvider = {
  
        this.maybeInstallBuiltinAddon(
          "default-theme@mozilla.org",
--        "1.1",
-+        "1.7",
+-        "1.2",
++        "1.8",
          "resource://default-theme/"
        );
 +      this.maybeInstallBuiltinAddon(
@@ -468,7 +498,7 @@ index ac5bdacb6d..6732e49625 100644
  
        resolveProviderReady(Promise.all(this.startupPromises));
  
-@@ -2675,6 +2680,10 @@ var XPIProvider = {
+@@ -2678,6 +2683,10 @@ var XPIProvider = {
        logger.error("startup failed", e);
        AddonManagerPrivate.recordException("XPI", "startup failed", e);
      }
@@ -479,7 +509,7 @@ index ac5bdacb6d..6732e49625 100644
    },
  
    /**
-@@ -2920,6 +2929,20 @@ var XPIProvider = {
+@@ -2923,6 +2932,20 @@ var XPIProvider = {
      return installed;
    },
  
@@ -501,62 +531,62 @@ index ac5bdacb6d..6732e49625 100644
      return Array.from(XPIDatabase.getAddons()).filter(addon =>
        addon.dependencies.includes(aAddon.id)
 diff --git a/toolkit/mozapps/extensions/jar.mn b/toolkit/mozapps/extensions/jar.mn
-index eee530f7e8..7b59d4b203 100644
+index 10a7dd29a4..bd98d14e65 100644
 --- a/toolkit/mozapps/extensions/jar.mn
 +++ b/toolkit/mozapps/extensions/jar.mn
-@@ -21,6 +21,7 @@ toolkit.jar:
+@@ -19,6 +19,7 @@ toolkit.jar:
    content/mozapps/extensions/firefox-compact-dark.svg           (content/firefox-compact-dark.svg)
    content/mozapps/extensions/firefox-compact-light.svg          (content/firefox-compact-light.svg)
    content/mozapps/extensions/firefox-alpenglow.svg              (content/firefox-alpenglow.svg)
 +  content/mozapps/extensions/ghostery-dynamic.svg               (content/ghostery-dynamic.svg)
-   content/mozapps/extensions/message-bar.css                    (content/message-bar.css)
-   content/mozapps/extensions/message-bar.js                     (content/message-bar.js)
-   content/mozapps/extensions/named-deck.js                      (content/named-deck.js)
-@@ -34,4 +35,5 @@ toolkit.jar:
+   content/mozapps/extensions/panel-list.css                     (content/panel-list.css)
+   content/mozapps/extensions/panel-item.css                     (content/panel-item.css)
+   content/mozapps/extensions/rating-star.css                    (content/rating-star.css)
+@@ -29,4 +30,5 @@ toolkit.jar:
  % resource default-theme %content/mozapps/extensions/default-theme/
    content/mozapps/extensions/default-theme/icon.svg             (default-theme/icon.svg)
    content/mozapps/extensions/default-theme/manifest.json        (default-theme/manifest.json)
 +  content/mozapps/extensions/default-theme/experiment7.css      (default-theme/experiment7.css)
  #endif
 diff --git a/toolkit/themes/linux/global/toolbarbutton.css b/toolkit/themes/linux/global/toolbarbutton.css
-index 910e0a64b2..b6965ead5b 100644
+index a29aad0271..8e4f2d868c 100644
 --- a/toolkit/themes/linux/global/toolbarbutton.css
 +++ b/toolkit/themes/linux/global/toolbarbutton.css
 @@ -84,7 +84,7 @@ toolbarbutton:-moz-lwtheme:not(:hover, [checked="true"], [open="true"], [disable
    box-shadow: 0 1px 0 hsla(0, 100%, 100%, .2) inset,
                0 -1px 0 hsla(0, 0%, 0%, .1) inset,
                0 1px 0 hsla(206, 50%, 10%, .2);
--  margin: -6px 0 0 !important;
+-  margin: -5px 0 0 !important;
 +  margin: -4px 0 0 !important;
-   margin-inline-end: -8px !important;
+   margin-inline-end: -4px !important;
    min-width: 14px;
    max-width: 24px;
 diff --git a/toolkit/themes/osx/global/toolbarbutton.css b/toolkit/themes/osx/global/toolbarbutton.css
-index 90c346456e..6bad5c7fd5 100644
+index b0a4033316..2ed5a27df3 100644
 --- a/toolkit/themes/osx/global/toolbarbutton.css
 +++ b/toolkit/themes/osx/global/toolbarbutton.css
 @@ -47,7 +47,7 @@ toolbarbutton[disabled="true"] {
    box-shadow: 0 1px 0 hsla(0, 100%, 100%, .2) inset,
                0 -1px 0 hsla(0, 0%, 0%, .1) inset,
                0 1px 0 hsla(206, 50%, 10%, .2);
--  margin: -6px 0 0 !important;
+-  margin: -5px 0 0 !important;
 +  margin: -4px 0 0 !important;
-   margin-inline-end: -6px !important;
+   margin-inline-end: -4px !important;
    min-width: 14px;
    max-width: 24px;
 diff --git a/toolkit/themes/windows/global/toolbarbutton.css b/toolkit/themes/windows/global/toolbarbutton.css
-index 14aa94d92a..c003b40168 100644
+index edfbbdcb71..b313aa51bf 100644
 --- a/toolkit/themes/windows/global/toolbarbutton.css
 +++ b/toolkit/themes/windows/global/toolbarbutton.css
 @@ -90,7 +90,7 @@ toolbarbutton[disabled="true"] {
    box-shadow: 0 1px 0 hsla(0, 100%, 100%, .2) inset,
                0 -1px 0 hsla(0, 0%, 0%, .1) inset,
                0 1px 0 hsla(206, 50%, 10%, .2);
--  margin: -6px 0 0 !important;
+-  margin: -5px 0 0 !important;
 +  margin: -4px 0 0 !important;
-   margin-inline-end: -8px !important;
+   margin-inline-end: -4px !important;
    min-width: 14px;
    max-width: 24px;
 -- 
-2.25.1
+2.32.0
 

@@ -10,7 +10,7 @@
 0010-Hide-Recommend-as-you-browse-preferences.patch
 0011-Update-default-bookmarks-to-Ghostery-specific-ones.patch
 0012-Hide-Learn-More-links-in-preferences.patch
-0013-Remove-Report-Deceptive-Site-from-help-m.patch
+0013-Remove-Report-Deceptive-Site-from-help-menubar.patch
 0014-Update-uninstaller-survey-URL.patch
 0015-Update-strings-for-windows-module-manifest.patch
 0016-Fix-installer-trademark-info.patch
@@ -30,10 +30,9 @@
 0030-Hide-addon-recommendation-badge.patch
 0031-Disable-ion-pioneer-studies.patch
 0032-Hide-learn-more-link-on-network-error-pages.patch
-0033-Remove-Firefox-strings-for-new-install-page.patch
-0034-OpenURL-on-buildID-changes.patch
-0035-Ignore-the-glinter.patch
-0036-Replace-New-Tab-with-Ghostery-New-Tab-Addon.patch
-0037-Better-Fox-integration.patch
-0038-Default-top-sites.patch
-0039-Disable-package-duplicates-detection.patch
+0033-OpenURL-on-buildID-changes.patch
+0034-Ignore-the-glinter.patch
+0035-Replace-New-Tab-with-Ghostery-New-Tab-Addon.patch
+0036-Better-Fox-integration.patch
+0037-Default-top-sites.patch
+0038-Disable-package-duplicates-detection.patch
