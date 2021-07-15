@@ -8,7 +8,7 @@ Subject: Custom brand styling on new private window
  2 files changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/browser/components/privatebrowsing/content/aboutPrivateBrowsing.html b/browser/components/privatebrowsing/content/aboutPrivateBrowsing.html
-index 4d22812723..993438d22e 100644
+index f8a17646a6..5904b8438e 100644
 --- a/browser/components/privatebrowsing/content/aboutPrivateBrowsing.html
 +++ b/browser/components/privatebrowsing/content/aboutPrivateBrowsing.html
 @@ -11,6 +11,7 @@
@@ -17,21 +17,21 @@ index 4d22812723..993438d22e 100644
      <link rel="stylesheet" href="chrome://browser/skin/privatebrowsing/aboutPrivateBrowsing.css" media="all"/>
 +    <link rel="stylesheet" href="chrome://branding/content/aboutPrivateBrowsing.css" media="all"/>
      <link rel="localization" href="branding/brand.ftl"/>
-     <link rel="localization" href="browser/branding/brandings.ftl">
+     <link rel="localization" href="browser/branding/brandings.ftl"/>
      <link rel="localization" href="browser/aboutPrivateBrowsing.ftl"/>
 diff --git a/browser/themes/shared/tabs.inc.css b/browser/themes/shared/tabs.inc.css
-index 98dda4d7ef..0590d11591 100644
+index 644d8d5fc9..d6928d3e76 100644
 --- a/browser/themes/shared/tabs.inc.css
 +++ b/browser/themes/shared/tabs.inc.css
-@@ -45,7 +45,7 @@
+@@ -23,7 +23,7 @@
  
- :root[privatebrowsingmode=temporary] #tabbrowser-tabpanels {
+ :root[privatebrowsingmode=temporary] {
    /* Value for --in-content-page-background in aboutPrivateBrowsing.css */
--  background-color: #25003e;
-+  background-color: #36393f;
+-  --tabpanel-background-color: #25003e;
++  --tabpanel-background-color: #36393f;
  }
  
- @media (prefers-color-scheme: dark) {
+ @media (-moz-proton) {
 -- 
-2.25.1
+2.32.0
 

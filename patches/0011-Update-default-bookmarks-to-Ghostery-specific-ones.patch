@@ -2,12 +2,13 @@ From: Sam Macbeth <sam@cliqz.com>
 Date: Sat, 6 Mar 2021 13:28:38 +0100
 Subject: Update default bookmarks to Ghostery-specific ones
 
+Fix bookmarks
 ---
  browser/locales/generic/profile/bookmarks.html.in | 12 ++++++------
  1 file changed, 6 insertions(+), 6 deletions(-)
 
 diff --git a/browser/locales/generic/profile/bookmarks.html.in b/browser/locales/generic/profile/bookmarks.html.in
-index 3f9728d9c2..af8f4e1d98 100644
+index c5ac0b45d9..af8f4e1d98 100644
 --- a/browser/locales/generic/profile/bookmarks.html.in
 +++ b/browser/locales/generic/profile/bookmarks.html.in
 @@ -10,6 +10,8 @@
@@ -28,7 +29,7 @@ index 3f9728d9c2..af8f4e1d98 100644
 -    <p><dt><h3>@firefox_heading@</h3></dt>
 +    <p><dt><h3>@ghostery_heading@</h3></dt>
          <dl><p>
--            <dt><a href="https://support.mozilla.org/@AB_CD@/products/firefox" icon="@firefox_icon@">@firefox_help@</a>
+-            <dt><a href="https://support.mozilla.org/@AB_CD@/products/firefox" icon="@firefox_icon@">@firefox_get_help@</a>
 -            <dt><a href="https://support.mozilla.org/@AB_CD@/kb/customize-firefox-controls-buttons-and-toolbars?utm_source=firefox-browser&utm_medium=default-bookmarks&utm_campaign=customize" icon="@firefox_icon@">@firefox_customize@</a>
 -            <dt><a href="https://www.mozilla.org/@AB_CD@/contribute/" icon="@mozilla_icon@">@firefox_community@</a>
 -            <dt><a href="https://www.mozilla.org/@AB_CD@/about/" icon="@mozilla_icon@">@firefox_about@</a>
@@ -39,5 +40,5 @@ index 3f9728d9c2..af8f4e1d98 100644
  #else
          <dl>
 -- 
-2.25.1
+2.32.0
 

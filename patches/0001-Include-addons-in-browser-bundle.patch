@@ -3,19 +3,23 @@ Date: Fri, 21 Aug 2020 13:35:37 +0200
 Subject: Include addons in browser bundle
 
 ---
- browser/extensions/moz.build | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ browser/extensions/moz.build | 3 +++
+ 1 file changed, 3 insertions(+)
 
 diff --git a/browser/extensions/moz.build b/browser/extensions/moz.build
-index 0eb3c53e76..b37208ee92 100644
+index 1ab9167d87..ebdaad482a 100644
 --- a/browser/extensions/moz.build
 +++ b/browser/extensions/moz.build
-@@ -4,4 +4,4 @@
- # License, v. 2.0. If a copy of the MPL was not distributed with this
- # file, You can obtain one at http://mozilla.org/MPL/2.0/.
+@@ -11,6 +11,9 @@ DIRS += [
+     "webcompat",
+     "report-site-issue",
+     "pictureinpicture",
++    "ghostery",
++    "ghostery-search",
++    "ghostery-newtab",
+ ]
  
--DIRS += ["doh-rollout", "formautofill", "screenshots", "webcompat", "report-site-issue"]
-+DIRS += ["doh-rollout", "formautofill", "screenshots", "webcompat", "report-site-issue", "ghostery", "ghostery-search", "ghostery-newtab"]
+ if CONFIG["NIGHTLY_BUILD"]:
 -- 
-2.25.1
+2.32.0
 

@@ -7,10 +7,10 @@ Subject: Fix installer trademark info
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/browser/installer/windows/nsis/defines.nsi.in b/browser/installer/windows/nsis/defines.nsi.in
-index 441e2cf423..076b9c9cf6 100644
+index d15f6713c9..2368b7bf05 100644
 --- a/browser/installer/windows/nsis/defines.nsi.in
 +++ b/browser/installer/windows/nsis/defines.nsi.in
-@@ -141,7 +141,7 @@ VIProductVersion "1.0.0.0"
+@@ -137,7 +137,7 @@ VIProductVersion "1.0.0.0"
  VIAddVersionKey "ProductName"     "${BrandShortName}"
  VIAddVersionKey "CompanyName"     "${CompanyName}"
  #ifdef MOZ_OFFICIAL_BRANDING
@@ -20,5 +20,5 @@ index 441e2cf423..076b9c9cf6 100644
  VIAddVersionKey "LegalCopyright"  "${CompanyName}"
  VIAddVersionKey "FileVersion"     "${AppVersion}"
 -- 
-2.25.1
+2.32.0
 

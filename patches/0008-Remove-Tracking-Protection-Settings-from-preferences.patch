@@ -7,10 +7,10 @@ Subject: Remove Tracking Protection Settings from preferences
  1 file changed, 3 insertions(+)
 
 diff --git a/browser/themes/shared/preferences/privacy.css b/browser/themes/shared/preferences/privacy.css
-index 8bc856f8af..07da15a167 100644
+index 5e830c19af..5f52e6f964 100644
 --- a/browser/themes/shared/preferences/privacy.css
 +++ b/browser/themes/shared/preferences/privacy.css
-@@ -113,6 +113,9 @@
+@@ -76,6 +76,9 @@
  }
  
  /* Content Blocking */
@@ -21,5 +21,5 @@ index 8bc856f8af..07da15a167 100644
  /* Override styling that sets descriptions as grey */
  #trackingGroup description.indent,
 -- 
-2.25.1
+2.32.0
 

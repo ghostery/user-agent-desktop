@@ -5,7 +5,6 @@ const { getRoot } = require("../core/workspace.js");
 const replacePaths = [
   ["browser", "chrome", "overrides", "appstrings.properties"],
   ["devtools", "startup", "aboutDevTools.ftl"],
-  ["browser", "browser", "newInstallPage.ftl"]
 ];
 
 function getPathToLocaleFile(filePath, locale, root) {
