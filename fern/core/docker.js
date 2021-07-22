@@ -10,7 +10,7 @@ const { getRoot } = require("./workspace.js");
 
 const MOZ_FETCHES_DIR = "/builds/worker/fetches/";
 
-const SKIP_TOOLCHAINS = new Set(['win64-pdbstr', 'macosx64-sdk-11.0'])
+const SKIP_TOOLCHAINS = new Set(['win64-pdbstr', 'macosx64-sdk-11.0', 'macosx64-sdk-10.12'])
 
 async function loadFetches(root) {
   return yaml.safeLoad(

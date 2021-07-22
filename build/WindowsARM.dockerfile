@@ -2,7 +2,7 @@ FROM ua-build-base
 
 ARG IPFS_GATEWAY=https://cloudflare-ipfs.com
 
-ENV TOOLTOOL_MANIFEST=browser/config/tooltool-manifests/win64/aarch64.manifest \
+ENV TOOLTOOL_MANIFEST=browser/config/tooltool-manifests/vs2017-15.9.manifest \
     PERFHERDER_EXTRA_OPTIONS=aarch64 \
     MOZ_AUTOMATION_PACKAGE_TESTS=1
 
@@ -24,67 +24,67 @@ RUN /builds/worker/bin/fetch-content static-url \
     unzip upx-3.95-win64.zip && \
     rm upx-3.95-win64.zip
 
-RUN wget -nv -O /builds/worker/fetches/binutils.tar.xz $IPFS_GATEWAY/ipfs/QmeFSdGiyZiCXeJHkdgnG5GnfN9HTUUMR9na2nU1jZHLyx && \
+RUN wget -nv -O /builds/worker/fetches/binutils.tar.xz $IPFS_GATEWAY/ipfs/QmcG91LC64zVz1NJgH9RXMTPs3bdCLtMkRaxax6LRWKXBL && \
     cd /builds/worker/fetches/ && \
     tar -xf binutils.tar.xz && \
     rm binutils.tar.xz
 
-RUN wget -nv -O /builds/worker/fetches/clang.tar.zst $IPFS_GATEWAY/ipfs/QmVzxQyDLKq7R59VaFdhfwdB9EKPrF3mY2hkx13L9fdxhA && \
+RUN wget -nv -O /builds/worker/fetches/clang.tar.zst $IPFS_GATEWAY/ipfs/QmbXKQ2TDSyJJLNfqeUQSFN5MKW4Ua1Mb9uAmX9sJuY9UW && \
     cd /builds/worker/fetches/ && \
     tar -xf clang.tar.zst && \
     rm clang.tar.zst
 
-RUN wget -nv -O /builds/worker/fetches/rustc.tar.zst $IPFS_GATEWAY/ipfs/QmXLE9cRR2h82Dhds6i3n8ACsZY9yA31K8ce31Fux5BD31 && \
+RUN wget -nv -O /builds/worker/fetches/rustc.tar.zst $IPFS_GATEWAY/ipfs/QmUxb7HJG3DZKL8rBy36ADE4CT2Z5fUxeaWYj7sAFku7h3 && \
     cd /builds/worker/fetches/ && \
     tar -xf rustc.tar.zst && \
     rm rustc.tar.zst
 
-RUN wget -nv -O /builds/worker/fetches/rust-size.tar.xz $IPFS_GATEWAY/ipfs/QmRnEqBQJLiJxpvSbrFQu8XrWwzdRGV73stsStUz4KgJPK && \
+RUN wget -nv -O /builds/worker/fetches/rust-size.tar.xz $IPFS_GATEWAY/ipfs/QmTzjvoUMZN3XrriJH5j2hHRCeV1sGAHmAeJvS1zY4MWz6 && \
     cd /builds/worker/fetches/ && \
     tar -xf rust-size.tar.xz && \
     rm rust-size.tar.xz
 
-RUN wget -nv -O /builds/worker/fetches/nasm.tar.bz2 $IPFS_GATEWAY/ipfs/QmRQxpSb2kM7BnG39FVGmKLcLZMr7ni87RC79m6UaVewgt && \
+RUN wget -nv -O /builds/worker/fetches/nasm.tar.bz2 $IPFS_GATEWAY/ipfs/QmPCrsLuw4zZEG7qbua6yv62gkCLpQ4UFuTMxNFLFhpM3E && \
     cd /builds/worker/fetches/ && \
     tar -xf nasm.tar.bz2 && \
     rm nasm.tar.bz2
 
-RUN wget -nv -O /builds/worker/fetches/node.tar.xz $IPFS_GATEWAY/ipfs/QmSgLsqyDiZrv5vTsVKqMNVk1Ai6mvZhL4GLKVFor6aotJ && \
+RUN wget -nv -O /builds/worker/fetches/node.tar.zst $IPFS_GATEWAY/ipfs/QmduJzrgXnLXndunw2KWwMpMQTSHV96QkmVeoVd8nBvX59 && \
     cd /builds/worker/fetches/ && \
-    tar -xf node.tar.xz && \
-    rm node.tar.xz
+    tar -xf node.tar.zst && \
+    rm node.tar.zst
 
-RUN wget -nv -O /builds/worker/fetches/cbindgen.tar.xz $IPFS_GATEWAY/ipfs/QmcRVCUDD3464tJ239X5XkbaTSFHDZnKPQbw2Rxp8Q4DvC && \
+RUN wget -nv -O /builds/worker/fetches/cbindgen.tar.xz $IPFS_GATEWAY/ipfs/QmcE5AzXiXsyX5sEJZXd9f3EMRPGY6Ykg6u5uKebCatWUf && \
     cd /builds/worker/fetches/ && \
     tar -xf cbindgen.tar.xz && \
     rm cbindgen.tar.xz
 
-RUN wget -nv -O /builds/worker/fetches/sccache.tar.xz $IPFS_GATEWAY/ipfs/QmWEBpqfYwLhBfr66ASqaTkfY6tGSC5wLKYtj6DKDMRG6T && \
+RUN wget -nv -O /builds/worker/fetches/sccache.tar.xz $IPFS_GATEWAY/ipfs/QmYYVhmiQoEBTNETfk7snrTJ5VJRDuLkyTSyd1tcUvj3cS && \
     cd /builds/worker/fetches/ && \
     tar -xf sccache.tar.xz && \
     rm sccache.tar.xz
 
-RUN wget -nv -O /builds/worker/fetches/dump_syms.tar.xz $IPFS_GATEWAY/ipfs/QmdLTjhbkCuUbN5TraCuLh41jdsF7QEy4ZmDhByziwcQoY && \
+RUN wget -nv -O /builds/worker/fetches/dump_syms.tar.xz $IPFS_GATEWAY/ipfs/QmWcC3yRQXdHrDDwrJGkvTNxj5xrsjYNNEXVKrPud429VP && \
     cd /builds/worker/fetches/ && \
     tar -xf dump_syms.tar.xz && \
     rm dump_syms.tar.xz
 
-RUN wget -nv -O /builds/worker/fetches/wine.tar.xz $IPFS_GATEWAY/ipfs/Qma6tgysiwd3TGpS4hdempt1m7Ev6FsZbbPiGvJAzcECVU && \
+RUN wget -nv -O /builds/worker/fetches/wine.tar.xz $IPFS_GATEWAY/ipfs/QmT73n1moFxFfHhd4qYAndfHuECKbeHa52FVtpvdHLDoyJ && \
     cd /builds/worker/fetches/ && \
     tar -xf wine.tar.xz && \
     rm wine.tar.xz
 
-RUN wget -nv -O /builds/worker/fetches/liblowercase.tar.xz $IPFS_GATEWAY/ipfs/QmNsQXu998cJ2iR5qMKCQQRpWgwFrBKVJLUu5azVbuU8U7 && \
+RUN wget -nv -O /builds/worker/fetches/liblowercase.tar.xz $IPFS_GATEWAY/ipfs/QmP9mEruB9iVcjWNBxeigEzyr3nNnexmqQNW7oouHewR8y && \
     cd /builds/worker/fetches/ && \
     tar -xf liblowercase.tar.xz && \
     rm liblowercase.tar.xz
 
-RUN wget -nv -O /builds/worker/fetches/winchecksec.tar.bz2 $IPFS_GATEWAY/ipfs/QmeX3eMz11KBsCKd5tXM5mt3YCxfbafBZZLbeWDe2teVi1 && \
+RUN wget -nv -O /builds/worker/fetches/winchecksec.tar.bz2 $IPFS_GATEWAY/ipfs/QmfKctjJLWSGjVpRpfMR4Lqo3T8cetXorznunZhK74EtRE && \
     cd /builds/worker/fetches/ && \
     tar -xf winchecksec.tar.bz2 && \
     rm winchecksec.tar.bz2
 
-RUN wget -nv -O /builds/worker/fetches/dump_syms.tar.bz2 $IPFS_GATEWAY/ipfs/QmYYrHMTw2GQvdKmVBSXfScMw8Hecr2MHf525ESjkooj5b && \
+RUN wget -nv -O /builds/worker/fetches/dump_syms.tar.bz2 $IPFS_GATEWAY/ipfs/QmTrZUBQGPf5TywxAwBhKKfZDpCFNnGzAkcXoFqCiGM7AA && \
     cd /builds/worker/fetches/ && \
     tar -xf dump_syms.tar.bz2 && \
     rm dump_syms.tar.bz2
