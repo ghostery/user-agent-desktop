@@ -128,20 +128,6 @@
       "string": "Im privaten Ghostery-Surfmodus bleiben Ihre Aktivitäten vor anderen Benutzern dieses Geräts verborgen. Folgende Daten werden am Ende der Sitzung automatisch aus Ghostery Dawn gelöscht: <em>Browserverlauf</em>, <em>Suchverlauf</em>, <em>Cookies</em> und <em>Download-Verlauf</em>. Dateien, die Sie auf Ihr Gerät herunterladen, und Seiten, die Sie mit einem Lesezeichen markieren, werden jedoch gespeichert."
     }
   },
-  "browser/browser/newInstallPage.ftl": {
-    "changed-desc-profiles": {
-      "string": "Diese Installation von { -brand-short-name } nutzt jetzt ein neues Profil. Ein Profil ist eine Gruppe von Dateien, in welchen Daten wie Lesezeichen, Passwörter und vom Benutzer geänderte Einstellungen gespeichert werden."
-    },
-    "changed-desc-dedicated": {
-      "string": ""
-    },
-    "lost": {
-      "string": "<b>Es sind keine persönlichen Daten oder Anpassungen verloren gegangen.</b>"
-    },
-    "options-use-sync": {
-      "string": ""
-    }
-  },
   "browser/profile/bookmarks.inc": {
     "ghostery_heading": {
       "string": "Ghostery",

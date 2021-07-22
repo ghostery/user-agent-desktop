@@ -13,7 +13,7 @@ index 5ef8d2a02a..143151a29b 100644
 +++ b/browser/app/module.ver
 @@ -1,8 +1,8 @@
 -WIN32_MODULE_COMPANYNAME=Mozilla Corporation
--WIN32_MODULE_COPYRIGHT=©Firefox and Mozilla Developers; available under the MPL 2 license.
+-WIN32_MODULE_COPYRIGHT=ï¿½Firefox and Mozilla Developers; available under the MPL 2 license.
 +WIN32_MODULE_COMPANYNAME=Ghostery Inc.
 +WIN32_MODULE_COPYRIGHT=Ghostery Inc.; available under the MPL 2 license.
  WIN32_MODULE_PRODUCTVERSION=@MOZ_APP_WINVERSION@
@@ -33,6 +33,6 @@ index 8abbd23f0e..af50bc1fef 100644
  WIN32_MODULE_PRODUCTVERSION=@MOZ_APP_WINVERSION@
  WIN32_MODULE_PRODUCTVERSION_STRING=@MOZ_APP_VERSION@
  WIN32_MODULE_DESCRIPTION=Plugin Container for @MOZ_APP_DISPLAYNAME@
---
-2.28.0
+-- 
+2.32.0
 

@@ -5,15 +5,15 @@ Subject: Remove tracking protection panel from url bar
 ---
  browser/base/content/browser-siteIdentity.js |  8 ++++----
  browser/base/content/browser.js              | 20 ++++++++++----------
- browser/base/content/browser.xhtml           |  6 ++++--
- 3 files changed, 18 insertions(+), 16 deletions(-)
+ browser/base/content/browser.xhtml           |  4 +++-
+ 3 files changed, 17 insertions(+), 15 deletions(-)
 
 diff --git a/browser/base/content/browser-siteIdentity.js b/browser/base/content/browser-siteIdentity.js
-index 01d47f0907..f5267471c2 100644
+index 35f88104a8..6c4cfeafe1 100644
 --- a/browser/base/content/browser-siteIdentity.js
 +++ b/browser/base/content/browser-siteIdentity.js
-@@ -895,10 +895,10 @@ var gIdentityHandler = {
-     gPermissionPanel.refreshPermissionIcons();
+@@ -911,10 +911,10 @@ var gIdentityHandler = {
+     }
  
      // Hide the shield icon if it is a chrome page.
 -    gProtectionsHandler._trackingProtectionIconContainer.classList.toggle(
@@ -28,10 +28,10 @@ index 01d47f0907..f5267471c2 100644
  
    /**
 diff --git a/browser/base/content/browser.js b/browser/base/content/browser.js
-index 27d8911d61..bdd4f42a70 100644
+index bd4269e232..edb83c53cf 100644
 --- a/browser/base/content/browser.js
 +++ b/browser/base/content/browser.js
-@@ -1971,7 +1971,7 @@ var gBrowserInit = {
+@@ -1943,7 +1943,7 @@ var gBrowserInit = {
  
      BookmarkingUI.init();
      BrowserSearch.delayedStartupInit();
@@ -40,7 +40,7 @@ index 27d8911d61..bdd4f42a70 100644
      HomePage.delayedStartup().catch(Cu.reportError);
  
      let safeMode = document.getElementById("helpSafeMode");
-@@ -2568,7 +2568,7 @@ var gBrowserInit = {
+@@ -2536,7 +2536,7 @@ var gBrowserInit = {
        Services.prefs.removeObserver(ctrlTab.prefName, ctrlTab);
        ctrlTab.uninit();
        gBrowserThumbnails.uninit();
@@ -49,7 +49,7 @@ index 27d8911d61..bdd4f42a70 100644
        FullZoom.destroy();
  
        Services.obs.removeObserver(gIdentityHandler, "perm-changed");
-@@ -5071,7 +5071,7 @@ var XULBrowserWindow = {
+@@ -5069,7 +5069,7 @@ var XULBrowserWindow = {
      const nsIWebProgressListener = Ci.nsIWebProgressListener;
  
      let browser = gBrowser.selectedBrowser;
@@ -58,16 +58,16 @@ index 27d8911d61..bdd4f42a70 100644
  
      if (
        aStateFlags & nsIWebProgressListener.STATE_START &&
-@@ -5214,7 +5214,7 @@ var XULBrowserWindow = {
+@@ -5231,7 +5231,7 @@ var XULBrowserWindow = {
  
-       gPermissionPanel.onLocationChange();
+     gPermissionPanel.onLocationChange();
  
--      gProtectionsHandler.onLocationChange();
-+      // gProtectionsHandler.onLocationChange();
+-    gProtectionsHandler.onLocationChange();
++    // gProtectionsHandler.onLocationChange();
  
-       BrowserPageActions.onLocationChange();
+     BrowserPageActions.onLocationChange();
  
-@@ -5363,12 +5363,12 @@ var XULBrowserWindow = {
+@@ -5380,12 +5380,12 @@ var XULBrowserWindow = {
        );
      }
  
@@ -87,7 +87,7 @@ index 27d8911d61..bdd4f42a70 100644
      // We need the state of the previous content blocking event, so update
      // event after onContentBlockingEvent is called.
 diff --git a/browser/base/content/browser.xhtml b/browser/base/content/browser.xhtml
-index 0a1090292f..ded22553bd 100644
+index 178cb69eef..c2103dcc71 100644
 --- a/browser/base/content/browser.xhtml
 +++ b/browser/base/content/browser.xhtml
 @@ -71,7 +71,7 @@
@@ -99,24 +99,15 @@ index 0a1090292f..ded22553bd 100644
    <link rel="localization" href="browser/appmenu.ftl"/>
    <link rel="localization" href="preview/interventions.ftl"/>
    <link rel="localization" href="browser/sidebarMenu.ftl"/>
-@@ -633,7 +633,7 @@
- #include ../../components/customizableui/content/panelUI.inc.xhtml
- #include ../../components/controlcenter/content/identityPanel.inc.xhtml
- #include ../../components/controlcenter/content/permissionPanel.inc.xhtml
--#include ../../components/controlcenter/content/protectionsPanel.inc.xhtml
-+<!-- #include ../../components/controlcenter/content/protectionsPanel.inc.xhtml -->
- #include ../../components/downloads/content/downloadsPanel.inc.xhtml
- #include ../../../devtools/startup/enableDevToolsPopup.inc.xhtml
- #include browser-allTabsMenu.inc.xhtml
-@@ -763,6 +763,7 @@
-                         oncommand="gSync.toggleAccountPanel('PanelUI-fxa', this, event)"/>
+@@ -759,6 +759,7 @@
+                         oncommand="gSync.toggleAccountPanel(this, event)"/>
          </toolbaritem>
          <toolbarseparator class="sync-ui-item"/>
 +        <!--
          <toolbaritem>
            <toolbarbutton id="appMenu-protection-report-button"
                 class="subviewbutton subviewbutton-iconic"
-@@ -774,6 +775,7 @@
+@@ -770,6 +771,7 @@
              </label>
            </toolbarbutton>
          </toolbaritem>
@@ -125,5 +116,5 @@ index 0a1090292f..ded22553bd 100644
          <toolbarbutton id="appMenu-new-window-button"
                         class="subviewbutton subviewbutton-iconic"
 -- 
-2.25.1
+2.32.0
 

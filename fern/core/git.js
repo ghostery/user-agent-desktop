@@ -184,13 +184,17 @@ function exportPatches(root, version, locales) {
     tasks.push({
       title: `Export translation patches: ${locale}`,
       task: () =>
-        withCwd(`l10n/${locale}`, () =>
-          exportPatchesToFolder(
-            path.join(root, "l10n-patches", locale),
-            `mozhg-${locales[locale]}`,
-            1
-          )
-        ),
+        withCwd(`l10n/${locale}`, async () => {
+          try {
+            await exportPatchesToFolder(
+              path.join(root, "l10n-patches", locale),
+              `mozhg-${locales[locale]}`,
+              1
+            );
+          } catch (e) {
+            // nothing to do
+          }
+        }),
     });
   });
   return new Listr(tasks);

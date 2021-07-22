@@ -27,6 +27,8 @@ VOLUME /builds/worker/checkouts
 VOLUME /builds/worker/workspace
 VOLUME /builds/worker/tooltool-cache
 
+
+
 RUN dpkg --add-architecture $ARCH
 RUN apt-get update && \
     apt-get dist-upgrade -y  && \
@@ -35,7 +37,6 @@ RUN apt-get update && \
       apt-transport-https \
       ca-certificates \
       # from debian-base
-      git \
       less \
       make \
       patch \
@@ -50,7 +51,6 @@ RUN apt-get update && \
       build-essential \
       devscripts \
       fakeroot \
-      git \
       # from debian-build
       autoconf2.13 \
       automake \
@@ -100,6 +100,12 @@ RUN apt-get update && \
       libnss3-tools \
       locales \
       liblzma-dev
+
+RUN apt -y install software-properties-common dirmngr apt-transport-https lsb-release ca-certificates && \
+    add-apt-repository -y "deb http://ppa.launchpad.net/git-core/ppa/ubuntu eoan main" && \
+    apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A1715D88E1DF1F24 && \
+    apt-get update && \
+    apt-get install -y git
 
 # custom
 RUN pip3 install zstandard pip-tools==5.5.0 mar balrogclient

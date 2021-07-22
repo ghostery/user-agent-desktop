@@ -9,18 +9,18 @@ Subject: Remove Lockwise branding in about:logins
  3 files changed, 13 insertions(+), 5 deletions(-)
 
 diff --git a/browser/components/aboutlogins/content/aboutLogins.html b/browser/components/aboutlogins/content/aboutLogins.html
-index 9fc32a2416..4c29dc67c6 100644
+index f32666b006..a9afb2ed13 100644
 --- a/browser/components/aboutlogins/content/aboutLogins.html
 +++ b/browser/components/aboutlogins/content/aboutLogins.html
-@@ -228,6 +228,7 @@
+@@ -229,6 +229,7 @@
        <img class="illustration" src="chrome://browser/content/aboutlogins/icons/intro-illustration.svg"/>
-       <h1 class="heading" data-l10n-id="about-logins-login-intro-heading-logged-out"></h1>
+       <h1 class="heading" data-l10n-id="about-logins-login-intro-heading-logged-out2"></h1>
        <section>
 +        <!--
          <p class="description" data-l10n-id="login-intro-description"></p>
          <ul>
-           <li data-l10n-id="login-intro-instruction-fxa"></li>
-@@ -236,13 +237,16 @@
+           <li data-l10n-id="login-intro-instructions-fxa"></li>
+@@ -237,13 +238,16 @@
              <a data-l10n-name="help-link" class="intro-help-link" target="_blank" rel="noreferrer"></a>
            </li>
          </ul>
@@ -38,7 +38,7 @@ index 9fc32a2416..4c29dc67c6 100644
      </template>
  
 diff --git a/browser/components/aboutlogins/content/components/login-intro.js b/browser/components/aboutlogins/content/components/login-intro.js
-index a0cd1d8cd1..10d72b3a94 100644
+index f9a82fa5dc..a76b6e5ec6 100644
 --- a/browser/components/aboutlogins/content/components/login-intro.js
 +++ b/browser/components/aboutlogins/content/components/login-intro.js
 @@ -50,11 +50,11 @@ export default class LoginIntro extends HTMLElement {
@@ -59,7 +59,7 @@ index a0cd1d8cd1..10d72b3a94 100644
      let importClass = window.AboutLoginsUtils.fileImportEnabled
        ? ".intro-import-text.file-import"
 diff --git a/browser/themes/shared/preferences/privacy.css b/browser/themes/shared/preferences/privacy.css
-index 07da15a167..6d5d3dd3be 100644
+index 5f52e6f964..b58a03afcc 100644
 --- a/browser/themes/shared/preferences/privacy.css
 +++ b/browser/themes/shared/preferences/privacy.css
 @@ -4,6 +4,10 @@
@@ -71,8 +71,8 @@ index 07da15a167..6d5d3dd3be 100644
 +}
 +
  #trackingGroup {
-   --section-highlight-background-color: rgba(69, 161, 255, 0.2);
+   --section-highlight-background-color: color-mix(in srgb, var(--in-content-accent-color) 20%, transparent);
  }
 -- 
-2.25.1
+2.32.0
 
