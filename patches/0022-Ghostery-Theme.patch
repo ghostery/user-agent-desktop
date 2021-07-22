@@ -3,33 +3,35 @@ Date: Tue, 9 Mar 2021 15:08:27 +0100
 Subject: Ghostery Theme
 
 Fix theme
+
+X
 ---
  browser/components/BrowserGlue.jsm            |   2 +
  .../customizableui/CustomizeMode.jsm          |   3 +
  .../background-gradient-dark.svg              |   1 +
  .../ghostery-dynamic/background-gradient.svg  |   1 +
- .../themes/addons/ghostery-dynamic/icon.svg   |  14 ++
- .../addons/ghostery-dynamic/manifest.json     |  43 ++++++
+ .../themes/addons/ghostery-dynamic/icon.svg   |  14 +
+ .../addons/ghostery-dynamic/manifest.json     |  43 ++++
  browser/themes/addons/jar.mn                  |   4 +
  .../themes/shared/urlbar-searchbar.inc.css    |   3 +-
  .../global/global-extension-fields.properties |   4 +-
  toolkit/modules/LightweightThemeConsumer.jsm  |   2 +-
  .../mozapps/extensions/content/aboutaddons.js |   8 +-
- .../extensions/content/ghostery-dynamic.svg   |  21 +++
- .../extensions/default-theme/experiment7.css  | 129 ++++++++++++++++++
- .../extensions/default-theme/manifest.json    |  53 ++-----
- .../extensions/internal/XPIProvider.jsm       |  25 +++-
+ .../extensions/content/ghostery-dynamic.svg   |  21 ++
+ .../extensions/default-theme/experiment8.css  | 242 ++++++++++++++++++
+ .../extensions/default-theme/manifest.json    |  55 +---
+ .../extensions/internal/XPIProvider.jsm       |  25 +-
  toolkit/mozapps/extensions/jar.mn             |   2 +
  toolkit/themes/linux/global/toolbarbutton.css |   2 +-
  toolkit/themes/osx/global/toolbarbutton.css   |   2 +-
  .../themes/windows/global/toolbarbutton.css   |   2 +-
- 19 files changed, 271 insertions(+), 50 deletions(-)
+ 19 files changed, 385 insertions(+), 51 deletions(-)
  create mode 100644 browser/themes/addons/ghostery-dynamic/background-gradient-dark.svg
  create mode 100644 browser/themes/addons/ghostery-dynamic/background-gradient.svg
  create mode 100644 browser/themes/addons/ghostery-dynamic/icon.svg
  create mode 100644 browser/themes/addons/ghostery-dynamic/manifest.json
  create mode 100644 toolkit/mozapps/extensions/content/ghostery-dynamic.svg
- create mode 100644 toolkit/mozapps/extensions/default-theme/experiment7.css
+ create mode 100644 toolkit/mozapps/extensions/default-theme/experiment8.css
 
 diff --git a/browser/components/BrowserGlue.jsm b/browser/components/BrowserGlue.jsm
 index 3adabc3ccc..1d3b70855b 100644
@@ -260,35 +262,39 @@ index 0000000000..223a0b63e1
 +  <rect id="Rectangle" fill="#FFFFFF" fill-rule="nonzero" x="630" y="67" width="18" height="2.67" rx="1.33" stroke="none" stroke-width="1"/>
 +</svg>
 \ No newline at end of file
-diff --git a/toolkit/mozapps/extensions/default-theme/experiment7.css b/toolkit/mozapps/extensions/default-theme/experiment7.css
+diff --git a/toolkit/mozapps/extensions/default-theme/experiment8.css b/toolkit/mozapps/extensions/default-theme/experiment8.css
 new file mode 100644
-index 0000000000..83eba2e10f
+index 0000000000..9c00713461
 --- /dev/null
-+++ b/toolkit/mozapps/extensions/default-theme/experiment7.css
-@@ -0,0 +1,129 @@
++++ b/toolkit/mozapps/extensions/default-theme/experiment8.css
+@@ -0,0 +1,242 @@
 +/* This Source Code Form is subject to the terms of the Mozilla Public
 + * License, v. 2.0. If a copy of the MPL was not distributed with this
 + * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 +
-+@import url("chrome://browser/skin/compacttheme.css");
-+
 +:root {
-+  --tab-min-height: 34px;
++  --tab-min-height: 34px !important;
++  --urlbar-height: 34px !important;
++  --urlbar-toolbar-height: 34px !important;
++  --urlbar-container-height: 34px !important;
++  --toolbarbutton-inner-padding: 9px;
++  --toolbarbutton-border-radius: 17px;
++  --tab-border-radius: 17px;
 +}
 +
-+:root:not([uidensity="compact"]) #back-button > .toolbarbutton-icon {
++/* :root:not([uidensity="compact"]) #back-button > .toolbarbutton-icon {
 +  background-color: transparent;
 +  border-color: transparent;
-+}
++} */
 +
 +#urlbar {
-+  padding-left: 7px;
-+  padding-right: 7px;
++  /* padding-left: 7px;
++  padding-right: 7px; */
 +}
 +
 +#urlbar-background {
 +  border: 2px solid transparent;
-+  border-radius: 24px;
++  border-radius: 17px;
 +  padding: 0;
 +  background-clip: padding-box;
 +  box-sizing: border-box;
@@ -310,20 +316,21 @@ index 0000000000..83eba2e10f
 +  background-color: #53565B;
 +}
 +
++#urlbar[focused="true"]:not([suppress-focus-border]) > #urlbar-background {
++  border-color: #42414d;
++}
++
 +#urlbar:not([focused="true"]):-moz-lwtheme:hover > #urlbar-background, #navigator-toolbox #searchbar:not(:focus-within):-moz-lwtheme:hover {
 +  border-color: #53565B;
 +}
 +
 +#urlbar[focused="true"] > #urlbar-background {
-+  border-radius: 6px;
++  border-radius: 17px;
++  border-color: transparent;
 +}
 +
 +#urlbar[focused="true"] > #urlbar-background:before {
-+  background: linear-gradient(to bottom right, #72b643, #00AEF0);
-+}
-+
-+#urlbar[focused="true"] > #urlbar-background {
-+  border-color: transparent;
++  background: #53565B;
 +}
 +
 +/*
@@ -364,6 +371,16 @@ index 0000000000..83eba2e10f
 +  top: 0px;
 +}
 +
++#urlbar[breakout][breakout-extend] > #urlbar-input-container {
++  padding-block: 0;
++  padding-inline: 0;
++}
++
++#urlbar[breakout][breakout-extend] {
++  width: 100%;
++  left: unset;
++}
++
 +#navigator-toolbox {
 +  border-bottom: none;
 +}
@@ -374,6 +391,10 @@ index 0000000000..83eba2e10f
 +
 +#TabsToolbar .toolbarbutton-1, #tabbrowser-arrowscrollbox::part(scrollbutton-up), #tabbrowser-arrowscrollbox::part(scrollbutton-down) {
 +  margin: 1px 0 0 0 !important;
++}
++
++toolbar .toolbarbutton-1 {
++  padding: 0;
 +}
 +
 +#nav-bar {
@@ -395,8 +416,102 @@ index 0000000000..83eba2e10f
 +.tab-line {
 +  height: 0;
 +}
++
++#nav-bar toolbarbutton > .toolbarbutton-icon {
++  /* translate: 0 -1px; */
++}
++
++:where(#reload-button, #stop-button) > .toolbarbutton-icon, :where(#reload-button, #stop-button) > .toolbarbutton-animatable-box {
++  translate: none !important;
++}
++
++toolbarbutton toolbarbutton-badge-stack {
++  padding: 0 !important;
++}
++
++#urlbar-input-container {
++  border: 0px solid transparent;
++  padding: 0px;
++}
++
++#urlbar-input-container, #searchbar {
++  border-radius: none;
++  height: 34px;
++}
++
++#urlbar[breakout][breakout-extend] > #urlbar-input-container {
++  height: 34px !important;
++}
++
++.urlbar-icon {
++  padding: 9px;
++  width: unset;
++  height: unset;
++}
++
++.identity-box-button {
++  padding: 9px;
++}
++
++.tab-background {
++  border-radius: 0;
++  margin-block: 0;
++}
++
++.urlbarView {
++  margin-inline: 2px;
++  border-inline: unset;
++  width: calc(100% - 4px);
++  padding-bottom: 17px;
++  margin-top: 17px;
++}
++
++#urlbar[open] > .urlbarView > .urlbarView-body-outer > .urlbarView-body-inner {
++  border-top: unset
++}
++
++.urlbarView-results {
++  padding-block: 2px;
++}
++
++.urlbarView-row-inner {
++  padding-inline: 40px;
++}
++
++.urlbarView-title {
++  margin-left: 4px;
++}
++
++.urlbarView-row-inner {
++  border-radius: 0;
++}
++
++#urlbar .search-one-offs:not([hidden]) {
++  display: none;
++}
++
++.tabbrowser-tab:hover > .tab-stack > .tab-background:not([selected="true"], [multiselected]) {
++  background-color: #2A2A33;
++}
++
++.tab-label {
++  margin: 0;
++}
++
++.tab-close-button {
++  margin-top: 3px;
++}
++
++toolbar .toolbarbutton-1 > .toolbarbutton-icon {
++  border-radius: 0;
++}
++
++toolbar#nav-bar .toolbarbutton-1 {
++  border-radius: 17px;
++  overflow: clip;
++}
 diff --git a/toolkit/mozapps/extensions/default-theme/manifest.json b/toolkit/mozapps/extensions/default-theme/manifest.json
-index 9646010b54..eaf848075c 100644
+index 9646010b54..a32cfc1480 100644
 --- a/toolkit/mozapps/extensions/default-theme/manifest.json
 +++ b/toolkit/mozapps/extensions/default-theme/manifest.json
 @@ -7,33 +7,30 @@
@@ -420,7 +535,8 @@ index 9646010b54..eaf848075c 100644
 -  "dark_theme": {
      "colors": {
        "tab_background_text": "#fbfbfe",
-       "tab_selected": "rgb(66,65,77)",
+-      "tab_selected": "rgb(66,65,77)",
++      "tab_selected": "#36393F",
        "tab_text": "rgb(251,251,254)",
        "icons": "rgb(251,251,254)",
 -      "frame": "#1c1b22",
@@ -475,7 +591,7 @@ index 9646010b54..eaf848075c 100644
 -      "panel_active_darker": "--arrowpanel-dimmed-even-further",
 -      "toolbar_field_icon_opacity": "--urlbar-icon-fill-opacity"
 -    }
-+    "stylesheet": "experiment7.css"
++    "stylesheet": "experiment8.css"
    }
  }
 diff --git a/toolkit/mozapps/extensions/internal/XPIProvider.jsm b/toolkit/mozapps/extensions/internal/XPIProvider.jsm
