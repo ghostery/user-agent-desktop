@@ -40,7 +40,7 @@ if (!tagExists) {
         }
     }
 
-    build job: 'user-agent/desktop/master', parameters: [
+    build job: 'user-agent/desktop/main', parameters: [
         booleanParam(name: 'Reset', value: true),
         booleanParam(name: 'Clobber', value: false),
         string(name: 'ReleaseName', value: VERSION_NAME),
