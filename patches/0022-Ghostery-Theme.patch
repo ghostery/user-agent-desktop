@@ -662,7 +662,7 @@ index 10a7dd29a4..bd98d14e65 100644
  % resource default-theme %content/mozapps/extensions/default-theme/
    content/mozapps/extensions/default-theme/icon.svg             (default-theme/icon.svg)
    content/mozapps/extensions/default-theme/manifest.json        (default-theme/manifest.json)
-+  content/mozapps/extensions/default-theme/experiment7.css      (default-theme/experiment7.css)
++  content/mozapps/extensions/default-theme/experiment8.css      (default-theme/experiment8.css)
  #endif
 diff --git a/toolkit/themes/linux/global/toolbarbutton.css b/toolkit/themes/linux/global/toolbarbutton.css
 index a29aad0271..8e4f2d868c 100644
