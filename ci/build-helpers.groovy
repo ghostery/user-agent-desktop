@@ -11,6 +11,9 @@ def build(opts, Closure postpackage={}, Closure archiving={}) {
             if (!fileExists('./build/makecab.exe')) {
                 sh 'wget -nv -O ./build/makecab.exe ftp://10.180.244.36/cliqz-browser-build-artifacts/makecab.exe '
             }
+            if (!fileExists('./build/MacOSX11.sdk.tar.bz2')) {
+                sh 'wget -nv -O ./build/MacOSX10.12.sdk.tar.bz2 ftp://10.180.244.36/cliqz-browser-build-artifacts/MacOSX10.12.sdk.tar.bz2'
+            }
             if (!fileExists('./build/MacOSX11.0.sdk.tar.bz2')) {
                 sh 'wget -nv -O ./build/MacOSX11.0.sdk.tar.bz2 ftp://10.180.244.36/cliqz-browser-build-artifacts/MacOSX11.0.sdk.tar.bz2'
             }
@@ -41,6 +44,7 @@ def build(opts, Closure postpackage={}, Closure archiving={}) {
                 }
 
                 dir('mozilla-release') {
+                    sh 'rm -f `pwd`/MacOSX10.12.sdk; ln -s /builds/worker/fetches/MacOSX10.12.sdk `pwd`/MacOSX10.12.sdk'
                     sh 'rm -f `pwd`/MacOSX11.0.sdk; ln -s /builds/worker/fetches/MacOSX11.0.sdk `pwd`/MacOSX11.0.sdk'
 
                     if (opts.PGO) {
