@@ -116,13 +116,23 @@ async function generateDockerFile({ key, fetches, job, name, toolchains }) {
       "ADD --chown=worker:worker makecab.exe /builds/worker/fetches/"
     );
   }
-  if (key.startsWith("mac")) {
+  if (key.startsWith("macosx64")) {
     statements.push("COPY MacOSX10.12.sdk.tar.bz2 /builds/worker/fetches/");
     statements.push(
       [
         "RUN cd /builds/worker/fetches/ &&",
         "tar -xf MacOSX10.12.sdk.tar.bz2 &&",
         "rm MacOSX10.12.sdk.tar.bz2",
+      ].join(" \\\n    ")
+    );
+  }
+  if (key.startsWith("macosx64-aarch64")) {
+    statements.push("COPY MacOSX11.0.sdk.tar.bz2 /builds/worker/fetches/");
+    statements.push(
+      [
+        "RUN cd /builds/worker/fetches/ &&",
+        "tar -xf MacOSX11.0.sdk.tar.bz2 &&",
+        "rm MacOSX11.0.sdk.tar.bz2",
       ].join(" \\\n    ")
     );
   }
