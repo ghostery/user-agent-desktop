@@ -10,7 +10,7 @@ const { getRoot } = require("./workspace.js");
 
 const MOZ_FETCHES_DIR = "/builds/worker/fetches/";
 
-const SKIP_TOOLCHAINS = new Set(['win64-pdbstr', 'macosx64-sdk-11.0', 'macosx64-sdk-10.12'])
+const SKIP_TOOLCHAINS = new Set(['win64-pdbstr', 'macosx64-sdk-11.0'])
 
 async function loadFetches(root) {
   return yaml.safeLoad(
@@ -117,12 +117,12 @@ async function generateDockerFile({ key, fetches, job, name, toolchains }) {
     );
   }
   if (key.startsWith("mac")) {
-    statements.push("COPY MacOSX10.12.sdk.tar.bz2 /builds/worker/fetches/");
+    statements.push("COPY MacOSX11.0.sdk.tar.bz2 /builds/worker/fetches/");
     statements.push(
       [
         "RUN cd /builds/worker/fetches/ &&",
-        "tar -xf MacOSX10.12.sdk.tar.bz2 &&",
-        "rm MacOSX10.12.sdk.tar.bz2",
+        "tar -xf MacOSX11.0.sdk.tar.bz2 &&",
+        "rm MacOSX11.0.sdk.tar.bz2",
       ].join(" \\\n    ")
     );
   }
