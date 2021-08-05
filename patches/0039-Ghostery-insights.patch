@@ -1,0 +1,23 @@
+From: Krzysztof Jan Modras <chrmod@chrmod.net>
+Date: Thu, 5 Aug 2021 14:41:11 +0200
+Subject: Ghostery Insights
+
+---
+ browser/extensions/moz.build | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/browser/extensions/moz.build b/browser/extensions/moz.build
+index 5c0bfeacea..ae9a89b209 100644
+--- a/browser/extensions/moz.build
++++ b/browser/extensions/moz.build
+@@ -11,6 +11,7 @@ DIRS += [
+     "ghostery",
+     "ghostery-search",
+     "ghostery-newtab",
++    "ghostery-insights",
+ ]
+
+ if CONFIG["NIGHTLY_BUILD"]:
+--
+2.32.0
+
