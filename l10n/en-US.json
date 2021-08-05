@@ -106,8 +106,10 @@
     }
   },
   "browser/browser/aboutPrivateBrowsing.ftl": {
-    "about-private-browsing-search-placeholder": {
-      "string": "Search privately with Ghostery"
+    "about-private-browsing-handoff-no-engine": {
+      "title": {
+        "string": "Search privately with Ghostery"
+      }
     },
     "privatebrowsingpage-open-private-window-label": {
       "string": "Open a Ghost Mode Window"

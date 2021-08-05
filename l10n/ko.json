@@ -106,8 +106,10 @@
     }
   },
   "browser/browser/aboutPrivateBrowsing.ftl": {
-    "about-private-browsing-search-placeholder": {
-      "string": "프라이버시를 보호하는 Ghostery로 검색하세요"
+    "about-private-browsing-handoff-no-engine": {
+      "title": {
+        "string": "프라이버시를 보호하는 Ghostery로 검색하세요"
+      }
     },
     "privatebrowsingpage-open-private-window-label": {
       "string": "Open a Ghost Mode Window"

@@ -79,6 +79,10 @@ pref("toolkit.telemetry.updatePing.enabled", false);
 pref("toolkit.telemetry.bhrPing.enabled", false);
 pref("toolkit.telemetry.firstShutdownPing.enabled", false);
 
+// Nimbus
+pref("messaging-system.rsexperimentloader.enabled", false);
+pref("browser.privatebrowsing.promoEnabled", false);
+
 // Corroborator (#141)
 pref("corroborator.enabled", false);
 

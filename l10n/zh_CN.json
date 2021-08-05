@@ -106,8 +106,10 @@
     }
   },
   "browser/browser/aboutPrivateBrowsing.ftl": {
-    "about-private-browsing-search-placeholder": {
-      "string": "使用 Ghostery 进行无痕搜索"
+    "about-private-browsing-handoff-no-engine": {
+      "title": {
+        "string": "使用 Ghostery 进行无痕搜索"
+      }
     },
     "privatebrowsingpage-open-private-window-label": {
       "string": "Open a Ghost Mode Window"

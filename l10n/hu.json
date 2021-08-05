@@ -106,8 +106,10 @@
     }
   },
   "browser/browser/aboutPrivateBrowsing.ftl": {
-    "about-private-browsing-search-placeholder": {
-      "string": "Privát keresés a Ghostery segítségével"
+    "about-private-browsing-handoff-no-engine": {
+      "title": {
+        "string": "Privát keresés a Ghostery segítségével"
+      }
     },
     "privatebrowsingpage-open-private-window-label": {
       "string": "Open a Ghost Mode Window"
