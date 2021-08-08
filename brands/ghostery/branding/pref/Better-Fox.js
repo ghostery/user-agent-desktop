@@ -103,40 +103,84 @@ user_pref("privacy.sanitize.timeSpan", 0);
 
 
 /** SPECULATIVE CONNECTIONS ***/
-// disable DNS prefetching
-pref("network.dns.disablePrefetch", true);
-pref("network.dns.disablePrefetchFromHTTPS", true); /* default */
+// [NOTE] Firefox 85+ partitions (isolates) pooled connections, prefetch connections, pre-connect connections,
+// speculative connections, TLS session identifiers, and other connections. We can take advantage of the speed of
+// pre-connections while preserving privacy. Users may harden these settings to their preference.
+// For more information, see "State Paritioning" and "Network Partitioning".
 
-// Preload the autocomplete URL in the address bar.
-// Firefox preloads URLs that autocomplete when a user types into the address bar.
-// NOTE: Firefox will do the server DNS lookup and TCP and TLS handshake but not start sending or receiving HTTP data.
-pref("browser.urlbar.speculativeConnect.enabled", false);
-
-// Link prefetching
-// Along with the referral and URL-following implications, prefetching will generally cause the cookies of the prefetched
-// site to be accessed. (For example, if you google Amazon, the Google results page will prefetch www.amazon.com, causing
-// Amazon cookies to be sent back and forth.)
-pref("network.prefetch-next", false);
-
-// Link-mouseover opening connection to linked server.
-// TCP and SSL handshakes are set up in advance but page contents are not downloaded until a click on the link is registered.
-pref("network.http.speculative-parallel-limit", 6); /* default */
-
-// Enable <link rel=preload>.
-// Developer hints to the browser to preload some resources with a higher priority and in advance.
-// Helps the web page to render and get into the stable and interactive state faster.
-pref("network.preload", true); /* default */
-
-// Network predictor
-// Uses a local file to remember which resources were needed when the user visits a webpage (such as image.jpg and script.js),
-// so that the next time the user mouseovers a link to that webpage, this history can be used to predict what resources will
+// Network Predictor
+// Keeps track of components that were loaded during page visits so that the browser knows next time
+// which resources to request from the server: It uses a local file to remember which resources were
+// needed when the user visits a webpage (such as image.jpg and script.js), so that the next time the
+// user mouseovers a link to that webpage, this history can be used to predict what resources will
 // be needed rather than wait for the document to link those resources.
-pref("network.predictor.enabled", true); /* default */
+// [NOTE] DNS pre-resolve and TCP preconnect (which includes SSL handshake). Honors settings in Private Browsing to erase data.
+// [1] https://wiki.mozilla.org/Privacy/Reviews/Necko
+// [2] https://www.ghacks.net/2014/05/11/seer-disable-firefox/
+// [3] https://github.com/dillbyrne/random-agent-spoofer/issues/238#issuecomment-110214518
+// [4] https://www.igvita.com/posa/high-performance-networking-in-google-chrome/#predictor
+pref("network.predictor.enabled", true); // default
+// Fetch critical resources on the page ahead of time as determined by the local file, to accelerate rendering of the page.
 pref("network.predictor.enable-hover-on-ssl", true);
-pref("network.predictor.enable-prefetch", false); /* default */
+pref("network.predictor.enable-prefetch", true);
+
+// DNS pre-resolve <link rel="dns-prefetch">
+// Resolve hostnames ahead of time, to avoid DNS latency.
+// [1] https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-DNS-Prefetch-Control
+// [2] https://css-tricks.com/prefetching-preloading-prebrowsing/#dns-prefetching
+// [3] http://www.mecs-press.org/ijieeb/ijieeb-v7-n5/IJIEEB-V7-N5-2.pdf
+pref("network.dns.disablePrefetch", true);
+pref("network.dns.disablePrefetchFromHTTPS", false);
+
+// Preconnect to the autocomplete URL in the address bar
+// Firefox preloads URLs that autocomplete when a user types into the address bar.
+// Connects to destination server ahead of time, to avoid TCP handshake latency.
+// [NOTE] Firefox will perform DNS lookup and TCP and TLS handshake, but will not start sending or receiving HTTP data.
+// [1] https://www.ghacks.net/2017/07/24/disable-preloading-firefox-autocomplete-urls/
+pref("browser.urlbar.speculativeConnect.enabled", true); // default
+
+// Link prefetching <link rel="prefetch">
+// Fetch critical resources on the page ahead of time, to accelerate rendering of the page.
+// Websites can provide Firefox with hints as to which page is likely the be accessed next so that it is downloaded right away,
+// even if you don't request that link. The prefetch resource hint tells the browser to go grab a resource even though it
+// hasn’t been requested by the current page, and puts it into cache. Firefox will request the resource at a low
+// priority and only during idle time so that the resource doesn’t compete with anything needed for the current navigation.
+// When the user clicks on a link, or initiates any kind of page load, link prefetching will stop and any prefetch hints will be discarded.
+// [1] https://developer.mozilla.org/en-US/docs/Web/HTTP/Link_prefetching_FAQ#Privacy_implications
+// [2] http://www.mecs-press.org/ijieeb/ijieeb-v7-n5/IJIEEB-V7-N5-2.pdf
+// [3] https://timkadlec.com/remembers/2020-06-17-prefetching-at-this-age/
+pref("network.prefetch-next", true); // default
+
+// Prefetch links upon hover
+// When you hover over links, connections are established to linked domains and servers automatically to speed up the loading
+// process should you click on the link. To improve the loading speed, Firefox will open predictive connections to sites when
+// the user hovers their mouse over. In case the user follows through with the action, the page can begin loading faster since
+// some of the work was already started in advance.
+// [NOTE] TCP and SSL handshakes are set up in advance but page contents are not downloaded until a click on the link is registered.
+// [1] https://news.slashdot.org/story/15/08/14/2321202/how-to-quash-firefoxs-silent-requests
+// [2] https://www.ghacks.net/2015/08/16/block-firefox-from-connecting-to-sites-when-you-hover-over-links
+pref("network.http.speculative-parallel-limit", 6); // default
+
+// Preload <link rel=preload>
+// Fetch the entire page with all of its resources ahead of time, to enable instant navigation when triggered by the user.
+// Allows developers to hint to the browser to preload some resources with a higher priority and in advance, which helps the web page to
+// render and get into the stable and interactive state faster. This spec assumes that sometimes it’s best to always download an asset,
+// regardless of whether the browser thinks that’s a good idea or not(!). Unlike prefetching assets, which can be ignored, preloading assets
+// must be requested by the browser.
+// [WARNING] Interferes with content blocking extensions, even if you utilize DNS-level blocking as well. Disable this!
+// [NOTE] Revisit and test to see if we can enable this in future builds.
+// [1] https://www.janbambas.cz/firefox-enables-link-rel-preload-support/
+// [2] https://bugzilla.mozilla.org/show_bug.cgi?id=1639607
+// [3] https://css-tricks.com/prefetching-preloading-prebrowsing/#future-option-preloading
+pref("network.preload", false);
 
 // New tab preload
-pref("browser.newtab.preload", true); /* default */
+// [WARNING] Disabling this causes a delay when opening a new tab in Firefox.
+// [NOTE] Not sure if this affects Ghostery since we use an extension for the New Tab page. Needs testing.
+// [1] https://wiki.mozilla.org/Tiles/Technical_Documentation#Ping
+// [2] https://gecko.readthedocs.org/en/latest/browser/browser/DirectoryLinksProvider.html#browser-newtabpage-directory-source
+// [3] https://gecko.readthedocs.org/en/latest/browser/browser/DirectoryLinksProvider.html#browser-newtabpage-directory-ping
+pref("browser.newtab.preload", true); // default
 
 
 /** SEARCH ***/
