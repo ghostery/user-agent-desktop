@@ -41,7 +41,7 @@ pref("privacy.webrtc.globalMuteToggles", true);
 // Creates operating system process-level boundaries for all sites loaded in Firefox for Desktop. Isolating each site
 // into a separate operating system process makes it harder for malicious sites to read another site’s secret or private data.
 // [1] https://hacks.mozilla.org/2021/05/introducing-firefox-new-site-isolation-security-architecture/
-user_pref("fission.autostart", true);
+pref("fission.autostart", true);
 
 // State Paritioning [aka Dynamic First-Party Isolation (dFPI)]
 // Firefox manages client-side state (i.e., data stored in the browser) to mitigate the ability of websites to abuse state
@@ -105,7 +105,7 @@ pref("privacy.sanitize.timeSpan", 0);
 // Reset default 'Time range to clear' for 'Clear Recent History'.
 // Firefox remembers your last choice. This will reset the value when you start Firefox.
 // 0=everything, 1=last hour, 2=last two hours, 3=last four hours, 4=today
-user_pref("privacy.sanitize.timeSpan", 0);
+pref("privacy.sanitize.timeSpan", 0);
 
 
 /** SPECULATIVE CONNECTIONS ***/
