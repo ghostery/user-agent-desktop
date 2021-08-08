@@ -37,6 +37,12 @@ pref("security.remote_settings.crlite_filters.enabled", true);
 // Microphone and camera kill switch (#370) /* experimental */
 pref("privacy.webrtc.globalMuteToggles", true);
 
+// Site Isolation [aka Project Fission]
+// Creates operating system process-level boundaries for all sites loaded in Firefox for Desktop. Isolating each site
+// into a separate operating system process makes it harder for malicious sites to read another site’s secret or private data.
+// [1] https://hacks.mozilla.org/2021/05/introducing-firefox-new-site-isolation-security-architecture/
+user_pref("fission.autostart", true);
+
 // State Paritioning [aka Dynamic First-Party Isolation (dFPI)]
 // Firefox manages client-side state (i.e., data stored in the browser) to mitigate the ability of websites to abuse state
 // for cross-site tracking. This effort aims to achieve that by providing what is effectively a "different", isolated storage
