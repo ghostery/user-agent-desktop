@@ -11,13 +11,7 @@
 /****************************************************************************
  * SECTION: FASTFOX                                                         *
 ****************************************************************************/
-
-// Lazy Loading
-pref("dom.image-lazy-loading.enabled", true);
-
 // Lazy session restore
-pref("browser.sessionstore.restore_tabs_lazily", true);
-pref("browser.sessionstore.restore_on_demand", true);
 pref("browser.sessionstore.restore_pinned_tabs_on_demand", true);
 
 // skeleton UI
@@ -29,11 +23,6 @@ pref("browser.startup.preXulSkeletonUI", false);
 ****************************************************************************/
 
 /** TRACKING PROTECTION ***/
-
-// Disable Hyperlink Auditing (click tracking).
-pref("browser.send_pings", false);
-pref("browser.send_pings.require_same_host", true);
-
 // Disable sending additional analytics to web servers
 pref("beacon.enabled", false);
 
@@ -47,9 +36,6 @@ pref("security.remote_settings.crlite_filters.enabled", true);
 
 // Microphone and camera kill switch (#370) /* experimental */
 pref("privacy.webrtc.globalMuteToggles", true);
-
-
-/** STORAGE ***/
 
 // Dynamic First-Party Isolation (dFPI)
 // Tracker storage partitioning - currently undocumented setting to partition browser storage for trackers in 3rd party contexts.
@@ -70,11 +56,10 @@ pref("dom.storage.next_gen", true);
 // Samesite Cookies /* experimental */
 pref("network.cookie.sameSite.laxByDefault", true);
 pref("network.cookie.sameSite.noneRequiresSecure", true);
-// pref("network.cookie.sameSite.schemeful", true); /* test in future builds */
+// pref("network.cookie.sameSite.schemeful", true);
 
 
 /** CLEARING HISTORY DEFAULTS (MANUALLY) ***/
-
 // Reset default items to clear with Ctrl-Shift-Del
 // This dialog can also be accessed from the menu History>Clear Recent History
 // Firefox remembers your last choices. This will reset them when you start Firefox.
@@ -93,8 +78,7 @@ pref("privacy.sanitize.timeSpan", 0);
 user_pref("privacy.sanitize.timeSpan", 0);
 
 
-/*** PRELOADING ***/
-
+/** SPECULATIVE CONNECTIONS ***/
 // disable DNS prefetching
 pref("network.dns.disablePrefetch", true);
 pref("network.dns.disablePrefetchFromHTTPS", true); /* default */
@@ -132,7 +116,6 @@ pref("browser.newtab.preload", true); /* default */
 
 
 /** SEARCH ***/
-
 // Enable a seperate search engine for Private Windows
 pref("browser.search.separatePrivateDefault", true);
 pref("browser.search.separatePrivateDefault.ui.enabled", true);
@@ -162,7 +145,6 @@ pref("network.IDN_show_punycode", true);
 
 
 /** HTTPS-ONLY MODE ***/
-
 // HTTPS-only connections (#367)
 pref("dom.security.https_only_mode", true);
 pref("dom.security.https_only_mode_ever_enabled", true);
@@ -177,9 +159,7 @@ pref("dom.security.https_only_mode_send_http_background_request", false);
 // HTTPS-Only mode for local resources
 pref("dom.security.https_only_mode.upgrade_local", true);
 
-
 /** DNS-over-HTTPS (DOH) ***/
-
 // DoH
 // 0=off, 2=TRR preferred, 3=TRR only, 5=TRR disabled
 pref("network.trr.mode", 0); /* for now??? */
@@ -188,7 +168,6 @@ pref("network.dns.skipTRR-when-parental-control-enabled", false);
 
 
 /** PASSWORDS AND AUTOFILL ***/
-
 // Autofilling saved passwords on HTTP pages
 pref("signon.autofillForms.http", false);
 // Show warning
@@ -198,15 +177,12 @@ pref("signon.privateBrowsingCapture.enabled", false);
 
 
 /** MIXED CONTENT + CROSS-SITE ***/
-
 // HTTP authentication credentials dialogs triggered by sub-resources
 // 0=don't allow sub-resources to open HTTP authentication credentials dialogs
 // 1=don't allow cross-origin sub-resources to open HTTP authentication credentials dialogs
 // 2=allow sub-resources to open HTTP authentication credentials dialogs (default)
 pref("network.auth.subresource-http-auth-allow", 1);
 
-// Block insecure active content (scripts) on HTTPS pages.
-pref("security.mixed_content.block_active_content", true);
 // Upgrade passive content to use HTTPS on secure pages.
 pref("security.mixed_content.upgrade_display_content", true);
 // Block unencrypted requests from Flash on encrypted pages to mitigate MitM attacks
@@ -218,28 +194,13 @@ pref("dom.block_download_insecure", true);
 // [1] https://bugzilla.mozilla.org/buglist.cgi?bug_id=1659530,1681331
 pref("extensions.postDownloadThirdPartyPrompt", false);
 
-// Permissions delegation
-// Currently applies to cross-origin geolocation, camera, mic and screen-sharing
-// permissions, and fullscreen requests. Disabling delegation means any prompts
-// for these will show/use their correct 3rd party origin
-pref("permissions.delegation.enabled", false);
-
-// "window.name" protection
-// If a new page from another domain is loaded into a tab, then window.name is set to an empty string. The original
-// string is restored if the tab reverts back to the original page. This change prevents some cross-site attacks.
-pref("privacy.window.name.update.enabled", true);
-
 // Downgrade Cross-Origin Referers
-// Control when to send a referer.
-// 0=always (default), 1=only if base domains match, 2=only if hosts match
-pref("network.http.referer.XOriginPolicy", 0); /* default */
 // Control the amount of information to send.
 // 0=send full URI (default), 1=scheme+host+port+path, 2=scheme+host+port
 pref("network.http.referer.XOriginTrimmingPolicy", 2);
 
 
 /** GOOGLE SAFE BROWSING (GSB) ***/
-
 // GSB, master switch (see #38)
 // Privacy & Security>Security>... "Block dangerous and deceptive content"
 // pref("browser.safebrowsing.malware.enabled", false);
@@ -262,46 +223,35 @@ pref("browser.safebrowsing.downloads.remote.enabled", false);
 
 
 /** MOZILLA ***/
-
 // Geolocation URL (see #187, #405)
 // pref("geo.provider.network.url", "https://location.services.mozilla.com/v1/geolocate?key=%MOZILLA_API_KEY%");
 pref("geo.provider.network.logging.enabled", false);
-
-// Enforce Firefox blocklist for extensions + no hiding tabs
-// This includes updates for "revoked certificates".
-pref("extensions.blocklist.enabled", true);
-pref("extensions.webextensions.tabhide.enabled", false);
 
 
 /****************************************************************************
  * SECTION: PESKYFOX                                                        *
 ****************************************************************************/
-
 /** TAB WARNINGS ***/
-
 pref("browser.tabs.warnOnClose", false);
 pref("browser.tabs.warnOnCloseOtherTabs", false);
 pref("browser.tabs.warnOnOpen", false);
 
 
 /** FULLSCREEN ***/
-
 // transition time (instant)
 pref("full-screen-api.transition-duration.enter", "0 0");
 pref("full-screen-api.transition-duration.leave", "0 0");
 // fullscreen notice (disable)
-pref("full-screen-api.warning.delay", -1);
-pref("full-screen-api.warning.timeout", -1);
+pref("full-screen-api.warning.delay", 0);
+pref("full-screen-api.warning.timeout", 0);
 
 
 /** DOWNLOADS ***/
-
 // always ask where to download
 pref("browser.download.useDownloadDir", false);
 
 
 /** VARIOUS ***/
-
 // Dropdown options in the URL bar
 pref("browser.urlbar.suggest.bookmark", true);
 pref("browser.urlbar.suggest.engines", false);
@@ -321,9 +271,6 @@ pref("permissions.default.desktop-notification", 2);
 // isn't loaded, by pushing messages to your userAgentID through Mozilla's Push Server.
 pref("dom.push.enabled", false);
 
-// Autoplay
-pref("media.block-autoplay-until-in-foreground", true);
-
 // Show all matches in Findbar
 pref("findbar.highlightAll", true);
 
@@ -332,15 +279,11 @@ pref("browser.display.show_image_placeholders", false);
 
 
 /** TAB BEHAVIOR ***/
-
 // Prevent scripts from moving and resizing open windows
 pref("dom.disable_window_move_resize", true);
 
 // Hide bookmarks toolbar from new tab page (#473)
 pref("browser.toolbars.bookmarks.visibility", "never");
-
-// AVIF images
-pref("image.avif.enabled", true);
 
 // Prevent password truncation when submitting form data
 // [1] https://www.ghacks.net/2020/05/18/firefox-77-wont-truncate-text-exceeding-max-length-to-address-password-pasting-issues/
@@ -352,8 +295,7 @@ pref("clipboard.plainTextOnly", true);
 // Limit events that can cause a pop-up
 // Firefox provides an option to provide exceptions for sites, remembered in your Site Settings.
 // (default) "change click dblclick auxclick mouseup pointerup notificationclick reset submit touchend contextmenu"
-pref("dom.popup_allowed_events", "click dblclick");
-pref("dom.disable_open_during_load", true);
+pref("dom.popup_allowed_events", "click dblclick mousedown pointerdown");
 
 /****************************************************************************
  * END: BETTERFOX                                                           *
