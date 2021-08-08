@@ -37,18 +37,42 @@ pref("security.remote_settings.crlite_filters.enabled", true);
 // Microphone and camera kill switch (#370) /* experimental */
 pref("privacy.webrtc.globalMuteToggles", true);
 
-// Dynamic First-Party Isolation (dFPI)
-// Tracker storage partitioning - currently undocumented setting to partition browser storage for trackers in 3rd party contexts.
+// State Paritioning [aka Dynamic First-Party Isolation (dFPI)]
+// Firefox manages client-side state (i.e., data stored in the browser) to mitigate the ability of websites to abuse state
+// for cross-site tracking. This effort aims to achieve that by providing what is effectively a "different", isolated storage
+// location to every website a user visits.
+// dFPI is a more web-compatible version of FPI, which double keys all third-party state by the origin of the top-level
+// context. dFPI isolates user's browsing data for each top-level eTLD+1, but is flexible enough to apply web
+// compatibility heuristics to address resulting breakage by dynamically modifying a frame's storage principal.
+// dFPI isolates most sites while applying heuristics to allow sites through the isolation in certain circumstances for usability.
+// [NOTE] dFPI partitions all of the following caches by the top-level site being visited: HTTP cache, image cache,
+// favicon cache, HSTS cache, OCSP cache, style sheet cache, font cache, DNS cache, HTTP Authentication cache,
+// Alt-Svc cache, and TLS certificate cache.
 // [1] https://bugzilla.mozilla.org/show_bug.cgi?id=1549587
+// [2] https://developer.mozilla.org/en-US/docs/Mozilla/Firefox/Privacy/State_Partitioning
+// [3] https://blog.mozilla.org/security/2021/02/23/total-cookie-protection/
+// [4] https://hacks.mozilla.org/2021/02/introducing-state-partitioning/
 pref("network.cookie.cookieBehavior", 5);
 
-// Redirect tracking prevention + Purge site data of sites associated with tracking cookies automatically
-pref("privacy.purge_trackers.enabled", true);
-
-// Network Partitioning
-// Allows the browser to save resources like the cache, favicons, CSS files, images, and more
-// on a per-website basis rather than together in the same pool.
+// Network Partitioning /* default pref, but keeping here for reference */
+// Networking-related APIs are not intended to be used for websites to store data, but they can be abused for
+// cross-site tracking. Network APIs and caches are permanently partitioned by the top-level site.
+// Network Partitioning (isolation) will allow Firefox to associate resources on a per-website basis rather than together
+// in the same pool. This includes cache, favicons, CSS files, images, and even speculative connections. 
+// [1] https://www.zdnet.com/article/firefox-to-ship-network-partitioning-as-a-new-anti-tracking-defense/
+// [2] https://developer.mozilla.org/en-US/docs/Web/Privacy/State_Partitioning#network_partitioning
+// [3] https://blog.mozilla.org/security/2021/01/26/supercookie-protections/
 pref("privacy.partition.network_state", true);
+
+// Redirect Tracking Prevention /* default pref, but keeping here for reference */
+// All storage is cleared (more or less) daily from origins that are known trackers and that
+// haven’t received a top-level user interaction (including scroll) within the last 45 days.
+// [1] https://www.ghacks.net/2020/08/06/how-to-enable-redirect-tracking-in-firefox/
+// [2] https://www.cookiestatus.com/firefox/#other-first-party-storage
+// [3] https://developer.mozilla.org/en-US/docs/Mozilla/Firefox/Privacy/Redirect_tracking_protection
+// [4] https://www.ghacks.net/2020/03/04/firefox-75-will-purge-site-data-if-associated-with-tracking-cookies/
+// [5] https://github.com/arkenfox/user.js/issues/1089
+pref("privacy.purge_trackers.enabled", true);
 
 // Enable Local Storage Next Generation (LSNG) (DOMStorage) 
 pref("dom.storage.next_gen", true);
