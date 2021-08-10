@@ -129,7 +129,6 @@ pref("browser.search.separatePrivateDefault.ui.enabled", true);
 // Live search engine suggestions (Google, Bing, etc.)
 // Search engines keylog every character you type from the URL bar
 pref("browser.search.suggest.enabled", false);
-pref("browser.search.suggest.enabled.private", false);
 
 // URL bar domain guessing
 // https://github.com/yokoffing/Better-Fox/blob/079be70df3e513507dc419c3cce1a413902ada13/SecureFox.js#L276-L281
