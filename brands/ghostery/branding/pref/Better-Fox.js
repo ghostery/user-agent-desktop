@@ -220,13 +220,13 @@ pref("network.IDN_show_punycode", true);
 
 /** HTTPS-FIRST POLICY ***/
 // [NOTE] Already enabled by default in Private Browsing.
-user_pref("dom.security.https_first", true);
+pref("dom.security.https_first", true);
 
 
 /** HTTPS-ONLY MODE ***/
 // HTTPS-only connections (#367)
-pref("dom.security.https_only_mode", true);
-pref("dom.security.https_only_mode_ever_enabled", true);
+pref("dom.security.https_only_mode_pbm", true);
+pref("dom.security.https_only_mode_ever_enabled_pbm", true);
 
 // HTTP background requests
 // When attempting to upgrade, if the server doesn't respond within 3 seconds, Firefox
