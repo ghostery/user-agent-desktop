@@ -140,30 +140,29 @@ pref("security.insecure_connection_text.enabled", true);
 pref("security.insecure_connection_text.pbmode.enabled", true);
 
 // Enforce Punycode for Internationalized Domain Names to eliminate possible spoofing
-// Might be undesirable for non-latin alphabet users since legitimate IDN's are also punycoded.
-// [TEST] https://www.xn--80ak6aa92e.com/ (www.apple.com)
+// https://github.com/yokoffing/Better-Fox/blob/b713c0662f01aa2fe81fb1e2cfb8e41c24e5d293/SecureFox.js#L293-L300
 pref("network.IDN_show_punycode", true);
 
 
 /** HTTPS-FIRST POLICY ***/
-// [NOTE] Already enabled by default in Private Browsing.
+// https://github.com/yokoffing/Better-Fox/blob/b713c0662f01aa2fe81fb1e2cfb8e41c24e5d293/SecureFox.js#L307-L313
 pref("dom.security.https_first", true);
 
 
 /** HTTPS-ONLY MODE ***/
 // HTTPS-only connections (#367)
+// Enable HTTPS-only Mode for Private Browsing windows
+// https://github.com/yokoffing/Better-Fox/blob/b713c0662f01aa2fe81fb1e2cfb8e41c24e5d293/SecureFox.js#L321-L336
 pref("dom.security.https_only_mode_pbm", true);
 pref("dom.security.https_only_mode_ever_enabled_pbm", true);
 
-// HTTP background requests
-// When attempting to upgrade, if the server doesn't respond within 3 seconds, Firefox
-// sends HTTP requests in order to check if the server supports HTTPS or not.
-// This is done to avoid waiting for a timeout which takes 90 seconds.
-// [1] https://bugzilla.mozilla.org/buglist.cgi?bug_id=1642387,1660945
+// Disable HTTP background requests in HTTPS-only Mode
+// https://github.com/yokoffing/Better-Fox/blob/e9535084374c4f379bc20fda945b3236b7723c48/SecureFox.js#L330-L335
 pref("dom.security.https_only_mode_send_http_background_request", false);
 
 // HTTPS-Only mode for local resources
 pref("dom.security.https_only_mode.upgrade_local", true);
+
 
 /** DNS-over-HTTPS (DOH) ***/
 // DoH
