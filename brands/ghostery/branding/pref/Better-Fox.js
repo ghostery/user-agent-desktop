@@ -116,7 +116,8 @@ pref("network.http.speculative-parallel-limit", 6); // default
 // https://github.com/yokoffing/Better-Fox/blob/079be70df3e513507dc419c3cce1a413902ada13/SecureFox.js#L238-L247
 pref("network.preload", false);
 
-// New tab preload
+// New tab preload /* default pref, but keeping here for reference */
+// How does this affect Ghostery Browser since we use a description for the New Tab Page?
 // https://github.com/yokoffing/Better-Fox/blob/079be70df3e513507dc419c3cce1a413902ada13/SecureFox.js#L250-L254
 pref("browser.newtab.preload", true); // default
 
