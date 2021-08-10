@@ -279,7 +279,7 @@ stage('publish to github') {
 
                 unarchive mapping: ["mozilla-release/" : "artifacts"]
 
-                # ignore obj-aarch64-apple-darwin artifacts - they have been unified with grep -v obj-x86-apple-darwin
+                // ignore obj-aarch64-apple-darwin artifacts - they have been unified with grep -v obj-x86-apple-darwin
                 def artifacts = sh(returnStdout: true, script: "find artifacts -type f \\( -iname \\*.mar -o -iname *-signed.dmg -o -iname \\*.exe -o -iname \\*.tar.bz2 \\) | grep -v obj-aarch64-apple-darwin").trim().split("\\r?\\n")
 
                 withCredentials([
@@ -325,7 +325,7 @@ stage('publish to balrog') {
 
                 unarchive mapping: ["mozilla-release/" : "artifacts"]
 
-                # ignore obj-aarch64-apple-darwin artifacts - they have been unified with grep -v obj-x86-apple-darwin
+                // ignore obj-aarch64-apple-darwin artifacts - they have been unified with grep -v obj-x86-apple-darwin
                 def artifacts = sh(returnStdout: true, script: 'find artifacts -type f -name *.mar | grep -v obj-aarch64-apple-darwin').trim().split("\\r?\\n")
 
                 withCredentials([usernamePassword(
