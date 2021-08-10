@@ -299,6 +299,7 @@ pref("layout.css.constructable-stylesheets.enabled", true);
 pref("layout.css.grid-template-masonry-value.enabled", true);
 
 // inputmode
+// [EXPERIMENTAL]
 pref("dom.forms.inputmode", true);
 
 /** TAB BEHAVIOR ***/
