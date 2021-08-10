@@ -190,8 +190,7 @@ pref("network.auth.subresource-http-auth-allow", 1);
 
 // Upgrade passive content to use HTTPS on secure pages.
 pref("security.mixed_content.upgrade_display_content", true);
-// Block unencrypted requests from Flash on encrypted pages to mitigate MitM attacks
-pref("security.mixed_content.block_object_subrequest", true);
+
 // Block insecure downloads from secure sites
 pref("dom.block_download_insecure", true);
 
