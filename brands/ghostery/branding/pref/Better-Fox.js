@@ -218,6 +218,11 @@ pref("security.insecure_connection_text.pbmode.enabled", true);
 pref("network.IDN_show_punycode", true);
 
 
+/** HTTPS-FIRST POLICY ***/
+// [NOTE] Already enabled by default in Private Browsing.
+user_pref("dom.security.https_first", true);
+
+
 /** HTTPS-ONLY MODE ***/
 // HTTPS-only connections (#367)
 pref("dom.security.https_only_mode", true);
