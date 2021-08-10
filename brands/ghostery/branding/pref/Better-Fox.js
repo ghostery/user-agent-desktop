@@ -171,6 +171,12 @@ pref("network.trr.send_user-agent_headers", false); /* default */
 pref("network.dns.skipTRR-when-parental-control-enabled", false);
 
 
+/** Encrypted Client Hello (ECH) ***/
+// https://github.com/yokoffing/Better-Fox/blob/b713c0662f01aa2fe81fb1e2cfb8e41c24e5d293/SecureFox.js#L374-L378
+pref("network.dns.echconfig.enabled", true);
+pref("network.dns.use_https_rr_as_altsvc", true);
+
+
 /** PASSWORDS AND AUTOFILL ***/
 // Autofilling saved passwords on HTTP pages
 pref("signon.autofillForms.http", false);
