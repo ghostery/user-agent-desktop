@@ -18,6 +18,9 @@ pref("browser.sessionstore.restore_pinned_tabs_on_demand", true);
 // [1] https://www.ghacks.net/2021/01/25/firefox-nightly-uses-a-new-skeleton-ui-on-start-on-windows/
 pref("browser.startup.preXulSkeletonUI", false);
 
+// about:home startup cache
+pref("browser.startup.homepage.abouthome_cache.enabled", true);
+
 /****************************************************************************
  * SECTION: SECUREFOX                                                       *
 ****************************************************************************/
@@ -287,6 +290,16 @@ pref("findbar.highlightAll", true);
 // Hide image placeholders
 pref("browser.display.show_image_placeholders", false);
 
+// CSS Constructable Stylesheets
+// [EXPERIMENTAL]
+pref("layout.css.constructable-stylesheets.enabled", true);
+
+// CSS Masonry
+// [EXPERIMENTAL]
+pref("layout.css.grid-template-masonry-value.enabled", true);
+
+// inputmode
+pref("dom.forms.inputmode", true);
 
 /** TAB BEHAVIOR ***/
 // Prevent scripts from moving and resizing open windows
@@ -294,6 +307,10 @@ pref("dom.disable_window_move_resize", true);
 
 // Hide bookmarks toolbar from new tab page (#473)
 pref("browser.toolbars.bookmarks.visibility", "never");
+
+// JPEG XL
+// [EXPERIMENTAL]
+pref("image.jxl.enabled", true);
 
 // Prevent password truncation when submitting form data
 // [1] https://www.ghacks.net/2020/05/18/firefox-77-wont-truncate-text-exceeding-max-length-to-address-password-pasting-issues/
