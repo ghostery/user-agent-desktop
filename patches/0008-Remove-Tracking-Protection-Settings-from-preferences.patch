@@ -7,7 +7,7 @@ Subject: Remove Tracking Protection Settings from preferences
  1 file changed, 3 insertions(+)
 
 diff --git a/browser/themes/shared/preferences/privacy.css b/browser/themes/shared/preferences/privacy.css
-index 5e830c19af..5f52e6f964 100644
+index 6bd874ab25..73f9af32a3 100644
 --- a/browser/themes/shared/preferences/privacy.css
 +++ b/browser/themes/shared/preferences/privacy.css
 @@ -76,6 +76,9 @@

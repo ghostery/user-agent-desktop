@@ -7,7 +7,7 @@ Subject: Hide learn more link on network error pages
  1 file changed, 4 insertions(+)
 
 diff --git a/browser/themes/shared/aboutNetError.css b/browser/themes/shared/aboutNetError.css
-index bcbb8fcd10..85948cd8b6 100644
+index ff9aa87597..c3f4b4c799 100644
 --- a/browser/themes/shared/aboutNetError.css
 +++ b/browser/themes/shared/aboutNetError.css
 @@ -4,6 +4,10 @@
@@ -18,9 +18,9 @@ index bcbb8fcd10..85948cd8b6 100644
 +  display: none;
 +}
 +
- body.certerror {
-   width: 100%;
-   justify-content: normal;
+ body {
+   --warning-color: #ffa436;
+ }
 -- 
 2.32.0
 

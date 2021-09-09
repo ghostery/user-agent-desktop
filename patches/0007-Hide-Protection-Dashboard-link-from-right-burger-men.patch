@@ -3,49 +3,54 @@ Date: Fri, 16 Oct 2020 15:47:47 +0200
 Subject: Hide Protection Dashboard link from right burger menu
 
 ---
- browser/base/content/browser.xhtml | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ browser/base/content/appmenu-viewcache.inc.xhtml | 4 ++--
+ browser/base/content/navigator-toolbox.inc.xhtml | 2 ++
+ 2 files changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/browser/base/content/browser.xhtml b/browser/base/content/browser.xhtml
-index c2103dcc71..41c3d8abe5 100644
---- a/browser/base/content/browser.xhtml
-+++ b/browser/base/content/browser.xhtml
-@@ -758,8 +758,8 @@
-                         closemenu="none"
-                         oncommand="gSync.toggleAccountPanel(this, event)"/>
-         </toolbaritem>
--        <toolbarseparator class="sync-ui-item"/>
-         <!--
-+        <toolbarseparator class="sync-ui-item"/>
-         <toolbaritem>
-           <toolbarbutton id="appMenu-protection-report-button"
-                class="subviewbutton subviewbutton-iconic"
-@@ -771,8 +771,8 @@
-             </label>
-           </toolbarbutton>
-         </toolbaritem>
--        -->
-         <toolbarseparator id="appMenu-tp-separator"/>
-+        -->
-         <toolbarbutton id="appMenu-new-window-button"
-                        class="subviewbutton subviewbutton-iconic"
-                        label="&newNavigatorCmd.label;"
-@@ -1837,6 +1837,7 @@
-                    class="chromeclass-toolbar-additional"/>
-               <!-- Use onclick instead of normal popup= syntax since the popup
-                    code fires onmousedown, and hence eats our favicon drag events. -->
-+              <!--
-               <box id="tracking-protection-icon-container" align="center"
-                    role="button"
-                    onclick="gProtectionsHandler.handleProtectionsButtonEvent(event);"
-@@ -1851,6 +1852,7 @@
-                   <description id="tracking-protection-icon-tooltip-label" class="tooltip-label"/>
-                 </tooltip>
-               </box>
-+              -->
-               <box id="identity-box"
-                    pageproxystate="invalid"
-                    ondragstart="gIdentityHandler.onDragStart(event);">
+diff --git a/browser/base/content/appmenu-viewcache.inc.xhtml b/browser/base/content/appmenu-viewcache.inc.xhtml
+index 24af9db9fa..561d7d2134 100644
+--- a/browser/base/content/appmenu-viewcache.inc.xhtml
++++ b/browser/base/content/appmenu-viewcache.inc.xhtml
+@@ -23,8 +23,8 @@
+                       closemenu="none"
+                       oncommand="gSync.toggleAccountPanel(this, event)"/>
+       </toolbaritem>
+-      <toolbarseparator class="sync-ui-item"/>
+       <!--
++      <toolbarseparator class="sync-ui-item"/>
+       <toolbaritem>
+         <toolbarbutton id="appMenu-protection-report-button"
+              class="subviewbutton subviewbutton-iconic"
+@@ -36,8 +36,8 @@
+           </label>
+         </toolbarbutton>
+       </toolbaritem>
+-      -->
+       <toolbarseparator id="appMenu-tp-separator"/>
++      -->
+       <toolbarbutton id="appMenu-new-window-button"
+                      class="subviewbutton subviewbutton-iconic"
+                      data-l10n-id="appmenuitem-new-window"
+diff --git a/browser/base/content/navigator-toolbox.inc.xhtml b/browser/base/content/navigator-toolbox.inc.xhtml
+index 87e498722f..f26bd8909d 100644
+--- a/browser/base/content/navigator-toolbox.inc.xhtml
++++ b/browser/base/content/navigator-toolbox.inc.xhtml
+@@ -180,6 +180,7 @@
+                  class="chromeclass-toolbar-additional"/>
+             <!-- Use onclick instead of normal popup= syntax since the popup
+                  code fires onmousedown, and hence eats our favicon drag events. -->
++            <!--
+             <box id="tracking-protection-icon-container" align="center"
+                  role="button"
+                  onclick="gProtectionsHandler.handleProtectionsButtonEvent(event);"
+@@ -194,6 +195,7 @@
+                 <description id="tracking-protection-icon-tooltip-label" class="tooltip-label"/>
+               </tooltip>
+             </box>
++            -->
+             <box id="identity-box"
+                  pageproxystate="invalid"
+                  ondragstart="gIdentityHandler.onDragStart(event);">
 -- 
 2.32.0
 

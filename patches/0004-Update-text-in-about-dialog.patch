@@ -7,7 +7,7 @@ Subject: Update text in about dialog
  1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/browser/base/content/aboutDialog.xhtml b/browser/base/content/aboutDialog.xhtml
-index 55c8b1c2c5..117e88be62 100644
+index f9f677eb4c..8b039fb273 100644
 --- a/browser/base/content/aboutDialog.xhtml
 +++ b/browser/base/content/aboutDialog.xhtml
 @@ -142,17 +142,17 @@

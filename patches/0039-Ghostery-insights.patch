@@ -16,8 +16,8 @@ index 5c0bfeacea..ae9a89b209 100644
      "ghostery-newtab",
 +    "ghostery-insights",
  ]
-
+ 
  if CONFIG["NIGHTLY_BUILD"]:
---
+-- 
 2.32.0
 

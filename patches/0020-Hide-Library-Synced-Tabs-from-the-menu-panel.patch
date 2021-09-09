@@ -7,21 +7,18 @@ Subject: Hide Library -> Synced Tabs from the menu panel
  1 file changed, 5 insertions(+)
 
 diff --git a/browser/themes/shared/menupanel.inc.css b/browser/themes/shared/menupanel.inc.css
-index 26c0a1a0a0..c88dc70919 100644
+index 4629e5e868..ed7132d3ca 100644
 --- a/browser/themes/shared/menupanel.inc.css
 +++ b/browser/themes/shared/menupanel.inc.css
-@@ -4,6 +4,11 @@
- 
- /* Menu panel and palette styles */
- 
+@@ -23,3 +23,8 @@
+ #appMenu-fullscreen-button2[checked] {
+   list-style-image: url(chrome://browser/skin/fullscreen-exit.svg);
+ }
++
 +/* Hide Library > Synced Tabs */
 +#appMenu-library-remotetabs-button {
 +  display: none;
 +}
-+
- @media not (-moz-proton) {
- #appMenu-new-window-button {
-   list-style-image: url(chrome://browser/skin/window.svg);
 -- 
 2.32.0
 
