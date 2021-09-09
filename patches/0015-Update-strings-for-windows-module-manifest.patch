@@ -3,6 +3,7 @@ Date: Wed, 23 Sep 2020 11:11:16 +0200
 Subject: Update strings for windows module manifest
 
 IMPORTANT: save this file with Windows 1252 encoding
+
 ---
  browser/app/module.ver |  6 +++---
  ipc/app/module.ver     | 12 ++++++------
@@ -14,7 +15,7 @@ index 5ef8d2a02a..143151a29b 100644
 +++ b/browser/app/module.ver
 @@ -1,8 +1,8 @@
 -WIN32_MODULE_COMPANYNAME=Mozilla Corporation
--WIN32_MODULE_COPYRIGHT=ï¿½Firefox and Mozilla Developers; available under the MPL 2 license.
+-WIN32_MODULE_COPYRIGHT=©Firefox and Mozilla Developers; available under the MPL 2 license.
 +WIN32_MODULE_COMPANYNAME=Ghostery Inc.
 +WIN32_MODULE_COPYRIGHT=Ghostery Inc.; available under the MPL 2 license.
  WIN32_MODULE_PRODUCTVERSION=@MOZ_APP_WINVERSION@
@@ -41,6 +42,6 @@ index 8abbd23f0e..25086f171d 100644
 +WIN32_MODULE_DESCRIPTION=Plugin Container for @MOZ_APP_DISPLAYNAME@
 +WIN32_MODULE_PRODUCTNAME=@MOZ_APP_DISPLAYNAME@
 +WIN32_MODULE_NAME=@MOZ_APP_DISPLAYNAME@
--- 
+--
 2.32.0
 
