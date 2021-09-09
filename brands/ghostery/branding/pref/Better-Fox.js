@@ -64,7 +64,7 @@ pref("dom.storage.next_gen", true);
 // Samesite Cookies
 pref("network.cookie.sameSite.laxByDefault", true);
 pref("network.cookie.sameSite.noneRequiresSecure", true);
-pref("network.cookie.sameSite.schemeful", true);
+pref("network.cookie.sameSite.schemeful", false); /* still noticing some breakage with schemeful on educational and professional sites */
 
 
 /** CLEARING HISTORY DEFAULTS (MANUALLY) ***/
@@ -87,42 +87,34 @@ pref("privacy.sanitize.timeSpan", 0);
 
 
 /** SPECULATIVE CONNECTIONS ***/
-// [NOTE] Firefox 85+ partitions (isolates) pooled connections, prefetch connections, pre-connect connections,
-// speculative connections, TLS session identifiers, and other connections. We can take advantage of the speed of
-// pre-connections while preserving privacy. Users may harden these settings to their preference.
-// For more information, see "State Paritioning" and "Network Partitioning".
-
-// Network Predictor /* default pref, but keeping here for reference */
+// Network Predictor
 // https://github.com/yokoffing/Better-Fox/blob/079be70df3e513507dc419c3cce1a413902ada13/SecureFox.js#L184-L195
-pref("network.predictor.enabled", true); // default
-pref("network.predictor.enable-hover-on-ssl", true);
-pref("network.predictor.enable-prefetch", true);
+pref("network.predictor.enabled", false);
 
 // DNS pre-resolve <link rel="dns-prefetch">
 // https://github.com/yokoffing/Better-Fox/blob/e9535084374c4f379bc20fda945b3236b7723c48/SecureFox.js#L201-L206
 pref("network.dns.disablePrefetch", true);
-pref("network.dns.disablePrefetchFromHTTPS", false);
 
-// Preconnect to the autocomplete URL in the address bar /* default pref, but keeping here for reference */
+// Preconnect to the autocomplete URL in the address bar
 // https://github.com/yokoffing/Better-Fox/blob/079be70df3e513507dc419c3cce1a413902ada13/SecureFox.js#L209-L213
-pref("browser.urlbar.speculativeConnect.enabled", true); // default
+pref("browser.urlbar.speculativeConnect.enabled", false);
 
-// Link prefetching <link rel="prefetch"> /* default pref, but keeping here for reference */
+// Link prefetching <link rel="prefetch">
 // https://github.com/yokoffing/Better-Fox/blob/079be70df3e513507dc419c3cce1a413902ada13/SecureFox.js#L216-L225
-pref("network.prefetch-next", true); // default
+pref("network.prefetch-next", false);
 
-// Prefetch links upon hover /* default pref, but keeping here for reference */
+// Prefetch links upon hover 
 // https://github.com/yokoffing/Better-Fox/blob/079be70df3e513507dc419c3cce1a413902ada13/SecureFox.js#L228-L235
-pref("network.http.speculative-parallel-limit", 6); // default
+pref("network.http.speculative-parallel-limit", 0);
 
 // Preload <link rel=preload>
 // https://github.com/yokoffing/Better-Fox/blob/079be70df3e513507dc419c3cce1a413902ada13/SecureFox.js#L238-L247
 pref("network.preload", false);
 
-// New tab preload /* default pref, but keeping here for reference */
+// New tab preload
 // How does this affect Ghostery Browser since we use a description for the New Tab Page?
 // https://github.com/yokoffing/Better-Fox/blob/079be70df3e513507dc419c3cce1a413902ada13/SecureFox.js#L250-L254
-pref("browser.newtab.preload", true); // default
+pref("browser.newtab.preload", true); /* default */
 
 
 /** SEARCH ***/
