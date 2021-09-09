@@ -224,10 +224,6 @@ async function importFromPatchFiles(patchesFolder) {
     ]);
   } catch (ex) {
     // Catch error and raw exception with more details.
-    const { stdout: details } = await execa("git", [
-      "am",
-      "--show-current-patch=raw",
-    ]);
 
     console.error();
     console.error(chalk.bold(chalk.red("Error while importing patches...")));
@@ -242,6 +238,11 @@ async function importFromPatchFiles(patchesFolder) {
     if (stderr) {
       console.error(chalk.bold(chalk.red("STDERR")), ex.stderr.trim());
     }
+
+    const { stdout: details } = await execa("git", [
+      "am",
+      "--show-current-patch=raw",
+    ]);
 
     console.error(chalk.bold(chalk.yellow("PATCH:")), details.trim());
 
