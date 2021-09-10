@@ -14,6 +14,16 @@ RUN wget -nv -O /builds/worker/fetches/clang.tar.zst $IPFS_GATEWAY/ipfs/QmagiTVT
     cd /builds/worker/fetches/ && \
     tar -xf clang.tar.zst && \
     rm clang.tar.zst
+    
+RUN wget -nv -O /builds/worker/fetches/sccache.tar.xz $IPFS_GATEWAY/ipfs/QmYYVhmiQoEBTNETfk7snrTJ5VJRDuLkyTSyd1tcUvj3cS && \
+    cd /builds/worker/fetches/ && \
+    tar -xf sccache.tar.xz && \
+    rm sccache.tar.xz
+
+RUN wget -nv -O /builds/worker/fetches/wasi-sysroot.tar.xz $IPFS_GATEWAY/ipfs/QmVbb4erbw4iDYcNVge3jtPipD2XPn8MmHdUsmyKMSZ6TT && \
+    cd /builds/worker/fetches/ && \
+    tar -xf wasi-sysroot.tar.xz && \
+    rm wasi-sysroot.tar.xz
 
 RUN wget -nv -O /builds/worker/fetches/binutils.tar.xz $IPFS_GATEWAY/ipfs/QmcG91LC64zVz1NJgH9RXMTPs3bdCLtMkRaxax6LRWKXBL && \
     cd /builds/worker/fetches/ && \
