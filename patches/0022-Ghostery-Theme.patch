@@ -20,10 +20,10 @@ X
  create mode 100644 toolkit/mozapps/extensions/default-theme/experiment8.css
 
 diff --git a/browser/components/BrowserGlue.jsm b/browser/components/BrowserGlue.jsm
-index 3adabc3ccc..1d3b70855b 100644
+index 008b3be2f7..5324eecaf6 100644
 --- a/browser/components/BrowserGlue.jsm
 +++ b/browser/components/BrowserGlue.jsm
-@@ -1361,6 +1361,7 @@ BrowserGlue.prototype = {
+@@ -1357,6 +1357,7 @@ BrowserGlue.prototype = {
  
      SessionStore.init();
  
@@ -31,7 +31,7 @@ index 3adabc3ccc..1d3b70855b 100644
      AddonManager.maybeInstallBuiltinAddon(
        "firefox-compact-light@mozilla.org",
        "1.2",
-@@ -1377,6 +1378,7 @@ BrowserGlue.prototype = {
+@@ -1373,6 +1374,7 @@ BrowserGlue.prototype = {
        "1.4",
        "resource://builtin-themes/alpenglow/"
      );
@@ -40,10 +40,10 @@ index 3adabc3ccc..1d3b70855b 100644
      if (AppConstants.MOZ_NORMANDY) {
        Normandy.init();
 diff --git a/browser/components/customizableui/CustomizeMode.jsm b/browser/components/customizableui/CustomizeMode.jsm
-index 8a64ec807d..22438a18ee 100644
+index 4cc3c41fb5..50995e4514 100644
 --- a/browser/components/customizableui/CustomizeMode.jsm
 +++ b/browser/components/customizableui/CustomizeMode.jsm
-@@ -97,9 +97,11 @@ const ALPENGLOW_THEME_ID = "firefox-alpenglow@mozilla.org";
+@@ -91,9 +91,11 @@ const ALPENGLOW_THEME_ID = "firefox-alpenglow@mozilla.org";
  
  const _defaultImportantThemes = [
    DEFAULT_THEME_ID,
@@ -77,7 +77,7 @@ index 4585aec57d..eec3fd7cb3 100644
 +extension.default-theme@mozilla.org.name=Ghostery Private
 +extension.default-theme@mozilla.org.description=
 diff --git a/toolkit/modules/LightweightThemeConsumer.jsm b/toolkit/modules/LightweightThemeConsumer.jsm
-index 3ee394a5d9..dbedec5158 100644
+index 77597681e5..0cc5d2d6af 100644
 --- a/toolkit/modules/LightweightThemeConsumer.jsm
 +++ b/toolkit/modules/LightweightThemeConsumer.jsm
 @@ -6,7 +6,7 @@ var EXPORTED_SYMBOLS = ["LightweightThemeConsumer"];
@@ -90,10 +90,10 @@ index 3ee394a5d9..dbedec5158 100644
  const DARK_THEME_ID = "firefox-compact-dark@mozilla.org";
  
 diff --git a/toolkit/mozapps/extensions/content/aboutaddons.js b/toolkit/mozapps/extensions/content/aboutaddons.js
-index ba4b4ec6c3..5fe5842165 100644
+index 0d8146f5c7..7d2c404b3b 100644
 --- a/toolkit/mozapps/extensions/content/aboutaddons.js
 +++ b/toolkit/mozapps/extensions/content/aboutaddons.js
-@@ -87,8 +87,9 @@ const EXTENSION_ICON_URL =
+@@ -81,8 +81,9 @@ const EXTENSION_ICON_URL =
  const BUILTIN_THEME_PREVIEWS = new Map([
    [
      "default-theme@mozilla.org",
@@ -104,7 +104,7 @@ index ba4b4ec6c3..5fe5842165 100644
    [
      "firefox-compact-light@mozilla.org",
      "chrome://mozapps/content/extensions/firefox-compact-light.svg",
-@@ -101,6 +102,7 @@ const BUILTIN_THEME_PREVIEWS = new Map([
+@@ -95,6 +96,7 @@ const BUILTIN_THEME_PREVIEWS = new Map([
      "firefox-alpenglow@mozilla.org",
      "chrome://mozapps/content/extensions/firefox-alpenglow.svg",
    ],
@@ -377,7 +377,7 @@ index 0000000000..128052f046
 +  margin-inline-end: -6px !important;
 +}
 diff --git a/toolkit/mozapps/extensions/default-theme/manifest.json b/toolkit/mozapps/extensions/default-theme/manifest.json
-index 9646010b54..33c11c88a8 100644
+index f974b9809c..b863601600 100644
 --- a/toolkit/mozapps/extensions/default-theme/manifest.json
 +++ b/toolkit/mozapps/extensions/default-theme/manifest.json
 @@ -7,33 +7,30 @@
@@ -461,10 +461,10 @@ index 9646010b54..33c11c88a8 100644
    }
  }
 diff --git a/toolkit/mozapps/extensions/internal/XPIProvider.jsm b/toolkit/mozapps/extensions/internal/XPIProvider.jsm
-index 0599e221ed..9f58bcf93f 100644
+index 5bd7cabb0f..d0d4edcfc9 100644
 --- a/toolkit/mozapps/extensions/internal/XPIProvider.jsm
 +++ b/toolkit/mozapps/extensions/internal/XPIProvider.jsm
-@@ -2473,7 +2473,7 @@ var XPIProvider = {
+@@ -2474,7 +2474,7 @@ var XPIProvider = {
  
        this.maybeInstallBuiltinAddon(
          "default-theme@mozilla.org",
@@ -473,7 +473,7 @@ index 0599e221ed..9f58bcf93f 100644
          "resource://default-theme/"
        );
  
-@@ -2678,6 +2678,10 @@ var XPIProvider = {
+@@ -2675,6 +2675,10 @@ var XPIProvider = {
        logger.error("startup failed", e);
        AddonManagerPrivate.recordException("XPI", "startup failed", e);
      }
@@ -484,7 +484,7 @@ index 0599e221ed..9f58bcf93f 100644
    },
  
    /**
-@@ -2923,6 +2927,20 @@ var XPIProvider = {
+@@ -2920,6 +2924,20 @@ var XPIProvider = {
      return installed;
    },
  

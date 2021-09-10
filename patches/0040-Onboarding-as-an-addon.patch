@@ -1,0 +1,23 @@
+From: Krzysztof Jan Modras <chrmod@chrmod.net>
+Date: Thu, 9 Sep 2021 11:56:18 +0200
+Subject: Onboarding as an addon
+
+---
+ browser/extensions/moz.build | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/browser/extensions/moz.build b/browser/extensions/moz.build
+index ae9a89b209..e426e4ad33 100644
+--- a/browser/extensions/moz.build
++++ b/browser/extensions/moz.build
+@@ -12,6 +12,7 @@ DIRS += [
+     "ghostery-search",
+     "ghostery-newtab",
+     "ghostery-insights",
++    "ghostery-dawn-onboarding-extension"
+ ]
+ 
+ if CONFIG["NIGHTLY_BUILD"]:
+-- 
+2.32.0
+

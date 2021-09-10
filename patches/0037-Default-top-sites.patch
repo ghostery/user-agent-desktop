@@ -412,7 +412,7 @@ literal 0
 HcmV?d00001
 
 diff --git a/browser/components/newtab/data/content/tippytop/top_sites.json b/browser/components/newtab/data/content/tippytop/top_sites.json
-index 1840e95691..a2e9f1f817 100644
+index a5dadb4db1..709167f69a 100644
 --- a/browser/components/newtab/data/content/tippytop/top_sites.json
 +++ b/browser/components/newtab/data/content/tippytop/top_sites.json
 @@ -178,5 +178,30 @@

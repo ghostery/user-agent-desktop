@@ -20,10 +20,10 @@ index f8a17646a6..5904b8438e 100644
      <link rel="localization" href="browser/branding/brandings.ftl"/>
      <link rel="localization" href="browser/aboutPrivateBrowsing.ftl"/>
 diff --git a/browser/themes/shared/tabs.inc.css b/browser/themes/shared/tabs.inc.css
-index 644d8d5fc9..d6928d3e76 100644
+index 5c497dfcc2..3dd65a4046 100644
 --- a/browser/themes/shared/tabs.inc.css
 +++ b/browser/themes/shared/tabs.inc.css
-@@ -23,7 +23,7 @@
+@@ -30,7 +30,7 @@
  
  :root[privatebrowsingmode=temporary] {
    /* Value for --in-content-page-background in aboutPrivateBrowsing.css */
@@ -31,7 +31,7 @@ index 644d8d5fc9..d6928d3e76 100644
 +  --tabpanel-background-color: #36393f;
  }
  
- @media (-moz-proton) {
+ :root[uidensity=compact] {
 -- 
 2.32.0
 

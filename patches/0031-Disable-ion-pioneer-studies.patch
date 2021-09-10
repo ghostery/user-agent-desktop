@@ -8,10 +8,10 @@ fix #358
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/browser/components/BrowserGlue.jsm b/browser/components/BrowserGlue.jsm
-index 1d3b70855b..57d4ac5720 100644
+index 5324eecaf6..07cd25d66b 100644
 --- a/browser/components/BrowserGlue.jsm
 +++ b/browser/components/BrowserGlue.jsm
-@@ -2203,8 +2203,8 @@ BrowserGlue.prototype = {
+@@ -2212,8 +2212,8 @@ BrowserGlue.prototype = {
      this._monitorScreenshotsPref();
      this._monitorWebcompatReporterPref();
      this._monitorHTTPSOnlyPref();
