@@ -11,29 +11,21 @@
 /****************************************************************************
  * SECTION: FASTFOX                                                         *
 ****************************************************************************/
-
-// Lazy Loading
-pref("dom.image-lazy-loading.enabled", true);
-
 // Lazy session restore
-pref("browser.sessionstore.restore_tabs_lazily", true);
-pref("browser.sessionstore.restore_on_demand", true);
 pref("browser.sessionstore.restore_pinned_tabs_on_demand", true);
 
 // skeleton UI
 // [1] https://www.ghacks.net/2021/01/25/firefox-nightly-uses-a-new-skeleton-ui-on-start-on-windows/
 pref("browser.startup.preXulSkeletonUI", false);
 
+// about:home startup cache
+pref("browser.startup.homepage.abouthome_cache.enabled", true);
+
 /****************************************************************************
  * SECTION: SECUREFOX                                                       *
 ****************************************************************************/
 
 /** TRACKING PROTECTION ***/
-
-// Disable Hyperlink Auditing (click tracking).
-pref("browser.send_pings", false);
-pref("browser.send_pings.require_same_host", true);
-
 // Disable sending additional analytics to web servers
 pref("beacon.enabled", false);
 
@@ -45,36 +37,37 @@ pref("dom.battery.enabled", false);
 pref("security.pki.crlite_mode", 2);
 pref("security.remote_settings.crlite_filters.enabled", true);
 
-// Microphone and camera kill switch (#370) /* experimental */
+// Microphone and camera kill switch (#370)
+// [EXPERIMENTAL]
 pref("privacy.webrtc.globalMuteToggles", true);
 
+// Site Isolation [aka Project Fission]
+// [EXPERIMENTAL]
+// https://github.com/yokoffing/Better-Fox/blob/77128d3d49ba371cb428209c053c35135ba3e4b8/SecureFox.js#L44-L47
+pref("fission.autostart", true);
 
-/** STORAGE ***/
-
-// Dynamic First-Party Isolation (dFPI)
-// Tracker storage partitioning - currently undocumented setting to partition browser storage for trackers in 3rd party contexts.
-// [1] https://bugzilla.mozilla.org/show_bug.cgi?id=1549587
+// State Paritioning [aka Dynamic First-Party Isolation (dFPI)]
+// https://github.com/yokoffing/Better-Fox/blob/77128d3d49ba371cb428209c053c35135ba3e4b8/SecureFox.js#L50-L64
 pref("network.cookie.cookieBehavior", 5);
 
-// Redirect tracking prevention + Purge site data of sites associated with tracking cookies automatically
-pref("privacy.purge_trackers.enabled", true);
-
-// Network Partitioning
-// Allows the browser to save resources like the cache, favicons, CSS files, images, and more
-// on a per-website basis rather than together in the same pool.
+// Network Partitioning /* default pref, but keeping here for reference */
+// https://github.com/yokoffing/Better-Fox/blob/77128d3d49ba371cb428209c053c35135ba3e4b8/SecureFox.js#L69-L76
 pref("privacy.partition.network_state", true);
+
+// Redirect Tracking Prevention /* default pref, but keeping here for reference */
+// https://github.com/yokoffing/Better-Fox/blob/77128d3d49ba371cb428209c053c35135ba3e4b8/SecureFox.js#L79-L86
+pref("privacy.purge_trackers.enabled", true);
 
 // Enable Local Storage Next Generation (LSNG) (DOMStorage) 
 pref("dom.storage.next_gen", true);
 
-// Samesite Cookies /* experimental */
+// Samesite Cookies
 pref("network.cookie.sameSite.laxByDefault", true);
 pref("network.cookie.sameSite.noneRequiresSecure", true);
-// pref("network.cookie.sameSite.schemeful", true); /* test in future builds */
+pref("network.cookie.sameSite.schemeful", false); /* still noticing some breakage with schemeful on educational and professional sites */
 
 
 /** CLEARING HISTORY DEFAULTS (MANUALLY) ***/
-
 // Reset default items to clear with Ctrl-Shift-Del
 // This dialog can also be accessed from the menu History>Clear Recent History
 // Firefox remembers your last choices. This will reset them when you start Firefox.
@@ -90,49 +83,41 @@ pref("privacy.sanitize.timeSpan", 0);
 // Reset default 'Time range to clear' for 'Clear Recent History'.
 // Firefox remembers your last choice. This will reset the value when you start Firefox.
 // 0=everything, 1=last hour, 2=last two hours, 3=last four hours, 4=today
-user_pref("privacy.sanitize.timeSpan", 0);
+pref("privacy.sanitize.timeSpan", 0);
 
 
-/*** PRELOADING ***/
+/** SPECULATIVE CONNECTIONS ***/
+// Network Predictor
+// https://github.com/yokoffing/Better-Fox/blob/079be70df3e513507dc419c3cce1a413902ada13/SecureFox.js#L184-L195
+pref("network.predictor.enabled", false);
 
-// disable DNS prefetching
+// DNS pre-resolve <link rel="dns-prefetch">
+// https://github.com/yokoffing/Better-Fox/blob/e9535084374c4f379bc20fda945b3236b7723c48/SecureFox.js#L201-L206
 pref("network.dns.disablePrefetch", true);
-pref("network.dns.disablePrefetchFromHTTPS", true); /* default */
 
-// Preload the autocomplete URL in the address bar.
-// Firefox preloads URLs that autocomplete when a user types into the address bar.
-// NOTE: Firefox will do the server DNS lookup and TCP and TLS handshake but not start sending or receiving HTTP data.
+// Preconnect to the autocomplete URL in the address bar
+// https://github.com/yokoffing/Better-Fox/blob/079be70df3e513507dc419c3cce1a413902ada13/SecureFox.js#L209-L213
 pref("browser.urlbar.speculativeConnect.enabled", false);
 
-// Link prefetching
-// Along with the referral and URL-following implications, prefetching will generally cause the cookies of the prefetched
-// site to be accessed. (For example, if you google Amazon, the Google results page will prefetch www.amazon.com, causing
-// Amazon cookies to be sent back and forth.)
+// Link prefetching <link rel="prefetch">
+// https://github.com/yokoffing/Better-Fox/blob/079be70df3e513507dc419c3cce1a413902ada13/SecureFox.js#L216-L225
 pref("network.prefetch-next", false);
 
-// Link-mouseover opening connection to linked server.
-// TCP and SSL handshakes are set up in advance but page contents are not downloaded until a click on the link is registered.
-pref("network.http.speculative-parallel-limit", 6); /* default */
+// Prefetch links upon hover 
+// https://github.com/yokoffing/Better-Fox/blob/079be70df3e513507dc419c3cce1a413902ada13/SecureFox.js#L228-L235
+pref("network.http.speculative-parallel-limit", 0);
 
-// Enable <link rel=preload>.
-// Developer hints to the browser to preload some resources with a higher priority and in advance.
-// Helps the web page to render and get into the stable and interactive state faster.
-pref("network.preload", true); /* default */
-
-// Network predictor
-// Uses a local file to remember which resources were needed when the user visits a webpage (such as image.jpg and script.js),
-// so that the next time the user mouseovers a link to that webpage, this history can be used to predict what resources will
-// be needed rather than wait for the document to link those resources.
-pref("network.predictor.enabled", true); /* default */
-pref("network.predictor.enable-hover-on-ssl", true);
-pref("network.predictor.enable-prefetch", false); /* default */
+// Preload <link rel=preload>
+// https://github.com/yokoffing/Better-Fox/blob/079be70df3e513507dc419c3cce1a413902ada13/SecureFox.js#L238-L247
+pref("network.preload", false);
 
 // New tab preload
+// How does this affect Ghostery Browser since we use a description for the New Tab Page?
+// https://github.com/yokoffing/Better-Fox/blob/079be70df3e513507dc419c3cce1a413902ada13/SecureFox.js#L250-L254
 pref("browser.newtab.preload", true); /* default */
 
 
 /** SEARCH ***/
-
 // Enable a seperate search engine for Private Windows
 pref("browser.search.separatePrivateDefault", true);
 pref("browser.search.separatePrivateDefault.ui.enabled", true);
@@ -140,15 +125,9 @@ pref("browser.search.separatePrivateDefault.ui.enabled", true);
 // Live search engine suggestions (Google, Bing, etc.)
 // Search engines keylog every character you type from the URL bar
 pref("browser.search.suggest.enabled", false);
-pref("browser.search.suggest.enabled.private", false);
 
 // URL bar domain guessing
-// Domain guessing intercepts DNS "hostname not found errors" and resends a
-// request (e.g. by adding www or .com). This is inconsistent use (e.g. FQDNs), does not work
-// via Proxy Servers (different error), is a flawed use of DNS (TLDs: why treat .com
-// as the 411 for DNS errors?), privacy issues (why connect to sites you didn't
-// intend to), can leak sensitive data (e.g. query strings: e.g. Princeton attack),
-// and is a security risk (e.g. common typos & malicious sites set up to exploit this).
+// https://github.com/yokoffing/Better-Fox/blob/079be70df3e513507dc419c3cce1a413902ada13/SecureFox.js#L276-L281
 pref("browser.fixup.alternate.enabled", false);
 
 // "Not Secure" text in the URL bar on HTTP sites.
@@ -156,22 +135,24 @@ pref("security.insecure_connection_text.enabled", true);
 pref("security.insecure_connection_text.pbmode.enabled", true);
 
 // Enforce Punycode for Internationalized Domain Names to eliminate possible spoofing
-// Might be undesirable for non-latin alphabet users since legitimate IDN's are also punycoded.
-// [TEST] https://www.xn--80ak6aa92e.com/ (www.apple.com)
+// https://github.com/yokoffing/Better-Fox/blob/b713c0662f01aa2fe81fb1e2cfb8e41c24e5d293/SecureFox.js#L293-L300
 pref("network.IDN_show_punycode", true);
 
 
+/** HTTPS-FIRST POLICY ***/
+// https://github.com/yokoffing/Better-Fox/blob/b713c0662f01aa2fe81fb1e2cfb8e41c24e5d293/SecureFox.js#L307-L313
+pref("dom.security.https_first", true);
+
+
 /** HTTPS-ONLY MODE ***/
-
 // HTTPS-only connections (#367)
-pref("dom.security.https_only_mode", true);
-pref("dom.security.https_only_mode_ever_enabled", true);
+// Enable HTTPS-only Mode for Private Browsing windows
+// https://github.com/yokoffing/Better-Fox/blob/b713c0662f01aa2fe81fb1e2cfb8e41c24e5d293/SecureFox.js#L321-L336
+pref("dom.security.https_only_mode_pbm", true);
+pref("dom.security.https_only_mode_ever_enabled_pbm", true);
 
-// HTTP background requests
-// When attempting to upgrade, if the server doesn't respond within 3 seconds, Firefox
-// sends HTTP requests in order to check if the server supports HTTPS or not.
-// This is done to avoid waiting for a timeout which takes 90 seconds.
-// [1] https://bugzilla.mozilla.org/buglist.cgi?bug_id=1642387,1660945
+// Disable HTTP background requests in HTTPS-only Mode
+// https://github.com/yokoffing/Better-Fox/blob/e9535084374c4f379bc20fda945b3236b7723c48/SecureFox.js#L330-L335
 pref("dom.security.https_only_mode_send_http_background_request", false);
 
 // HTTPS-Only mode for local resources
@@ -179,7 +160,6 @@ pref("dom.security.https_only_mode.upgrade_local", true);
 
 
 /** DNS-over-HTTPS (DOH) ***/
-
 // DoH
 // 0=off, 2=TRR preferred, 3=TRR only, 5=TRR disabled
 pref("network.trr.mode", 0); /* for now??? */
@@ -187,8 +167,13 @@ pref("network.trr.send_user-agent_headers", false); /* default */
 pref("network.dns.skipTRR-when-parental-control-enabled", false);
 
 
-/** PASSWORDS AND AUTOFILL ***/
+/** Encrypted Client Hello (ECH) ***/
+// https://github.com/yokoffing/Better-Fox/blob/b713c0662f01aa2fe81fb1e2cfb8e41c24e5d293/SecureFox.js#L374-L378
+pref("network.dns.echconfig.enabled", true);
+pref("network.dns.use_https_rr_as_altsvc", true);
 
+
+/** PASSWORDS AND AUTOFILL ***/
 // Autofilling saved passwords on HTTP pages
 pref("signon.autofillForms.http", false);
 // Show warning
@@ -198,19 +183,15 @@ pref("signon.privateBrowsingCapture.enabled", false);
 
 
 /** MIXED CONTENT + CROSS-SITE ***/
-
 // HTTP authentication credentials dialogs triggered by sub-resources
 // 0=don't allow sub-resources to open HTTP authentication credentials dialogs
 // 1=don't allow cross-origin sub-resources to open HTTP authentication credentials dialogs
 // 2=allow sub-resources to open HTTP authentication credentials dialogs (default)
 pref("network.auth.subresource-http-auth-allow", 1);
 
-// Block insecure active content (scripts) on HTTPS pages.
-pref("security.mixed_content.block_active_content", true);
 // Upgrade passive content to use HTTPS on secure pages.
 pref("security.mixed_content.upgrade_display_content", true);
-// Block unencrypted requests from Flash on encrypted pages to mitigate MitM attacks
-pref("security.mixed_content.block_object_subrequest", true);
+
 // Block insecure downloads from secure sites
 pref("dom.block_download_insecure", true);
 
@@ -218,28 +199,13 @@ pref("dom.block_download_insecure", true);
 // [1] https://bugzilla.mozilla.org/buglist.cgi?bug_id=1659530,1681331
 pref("extensions.postDownloadThirdPartyPrompt", false);
 
-// Permissions delegation
-// Currently applies to cross-origin geolocation, camera, mic and screen-sharing
-// permissions, and fullscreen requests. Disabling delegation means any prompts
-// for these will show/use their correct 3rd party origin
-pref("permissions.delegation.enabled", false);
-
-// "window.name" protection
-// If a new page from another domain is loaded into a tab, then window.name is set to an empty string. The original
-// string is restored if the tab reverts back to the original page. This change prevents some cross-site attacks.
-pref("privacy.window.name.update.enabled", true);
-
 // Downgrade Cross-Origin Referers
-// Control when to send a referer.
-// 0=always (default), 1=only if base domains match, 2=only if hosts match
-pref("network.http.referer.XOriginPolicy", 0); /* default */
 // Control the amount of information to send.
 // 0=send full URI (default), 1=scheme+host+port+path, 2=scheme+host+port
 pref("network.http.referer.XOriginTrimmingPolicy", 2);
 
 
 /** GOOGLE SAFE BROWSING (GSB) ***/
-
 // GSB, master switch (see #38)
 // Privacy & Security>Security>... "Block dangerous and deceptive content"
 // pref("browser.safebrowsing.malware.enabled", false);
@@ -262,46 +228,35 @@ pref("browser.safebrowsing.downloads.remote.enabled", false);
 
 
 /** MOZILLA ***/
-
 // Geolocation URL (see #187, #405)
 // pref("geo.provider.network.url", "https://location.services.mozilla.com/v1/geolocate?key=%MOZILLA_API_KEY%");
 pref("geo.provider.network.logging.enabled", false);
-
-// Enforce Firefox blocklist for extensions + no hiding tabs
-// This includes updates for "revoked certificates".
-pref("extensions.blocklist.enabled", true);
-pref("extensions.webextensions.tabhide.enabled", false);
 
 
 /****************************************************************************
  * SECTION: PESKYFOX                                                        *
 ****************************************************************************/
-
 /** TAB WARNINGS ***/
-
 pref("browser.tabs.warnOnClose", false);
 pref("browser.tabs.warnOnCloseOtherTabs", false);
 pref("browser.tabs.warnOnOpen", false);
 
 
 /** FULLSCREEN ***/
-
 // transition time (instant)
 pref("full-screen-api.transition-duration.enter", "0 0");
 pref("full-screen-api.transition-duration.leave", "0 0");
 // fullscreen notice (disable)
-pref("full-screen-api.warning.delay", -1);
-pref("full-screen-api.warning.timeout", -1);
+pref("full-screen-api.warning.delay", 0);
+pref("full-screen-api.warning.timeout", 0);
 
 
 /** DOWNLOADS ***/
-
 // always ask where to download
 pref("browser.download.useDownloadDir", false);
 
 
 /** VARIOUS ***/
-
 // Dropdown options in the URL bar
 pref("browser.urlbar.suggest.bookmark", true);
 pref("browser.urlbar.suggest.engines", false);
@@ -321,26 +276,34 @@ pref("permissions.default.desktop-notification", 2);
 // isn't loaded, by pushing messages to your userAgentID through Mozilla's Push Server.
 pref("dom.push.enabled", false);
 
-// Autoplay
-pref("media.block-autoplay-until-in-foreground", true);
-
 // Show all matches in Findbar
 pref("findbar.highlightAll", true);
 
 // Hide image placeholders
 pref("browser.display.show_image_placeholders", false);
 
+// CSS Constructable Stylesheets
+// [EXPERIMENTAL]
+pref("layout.css.constructable-stylesheets.enabled", true);
+
+// CSS Masonry
+// [EXPERIMENTAL]
+pref("layout.css.grid-template-masonry-value.enabled", true);
+
+// inputmode
+// [EXPERIMENTAL]
+pref("dom.forms.inputmode", true);
 
 /** TAB BEHAVIOR ***/
-
 // Prevent scripts from moving and resizing open windows
 pref("dom.disable_window_move_resize", true);
 
 // Hide bookmarks toolbar from new tab page (#473)
 pref("browser.toolbars.bookmarks.visibility", "never");
 
-// AVIF images
-pref("image.avif.enabled", true);
+// JPEG XL
+// [EXPERIMENTAL]
+pref("image.jxl.enabled", true);
 
 // Prevent password truncation when submitting form data
 // [1] https://www.ghacks.net/2020/05/18/firefox-77-wont-truncate-text-exceeding-max-length-to-address-password-pasting-issues/
@@ -352,8 +315,7 @@ pref("clipboard.plainTextOnly", true);
 // Limit events that can cause a pop-up
 // Firefox provides an option to provide exceptions for sites, remembered in your Site Settings.
 // (default) "change click dblclick auxclick mouseup pointerup notificationclick reset submit touchend contextmenu"
-pref("dom.popup_allowed_events", "click dblclick");
-pref("dom.disable_open_during_load", true);
+pref("dom.popup_allowed_events", "click dblclick mousedown pointerdown");
 
 /****************************************************************************
  * END: BETTERFOX                                                           *
