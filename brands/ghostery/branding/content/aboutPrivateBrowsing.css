@@ -26,6 +26,7 @@ html.private {
 .search-inner-wrapper {
   padding: 0;
   margin-bottom: 24px;
+  min-width: 654px !important;
 }
 
 .search-handoff-button, .search-handoff-button:active, .search-handoff-button:enabled:hover:active {
