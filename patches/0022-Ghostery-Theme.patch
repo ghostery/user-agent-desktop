@@ -12,11 +12,11 @@ X
  .../global/global-extension-fields.properties |   4 +-
  toolkit/modules/LightweightThemeConsumer.jsm  |   2 +-
  .../mozapps/extensions/content/aboutaddons.js |   4 +-
- .../extensions/default-theme/experiment8.css  | 258 ++++++++++++++++++
+ .../extensions/default-theme/experiment8.css  | 253 ++++++++++++++++++
  .../extensions/default-theme/manifest.json    |  55 +---
  .../extensions/internal/XPIProvider.jsm       |  20 +-
  toolkit/mozapps/extensions/jar.mn             |   1 +
- 10 files changed, 302 insertions(+), 47 deletions(-)
+ 10 files changed, 297 insertions(+), 47 deletions(-)
  create mode 100644 toolkit/mozapps/extensions/default-theme/experiment8.css
 
 diff --git a/browser/components/BrowserGlue.jsm b/browser/components/BrowserGlue.jsm
@@ -114,10 +114,10 @@ index 0d8146f5c7..7d2c404b3b 100644
  const PERMISSION_MASKS = {
 diff --git a/toolkit/mozapps/extensions/default-theme/experiment8.css b/toolkit/mozapps/extensions/default-theme/experiment8.css
 new file mode 100644
-index 0000000000..128052f046
+index 0000000000..7220501438
 --- /dev/null
 +++ b/toolkit/mozapps/extensions/default-theme/experiment8.css
-@@ -0,0 +1,258 @@
+@@ -0,0 +1,253 @@
 +/* This Source Code Form is subject to the terms of the Mozilla Public
 + * License, v. 2.0. If a copy of the MPL was not distributed with this
 + * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
@@ -130,6 +130,7 @@ index 0000000000..128052f046
 +  --toolbarbutton-inner-padding: 9px;
 +  --toolbarbutton-border-radius: 17px;
 +  --tab-border-radius: 17px;
++  --urlbar-icon-padding: 9px !important;
 +}
 +
 +#urlbar-container,
@@ -288,12 +289,6 @@ index 0000000000..128052f046
 +
 +#urlbar[breakout][breakout-extend] > #urlbar-input-container {
 +  height: 34px !important;
-+}
-+
-+.urlbar-icon {
-+  padding: 9px;
-+  width: unset;
-+  height: unset;
 +}
 +
 +.identity-box-button {
