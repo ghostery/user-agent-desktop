@@ -8,15 +8,9 @@ def build(opts, Closure postpackage={}, Closure archiving={}) {
         def triggeringCommitHash = sh(returnStdout: true, script: "git log -n 1 --pretty=format:'%h'").trim()
 
         stage('prepare') {
-            if (!fileExists('./build/makecab.exe')) {
-                sh 'wget -nv -O ./build/makecab.exe ftp://10.180.244.36/cliqz-browser-build-artifacts/makecab.exe '
-            }
-            if (!fileExists('./build/MacOSX11.sdk.tar.bz2')) {
-                sh 'wget -nv -O ./build/MacOSX10.12.sdk.tar.bz2 ftp://10.180.244.36/cliqz-browser-build-artifacts/MacOSX10.12.sdk.tar.bz2'
-            }
-            if (!fileExists('./build/MacOSX11.0.sdk.tar.bz2')) {
-                sh 'wget -nv -O ./build/MacOSX11.0.sdk.tar.bz2 ftp://10.180.244.36/cliqz-browser-build-artifacts/MacOSX11.0.sdk.tar.bz2'
-            }
+            download('makecab.exe')
+            download('MacOSX10.12.sdk.tar.bz2')
+            download('MacOSX11.0.sdk.tar.bz2')
         }
 
         def image = stage('docker build base') {
@@ -390,6 +384,16 @@ def withGithubRelease(Closure body) {
             )
         ]) {
             body()
+        }
+    }
+}
+
+def download(filename) {
+    if (!fileExists("./build/${filename}")) {
+        withCredentials([
+            [$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'user-agent-desktop-jenkins-cache', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'],
+        ]) {
+            sh "aws s3 --region us-east-1 cp s3://user-agent-desktop-jenkins-cache/${filename} ./build/${filename}"
         }
     }
 }
