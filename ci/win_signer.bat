@@ -5,9 +5,6 @@ SET BUILD_SHELL=c:\mozilla-build\start-shell.bat
 set timestamp_server_sha1=http://timestamp.digicert.com
 set timestamp_server_sha256=http://sha256timestamp.ws.symantec.com/sha256/timestamp
 
-rem Ensure SDK signing tools are available
-ECHO cd $CQZ_WORKSPACE ^^^&^^^& ./ci/bootstrap_windows.sh | call %BUILD_SHELL%
-
 rem Enter a directory and sign everything
 cd %1
 
