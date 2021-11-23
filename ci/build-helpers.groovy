@@ -8,15 +8,9 @@ def build(opts, Closure postpackage={}, Closure archiving={}) {
         def triggeringCommitHash = sh(returnStdout: true, script: "git log -n 1 --pretty=format:'%h'").trim()
 
         stage('prepare') {
-            if (!fileExists('./build/makecab.exe')) {
-                sh 'wget -nv -O ./build/makecab.exe ftp://10.180.244.36/cliqz-browser-build-artifacts/makecab.exe '
-            }
-            if (!fileExists('./build/MacOSX11.sdk.tar.bz2')) {
-                sh 'wget -nv -O ./build/MacOSX10.12.sdk.tar.bz2 ftp://10.180.244.36/cliqz-browser-build-artifacts/MacOSX10.12.sdk.tar.bz2'
-            }
-            if (!fileExists('./build/MacOSX11.0.sdk.tar.bz2')) {
-                sh 'wget -nv -O ./build/MacOSX11.0.sdk.tar.bz2 ftp://10.180.244.36/cliqz-browser-build-artifacts/MacOSX11.0.sdk.tar.bz2'
-            }
+            download('makecab.exe')
+            download('MacOSX10.12.sdk.tar.bz2')
+            download('MacOSX11.0.sdk.tar.bz2')
         }
 
         def image = stage('docker build base') {
@@ -215,6 +209,9 @@ def windows_signed_packaging(name, objDir, appName='Ghostery') {
 // Sign windows installers
 def windows_signing(name, objDir, artifactGlob, locales) {
     return {
+        // this runs on linux node
+        downloadWinSDK()
+
         node('windows') {
             stage("Checkout") {
                 checkout scm
@@ -223,6 +220,7 @@ def windows_signing(name, objDir, artifactGlob, locales) {
             }
             stage('Prepare') {
                 unstash name
+                unstash 'win_sdk'
             }
             stage('Sign') {
                 withCredentials([
@@ -249,12 +247,16 @@ def windows_signing(name, objDir, artifactGlob, locales) {
 // Sign binaries and libraries in a stashed folder
 def windows_sign_dir(name, dir) {
     return {
+        // this runs on linux node
+        downloadWinSDK()
+
         node('windows') {
             stage('Sign') {
                 def signed_name = "${name}_signed"
                 checkout scm
                 bat 'del /s /q mozilla-release'
                 unstash name
+                unstash 'win_sdk'
                 withCredentials([
                     file(credentialsId: "7da7d2de-5a10-45e6-9ffd-4e49f83753a8", variable: 'WIN_CERT'),
                     string(credentialsId: "33b3705c-1c2e-4462-9354-56a76bbb164c", variable: 'WIN_CERT_PASS'),
@@ -391,6 +393,28 @@ def withGithubRelease(Closure body) {
         ]) {
             body()
         }
+    }
+}
+
+def download(filename) {
+    if (!fileExists("./build/${filename}")) {
+        withCredentials([
+            [$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'user-agent-desktop-jenkins-cache', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'],
+        ]) {
+            sh "aws s3 --region us-east-1 cp s3://user-agent-desktop-jenkins-cache/${filename} ./build/${filename}"
+        }
+    }
+}
+
+def downloadWinSDK() {
+    def version = 'vs2017_15.9.29'
+    if (!fileExists("./build/${version}")) {
+        download("${version}.tar.bz2")
+        sh "tar xjvf ${version}.tar.bz2 -C ./build"
+        stash name: "win_sdk", includes: [
+            "./build/${version}/*",
+            "./build/${version}/**/*",
+        ].join(',')
     }
 }
 

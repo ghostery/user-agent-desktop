@@ -6,8 +6,6 @@ SET BUILD_SHELL=c:\mozilla-build\start-shell.bat
 SET APP_NAME=Ghostery
 SET lang=%1
 
-ECHO cd $CQZ_WORKSPACE ^^^&^^^& ./ci/bootstrap_windows.sh | call %BUILD_SHELL%
-
 set ff_version=''
 set archivator_exe=c:\mozilla-build\bin\7z.exe
 for /F %%f in (%CQZ_WORKSPACE%\mozilla-release\browser\config\version.txt) do set ff_version=%%f
