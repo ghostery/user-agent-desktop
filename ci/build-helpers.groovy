@@ -15,7 +15,7 @@ def build(opts, Closure postpackage={}, Closure archiving={}) {
 
         def image = stage('docker build base') {
             docker.build('ua-build-base', '-f build/Base.dockerfile ./build/ --build-arg user=`whoami` --build-arg UID=`id -u` --build-arg GID=`id -g`')
-            docker.build("ua-build-${opts.name.toLowerCase()}", "-f build/${opts.dockerFile} ./build --build-arg IPFS_GATEWAY=http://10.180.244.30:8080")
+            docker.build("ua-build-${opts.name.toLowerCase()}", "-f build/${opts.dockerFile} ./build")
         }
 
         def defaultEnv = [
@@ -360,7 +360,7 @@ def mac_unified_dmg() {
     def x86ObjDir = "obj-x86_64-apple-darwin"
     checkout scm
     docker.build('ua-build-base', '-f build/Base.dockerfile ./build/ --build-arg user=`whoami` --build-arg UID=`id -u` --build-arg GID=`id -g`')
-    image = docker.build("ua-build-macosarm", '-f build/MacOSARM.dockerfile ./build/ --build-arg IPFS_GATEWAY=http://10.180.244.30:8080')
+    image = docker.build("ua-build-macosarm", '-f build/MacOSARM.dockerfile ./build/')
     image.inside() {
         prepare_workspace(false, 'macosx-aarch64', true)
         unarchive mapping: ["mozilla-release/" : "."]

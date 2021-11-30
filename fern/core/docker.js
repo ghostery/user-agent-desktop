@@ -6,11 +6,16 @@ const yaml = require("js-yaml");
 const Listr = require("listr");
 const execa = require("execa");
 
-const { getRoot } = require("./workspace.js");
+const { getRoot, load: loadWorkspace } = require("./workspace.js");
+const { exit } = require("process");
 
 const MOZ_FETCHES_DIR = "/builds/worker/fetches/";
 
-const SKIP_TOOLCHAINS = new Set(['win64-pdbstr', 'macosx64-sdk-11.0', 'macosx64-sdk-10.12'])
+const SKIP_TOOLCHAINS = new Set([
+  "win64-pdbstr",
+  "macosx64-sdk-11.0",
+  "macosx64-sdk-10.12",
+]);
 
 async function loadFetches(root) {
   return yaml.safeLoad(
@@ -92,7 +97,6 @@ function generateFetch(fetches, key) {
 
 async function generateDockerFile({ key, fetches, job, name, toolchains }) {
   const statements = ["FROM ua-build-base"];
-  statements.push("ARG IPFS_GATEWAY=https://cloudflare-ipfs.com");
   const env = Object.entries(job.worker.env || {})
     .map(([k, v]) => `${k}=${v}`)
     .join(" \\\n    ");
@@ -102,13 +106,15 @@ async function generateDockerFile({ key, fetches, job, name, toolchains }) {
     statements.push(generateFetch(fetches, key));
   }
 
-  for (const { filename, hash } of toolchains) {
-    statements.push([
-      `RUN wget -nv -O /builds/worker/fetches/${filename} $IPFS_GATEWAY/ipfs/${hash} &&`,
-      `cd /builds/worker/fetches/ &&`,
-      `tar -xf ${filename} &&`,
-      `rm ${filename}`
-    ].join(" \\\n    "));
+  for (const { filename, url } of toolchains) {
+    statements.push(
+      [
+        `RUN wget -nv -O /builds/worker/fetches/${filename} ${url} &&`,
+        `cd /builds/worker/fetches/ &&`,
+        `tar -xf ${filename} &&`,
+        `rm ${filename}`,
+      ].join(" \\\n    ")
+    );
   }
 
   if (key.startsWith("win")) {
@@ -197,7 +203,7 @@ async function generate(artifactBaseDir) {
     {
       name: "WindowsARM",
       key: "win64-aarch64/opt",
-      arch: 'arm64',
+      arch: "arm64",
       buildPath: path.join(
         root,
         "mozilla-release",
@@ -210,7 +216,7 @@ async function generate(artifactBaseDir) {
     {
       name: "MacOSARM",
       key: "macosx64-aarch64-shippable/opt",
-      arch: 'arm64',
+      arch: "arm64",
       buildPath: path.join(
         root,
         "mozilla-release",
@@ -219,7 +225,7 @@ async function generate(artifactBaseDir) {
         "build",
         "macosx.yml"
       ),
-    }
+    },
   ];
   // Collect the toolchains required for each build from it's specification in taskcluster configs.
   const buildInfos = await Promise.all(
@@ -235,17 +241,26 @@ async function generate(artifactBaseDir) {
       return jobs[key];
     })
   );
-  // Generate the Listr tasks for fetching toolchains from taskcluster and getting their IPFS address.
+  // Generate the Listr tasks for fetching toolchains from taskcluster and getting their S3 address.
   const toolchainFetchTasks = [];
   const toolchainsForConfig = buildConfigs.map(() => []);
+  const workspace = await loadWorkspace();
+  const s3bucket = workspace["s3bucket"];
+  const ffVersion = workspace["firefox"];
+
   buildInfos.forEach((job, i) => {
     for (const key of job.fetches.toolchain) {
-      if (toolchains.get(key).run["toolchain-artifact"] !== undefined && !SKIP_TOOLCHAINS.has(key)) {
+      if (
+        toolchains.get(key).run["toolchain-artifact"] !== undefined &&
+        !SKIP_TOOLCHAINS.has(key)
+      ) {
         const name = toolchains.get(key).name || key;
         const artifact = toolchains.get(key).run["toolchain-artifact"];
         const filename = artifact.split("/").pop();
         const localDir = path.join(artifactBaseDir, name);
         const artifactPath = path.join(localDir, filename);
+        const s3Key = `toolchains/${ffVersion}/${name}/${filename}`;
+
         toolchainFetchTasks.push({
           title: `Fetch toolchain: ${name} ${filename}`,
           skip: async () => fse.pathExists(artifactPath),
@@ -256,19 +271,41 @@ async function generate(artifactBaseDir) {
               artifactPath,
               `https://firefox-ci-tc.services.mozilla.com/api/index/v1/task/gecko.cache.level-3.toolchains.v3.${name}.latest/artifacts/${artifact}`,
             ]);
-          }
+          },
         });
         toolchainFetchTasks.push({
-          title: `Get toolchain IPFS address: ${name} ${filename}`,
+          title: `Upload toolchain to S3: ${name} ${filename}`,
           task: async () => {
-            const ipfsAdd = await execa("ipfs", ["add", "-Q", artifactPath]);
-            const hash = ipfsAdd.stdout.trim();
+            // Upload not existing files to S3. We use "aws s3 sync" because
+            // it can manage a few edge cases easily:
+            // - upload a file if it does not exist on S3
+            // - upload a file if a local file has a different size than S3 object
+            // FYI: "sync" doesn't work with files, but with directories,
+            // so we do the trick with '--include' and '--exclude' parameters.
+            await execa("aws", [
+              "s3",
+              "sync",
+              "--quiet",
+              "--size-only",
+              "--exclude",
+              "'*'",
+              "--include",
+              artifact,
+              localDir,
+              `s3://${s3bucket}/toolchains/${ffVersion}/${name}`,
+            ]);
+          },
+        });
+        toolchainFetchTasks.push({
+          title: `Get toolchain S3 address: ${name} ${filename}`,
+          task: async () => {
+            const url = `https://${s3bucket}.s3.amazonaws.com/${s3Key}`;
             toolchainsForConfig[i].push({
               name,
               filename,
-              hash,
+              url,
             });
-            return hash;
+            return url;
           },
         });
       }

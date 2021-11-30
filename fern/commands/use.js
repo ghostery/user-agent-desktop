@@ -18,20 +18,9 @@ module.exports = (program) => {
       "-f, --firefox <FIREFOX>",
       "Specify which version of Firefox to use"
     )
-    .option(
-      "-a, --app <APP>",
-      "Specify the app version"
-    )
-    .option(
-      "--ipfs-gateway <URL>",
-      "Specify an IPFS gateway for downloading Firefox"
-    )
+    .option("-a, --app <APP>", "Specify the app version")
     .action(
-      async ({
-        app: appVersionOverride,
-        firefox: firefoxVersionOverride,
-        ipfsGateway,
-      }) => {
+      async ({ app: appVersionOverride, firefox: firefoxVersionOverride }) => {
         let workspace = await loadWorkspace();
 
         if (
@@ -63,7 +52,8 @@ module.exports = (program) => {
         const tasks = new Listr([
           {
             title: `Setup Firefox ${workspace.firefox}`,
-            task: async () => await firefox.use(workspace.firefox, ipfsGateway, workspace.ipfsAddr),
+            task: async () =>
+              await firefox.use(workspace.firefox, workspace.s3bucket),
           },
           {
             title: `Setup Addons`,
