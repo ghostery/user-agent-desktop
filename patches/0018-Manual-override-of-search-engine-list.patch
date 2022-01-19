@@ -1035,7 +1035,7 @@ index 0000000000..4348f01068
 +  }
 +}
 diff --git a/toolkit/components/search/SearchEngineSelector.jsm b/toolkit/components/search/SearchEngineSelector.jsm
-index 9f61477182..064cad4de9 100644
+index c880b8ca05..93d5ed43b3 100644
 --- a/toolkit/components/search/SearchEngineSelector.jsm
 +++ b/toolkit/components/search/SearchEngineSelector.jsm
 @@ -94,6 +94,112 @@ class SearchEngineSelector {
@@ -1152,5 +1152,5 @@ index 9f61477182..064cad4de9 100644
     * Handles getting the configuration from remote settings.
     */
 -- 
-2.32.0
+2.34.1
 

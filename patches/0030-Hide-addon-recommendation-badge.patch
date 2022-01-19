@@ -8,10 +8,10 @@ fix #256
  1 file changed, 1 insertion(+)
 
 diff --git a/toolkit/mozapps/extensions/content/aboutaddons.css b/toolkit/mozapps/extensions/content/aboutaddons.css
-index cc40b15624..20d7942840 100644
+index 990c028d00..12f6787555 100644
 --- a/toolkit/mozapps/extensions/content/aboutaddons.css
 +++ b/toolkit/mozapps/extensions/content/aboutaddons.css
-@@ -335,6 +335,7 @@ addon-card[expanded] .update-postponed-bar + .addon-card-message {
+@@ -341,6 +341,7 @@ addon-card[expanded] .update-postponed-bar + .addon-card-message {
  .addon-badge-recommended {
    background-color: var(--orange-50);
    background-image: url("chrome://mozapps/skin/extensions/recommended.svg");
@@ -20,5 +20,5 @@ index cc40b15624..20d7942840 100644
  
  .addon-badge-line {
 -- 
-2.32.0
+2.34.1
 

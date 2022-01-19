@@ -7,10 +7,10 @@ Subject: Update text in about dialog
  1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/browser/base/content/aboutDialog.xhtml b/browser/base/content/aboutDialog.xhtml
-index f9f677eb4c..8b039fb273 100644
+index 90a568a17d..75d5a23a02 100644
 --- a/browser/base/content/aboutDialog.xhtml
 +++ b/browser/base/content/aboutDialog.xhtml
-@@ -142,17 +142,17 @@
+@@ -136,17 +136,17 @@
            <vbox id="experimental" hidden="true">
              <description class="text-blurb" id="warningDesc" data-l10n-id="warningDesc-version"></description>
              <description class="text-blurb" id="communityExperimentalDesc" data-l10n-id="community-exp">
@@ -31,7 +31,7 @@ index f9f677eb4c..8b039fb273 100644
            </description>
          </vbox>
        </vbox>
-@@ -161,7 +161,7 @@
+@@ -155,7 +155,7 @@
        <hbox pack="center">
          <label is="text-link" class="bottom-link" useoriginprincipal="true" href="about:license" data-l10n-id="bottomLinks-license"/>
          <label is="text-link" class="bottom-link" useoriginprincipal="true" href="about:rights" data-l10n-id="bottomLinks-rights"/>
@@ -41,5 +41,5 @@ index f9f677eb4c..8b039fb273 100644
        <description id="trademark" data-l10n-id="trademarkInfo"></description>
      </vbox>
 -- 
-2.32.0
+2.34.1
 
