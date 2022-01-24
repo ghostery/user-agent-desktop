@@ -8,7 +8,7 @@ ac_add_options --enable-crashreporter
 ac_add_options --enable-js-shell
 
 . "$topsrcdir/build/mozconfig.rust"
-. "$topsrcdir/build/mozconfig.cache"
+#. "$topsrcdir/build/mozconfig.cache"
 # //build/mozconfig.common
 
 # cctools for ld, ar, and other related tools ; dsymutil for rust.
