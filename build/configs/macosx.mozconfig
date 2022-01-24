@@ -57,8 +57,6 @@ unset MOZ_STDCXX_COMPAT
 
 # //build/macosx/cross-mozconfig.common
 
-. $topsrcdir/build/mozconfig.wasm-sandboxing
-
 # disable tests for this build
 ac_add_options --disable-tests
 
