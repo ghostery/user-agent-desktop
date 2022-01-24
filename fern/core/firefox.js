@@ -13,13 +13,15 @@ const { getRoot } = require("./workspace.js");
 const { getCacheDir } = require("./caching.js");
 const { fileExists, folderExists, symlinkExists } = require("./utils.js");
 
-async function use(version, ipfsGateway, ipfsAddr) {
+async function use(version, s3bucket) {
   const root = await getRoot();
   const cache = await getCacheDir("firefox", `${version}`);
-  const folder = path.join(cache, `firefox-${version.split('b')[0]}`);
+  const folder = path.join(cache, `firefox-${version.split("b")[0]}`);
   const archive = path.join(cache, `firefox-${version}.source.tar.xz`);
   const git = path.join(folder, ".git");
-  const baseUrl = ipfsGateway ? `${ipfsGateway}${ipfsAddr}` : "https://archive.mozilla.org/pub";
+  const baseUrl = s3bucket
+    ? `https://${s3bucket}.s3.amazonaws.com`
+    : "https://archive.mozilla.org/pub";
   const url = `${baseUrl}/firefox/releases/${version}/source/firefox-${version}.source.tar.xz`;
   return new Listr([
     {

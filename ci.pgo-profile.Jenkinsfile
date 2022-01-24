@@ -108,7 +108,7 @@ if (params.MacOSX64) {
           npm ci
           rm -rf mozilla-release
           rm -rf /tmp/*.app
-          ./fern.js use --ipfs-gateway=http://10.180.244.30:8080
+          ./fern.js use
         '''
       }
 
