@@ -212,7 +212,7 @@ def windows_signing(name, objDir, artifactGlob, locales) {
         // this runs on linux node
         downloadWinSDK()
 
-        node('windows') {
+        node('browser-builder-windows') {
             stage("Checkout") {
                 checkout scm
                 // clean old build artifacts in work dir
@@ -250,7 +250,7 @@ def windows_sign_dir(name, dir) {
         // this runs on linux node
         downloadWinSDK()
 
-        node('windows') {
+        node('browser-builder-windows') {
             stage('Sign') {
                 def signed_name = "${name}_signed"
                 checkout scm
@@ -272,7 +272,7 @@ def windows_sign_dir(name, dir) {
 
 def linux_signing(name, objDir, artifactGlob) {
     return {
-        node('docker') {
+        node('browser-builder') {
             stage('checkout') {
                 checkout scm
             }
