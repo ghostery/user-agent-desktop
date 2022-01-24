@@ -257,6 +257,14 @@ stage('Sign MAR') {
         node('browser-builder') {
             checkout scm
 
+            // prepare signmar environment
+            withCredentials([
+                [$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'user-agent-desktop-jenkins-cache', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'],
+            ]) {
+                sh 'aws s3 --region us-east-1 --recursive --quiet cp s3://user-agent-desktop-jenkins-cache/mar/ .'
+                sh 'chmod a+x signmar'
+            }
+
             docker.build('ua-build-base', '-f build/Base.dockerfile ./build/ --build-arg user=`whoami` --build-arg UID=`id -u` --build-arg GID=`id -g`')
 
             docker.image('ua-build-base').inside() {
