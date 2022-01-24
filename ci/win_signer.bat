@@ -19,5 +19,5 @@ for /R %%f in (
     "%CLZ_SIGNTOOL_PATH%" sign /fd sha256 /tr %timestamp_server_sha256% /td sha256 /f %WIN_CERT% /p %WIN_CERT_PASS% /as %%f
     "%CLZ_SIGNTOOL_PATH%" verify /pa %%f
   )
-  if ERRORLEVEL 1 (goto :error)
+  if ERRORLEVEL 1 (exit /b 1)
 )

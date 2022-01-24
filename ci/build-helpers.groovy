@@ -209,9 +209,6 @@ def windows_signed_packaging(name, objDir, appName='Ghostery') {
 // Sign windows installers
 def windows_signing(name, objDir, artifactGlob, locales) {
     return {
-        // this runs on linux node
-        downloadWinSDK()
-
         node('browser-builder-windows') {
             stage("Checkout") {
                 checkout scm
@@ -410,12 +407,9 @@ def downloadWinSDK() {
     def version = 'vs2017_15.9.29'
     if (!fileExists("./build/${version}")) {
         download("${version}.tar.bz2")
-        sh "tar xjvf ${version}.tar.bz2 -C ./build"
-        stash name: "win_sdk", includes: [
-            "./build/${version}/*",
-            "./build/${version}/**/*",
-        ].join(',')
+        sh "tar xjvf ./build/${version}.tar.bz2 -C ./build"
     }
+    stash name: "win_sdk", includes: "build/${version}/"
 }
 
 return this
