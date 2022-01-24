@@ -24,7 +24,7 @@ def helpers
 def buildId = new Date().format('yyyyMMddHHmmss')
 def locales = params.Locales ? params.Locales.split(',') : []
 
-node('master') {
+node('browser-builder') {
     checkout scm
 
     helpers = load "ci/build-helpers.groovy"
@@ -36,7 +36,7 @@ if (params.Linux64) {
     def artifactGlob = "$objDir/dist/Ghostery-*"
 
     buildmatrix[name] = {
-        node('docker && !magrathea') {
+        node('browser-builder') {
             helpers.build([
                 name: name,
                 dockerFile: 'Linux.dockerfile',
@@ -76,7 +76,7 @@ if (params.Windows64) {
 
     buildmatrix[name] = {
         // we have to run windows builds on magrathea because that is where the vssdk mount is.
-        node('docker && magrathea') {
+        node('browser-builder') {
             helpers.build([
                 name: name,
                 dockerFile: 'Windows.dockerfile',
@@ -124,7 +124,7 @@ if (params.WindowsARM) {
     def artifactGlob = "$objDir/dist/install/**/*"
 
     buildmatrix[name] = {
-        node('docker && magrathea') {
+        node('browser-builder') {
             helpers.build([
                 name: name,
                 dockerFile: 'WindowsARM.dockerfile',
@@ -169,7 +169,7 @@ if (params.MacOSX64) {
     def artifactGlob = "$objDir/dist/Ghostery-*"
 
     buildmatrix[name] = {
-        node('docker && !magrathea') {
+        node('browser-builder') {
             helpers.build([
                 name: name,
                 dockerFile: 'MacOSX.dockerfile',
@@ -212,7 +212,7 @@ if (params.MacOSARM) {
     def artifactGlob = "$objDir/dist/Ghostery-*"
 
     buildmatrix[name] = {
-        node('docker && !magrathea') {
+        node('browser-builder') {
             helpers.build([
                 name: name,
                 dockerFile: 'MacOSARM.dockerfile',
@@ -240,7 +240,7 @@ if (params.MacOSARM) {
     if (params.MacOSX64) {
         postbuildmatrix["MacOS Unified DMG"] = {
             stage('Unify Mac DMG') {
-                node('docker && kria') {
+                node('browser-builder') {
                     helpers.mac_unified_dmg()
                 }
             }
@@ -254,7 +254,7 @@ parallel signmatrix
 
 stage('Sign MAR') {
     if (shouldRelease) {
-        node('docker') {
+        node('browser-builder') {
             checkout scm
 
             docker.build('ua-build-base', '-f build/Base.dockerfile ./build/ --build-arg user=`whoami` --build-arg UID=`id -u` --build-arg GID=`id -g`')
@@ -273,7 +273,7 @@ stage('Sign MAR') {
 
 stage('publish to github') {
     if (shouldRelease) {
-        node('docker') {
+        node('browser-builder') {
             docker.image('ua-build-base').inside() {
                 sh 'rm -rf artifacts'
 
@@ -319,7 +319,7 @@ stage('publish to github') {
 
 stage('publish to balrog') {
     if (shouldRelease) {
-        node('docker && magrathea') {
+        node('browser-builder') {
             docker.image('ua-build-base').inside('--dns 1.1.1.1') {
                 sh 'rm -rf artifacts'
 
