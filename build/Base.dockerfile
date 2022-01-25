@@ -1,4 +1,4 @@
-FROM debian:10
+FROM debian:11
 ENV DEBIAN_FRONTEND=noninteractive
 ENV XZ_OPT=-T0
 
@@ -79,8 +79,6 @@ RUN apt-get update && \
       linux-libc-dev:$ARCH \
       pkg-config \
       dpkg-dev \
-      libstdc++-8-dev \
-      libstdc++-8-dev:$ARCH \
       libdbus-glib-1-dev:$ARCH \
       libdrm-dev:$ARCH \
       libfontconfig1-dev:$ARCH \
