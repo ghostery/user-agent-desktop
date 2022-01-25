@@ -57,7 +57,7 @@ index 682ddb32d8..49fc0a7be1 100644
      let importClass = window.AboutLoginsUtils.fileImportEnabled
        ? ".intro-import-text.file-import"
 diff --git a/browser/themes/shared/preferences/privacy.css b/browser/themes/shared/preferences/privacy.css
-index a316715e91..4893fb9f39 100644
+index f9bcba3b49..610f531b0b 100644
 --- a/browser/themes/shared/preferences/privacy.css
 +++ b/browser/themes/shared/preferences/privacy.css
 @@ -4,6 +4,10 @@

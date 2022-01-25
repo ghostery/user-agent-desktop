@@ -20,7 +20,7 @@ index 10ee1d8f95..5d1a44547d 100644
      <link rel="localization" href="browser/branding/brandings.ftl"/>
      <link rel="localization" href="browser/aboutPrivateBrowsing.ftl"/>
 diff --git a/browser/themes/shared/tabs.inc.css b/browser/themes/shared/tabs.inc.css
-index 9fec6af1a7..0bf6263408 100644
+index 0bc71bcb28..af19aad0ff 100644
 --- a/browser/themes/shared/tabs.inc.css
 +++ b/browser/themes/shared/tabs.inc.css
 @@ -24,7 +24,7 @@
