@@ -37,10 +37,6 @@ if test `uname -s` = Linux; then
 if [ -d "${VSPATH}" -a ! -x "${VSPATH}/VC/bin/Hostx64/x64/cl.exe" ]; then
     find "${VSPATH}" -type f -name \*.exe -exec chmod +x {} \;
 fi
-export MAKENSISU="${MOZ_FETCHES_DIR}/nsis-3.01/makensis.exe"
-if [ -d "${MAKENSISU%/*}" -a ! -x "${MAKENSISU}" ]; then
-    chmod +x "${MAKENSISU}"
-fi
 export MAKECAB="${TOOLTOOL_DIR}/makecab.exe"
 if [ -f "${MAKECAB}" ]; then
     chmod +x "${MAKECAB}"
@@ -50,7 +46,7 @@ if [ -f "${UPX}" ]; then
     chmod +x "${UPX}"
 fi
 export WINE=${MOZ_FETCHES_DIR}/wine/bin/wine64
-mk_add_options "export PATH=${VSPATH}/VC/bin/Hostx64/arm64:${MOZ_FETCHES_DIR}/nsis-3.01:${PATH}"
+mk_add_options "export PATH=${VSPATH}/VC/bin/Hostx64/arm64:${PATH}"
 mk_add_options "export WINEPATH=${VSPATH}/VC/bin/Hostx64/x64"
 
 unset VC_PATH
