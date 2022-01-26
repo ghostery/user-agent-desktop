@@ -3,37 +3,16 @@ Date: Fri, 11 Sep 2020 15:34:04 +0200
 Subject: Remove tracking protection panel from url bar
 
 ---
- .../base/content/appmenu-viewcache.inc.xhtml  |  2 ++
- browser/base/content/browser-siteIdentity.js  |  8 ++++----
- browser/base/content/browser.js               | 20 +++++++++----------
- browser/base/content/browser.xhtml            |  2 +-
- 4 files changed, 17 insertions(+), 15 deletions(-)
+ browser/base/content/browser-siteIdentity.js |  8 ++++----
+ browser/base/content/browser.js              | 20 ++++++++++----------
+ browser/base/content/browser.xhtml           |  2 +-
+ 3 files changed, 15 insertions(+), 15 deletions(-)
 
-diff --git a/browser/base/content/appmenu-viewcache.inc.xhtml b/browser/base/content/appmenu-viewcache.inc.xhtml
-index 204b84f000..24af9db9fa 100644
---- a/browser/base/content/appmenu-viewcache.inc.xhtml
-+++ b/browser/base/content/appmenu-viewcache.inc.xhtml
-@@ -24,6 +24,7 @@
-                       oncommand="gSync.toggleAccountPanel(this, event)"/>
-       </toolbaritem>
-       <toolbarseparator class="sync-ui-item"/>
-+      <!--
-       <toolbaritem>
-         <toolbarbutton id="appMenu-protection-report-button"
-              class="subviewbutton subviewbutton-iconic"
-@@ -35,6 +36,7 @@
-           </label>
-         </toolbarbutton>
-       </toolbaritem>
-+      -->
-       <toolbarseparator id="appMenu-tp-separator"/>
-       <toolbarbutton id="appMenu-new-window-button"
-                      class="subviewbutton subviewbutton-iconic"
 diff --git a/browser/base/content/browser-siteIdentity.js b/browser/base/content/browser-siteIdentity.js
-index 905232e41d..ace7caba66 100644
+index fceae6718a..d01fbd52e9 100644
 --- a/browser/base/content/browser-siteIdentity.js
 +++ b/browser/base/content/browser-siteIdentity.js
-@@ -907,10 +907,10 @@ var gIdentityHandler = {
+@@ -901,10 +901,10 @@ var gIdentityHandler = {
      }
  
      // Hide the shield icon if it is a chrome page.
@@ -49,10 +28,10 @@ index 905232e41d..ace7caba66 100644
  
    /**
 diff --git a/browser/base/content/browser.js b/browser/base/content/browser.js
-index 678f147171..598b45ba49 100644
+index 6debc9a530..f7fafb361b 100644
 --- a/browser/base/content/browser.js
 +++ b/browser/base/content/browser.js
-@@ -1908,7 +1908,7 @@ var gBrowserInit = {
+@@ -1911,7 +1911,7 @@ var gBrowserInit = {
  
      BookmarkingUI.init();
      BrowserSearch.delayedStartupInit();
@@ -61,7 +40,7 @@ index 678f147171..598b45ba49 100644
      HomePage.delayedStartup().catch(Cu.reportError);
  
      let safeMode = document.getElementById("helpSafeMode");
-@@ -2502,7 +2502,7 @@ var gBrowserInit = {
+@@ -2495,7 +2495,7 @@ var gBrowserInit = {
        Services.prefs.removeObserver(ctrlTab.prefName, ctrlTab);
        ctrlTab.uninit();
        gBrowserThumbnails.uninit();
@@ -70,7 +49,7 @@ index 678f147171..598b45ba49 100644
        FullZoom.destroy();
  
        Services.obs.removeObserver(gIdentityHandler, "perm-changed");
-@@ -5257,7 +5257,7 @@ var XULBrowserWindow = {
+@@ -5264,7 +5264,7 @@ var XULBrowserWindow = {
      const nsIWebProgressListener = Ci.nsIWebProgressListener;
  
      let browser = gBrowser.selectedBrowser;
@@ -79,7 +58,7 @@ index 678f147171..598b45ba49 100644
  
      if (
        aStateFlags & nsIWebProgressListener.STATE_START &&
-@@ -5431,7 +5431,7 @@ var XULBrowserWindow = {
+@@ -5457,7 +5457,7 @@ var XULBrowserWindow = {
  
      gPermissionPanel.onLocationChange();
  
@@ -88,7 +67,7 @@ index 678f147171..598b45ba49 100644
  
      BrowserPageActions.onLocationChange();
  
-@@ -5589,12 +5589,12 @@ var XULBrowserWindow = {
+@@ -5647,12 +5647,12 @@ var XULBrowserWindow = {
        );
      }
  
@@ -108,18 +87,18 @@ index 678f147171..598b45ba49 100644
      // We need the state of the previous content blocking event, so update
      // event after onContentBlockingEvent is called.
 diff --git a/browser/base/content/browser.xhtml b/browser/base/content/browser.xhtml
-index 82fd0d32d6..4a8a14bfca 100644
+index 71480fc2f6..b7b6e968db 100644
 --- a/browser/base/content/browser.xhtml
 +++ b/browser/base/content/browser.xhtml
-@@ -71,7 +71,7 @@
+@@ -65,7 +65,7 @@
    <link rel="localization" href="browser/browserContext.ftl"/>
    <link rel="localization" href="browser/browserSets.ftl"/>
    <link rel="localization" href="browser/menubar.ftl"/>
 -  <link rel="localization" href="browser/protectionsPanel.ftl"/>
 +  <!-- <link rel="localization" href="browser/protectionsPanel.ftl"/> -->
    <link rel="localization" href="browser/appmenu.ftl"/>
+   <link rel="localization" href="browser/panelUI.ftl"/>
    <link rel="localization" href="preview/interventions.ftl"/>
-   <link rel="localization" href="browser/sidebarMenu.ftl"/>
 -- 
-2.32.0
+2.34.1
 

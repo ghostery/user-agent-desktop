@@ -412,7 +412,7 @@ literal 0
 HcmV?d00001
 
 diff --git a/browser/components/newtab/data/content/tippytop/top_sites.json b/browser/components/newtab/data/content/tippytop/top_sites.json
-index a5dadb4db1..709167f69a 100644
+index 82764a0527..7d8fd3f75a 100644
 --- a/browser/components/newtab/data/content/tippytop/top_sites.json
 +++ b/browser/components/newtab/data/content/tippytop/top_sites.json
 @@ -178,5 +178,30 @@
@@ -468,5 +468,5 @@ index 9bb9ef66ce..9494826954 100644
  this.EXPORTED_SYMBOLS = ["DEFAULT_SITES"];
  
 -- 
-2.32.0
+2.34.1
 

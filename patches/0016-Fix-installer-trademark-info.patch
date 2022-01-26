@@ -20,5 +20,5 @@ index 8f0467b1a4..47763ff34a 100644
  VIAddVersionKey "LegalCopyright"  "${CompanyName}"
  VIAddVersionKey "FileVersion"     "${AppVersion}"
 -- 
-2.32.0
+2.34.1
 

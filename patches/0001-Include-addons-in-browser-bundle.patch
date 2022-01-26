@@ -7,13 +7,13 @@ Subject: Include addons in browser bundle
  1 file changed, 3 insertions(+)
 
 diff --git a/browser/extensions/moz.build b/browser/extensions/moz.build
-index 1ab9167d87..ebdaad482a 100644
+index 42961bd7d8..6294f9d0d5 100644
 --- a/browser/extensions/moz.build
 +++ b/browser/extensions/moz.build
-@@ -11,6 +11,9 @@ DIRS += [
-     "webcompat",
-     "report-site-issue",
+@@ -13,6 +13,9 @@ DIRS += [
      "pictureinpicture",
+     "proxy-failover",
+     "search-detection",
 +    "ghostery",
 +    "ghostery-search",
 +    "ghostery-newtab",
@@ -21,5 +21,5 @@ index 1ab9167d87..ebdaad482a 100644
  
  if CONFIG["NIGHTLY_BUILD"]:
 -- 
-2.32.0
+2.34.1
 

@@ -53,7 +53,7 @@ module.exports = (program) => {
           {
             title: `Setup Firefox ${workspace.firefox}`,
             task: async () =>
-              await firefox.use(workspace.firefox, workspace.s3bucket),
+              await firefox.use(workspace.firefox),
           },
           {
             title: `Setup Addons`,

@@ -6,117 +6,32 @@ Fix theme
 
 X
 ---
- browser/components/BrowserGlue.jsm            |   2 +
- .../customizableui/CustomizeMode.jsm          |   2 +
- browser/themes/addons/jar.mn                  |   1 +
- .../global/global-extension-fields.properties |   4 +-
  toolkit/modules/LightweightThemeConsumer.jsm  |   2 +-
- .../mozapps/extensions/content/aboutaddons.js |   4 +-
- .../extensions/default-theme/experiment8.css  | 253 ++++++++++++++++++
- .../extensions/default-theme/manifest.json    |  55 +---
+ .../extensions/default-theme/experiment9.css  | 253 ++++++++++++++++++
+ .../extensions/default-theme/manifest.json    |  53 +---
  .../extensions/internal/XPIProvider.jsm       |  20 +-
  toolkit/mozapps/extensions/jar.mn             |   1 +
- 10 files changed, 297 insertions(+), 47 deletions(-)
- create mode 100644 toolkit/mozapps/extensions/default-theme/experiment8.css
+ 5 files changed, 286 insertions(+), 43 deletions(-)
+ create mode 100644 toolkit/mozapps/extensions/default-theme/experiment9.css
 
-diff --git a/browser/components/BrowserGlue.jsm b/browser/components/BrowserGlue.jsm
-index 008b3be2f7..5324eecaf6 100644
---- a/browser/components/BrowserGlue.jsm
-+++ b/browser/components/BrowserGlue.jsm
-@@ -1357,6 +1357,7 @@ BrowserGlue.prototype = {
- 
-     SessionStore.init();
- 
-+    /*
-     AddonManager.maybeInstallBuiltinAddon(
-       "firefox-compact-light@mozilla.org",
-       "1.2",
-@@ -1373,6 +1374,7 @@ BrowserGlue.prototype = {
-       "1.4",
-       "resource://builtin-themes/alpenglow/"
-     );
-+    */
- 
-     if (AppConstants.MOZ_NORMANDY) {
-       Normandy.init();
-diff --git a/browser/components/customizableui/CustomizeMode.jsm b/browser/components/customizableui/CustomizeMode.jsm
-index 4cc3c41fb5..50995e4514 100644
---- a/browser/components/customizableui/CustomizeMode.jsm
-+++ b/browser/components/customizableui/CustomizeMode.jsm
-@@ -91,9 +91,11 @@ const ALPENGLOW_THEME_ID = "firefox-alpenglow@mozilla.org";
- 
- const _defaultImportantThemes = [
-   DEFAULT_THEME_ID,
-+  /*
-   LIGHT_THEME_ID,
-   DARK_THEME_ID,
-   ALPENGLOW_THEME_ID,
-+  */
- ];
- 
- var gDraggingInToolbars;
-diff --git a/browser/themes/addons/jar.mn b/browser/themes/addons/jar.mn
-index 5aa122b2ab..6ac590a8bc 100644
---- a/browser/themes/addons/jar.mn
-+++ b/browser/themes/addons/jar.mn
-@@ -15,3 +15,4 @@ browser.jar:
-   content/builtin-themes/light                     (light/*.svg)
-   content/builtin-themes/light                     (light/*.css)
-   content/builtin-themes/light/manifest.json       (light/manifest.json)
-+
-diff --git a/toolkit/locales/en-US/chrome/global/global-extension-fields.properties b/toolkit/locales/en-US/chrome/global/global-extension-fields.properties
-index 4585aec57d..eec3fd7cb3 100644
---- a/toolkit/locales/en-US/chrome/global/global-extension-fields.properties
-+++ b/toolkit/locales/en-US/chrome/global/global-extension-fields.properties
-@@ -3,5 +3,5 @@
- # file, You can obtain one at http://mozilla.org/MPL/2.0/.
- 
- # LOCALIZATION NOTE (extension.default-theme@mozilla.org.name, extension.default-theme@mozilla.org.description): This is displayed in about:addons -> Appearance
--extension.default-theme@mozilla.org.name=System theme
--extension.default-theme@mozilla.org.description=Follow the operating system setting for buttons, menus, and windows.
-+extension.default-theme@mozilla.org.name=Ghostery Private
-+extension.default-theme@mozilla.org.description=
 diff --git a/toolkit/modules/LightweightThemeConsumer.jsm b/toolkit/modules/LightweightThemeConsumer.jsm
-index 77597681e5..0cc5d2d6af 100644
+index b5b0da07cb..f041f9359e 100644
 --- a/toolkit/modules/LightweightThemeConsumer.jsm
 +++ b/toolkit/modules/LightweightThemeConsumer.jsm
-@@ -6,7 +6,7 @@ var EXPORTED_SYMBOLS = ["LightweightThemeConsumer"];
- 
- const { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
+@@ -24,7 +24,7 @@ ChromeUtils.defineModuleGetter(
+   "resource:///modules/ThemeVariableMap.jsm"
+ );
  
 -const DEFAULT_THEME_ID = "default-theme@mozilla.org";
 +const DEFAULT_THEME_ID = "__DOES_NOT_APPLY__"; // in Ghostery Browser default theme is a lightweight theme
- const LIGHT_THEME_ID = "firefox-compact-light@mozilla.org";
- const DARK_THEME_ID = "firefox-compact-dark@mozilla.org";
  
-diff --git a/toolkit/mozapps/extensions/content/aboutaddons.js b/toolkit/mozapps/extensions/content/aboutaddons.js
-index 0d8146f5c7..7d2c404b3b 100644
---- a/toolkit/mozapps/extensions/content/aboutaddons.js
-+++ b/toolkit/mozapps/extensions/content/aboutaddons.js
-@@ -81,8 +81,9 @@ const EXTENSION_ICON_URL =
- const BUILTIN_THEME_PREVIEWS = new Map([
-   [
-     "default-theme@mozilla.org",
--    "chrome://mozapps/content/extensions/default-theme.svg",
-+    "chrome://mozapps/content/extensions/firefox-compact-dark.svg",
-   ],
-+  /*
-   [
-     "firefox-compact-light@mozilla.org",
-     "chrome://mozapps/content/extensions/firefox-compact-light.svg",
-@@ -95,6 +96,7 @@ const BUILTIN_THEME_PREVIEWS = new Map([
-     "firefox-alpenglow@mozilla.org",
-     "chrome://mozapps/content/extensions/firefox-alpenglow.svg",
-   ],
-+  */
- ]);
- 
- const PERMISSION_MASKS = {
-diff --git a/toolkit/mozapps/extensions/default-theme/experiment8.css b/toolkit/mozapps/extensions/default-theme/experiment8.css
+ // On Linux, the default theme picks up the right colors from dark GTK themes.
+ const DEFAULT_THEME_RESPECTS_SYSTEM_COLOR_SCHEME =
+diff --git a/toolkit/mozapps/extensions/default-theme/experiment9.css b/toolkit/mozapps/extensions/default-theme/experiment9.css
 new file mode 100644
 index 0000000000..7220501438
 --- /dev/null
-+++ b/toolkit/mozapps/extensions/default-theme/experiment8.css
++++ b/toolkit/mozapps/extensions/default-theme/experiment9.css
 @@ -0,0 +1,253 @@
 +/* This Source Code Form is subject to the terms of the Mozilla Public
 + * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -372,19 +287,19 @@ index 0000000000..7220501438
 +  margin-inline-end: -6px !important;
 +}
 diff --git a/toolkit/mozapps/extensions/default-theme/manifest.json b/toolkit/mozapps/extensions/default-theme/manifest.json
-index f974b9809c..b863601600 100644
+index a095bbea50..7680b2e3e3 100644
 --- a/toolkit/mozapps/extensions/default-theme/manifest.json
 +++ b/toolkit/mozapps/extensions/default-theme/manifest.json
-@@ -7,33 +7,30 @@
+@@ -7,20 +7,17 @@
      }
    },
  
--  "name": "System theme",
+-  "name": "System theme — auto",
 -  "description": "Follow the operating system setting for buttons, menus, and windows.",
 -  "author": "Mozilla",
--  "version": "1.2",
-+  "name": "Ghostery Private",
-+   "description": "",
+-  "version": "1.3",
++  "name": "Ghostery Private Theme",
++  "description": "",
 +  "author": "Ghostery",
 +  "version": "1.9",
  
@@ -400,9 +315,8 @@ index f974b9809c..b863601600 100644
 +      "tab_selected": "#36393F",
        "tab_text": "rgb(251,251,254)",
        "icons": "rgb(251,251,254)",
--      "frame": "#1c1b22",
-+      "frame": "#12121c",
-       "popup": "rgb(66,65,77)",
+       "frame": "#1c1b22",
+@@ -28,12 +25,12 @@
        "popup_text": "rgb(251,251,254)",
        "popup_border": "rgb(82,82,94)",
        "popup_highlight": "rgb(43,42,51)",
@@ -441,34 +355,34 @@ index f974b9809c..b863601600 100644
 -      "zoom_controls": "--zoom-controls-bgcolor",
 -      "autocomplete_popup_separator": "--autocomplete-popup-separator-color",
 -      "appmenu_update_icon_color": "--panel-banner-item-update-supported-bgcolor",
--      "appmenu_warning_icon_color": "--panel-banner-item-warning-icon-bgcolor",
 -      "appmenu_info_icon_color": "--panel-banner-item-info-icon-bgcolor",
 -      "tab_icon_overlay_stroke": "--tab-icon-overlay-stroke",
 -      "tab_icon_overlay_fill": "--tab-icon-overlay-fill"
 -    },
 -    "properties": {
--      "panel_hover": "--arrowpanel-dimmed",
+-      "panel_hover": "--panel-item-hover-bgcolor",
 -      "panel_active": "--arrowpanel-dimmed-further",
--      "panel_active_darker": "--arrowpanel-dimmed-even-further",
--      "toolbar_field_icon_opacity": "--urlbar-icon-fill-opacity"
+-      "panel_active_darker": "--panel-item-active-bgcolor",
+-      "toolbar_field_icon_opacity": "--urlbar-icon-fill-opacity",
+-      "zap_gradient": "--panel-separator-zap-gradient"
 -    }
-+    "stylesheet": "experiment8.css"
++    "stylesheet": "experiment9.css"
    }
  }
 diff --git a/toolkit/mozapps/extensions/internal/XPIProvider.jsm b/toolkit/mozapps/extensions/internal/XPIProvider.jsm
-index 5bd7cabb0f..d0d4edcfc9 100644
+index 48d7a389a6..6ce8dca89e 100644
 --- a/toolkit/mozapps/extensions/internal/XPIProvider.jsm
 +++ b/toolkit/mozapps/extensions/internal/XPIProvider.jsm
-@@ -2474,7 +2474,7 @@ var XPIProvider = {
- 
+@@ -2492,7 +2492,7 @@ var XPIProvider = {
+       }
        this.maybeInstallBuiltinAddon(
          "default-theme@mozilla.org",
--        "1.2",
+-        "1.3",
 +        "1.9",
          "resource://default-theme/"
        );
  
-@@ -2675,6 +2675,10 @@ var XPIProvider = {
+@@ -2671,6 +2671,10 @@ var XPIProvider = {
        logger.error("startup failed", e);
        AddonManagerPrivate.recordException("XPI", "startup failed", e);
      }
@@ -479,7 +393,7 @@ index 5bd7cabb0f..d0d4edcfc9 100644
    },
  
    /**
-@@ -2920,6 +2924,20 @@ var XPIProvider = {
+@@ -2944,6 +2948,20 @@ var XPIProvider = {
      return installed;
    },
  
@@ -501,15 +415,15 @@ index 5bd7cabb0f..d0d4edcfc9 100644
      return Array.from(XPIDatabase.getAddons()).filter(addon =>
        addon.dependencies.includes(aAddon.id)
 diff --git a/toolkit/mozapps/extensions/jar.mn b/toolkit/mozapps/extensions/jar.mn
-index 10a7dd29a4..ff39e6265d 100644
+index 58f25876f2..ee32147456 100644
 --- a/toolkit/mozapps/extensions/jar.mn
 +++ b/toolkit/mozapps/extensions/jar.mn
-@@ -29,4 +29,5 @@ toolkit.jar:
+@@ -25,4 +25,5 @@ toolkit.jar:
  % resource default-theme %content/mozapps/extensions/default-theme/
-   content/mozapps/extensions/default-theme/icon.svg             (default-theme/icon.svg)
+   content/mozapps/extensions/default-theme                      (default-theme/*.svg)
    content/mozapps/extensions/default-theme/manifest.json        (default-theme/manifest.json)
-+  content/mozapps/extensions/default-theme/experiment8.css      (default-theme/experiment8.css)
++  content/mozapps/extensions/default-theme/experiment9.css      (default-theme/experiment9.css)
  #endif
 -- 
-2.32.0
+2.34.1
 

@@ -7,10 +7,10 @@ Subject: Ghostery Insights
  1 file changed, 1 insertion(+)
 
 diff --git a/browser/extensions/moz.build b/browser/extensions/moz.build
-index 5c0bfeacea..ae9a89b209 100644
+index 2eaa1bf288..96ca9e6b15 100644
 --- a/browser/extensions/moz.build
 +++ b/browser/extensions/moz.build
-@@ -11,6 +11,7 @@ DIRS += [
+@@ -13,6 +13,7 @@ DIRS += [
      "ghostery",
      "ghostery-search",
      "ghostery-newtab",
@@ -19,5 +19,5 @@ index 5c0bfeacea..ae9a89b209 100644
  
  if CONFIG["NIGHTLY_BUILD"]:
 -- 
-2.32.0
+2.34.1
 

@@ -163,11 +163,6 @@
       "string": "Open in a New Ghost Mode Window"
     }
   },
-  "browser/chrome/browser/browser.dtd": {
-    "newPrivateWindow.label": {
-      "string": "New Ghost Mode Window"
-    }
-  },
   "browser/chrome/browser/customizableui/customizableWidgets.properties": {
     "privatebrowsing-button.label": {
       "string": "New Ghost Mode Window"

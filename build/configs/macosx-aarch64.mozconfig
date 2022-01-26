@@ -22,8 +22,7 @@ export CXX="$MOZ_FETCHES_DIR/clang/bin/clang++"
 export CFLAGS="$CFLAGS -fcrash-diagnostics-dir=${UPLOAD_PATH}"
 export CXXFLAGS="$CXXFLAGS -fcrash-diagnostics-dir=${UPLOAD_PATH}"
 export LLVMCONFIG=$MOZ_FETCHES_DIR/clang/bin/llvm-config
-export DSYMUTIL=$topsrcdir/build/macosx/llvm-dsymutil
-mk_add_options "export REAL_DSYMUTIL=$MOZ_FETCHES_DIR/llvm-dsymutil/bin/dsymutil"
+export DSYMUTIL=$MOZ_FETCHES_DIR/clang/bin/dsymutil
 export MKFSHFS=$MOZ_FETCHES_DIR/hfsplus-tools/newfs_hfs
 export DMG_TOOL=$MOZ_FETCHES_DIR/dmg/dmg
 export HFS_TOOL=$MOZ_FETCHES_DIR/dmg/hfsplus
@@ -51,8 +50,6 @@ export CFLAGS="$CFLAGS -mcpu=apple-a12"
 export CXXFLAGS="$CXXFLAGS -mcpu=apple-a12"
 
 # //build/macosx/cross-mozconfig.common
-
-. $topsrcdir/build/mozconfig.wasm-sandboxing
 
 # disable tests for this build
 ac_add_options --disable-tests

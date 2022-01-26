@@ -21,10 +21,10 @@ index 908553b8b9..b1951ed4bc 100644
          FINAL_TARGET_FILES['..'] += [
              'firefox.VisualElementsManifest.xml',
 diff --git a/browser/installer/package-manifest.in b/browser/installer/package-manifest.in
-index 87976293ef..39a101754b 100644
+index 4d7a4810a7..b9d1007024 100644
 --- a/browser/installer/package-manifest.in
 +++ b/browser/installer/package-manifest.in
-@@ -273,6 +273,7 @@
+@@ -268,6 +268,7 @@
  ; All the pref files must be part of base to prevent migration bugs
  @RESPATH@/browser/@PREF_DIR@/firefox.js
  @RESPATH@/browser/@PREF_DIR@/firefox-branding.js
@@ -33,5 +33,5 @@ index 87976293ef..39a101754b 100644
  @RESPATH@/defaults/autoconfig/prefcalls.js
  @RESPATH@/browser/defaults/permissions
 -- 
-2.32.0
+2.34.1
 

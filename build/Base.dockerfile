@@ -1,4 +1,4 @@
-FROM debian:10
+FROM debian:11
 ENV DEBIAN_FRONTEND=noninteractive
 ENV XZ_OPT=-T0
 
@@ -79,8 +79,6 @@ RUN apt-get update && \
       linux-libc-dev:$ARCH \
       pkg-config \
       dpkg-dev \
-      libstdc++-8-dev \
-      libstdc++-8-dev:$ARCH \
       libdbus-glib-1-dev:$ARCH \
       libdrm-dev:$ARCH \
       libfontconfig1-dev:$ARCH \
@@ -98,6 +96,7 @@ RUN apt-get update && \
       python3-pip zstd \
       libasound2-dev libcurl4-openssl-dev \
       libnss3-tools \
+      python3-cairo \
       locales \
       liblzma-dev
 
@@ -108,7 +107,7 @@ RUN apt -y install software-properties-common dirmngr apt-transport-https lsb-re
     apt-get install -y git
 
 # custom
-RUN pip3 install zstandard pip-tools==5.5.0 mar balrogclient
+RUN pip3 install zstandard==0.16.0 pip-tools==5.5.0 mar balrogclient
 ADD fetch-content /builds/worker/bin/fetch-content
 # mbsdiff and mar (built from martools on linux)
 ADD mbsdiff /builds/worker/bin/mbsdiff

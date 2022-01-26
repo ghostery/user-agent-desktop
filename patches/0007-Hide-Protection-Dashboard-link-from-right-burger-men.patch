@@ -3,39 +3,35 @@ Date: Fri, 16 Oct 2020 15:47:47 +0200
 Subject: Hide Protection Dashboard link from right burger menu
 
 ---
- browser/base/content/appmenu-viewcache.inc.xhtml | 4 ++--
+ browser/base/content/appmenu-viewcache.inc.xhtml | 2 ++
  browser/base/content/navigator-toolbox.inc.xhtml | 2 ++
- 2 files changed, 4 insertions(+), 2 deletions(-)
+ 2 files changed, 4 insertions(+)
 
 diff --git a/browser/base/content/appmenu-viewcache.inc.xhtml b/browser/base/content/appmenu-viewcache.inc.xhtml
-index 24af9db9fa..561d7d2134 100644
+index 266c0e5a47..f001bef60e 100644
 --- a/browser/base/content/appmenu-viewcache.inc.xhtml
 +++ b/browser/base/content/appmenu-viewcache.inc.xhtml
-@@ -23,8 +23,8 @@
-                       closemenu="none"
-                       oncommand="gSync.toggleAccountPanel(this, event)"/>
-       </toolbaritem>
--      <toolbarseparator class="sync-ui-item"/>
-       <!--
-+      <toolbarseparator class="sync-ui-item"/>
-       <toolbaritem>
-         <toolbarbutton id="appMenu-protection-report-button"
-              class="subviewbutton subviewbutton-iconic"
-@@ -36,8 +36,8 @@
-           </label>
+@@ -25,6 +25,7 @@
+                      oncommand="PanelUI._onBannerItemSelected(event)"
+                      wrap="true"
+                      hidden="true"/>
++      <!--
+       <toolbaritem id="appMenu-fxa-status2"
+                    closemenu="none"
+                    class="subviewbutton toolbaritem-combined-buttons">
+@@ -41,6 +42,7 @@
          </toolbarbutton>
        </toolbaritem>
--      -->
-       <toolbarseparator id="appMenu-tp-separator"/>
+       <toolbarseparator id="appMenu-fxa-separator" class="proton-zap"/>
 +      -->
-       <toolbarbutton id="appMenu-new-window-button"
-                      class="subviewbutton subviewbutton-iconic"
-                      data-l10n-id="appmenuitem-new-window"
+       <toolbarbutton id="appMenu-new-tab-button2"
+                      class="subviewbutton"
+                      data-l10n-id="appmenuitem-new-tab"
 diff --git a/browser/base/content/navigator-toolbox.inc.xhtml b/browser/base/content/navigator-toolbox.inc.xhtml
-index 87e498722f..f26bd8909d 100644
+index 74104ac893..ceeb5318b9 100644
 --- a/browser/base/content/navigator-toolbox.inc.xhtml
 +++ b/browser/base/content/navigator-toolbox.inc.xhtml
-@@ -180,6 +180,7 @@
+@@ -171,6 +171,7 @@
                   class="chromeclass-toolbar-additional"/>
              <!-- Use onclick instead of normal popup= syntax since the popup
                   code fires onmousedown, and hence eats our favicon drag events. -->
@@ -43,7 +39,7 @@ index 87e498722f..f26bd8909d 100644
              <box id="tracking-protection-icon-container" align="center"
                   role="button"
                   onclick="gProtectionsHandler.handleProtectionsButtonEvent(event);"
-@@ -194,6 +195,7 @@
+@@ -185,6 +186,7 @@
                  <description id="tracking-protection-icon-tooltip-label" class="tooltip-label"/>
                </tooltip>
              </box>
@@ -52,5 +48,5 @@ index 87e498722f..f26bd8909d 100644
                   pageproxystate="invalid"
                   ondragstart="gIdentityHandler.onDragStart(event);">
 -- 
-2.32.0
+2.34.1
 
