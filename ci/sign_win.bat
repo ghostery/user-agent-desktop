@@ -1,8 +1,5 @@
 SET CQZ_WORKSPACE=%CD%
-SET TOOLTOOL_DIR=c:\build
-SET MOZ_FETCHES_DIR=c:\build
-SET CLZ_SIGNTOOL_PATH=%TOOLTOOL_DIR%\vs2017_15.9.29\SDK\bin\10.0.17134.0\x64\signtool.exe
-SET BUILD_SHELL=c:\mozilla-build\start-shell.bat
+SET CLZ_SIGNTOOL_PATH=C:\Program Files (x86)\Windows Kits\10\\bin\10.0.22000.0\x64\signtool.exe
 SET APP_NAME=Ghostery
 SET lang=%1
 
@@ -29,9 +26,6 @@ echo %CLZ_SIGNTOOL_PATH%
 
 if exist ./pkg%STUB_PREFIX%_%lang% rmdir /q /s "pkg%STUB_PREFIX%_%lang%"
 
-dir /b %TOOLTOOL_DIR%
-dir /b c:\mozilla-build
-
 %archivator_exe% l dist\install\sea\%APP_NAME%-%ff_exe%.%platform_prefix%.installer%STUB_PREFIX%.exe
 %archivator_exe% x -opkg%STUB_PREFIX%_%lang% -y dist\install\sea\%APP_NAME%-%ff_exe%.%platform_prefix%.installer%STUB_PREFIX%.exe
 if not exist ./pkg%STUB_PREFIX%_%lang% (goto :error)
@@ -43,7 +37,7 @@ for /R %%f in (
   echo Check and sign %%f
   "%CLZ_SIGNTOOL_PATH%" verify /pa %%f
   if ERRORLEVEL 1 (
-    "%CLZ_SIGNTOOL_PATH%" sign /t %timestamp_server_sha1% /f %WIN_CERT% /p %WIN_CERT_PASS% %%f
+    "%CLZ_SIGNTOOL_PATH%" sign /fd sha1 /t %timestamp_server_sha1% /f %WIN_CERT% /p %WIN_CERT_PASS% %%f
     "%CLZ_SIGNTOOL_PATH%" sign /fd sha256 /tr %timestamp_server_sha256% /td sha256 /f %WIN_CERT% /p %WIN_CERT_PASS% /as %%f
     "%CLZ_SIGNTOOL_PATH%" verify /pa %%f
   )
@@ -66,7 +60,7 @@ cd ..
 copy /b ..\other-licenses\7zstub\firefox\7zSD.Win32.sfx + ..\browser\installer\windows\instgen\stub.tag + pkg%STUB_PREFIX%_%lang%\stub.7z dist\install\sea\%APP_NAME%-%ff_exe%.%platform_prefix%.installer-stub.exe
 
 :sign_installer
-"%CLZ_SIGNTOOL_PATH%" sign /t %timestamp_server_sha1% /f %WIN_CERT% /p %WIN_CERT_PASS% dist\install\sea\%APP_NAME%-%ff_exe%.%platform_prefix%.installer%STUB_PREFIX%.exe
+"%CLZ_SIGNTOOL_PATH%" sign /fd sha1 /t %timestamp_server_sha1% /f %WIN_CERT% /p %WIN_CERT_PASS% dist\install\sea\%APP_NAME%-%ff_exe%.%platform_prefix%.installer%STUB_PREFIX%.exe
 "%CLZ_SIGNTOOL_PATH%" sign /fd sha256 /tr %timestamp_server_sha256% /td sha256 /f %WIN_CERT% /p %WIN_CERT_PASS% /as dist\install\sea\%APP_NAME%-%ff_exe%.%platform_prefix%.installer%STUB_PREFIX%.exe
 "%CLZ_SIGNTOOL_PATH%" verify /pa dist\install\sea\%APP_NAME%-%ff_exe%.%platform_prefix%.installer%STUB_PREFIX%.exe
 if ERRORLEVEL 1 (goto :error)
