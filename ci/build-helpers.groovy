@@ -206,7 +206,6 @@ def windows_signing(name, objDir, artifactGlob, locales) {
             }
             stage('Prepare') {
                 unstash name
-                unstash 'win_sdk'
             }
             stage('Sign') {
                 withCredentials([
@@ -233,16 +232,12 @@ def windows_signing(name, objDir, artifactGlob, locales) {
 // Sign binaries and libraries in a stashed folder
 def windows_sign_dir(name, dir) {
     return {
-        // this runs on linux node
-        downloadWinSDK()
-
         node('browser-builder-windows') {
             stage('Sign') {
                 def signed_name = "${name}_signed"
                 checkout scm
                 bat 'del /s /q mozilla-release'
                 unstash name
-                unstash 'win_sdk'
                 withCredentials([
                     file(credentialsId: "7da7d2de-5a10-45e6-9ffd-4e49f83753a8", variable: 'WIN_CERT'),
                     string(credentialsId: "33b3705c-1c2e-4462-9354-56a76bbb164c", variable: 'WIN_CERT_PASS'),
@@ -390,15 +385,6 @@ def download(filename) {
             sh "aws s3 --region us-east-1 cp s3://user-agent-desktop-jenkins-cache/${filename} ./build/${filename}"
         }
     }
-}
-
-def downloadWinSDK() {
-    def version = 'vs2017_15.9.29'
-    if (!fileExists("./build/${version}")) {
-        download("${version}.tar.bz2")
-        sh "tar xjvf ./build/${version}.tar.bz2 -C ./build"
-    }
-    stash name: "win_sdk", includes: "build/${version}/"
 }
 
 return this
