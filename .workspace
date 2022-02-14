@@ -1,13 +1,13 @@
 {
   "addons": {
-    "ghostery": "https://github.com/ghostery/ghostery-extension/releases/download/v8.6.1/ghostery-dawn-v8.6.1.zip",
+    "ghostery": "https://github.com/ghostery/ghostery-extension/releases/download/v8.6.2/ghostery-dawn-v8.6.2.zip",
     "ghostery-search": "https://github.com/ghostery/ghostery-search-extension/releases/download/v1.0.2/ghostery_glow-1.0.2.zip",
-    "ghostery-newtab": "https://github.com/ghostery/ghostery-newtab-extension/releases/download/v0.5.0/ghostery_new_tab-0.5.0.zip",
-    "ghostery-insights": "https://s3.amazonaws.com/ghostery-deployments/ghostery-insights/0.7.5/ghostery-insights-firefox-v0.7.5.xpi",
+    "ghostery-newtab": "https://github.com/ghostery/ghostery-newtab-extension/releases/download/v0.5.1/ghostery_new_tab-0.5.1.zip",
+    "ghostery-insights": "https://s3.amazonaws.com/ghostery-deployments/ghostery-insights/0.7.6/ghostery-insights-firefox-v0.7.6.xpi",
     "ghostery-dawn-onboarding-extension": "https://github.com/ghostery/ghostery-dawn-onboarding-extension/releases/download/v1.0.2/ghostery_dawn_onboarding-1.0.2.zip"
   },
-  "firefox": "96.0.2",
-  "app": "2022.1",
+  "firefox": "96.0.3",
+  "app": "2022.2",
   "s3bucket": "ghostery-user-agent-cache-public",
   "locales": {
     "de": "de1025e5e9a9f831271dc1aa8437aba18a631662",
