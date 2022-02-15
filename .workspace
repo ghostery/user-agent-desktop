@@ -4,7 +4,7 @@
     "ghostery-search": "https://github.com/ghostery/ghostery-search-extension/releases/download/v1.0.2/ghostery_glow-1.0.2.zip",
     "ghostery-newtab": "https://github.com/ghostery/ghostery-newtab-extension/releases/download/v0.5.1/ghostery_new_tab-0.5.1.zip",
     "ghostery-insights": "https://s3.amazonaws.com/ghostery-deployments/ghostery-insights/0.7.6/ghostery-insights-firefox-v0.7.6.xpi",
-    "ghostery-dawn-onboarding-extension": "https://github.com/ghostery/ghostery-dawn-onboarding-extension/releases/download/v1.0.2/ghostery_dawn_onboarding-1.0.2.zip"
+    "ghostery-dawn-onboarding-extension": "https://github.com/ghostery/ghostery-dawn-onboarding-extension/releases/download/v1.0.4/ghostery_dawn_onboarding-1.0.4.zip"
   },
   "firefoxAddons": [
     "screenshots",
