@@ -426,7 +426,7 @@ index 58f25876f2..ee32147456 100644
  % resource default-theme %content/mozapps/extensions/default-theme/
    content/mozapps/extensions/default-theme                      (default-theme/*.svg)
    content/mozapps/extensions/default-theme/manifest.json        (default-theme/manifest.json)
-+  content/mozapps/extensions/default-theme/experiment9.css      (default-theme/experiment9.css)
++  content/mozapps/extensions/default-theme/experiment10.css      (default-theme/experiment10.css)
  #endif
 -- 
 2.34.1
