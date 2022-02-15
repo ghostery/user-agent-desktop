@@ -9,7 +9,8 @@
   "firefoxAddons": [
     "screenshots",
     "webcompat",
-    "pictureinpicture"
+    "pictureinpicture",
+    "report-site-issue"
   ],
   "firefox": "96.0.3",
   "app": "2022.2",
