@@ -7,12 +7,12 @@ Fix theme
 X
 ---
  toolkit/modules/LightweightThemeConsumer.jsm  |   2 +-
- .../extensions/default-theme/experiment9.css  | 253 ++++++++++++++++++
+ .../extensions/default-theme/experiment10.css | 257 ++++++++++++++++++
  .../extensions/default-theme/manifest.json    |  53 +---
  .../extensions/internal/XPIProvider.jsm       |  20 +-
  toolkit/mozapps/extensions/jar.mn             |   1 +
- 5 files changed, 286 insertions(+), 43 deletions(-)
- create mode 100644 toolkit/mozapps/extensions/default-theme/experiment9.css
+ 5 files changed, 290 insertions(+), 43 deletions(-)
+ create mode 100644 toolkit/mozapps/extensions/default-theme/experiment10.css
 
 diff --git a/toolkit/modules/LightweightThemeConsumer.jsm b/toolkit/modules/LightweightThemeConsumer.jsm
 index b5b0da07cb..f041f9359e 100644
@@ -27,12 +27,12 @@ index b5b0da07cb..f041f9359e 100644
  
  // On Linux, the default theme picks up the right colors from dark GTK themes.
  const DEFAULT_THEME_RESPECTS_SYSTEM_COLOR_SCHEME =
-diff --git a/toolkit/mozapps/extensions/default-theme/experiment9.css b/toolkit/mozapps/extensions/default-theme/experiment9.css
+diff --git a/toolkit/mozapps/extensions/default-theme/experiment10.css b/toolkit/mozapps/extensions/default-theme/experiment10.css
 new file mode 100644
-index 0000000000..7220501438
+index 0000000000..4aac8cba8e
 --- /dev/null
-+++ b/toolkit/mozapps/extensions/default-theme/experiment9.css
-@@ -0,0 +1,253 @@
++++ b/toolkit/mozapps/extensions/default-theme/experiment10.css
+@@ -0,0 +1,257 @@
 +/* This Source Code Form is subject to the terms of the Mozilla Public
 + * License, v. 2.0. If a copy of the MPL was not distributed with this
 + * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
@@ -84,6 +84,10 @@ index 0000000000..7220501438
 +
 +#urlbar:not([focused="true"]):-moz-lwtheme:hover > #urlbar-background, #navigator-toolbox #searchbar:not(:focus-within):-moz-lwtheme:hover {
 +  border-color: #53565B;
++}
++
++#urlbar[focused="true"]:not([suppress-focus-border]) > #urlbar-background, #searchbar:focus-within {
++  outline-color: #53565B
 +}
 +
 +#urlbar[focused="true"] > #urlbar-background {
@@ -287,7 +291,7 @@ index 0000000000..7220501438
 +  margin-inline-end: -6px !important;
 +}
 diff --git a/toolkit/mozapps/extensions/default-theme/manifest.json b/toolkit/mozapps/extensions/default-theme/manifest.json
-index a095bbea50..7680b2e3e3 100644
+index a095bbea50..501556c651 100644
 --- a/toolkit/mozapps/extensions/default-theme/manifest.json
 +++ b/toolkit/mozapps/extensions/default-theme/manifest.json
 @@ -7,20 +7,17 @@
@@ -301,7 +305,7 @@ index a095bbea50..7680b2e3e3 100644
 +  "name": "Ghostery Private Theme",
 +  "description": "",
 +  "author": "Ghostery",
-+  "version": "1.9",
++  "version": "1.10",
  
    "icons": {"32": "icon.svg"},
  
@@ -366,11 +370,11 @@ index a095bbea50..7680b2e3e3 100644
 -      "toolbar_field_icon_opacity": "--urlbar-icon-fill-opacity",
 -      "zap_gradient": "--panel-separator-zap-gradient"
 -    }
-+    "stylesheet": "experiment9.css"
++    "stylesheet": "experiment10.css"
    }
  }
 diff --git a/toolkit/mozapps/extensions/internal/XPIProvider.jsm b/toolkit/mozapps/extensions/internal/XPIProvider.jsm
-index 48d7a389a6..6ce8dca89e 100644
+index 48d7a389a6..40c7bca8ba 100644
 --- a/toolkit/mozapps/extensions/internal/XPIProvider.jsm
 +++ b/toolkit/mozapps/extensions/internal/XPIProvider.jsm
 @@ -2492,7 +2492,7 @@ var XPIProvider = {
@@ -378,7 +382,7 @@ index 48d7a389a6..6ce8dca89e 100644
        this.maybeInstallBuiltinAddon(
          "default-theme@mozilla.org",
 -        "1.3",
-+        "1.9",
++        "1.10",
          "resource://default-theme/"
        );
  
