@@ -96,7 +96,8 @@ if (params.Windows64) {
                 }
             })()
 
-            archiveArtifacts artifacts: "mozilla-release/${objDir}/dist/update/*.mar"
+            def version = helpers.get_version()
+            archiveArtifacts artifacts: "mozilla-release/${objDir}/dist/update/*${version}*.mar"
             archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
             archiveArtifacts artifacts: "mozilla-release/${objDir}/dist/*.win64.zip"
             archiveArtifacts artifacts: "mozilla-release/browser/config/version*"
@@ -144,7 +145,8 @@ if (params.WindowsARM) {
                 }
             })()
 
-            archiveArtifacts artifacts: "mozilla-release/${objDir}/dist/update/*.mar"
+            def version = helpers.get_version()
+            archiveArtifacts artifacts: "mozilla-release/${objDir}/dist/update/*${version}*.mar"
             archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
 
             stash name: name, includes: [
@@ -185,7 +187,9 @@ if (params.MacOSX64) {
                 PGOProfiles: params.PGOProfiles,
             ])()
 
-            archiveArtifacts artifacts: "mozilla-release/${objDir}/dist/update/*.mar"
+
+            def version = helpers.get_version()
+            archiveArtifacts artifacts: "mozilla-release/${objDir}/dist/update/*${version}*.mar"
             archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
             archiveArtifacts artifacts: "mozilla-release/browser/config/version*"
 
