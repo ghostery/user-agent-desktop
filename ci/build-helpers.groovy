@@ -387,4 +387,8 @@ def download(filename) {
     }
 }
 
+def get_version() {
+    return sh(returnStdout: true, script: "cat mozilla-release/browser/config/version.txt").trim().split("\\r?\\n")[0]
+}
+
 return this
