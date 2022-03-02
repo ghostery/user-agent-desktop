@@ -14,7 +14,7 @@ index af2c367e1f..5447fd1a2a 100644
 +++ b/browser/components/extensions/parent/ext-url-overrides.js
 @@ -76,7 +76,7 @@ XPCOMUtils.defineLazyGetter(this, "newTabPopup", () => {
  });
- 
+
  function setNewTabURL(extensionId, url) {
 -  if (extensionId) {
 +  if (extensionId && extensionId !== 'newtab@ghostery.com') {
@@ -26,7 +26,7 @@ index 5a4ff16895..75c2468c78 100644
 --- a/browser/components/urlbar/UrlbarInput.jsm
 +++ b/browser/components/urlbar/UrlbarInput.jsm
 @@ -357,6 +357,13 @@ class UrlbarInput {
- 
+
        valid =
          !this.window.isBlankPageURL(uri.spec) || uri.schemeIs("moz-extension");
 +      try {
@@ -43,17 +43,17 @@ diff --git a/browser/themes/shared/preferences/preferences.inc.css b/browser/the
 index fac7026792..df65703cc1 100644
 --- a/browser/themes/shared/preferences/preferences.inc.css
 +++ b/browser/themes/shared/preferences/preferences.inc.css
-@@ -1182,6 +1182,10 @@ richlistitem .text-link:hover {
+@@ -1194,6 +1194,10 @@ richlistitem .text-link:hover {
    margin-inline-start: 6px;
  }
- 
+
 +#category-home {
 +  display: none;
 +}
 +
- #moreFromMozillaCategory .subtitle {
+ #moreFromMozillaCategory-header .subtitle {
    color: var(--in-content-deemphasized-text);
    margin: 4px 0 10px;
--- 
+--
 2.34.1
 
