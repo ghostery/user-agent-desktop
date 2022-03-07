@@ -78,10 +78,20 @@ def build(opts, Closure postpackage={}, Closure archiving={}) {
                         sh './mach package'
                     }
 
-                    stage("${opts.name}: make update-packaging") {
-                        dir(opts.objDir) {
-                            sh 'make update-packaging'
+                    stage("${opts.name}: generate MAR") {
+                        withEnv([
+                            "MOZ_PKG_FORMAT=TGZ",
+                        ]) {
+                            sh './mach package'
                         }
+                        // TODO: repackage tar.gz to remove top level folder
+                        sh """
+                            ./mach repackage mar \
+                                -i ${opts.objDir}/dist/Ghostery-2022.2.1.en-US.mac.tar.gz \
+                                --arch macos-x86_64-aarch64  \
+                                --mar ${opts.objDir}/dist/host/bin/mar \
+                                -o  ${opts.objDir}/x/target.complete.mar
+                        """
                     }
 
                     for (String locale in opts.locales) {
@@ -373,16 +383,6 @@ def withGithubRelease(Closure body) {
             )
         ]) {
             body()
-        }
-    }
-}
-
-def download(filename) {
-    if (!fileExists("./build/${filename}")) {
-        withCredentials([
-            [$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'user-agent-desktop-jenkins-cache', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'],
-        ]) {
-            sh "aws s3 --region us-east-1 cp s3://user-agent-desktop-jenkins-cache/${filename} ./build/${filename}"
         }
     }
 }

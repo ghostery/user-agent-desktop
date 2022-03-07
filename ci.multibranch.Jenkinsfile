@@ -1,389 +1,140 @@
+import groovy.transform.Field
+
 properties([
     parameters([
         booleanParam(name: 'Reset', defaultValue: false, description: 'clean workspace files'),
         booleanParam(name: 'Clobber', defaultValue: false, description: 'run mach clobber'),
-        booleanParam(name: 'Linux64', defaultValue: true, description: ''),
-        booleanParam(name: 'Windows64', defaultValue: true, description: ''),
-        booleanParam(name: 'WindowsARM', defaultValue: false, description: ''),
-        booleanParam(name: 'MacOSX64', defaultValue: true, description: ''),
-        booleanParam(name: 'MacOSARM', defaultValue: false, description: ''),
         string(name: 'ReleaseName', defaultValue: '', description: ''),
-        booleanParam(name: 'Nightly', defaultValue: false, description: 'Push release to nightly'),
-        booleanParam(name: 'PGO', defaultValue: false, description: 'Enable Profile Guided Optimization'),
-        string(name: 'PGOProfiles', defaultValue: 'http://10.180.244.30:8080/ipfs/QmXCSpgk3QMCf229eYpPva22EASeTLAvoWby23LW8MSJ1Z/86.0', description: 'Base URL for fetching PGO Profiles'),
-        booleanParam(name: 'Instrument', defaultValue: false, description: 'Enable an instrumented build for generating profiles for PGO'),
-        string(name: 'Locales', defaultValue: 'de', description: 'Repack for these locales'),
     ]),
 ])
 
-def buildmatrix = [:]
-def postbuildmatrix = [:]
-def signmatrix = [:]
-def shouldRelease = params.ReleaseName?.trim()
-def helpers
-def buildId = new Date().format('yyyyMMddHHmmss')
-def locales = params.Locales ? params.Locales.split(',') : []
+stage('Prepare') {
+    node('browser-builder') {
+        checkout scm
 
-node('browser-builder') {
-    checkout scm
+        triggeringCommitHash = sh(returnStdout: true, script: "git log -n 1 --pretty=format:'%h'").trim()
 
-    helpers = load "ci/build-helpers.groovy"
-}
+        download('makecab.exe')
+        download('MacOSX10.12.sdk.tar.bz2')
+        download('MacOSX11.0.sdk.tar.bz2')
 
-if (params.Linux64) {
-    def name = 'Linux64'
-    def objDir = 'obj-x86_64-pc-linux-gnu'
-    def artifactGlob = "$objDir/dist/Ghostery-*"
+        def image = docker.build('ua-build-base', '-f build/Base.dockerfile ./build/ --build-arg user=`whoami` --build-arg UID=`id -u` --build-arg GID=`id -g`')
 
-    buildmatrix[name] = {
-        node('browser-builder') {
-            helpers.build([
-                name: name,
-                dockerFile: 'Linux.dockerfile',
-                targetPlatform: 'linux',
-                objDir: objDir,
-                artifactGlob: artifactGlob,
-                locales: locales,
-                buildId: buildId,
-                Reset: params.Reset,
-                Clobber: params.Clobber,
-                PGO: params.PGO,
-                Instrument: params.Instrument,
-                PGOProfiles: params.PGOProfiles,
-            ])()
+        image.inside() {
+            sh 'npm ci'
 
-            archiveArtifacts artifacts: "mozilla-release/${objDir}/dist/update/*.mar"
-            archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
-            archiveArtifacts artifacts: "mozilla-release/browser/config/version*"
-
-            stash name: name, includes: [
-                "mozilla-release/${artifactGlob}",
-            ].join(',')
-
-            sh "rm -rf mozilla-release/$objDir/dist/update"
-        }
-    }
-
-    if (shouldRelease) {
-        signmatrix["Sign ${name}"] = helpers.linux_signing(name, objDir, artifactGlob)
-    }
-}
-
-if (params.Windows64) {
-    def name = 'Windows64'
-    def objDir = 'obj-x86_64-pc-mingw32'
-    def artifactGlob = "$objDir/dist/install/**/*"
-
-    buildmatrix[name] = {
-        // we have to run windows builds on magrathea because that is where the vssdk mount is.
-        node('browser-builder') {
-            helpers.build([
-                name: name,
-                dockerFile: 'Windows.dockerfile',
-                targetPlatform: 'win64',
-                objDir: objDir,
-                artifactGlob: artifactGlob,
-                locales: locales,
-                buildId: buildId,
-                Reset: params.Reset,
-                Clobber: params.Clobber,
-                PGO: params.PGO,
-                Instrument: params.Instrument,
-                PGOProfiles: params.PGOProfiles,
-            ], {
-                if (shouldRelease) {
-                    helpers.windows_signed_packaging(name, objDir)
-                }
-            })()
-
-            def version = helpers.get_version()
-            archiveArtifacts artifacts: "mozilla-release/${objDir}/dist/update/*${version}*.mar"
-            archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
-            archiveArtifacts artifacts: "mozilla-release/${objDir}/dist/*.win64.zip"
-            archiveArtifacts artifacts: "mozilla-release/browser/config/version*"
-
-            stash name: name, includes: [
-                "mozilla-release/${artifactGlob}",
-                "mozilla-release/browser/config/version.txt",
-                "mozilla-release/other-licenses/7zstub/firefox/*",
-                "mozilla-release/browser/installer/windows/*",
-                "mozilla-release/browser/installer/windows/instgen/*",
-            ].join(',')
-
-            sh "rm -rf mozilla-release/${objDir}/dist/update"
-        }
-    }
-
-    if (shouldRelease) {
-        signmatrix["Sign ${name}"] = helpers.windows_signing(name, objDir, artifactGlob, locales + "en-US")
-    }
-}
-
-if (params.WindowsARM) {
-    def name = 'WindowsARM'
-    def objDir = 'obj-aarch64-windows-mingw32'
-    def artifactGlob = "$objDir/dist/install/**/*"
-
-    buildmatrix[name] = {
-        node('browser-builder') {
-            helpers.build([
-                name: name,
-                dockerFile: 'WindowsARM.dockerfile',
-                targetPlatform: 'win64-aarch64',
-                objDir: objDir,
-                artifactGlob: artifactGlob,
-                locales: locales,
-                buildId: buildId,
-                Reset: params.Reset,
-                Clobber: params.Clobber,
-                PGO: params.PGO,
-                Instrument: params.Instrument,
-                PGOProfiles: params.PGOProfiles,
-            ],  {
-                if (shouldRelease) {
-                    helpers.windows_signed_packaging(name, objDir)
-                }
-            })()
-
-            def version = helpers.get_version()
-            archiveArtifacts artifacts: "mozilla-release/${objDir}/dist/update/*${version}*.mar"
-            archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
-
-            stash name: name, includes: [
-                "mozilla-release/${artifactGlob}",
-                "mozilla-release/browser/config/version.txt",
-                "mozilla-release/other-licenses/7zstub/firefox/*",
-                "mozilla-release/browser/installer/windows/*",
-            ].join(',')
-
-            sh "rm -rf mozilla-release/${objDir}/dist/update"
-        }
-    }
-
-    if (shouldRelease) {
-        signmatrix["Sign ${name}"] = helpers.windows_signing(name, objDir, artifactGlob, locales + "en-US")
-    }
-}
-
-if (params.MacOSX64) {
-    def name = 'MacOSX64'
-    def objDir = 'obj-x86_64-apple-darwin'
-    def artifactGlob = "$objDir/dist/Ghostery-*"
-
-    buildmatrix[name] = {
-        node('browser-builder') {
-            helpers.build([
-                name: name,
-                dockerFile: 'MacOSX.dockerfile',
-                targetPlatform: 'macosx',
-                objDir: objDir,
-                artifactGlob: artifactGlob,
-                locales: locales,
-                buildId: buildId,
-                Reset: params.Reset,
-                Clobber: params.Clobber,
-                PGO: params.PGO,
-                Instrument: params.Instrument,
-                PGOProfiles: params.PGOProfiles,
-            ])()
-
-
-            def version = helpers.get_version()
-            archiveArtifacts artifacts: "mozilla-release/${objDir}/dist/update/*${version}*.mar"
-            archiveArtifacts artifacts: "mozilla-release/${artifactGlob}"
-            archiveArtifacts artifacts: "mozilla-release/browser/config/version*"
-
-            stash name: name, includes: [
-                "mozilla-release/${artifactGlob}",
-                "mozilla-release/browser/config/version.txt",
-                "mozilla-release/build/package/mac_osx/unpack-diskimage",
-                "mozilla-release/security/mac/hardenedruntime/*",
-                "mozilla-release/tools/update-packaging/*"
-            ].join(',')
-
-            sh "rm -rf mozilla-release/${objDir}/dist/update"
-        }
-    }
-
-    if (shouldRelease) {
-        signmatrix["Sign Mac"] = helpers.mac_signing(name, objDir, artifactGlob)
-    }
-}
-
-if (params.MacOSARM) {
-    def name = 'MacOSARM'
-    def objDir = 'obj-aarch64-apple-darwin'
-    def artifactGlob = "$objDir/dist/Ghostery-*"
-
-    buildmatrix[name] = {
-        node('browser-builder') {
-            helpers.build([
-                name: name,
-                dockerFile: 'MacOSARM.dockerfile',
-                targetPlatform: 'macosx-aarch64',
-                objDir: objDir,
-                artifactGlob: artifactGlob,
-                locales: locales,
-                buildId: buildId,
-                Reset: params.Reset,
-                Clobber: params.Clobber,
-                PGO: params.PGO,
-                Instrument: params.Instrument,
-                PGOProfiles: params.PGOProfiles,
-            ])()
-
-            // the DMG is stashed - this build will then be unified with the x86_64 build
-            stash name: name, includes: [
-                "mozilla-release/${artifactGlob}",
-                "mozilla-release/${objDir}/dist/update/*.mar"
-            ].join(',')
-        }
-    }
-
-    // if x86_64 build is also being done, make a fat multi-arch dmg and mar
-    if (params.MacOSX64) {
-        postbuildmatrix["MacOS Unified DMG"] = {
-            stage('Unify Mac DMG') {
-                node('browser-builder') {
-                    helpers.mac_unified_dmg()
-                }
+            if (params.Reset) {
+                sh 'rm -rf .cache'
             }
-        }
-    }
-}
 
-parallel buildmatrix
-parallel postbuildmatrix
-parallel signmatrix
+            sh 'rm -rf mozilla-release'
 
-stage('Sign MAR') {
-    if (shouldRelease) {
-        node('browser-builder') {
-            checkout scm
+            sh './fern.js use'
 
-            // prepare signmar environment
             withCredentials([
-                [$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'user-agent-desktop-jenkins-cache', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'],
+                [
+                    $class: 'StringBinding',
+                    credentialsId: '06ca2847-8bc4-425b-8208-c4ee5518dc08',
+                    variable: 'GLS_GAPI_DATA',
+                ],
+                [
+                    $class: 'StringBinding',
+                    credentialsId: '9fa44cca-2ddb-41bf-b4a8-5a28114c9b4f',
+                    variable: 'SB_GAPI_DATA',
+                ],
             ]) {
-                sh 'aws s3 --region us-east-1 --recursive --quiet cp s3://user-agent-desktop-jenkins-cache/mar/ .'
-                sh 'chmod a+x signmar'
+                writeFile file: "gls-gapi.data", text: GLS_GAPI_DATA
+                writeFile file: "sb-gapi.data", text: SB_GAPI_DATA
+                writeFile file: "local.mozconfig", text: """
+                    ac_add_options --with-google-location-service-api-keyfile=${pwd()}/gls-gapi.data
+                    ac_add_options --with-google-safebrowsing-api-keyfile=${pwd()}/sb-gapi.data
+                """
             }
 
-            docker.build('ua-build-base', '-f build/Base.dockerfile ./build/ --build-arg user=`whoami` --build-arg UID=`id -u` --build-arg GID=`id -g`')
+            sh './fern.js reset'
 
-            docker.image('ua-build-base').inside() {
-                unarchive mapping: ["mozilla-release/" : "."]
+            sh './fern.js import-patches'
+        }
+    }
+}
 
-                helpers.signmar()
+stage('Build') {
+    node('browser-builder') {
+        buildAndPackage('linux')
+    }
+}
 
-                archiveArtifacts artifacts: "mozilla-release/obj*/dist/update/*.mar"
+// PIPELINE FIELDS
+
+@Field
+def triggeringCommitHash
+
+@Field
+def buildId = new Date().format('yyyyMMddHHmmss')
+
+@Field
+def SETTINGS = [
+    'linux': [
+        'name': 'linux',
+        'dockerFile': 'Linux.dockerfile',
+        'targetPlatform': 'linux',
+    ],
+]
+
+@Field
+def LOCALES = ['de', 'fr']
+
+// PIPELINE HELPERS
+
+def buildAndPackage(platform) {
+    def settings = SETTINGS[platform]
+    def image = docker.build(
+        "ua-build-${settings.name.toLowerCase()}",
+        "-f build/${settings.dockerFile} ./build"
+    )
+
+    image.inside(
+        '-v /mnt/vfat/vs2017_15.9.29/:/builds/worker/fetches/vs2017_15.9.29'
+    ) {
+        withEnv([
+            "MACH_USE_SYSTEM_PYTHON=1",
+            "MOZCONFIG=${env.WORKSPACE}/mozconfig",
+            "MOZ_BUILD_DATE=${buildId}",
+            "ACCEPTED_MAR_CHANNEL_IDS=firefox-ghostery-release",
+            "MAR_CHANNEL_ID=firefox-ghostery-release",
+            "MOZ_AUTOMATION=1",
+            "MH_BRANCH=${env.BRANCH_NAME}",
+            "MOZ_SOURCE_CHANGESET=${triggeringCommitHash}",
+            'MOZ_PKG_FORMAT=TGZ',
+        ]) {
+            sh 'rm -f `pwd`/MacOSX10.12.sdk; ln -s /builds/worker/fetches/MacOSX10.12.sdk `pwd`/MacOSX10.12.sdk'
+            sh 'rm -f `pwd`/MacOSX11.0.sdk; ln -s /builds/worker/fetches/MacOSX11.0.sdk `pwd`/MacOSX11.0.sdk'
+
+            sh "./fern.js config --print --force -l --platform ${settings.targetPlatform} --brand ghostery"
+
+            dir('mozilla-release') {
+                if (params.Clobber) {
+                    sh './mach clobber'
+                }
+
+                sh './mach build'
+
+                sh './mach package'
+
+                for (String locale in LOCALES) {
+                    sh "./mach build installers-${locale}"
+                }
             }
         }
     }
 }
 
-
-stage('publish to github') {
-    if (shouldRelease) {
-        node('browser-builder') {
-            docker.image('ua-build-base').inside() {
-                sh 'rm -rf artifacts'
-
-                unarchive mapping: ["mozilla-release/" : "artifacts"]
-
-                // ignore obj-aarch64-apple-darwin artifacts - they have been unified with grep -v obj-x86-apple-darwin
-                def artifacts = sh(returnStdout: true, script: "find artifacts -type f \\( -iname \\*.mar -o -iname *-signed.dmg -o -iname \\*.exe -o -iname \\*.tar.bz2 \\) | grep -v obj-aarch64-apple-darwin").trim().split("\\r?\\n")
-
-                withCredentials([
-                    usernamePassword(
-                        credentialsId: 'd60e38ae-4a5a-4eeb-ab64-32fd1fad4a28',
-                        passwordVariable: 'GITHUB_TOKEN',
-                        usernameVariable: 'GITHUB_USERNAME'
-                    )
-                ]) {
-                    def id = sh(returnStdout: true, script: """
-                      curl \
-                        -H "Accept: application/vnd.github.v3+json" \
-                        --header "authorization: Bearer $GITHUB_TOKEN" \
-                        https://api.github.com/repos/ghostery/user-agent-desktop/releases/tags/${params.ReleaseName} \
-                      | jq .id
-                    """).trim()
-
-                    for(String artifactPath in artifacts) {
-                        def artifactName = artifactPath.split('/').last()
-                        sh("""
-                          curl \
-                           -X POST \
-                           --header "authorization: Bearer $GITHUB_TOKEN" \
-                           -H "Accept: application/vnd.github.v3+json" \
-                           -H "Content-Type: application/octet-stream" \
-                           --data-binary @$artifactPath \
-                           "https://uploads.github.com/repos/ghostery/user-agent-desktop/releases/$id/assets?name=$artifactName"
-                        """)
-                    }
-                }
-
-                sh 'rm -rf artifacts'
-            }
-        }
-    }
-}
-
-stage('publish to balrog') {
-    if (shouldRelease) {
-        node('browser-builder') {
-            docker.image('ua-build-base').inside('--dns 1.1.1.1') {
-                sh 'rm -rf artifacts'
-
-                unarchive mapping: ["mozilla-release/" : "artifacts"]
-
-                // ignore obj-aarch64-apple-darwin artifacts - they have been unified with grep -v obj-x86-apple-darwin
-                def artifacts = sh(returnStdout: true, script: 'find artifacts -type f -name *.mar | grep -v obj-aarch64-apple-darwin').trim().split("\\r?\\n")
-
-                withCredentials([usernamePassword(
-                    credentialsId: 'dd3e97c0-5a9c-4ba9-bf34-f0071f6c3afa',
-                    passwordVariable: 'AUTH0_M2M_CLIENT_SECRET',
-                    usernameVariable: 'AUTH0_M2M_CLIENT_ID'
-                )]) {
-                    // create release on balrog
-                    sh """
-                        python3 ci/submitter.py release --tag "${params.ReleaseName}" \
-                            --moz-root artifacts/mozilla-release \
-                            --client-id "$AUTH0_M2M_CLIENT_ID" \
-                            --client-secret "$AUTH0_M2M_CLIENT_SECRET"
-                    """
-                    // publish builds
-                    for(String artifactPath in artifacts) {
-                        sh """
-                            python3 ci/submitter.py build --tag "${params.ReleaseName}" \
-                                --bid "${buildId}" \
-                                --mar "${artifactPath}" \
-                                --moz-root artifacts/mozilla-release \
-                                --client-id "$AUTH0_M2M_CLIENT_ID" \
-                                --client-secret "$AUTH0_M2M_CLIENT_SECRET"
-                        """
-                    }
-
-                    if (params.Nightly) {
-                        // generate partials from the last nightly version
-                        // By doing this before updating nightly we can use the nightly release
-                        // data on balrog to reference the previous day's nightly
-                        build job: 'user-agent/desktop-partial-updates', parameters: [
-                            string(name: 'from', value: 'nightly'),
-                            string(name: 'to', value: params.ReleaseName)
-                        ], propagate: false, wait: true
-                        // copy this release to nightly
-                        sh """
-                            python3 ci/submitter.py nightly --tag "${params.ReleaseName}" \
-                                --moz-root artifacts/mozilla-release \
-                                --client-id "$AUTH0_M2M_CLIENT_ID" \
-                                --client-secret "$AUTH0_M2M_CLIENT_SECRET"
-                        """
-                    }
-
-                    sh 'rm -rf artifacts'
-                }
-            }
+def download(filename) {
+    if (!fileExists("./build/${filename}")) {
+        withCredentials([
+            [$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'user-agent-desktop-jenkins-cache', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'],
+        ]) {
+            sh "aws s3 --region us-east-1 cp s3://user-agent-desktop-jenkins-cache/${filename} ./build/${filename}"
         }
     }
 }
