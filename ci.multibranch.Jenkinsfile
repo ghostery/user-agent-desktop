@@ -58,9 +58,33 @@ stage('Prepare') {
     }
 }
 
-stage('Build') {
+stage('Build Linux') {
     node('browser-builder') {
-        buildAndPackage('linux')
+        buildAndPackage('linux-x86')
+    }
+}
+
+stage('Build MacOS x86') {
+    node('browser-builder') {
+        buildAndPackage('macos-x86')
+    }
+}
+
+stage('Build MacOS ARM') {
+    node('browser-builder') {
+        buildAndPackage('macos-arm')
+    }
+}
+
+stage('Build Windows x86') {
+    node('browser-builder') {
+        buildAndPackage('windows-x86')
+    }
+}
+
+stage('Build Windows ARM') {
+    node('browser-builder') {
+        buildAndPackage('windows-arm')
     }
 }
 
@@ -74,10 +98,40 @@ def buildId = new Date().format('yyyyMMddHHmmss')
 
 @Field
 def SETTINGS = [
-    'linux': [
+    'linux-x86': [
         'name': 'linux',
         'dockerFile': 'Linux.dockerfile',
         'targetPlatform': 'linux',
+        'packageFormat': 'TGZ',
+        'objDir': 'obj-x86_64-pc-linux-gnu',
+    ],
+    'macos-x86': [
+        'name': 'MacOSX64',
+        'dockerFile': 'MacOSX.dockerfile',
+        'targetPlatform': 'macosx',
+        'packageFormat': 'TGZ',
+        'objDir': 'obj-x86_64-apple-darwin',
+    ],
+    'macos-arm': [
+        'name': 'MacOSARM',
+        'dockerFile': 'MacOSARM.dockerfile',
+        'targetPlatform': 'macosx-aarch64',
+        'packageFormat': 'TGZ',
+        'objDir': 'obj-aarch64-apple-darwin',
+    ],
+    'windows-x86': [
+        'name': 'Windows64',
+        'dockerFile': 'Windows.dockerfile',
+        'targetPlatform': 'win64',
+        'packageFormat': 'ZIP',
+        'objDir': 'obj-x86_64-pc-mingw32',
+    ],
+    'windows-arm': [
+        'name': 'WindowsARM',
+        'dockerFile': 'WindowsARM.dockerfile',
+        'targetPlatform': 'win64-aarch64',
+        'packageFormat': 'ZIP',
+        'objDir': 'obj-aarch64-windows-mingw32',
     ],
 ]
 
@@ -105,14 +159,14 @@ def buildAndPackage(platform) {
             "MOZ_AUTOMATION=1",
             "MH_BRANCH=${env.BRANCH_NAME}",
             "MOZ_SOURCE_CHANGESET=${triggeringCommitHash}",
-            'MOZ_PKG_FORMAT=TGZ',
+            "MOZ_PKG_FORMAT=${settings.packageFormat}",
         ]) {
-            sh 'rm -f `pwd`/MacOSX10.12.sdk; ln -s /builds/worker/fetches/MacOSX10.12.sdk `pwd`/MacOSX10.12.sdk'
-            sh 'rm -f `pwd`/MacOSX11.0.sdk; ln -s /builds/worker/fetches/MacOSX11.0.sdk `pwd`/MacOSX11.0.sdk'
-
             sh "./fern.js config --print --force -l --platform ${settings.targetPlatform} --brand ghostery"
 
             dir('mozilla-release') {
+                sh 'rm -f `pwd`/MacOSX10.12.sdk; ln -s /builds/worker/fetches/MacOSX10.12.sdk `pwd`/MacOSX10.12.sdk'
+                sh 'rm -f `pwd`/MacOSX11.0.sdk; ln -s /builds/worker/fetches/MacOSX11.0.sdk `pwd`/MacOSX11.0.sdk'
+
                 if (params.Clobber) {
                     sh './mach clobber'
                 }
@@ -126,6 +180,13 @@ def buildAndPackage(platform) {
                 }
             }
         }
+    }
+
+    if (settings.packageFormat == 'ZIP') {
+        archiveArtifacts artifacts: "mozilla-release/${settings.objDir}/dist/Ghostery-*.zip"
+    }
+    if (settings.packageFormat == 'TGZ') {
+        archiveArtifacts artifacts: "mozilla-release/${settings.objDir}/dist/Ghostery-*.tar.gz"
     }
 }
 
