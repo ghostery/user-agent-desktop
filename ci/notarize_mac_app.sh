@@ -1,9 +1,7 @@
 #!/bin/bash
 
-PKG_DIR=ci/pkg
+PKG_DIR="$1"
 
-ASC_USERNAME="$1"
-ASC_PASSWORD="$2"
 BUNDLE_ID="com.cliqz.desktopbrowser"
 BUNDLE_PKG="$PKG_NAME.zip"
 
@@ -18,21 +16,21 @@ function finish {
 }
 trap finish EXIT
 
-zip -r "$BUNDLE_PKG" "$PKG_DIR/$PKG_NAME.app"
+zip -r "$BUNDLE_PKG" "$PKG_DIR/$APP_NAME/$PKG_NAME.app"
 # submit app for notarization
-if xcrun altool --notarize-app --primary-bundle-id "$BUNDLE_ID" --username "$ASC_USERNAME" --password "$ASC_PASSWORD" --asc-provider EvidonInc -f "$BUNDLE_PKG" > "$NOTARIZE_APP_LOG" 2>&1; then
+if xcrun altool --notarize-app --primary-bundle-id "$BUNDLE_ID" --username "$MAC_NOTARY_USER" --password "$MAC_NOTARY_PASS" --asc-provider EvidonInc -f "$BUNDLE_PKG" > "$NOTARIZE_APP_LOG" 2>&1; then
 	cat "$NOTARIZE_APP_LOG"
 	RequestUUID=$(awk -F ' = ' '/RequestUUID/ {print $2}' "$NOTARIZE_APP_LOG")
 
 	# check status periodically
 	while sleep 60 && date; do
 		# check notarization status
-		if xcrun altool --notarization-info "$RequestUUID" --username "$ASC_USERNAME" --password "$ASC_PASSWORD" > "$NOTARIZE_INFO_LOG" 2>&1; then
+		if xcrun altool --notarization-info "$RequestUUID" --username "$MAC_NOTARY_USER" --password "$MAC_NOTARY_PASS" > "$NOTARIZE_INFO_LOG" 2>&1; then
 			cat "$NOTARIZE_INFO_LOG"
 
 			# once notarization is complete, run stapler and exit
 			if ! grep -q "Status: in progress" "$NOTARIZE_INFO_LOG"; then
-				xcrun stapler staple "$PKG_DIR/$PKG_NAME.app"
+				xcrun stapler staple "$PKG_DIR/$APP_NAME/$PKG_NAME.app"
 				exit $?
 			fi
 		else

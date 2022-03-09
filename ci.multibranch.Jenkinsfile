@@ -21,6 +21,8 @@ stage('Prepare') {
         def image = docker.build('ua-build-base', '-f build/Base.dockerfile ./build/ --build-arg user=`whoami` --build-arg UID=`id -u` --build-arg GID=`id -g`')
 
         image.inside() {
+            version = sh(returnStdout: true, script: "cat .workspace | jq -r .app").trim()
+
             sh 'npm ci'
 
             if (params.Reset) {
@@ -54,6 +56,11 @@ stage('Prepare') {
             sh './fern.js reset'
 
             sh './fern.js import-patches'
+
+            stash name: 'mac-entitlements', includes: [
+                'mozilla-release/security/mac/hardenedruntime/browser.production.entitlements.xml',
+                'mozilla-release/security/mac/hardenedruntime/plugin-container.production.entitlements.xml',
+            ].join(',')
         }
     }
 }
@@ -88,10 +95,97 @@ stage('Build Windows ARM') {
     }
 }
 
+stage('Sign MacOS') {
+    node('gideon') {
+        checkout scm
+
+        // clear mozilla-release to find packages easily
+        sh 'rm -rf mozilla-release'
+        sh 'rm -rf pkg'
+
+        unstash 'pkg-macos-x86'
+        unstash 'pkg-macos-arm'
+        unstash 'mac-entitlements'
+
+        def packages = [
+            ["mozilla-release/obj-aarch64-apple-darwin/dist/Ghostery-${version}.en-US.mac.tar.gz", 'pkg/arm-en'],
+            ["mozilla-release/obj-aarch64-apple-darwin/dist/Ghostery-${version}.de.mac.tar.gz", 'pkg/arm-de'],
+            ["mozilla-release/obj-aarch64-apple-darwin/dist/Ghostery-${version}.fr.mac.tar.gz", 'pkg/arm-fr'],
+            ["mozilla-release/obj-x86_64-apple-darwin/dist/Ghostery-${version}.en-US.mac.tar.gz", 'pkg/x86-en'],
+            ["mozilla-release/obj-x86_64-apple-darwin/dist/Ghostery-${version}.de.mac.tar.gz", 'pkg/x86-de'],
+            ["mozilla-release/obj-x86_64-apple-darwin/dist/Ghostery-${version}.fr.mac.tar.gz", 'pkg/x86-fr'],
+        ]
+
+        withEnv([
+            "APP_NAME=Ghostery",
+            "PKG_NAME=Ghostery Dawn",
+        ]) {
+            withCredentials([
+                file(credentialsId: '5f834aab-07ff-4c3f-9848-c2ac02b3b532', variable: 'MAC_CERT'),
+                string(credentialsId: 'b21cbf0b-c5e1-4c0f-9df7-20bb8ba61a2c', variable: 'MAC_CERT_PASS'),
+            ]) {
+                try {
+                    // create temporary keychain and make it a default one
+                    sh '''#!/bin/bash -l -x
+                        security create-keychain -p cliqz cliqz
+                        security list-keychains -s cliqz
+                        security default-keychain -s cliqz
+                        security unlock-keychain -p cliqz cliqz
+                    '''
+
+                    sh '''#!/bin/bash -l +x
+                        security import $MAC_CERT -P $MAC_CERT_PASS -k cliqz -A
+                        security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k cliqz cliqz
+                    '''
+
+                    withEnv([
+                        "MAC_CERT_NAME=HPY23A294X",
+                    ]){
+                        for (pkg in packages) {
+                           sh "./ci/sign_mac.sh ${pkg[0]} ${pkg[1]}"
+                        }
+                    }
+                } finally {
+                    sh '''#!/bin/bash -l -x
+                        security delete-keychain cliqz
+                        security list-keychains -s login.keychain
+                        security default-keychain -s login.keychain
+                        true
+                    '''
+                }
+            }
+
+            withCredentials([
+                usernamePassword(
+                    credentialsId: '840e974f-f733-4f02-809f-54dc68f5fa46',
+                    passwordVariable: 'MAC_NOTARY_PASS',
+                    usernameVariable: 'MAC_NOTARY_USER'
+                ),
+            ]) {
+                for (pkg in packages) {
+                //    sh "./ci/notarize_mac_app.sh ${pkg[1]}"
+                }
+            }
+
+            for (pkg in packages) {
+                def archiveName = pkg[0].split('/').last()
+                sh "tar zcf ${pkg[1]}/${archiveName} -C ${pkg[1]}/${env.APP_NAME} ."
+            }
+
+            sh 'ls -la pkg/*'
+
+            stash name: 'signed-pkg-mac', includes: 'pkg/*/*.tar.gz'
+        }
+    }
+}
+
 // PIPELINE FIELDS
 
 @Field
 def triggeringCommitHash
+
+@Field
+def version
 
 @Field
 def buildId = new Date().format('yyyyMMddHHmmss')
@@ -147,6 +241,7 @@ def buildAndPackage(platform) {
         "-f build/${settings.dockerFile} ./build"
     )
 
+    /*
     image.inside(
         '-v /mnt/vfat/vs2017_15.9.29/:/builds/worker/fetches/vs2017_15.9.29'
     ) {
@@ -181,13 +276,8 @@ def buildAndPackage(platform) {
             }
         }
     }
-
-    if (settings.packageFormat == 'ZIP') {
-        archiveArtifacts artifacts: "mozilla-release/${settings.objDir}/dist/Ghostery-*.zip"
-    }
-    if (settings.packageFormat == 'TGZ') {
-        archiveArtifacts artifacts: "mozilla-release/${settings.objDir}/dist/Ghostery-*.tar.gz"
-    }
+    */
+    stash name: "pkg-${platform}", includes: "mozilla-release/${settings.objDir}/dist/Ghostery-*.${settings.packageFormat == 'ZIP' ? 'zip' : 'tar.gz'}"
 }
 
 def download(filename) {
