@@ -210,6 +210,8 @@ stage('Sign') {
                 }
 
                 def archiveName = pkg[0].split('\\\\').last()
+
+                // bat "c:\\mozilla-build\\bin\\7z.exe a -tzip -o${pkg[1]} ${archiveName} ${pkg[1]}\\Ghostery -aoa"
                 // powershell "Compress-Archive -Force -DestinationPath ${pkg[1]}\\${archiveName} -Path ${pkg[1]}\\Ghostery*"
             }
 
@@ -236,56 +238,97 @@ stage('Repackage installers') {
             ["pkg/x86-fr/Ghostery-${version}.fr.mac.tar.gz", "pkg/Ghostery-${version}.fr.mac-x86.dmg"],
         ]
 
-        docker.image("ua-build-${SETTINGS['macos-x86'].name.toLowerCase()}").inside() {
-            withEnv([
-                "MACH_USE_SYSTEM_PYTHON=1",
-                "MOZCONFIG=${env.WORKSPACE}/mozconfig",
-                "MOZ_BUILD_DATE=${buildId}",
-                "MOZ_AUTOMATION=1",
-                "MOZ_SOURCE_CHANGESET=${triggeringCommitHash}",
-                "MH_BRANCH=${env.BRANCH_NAME}",
-            ]) {
-                sh "./fern.js config --print --force -l --platform ${SETTINGS['macos-x86'].targetPlatform} --brand ghostery"
-
-                dir('mozilla-release') {
-                    for (dmg in dmgs) {
-                        sh "./mach repackage dmg -i ${env.WORKSPACE}/${dmg[0]} -o ${env.WORKSPACE}/${dmg[1]}"
-                    }
-                }
+        withMach('macos-x86') {
+            for (dmg in dmgs) {
+                // sh "./mach repackage dmg -i ${env.WORKSPACE}/${dmg[0]} -o ${env.WORKSPACE}/${dmg[1]}"
             }
         }
 
-        def installers = [
-            ["pkg/arm-en/Ghostery-${version}.en-US.win64-aarch64.zip", "pkg/Ghostery-${version}.en.win64-aarch64.installer.exe"],
-            ["pkg/arm-de/Ghostery-${version}.de.win64-aarch64.zip", "pkg/Ghostery-${version}.de.win64-aarch64.installer.exe"],
-            ["pkg/arm-fr/Ghostery-${version}.fr.win64-aarch64.zip", "pkg/Ghostery-${version}.fr.win64-aarch64.installer.exe"],
+        // Fix ZIP paths
+        sh '''
+            for zip in pkg/*/*.zip
+            do
+                ./ci/zip-fix.sh "$zip"
+            done
+        '''
+
+        def installersX86 = [
             ["pkg/x86-en/Ghostery-${version}.en-US.win64.zip", "pkg/Ghostery-${version}.en.win64.installer.exe"],
             ["pkg/x86-de/Ghostery-${version}.de.win64.zip", "pkg/Ghostery-${version}.de.win64.installer.exe"],
             ["pkg/x86-fr/Ghostery-${version}.fr.win64.zip", "pkg/Ghostery-${version}.fr.win64.installer.exe"],
         ]
 
-        docker.image("ua-build-${SETTINGS['windows-x86'].name.toLowerCase()}").inside() {
-            dir('mozilla-release') {
-                for (dmg in dmgs) {
-                    // sh "./mach repackage dmg -i ${dmg[0]} -o ${dmg[1]}"
-                }
+        withMach('windows-x86') { settings ->
+            for (installer in installersX86) {
+                sh """
+                    ./mach repackage installer \
+                        -o ${env.WORKSPACE}/${installer[1]} \
+                        --package-name 'Ghostery' \
+                        --package ${env.WORKSPACE}/${installer[0]} \
+                        --tag browser/installer/windows/app.tag \
+                        --setupexe ${settings.objDir}/browser/installer/windows/instgen/setup.exe \
+                        --sfx-stub other-licenses/7zstub/firefox/7zSD.Win32.sfx \
+                        --use-upx
+                """
             }
         }
 
-        def miniInstallers = [
-            ["pkg/arm-en/Ghostery-${version}.en-US.win64-aarch64.zip", "pkg/Ghostery-${version}.en.win64-aarch64.installer-stub.exe"],
-            ["pkg/arm-de/Ghostery-${version}.de.win64-aarch64.zip", "pkg/Ghostery-${version}.de.win64-aarch64.installer-stub.exe"],
-            ["pkg/arm-fr/Ghostery-${version}.fr.win64-aarch64.zip", "pkg/Ghostery-${version}.fr.win64-aarch64.installer-stub.exe"],
+        def installersARM = [
+            ["pkg/arm-en/Ghostery-${version}.en-US.win64-aarch64.zip", "pkg/Ghostery-${version}.en.win64-aarch64.installer.exe"],
+            ["pkg/arm-de/Ghostery-${version}.de.win64-aarch64.zip", "pkg/Ghostery-${version}.de.win64-aarch64.installer.exe"],
+            ["pkg/arm-fr/Ghostery-${version}.fr.win64-aarch64.zip", "pkg/Ghostery-${version}.fr.win64-aarch64.installer.exe"],
+        ]
+
+        withMach('windows-arm') { settings ->
+            for (installer in installersARM) {
+                sh """
+                    ./mach repackage installer \
+                        -o ${env.WORKSPACE}/${installer[1]} \
+                        --package-name 'Ghostery' \
+                        --package ${env.WORKSPACE}/${installer[0]} \
+                        --tag browser/installer/windows/app.tag \
+                        --setupexe ${settings.objDir}/browser/installer/windows/instgen/setup.exe \
+                        --sfx-stub other-licenses/7zstub/firefox/7zSD.Win32.sfx \
+                        --use-upx
+                """
+            }
+        }
+
+        def miniInstallersX86 = [
             ["pkg/x86-en/Ghostery-${version}.en-US.win64.zip", "pkg/Ghostery-${version}.en.win64.installer-stub.exe"],
             ["pkg/x86-de/Ghostery-${version}.de.win64.zip", "pkg/Ghostery-${version}.de.win64.installer-stub.exe"],
             ["pkg/x86-fr/Ghostery-${version}.fr.win64.zip", "pkg/Ghostery-${version}.fr.win64.installer-stub.exe"],
         ]
 
-        docker.image("ua-build-${SETTINGS['windows-x86'].name.toLowerCase()}").inside() {
-            dir('mozilla-release') {
-                for (dmg in dmgs) {
-                    // sh "./mach repackage dmg -i ${dmg[0]} -o ${dmg[1]}"
-                }
+        withMach('windows-x86') { settings ->
+            for (installer in installersARM) {
+                sh """
+                   ./mach repackage installer \
+                        -o ${env.WORKSPACE}/${installer[1]} \
+                        --tag browser/installer/windows/stub.tag \
+                        --setupexe ${settings.objDir}/browser/installer/windows/instgen/setup-stub.exe \
+                        --sfx-stub other-licenses/7zstub/firefox/7zSD.Win32.sfx \
+                        --use-upx
+                """
+            }
+        }
+
+        def miniInstallersARM = [
+            ["pkg/arm-en/Ghostery-${version}.en-US.win64-aarch64.zip", "pkg/Ghostery-${version}.en.win64-aarch64.installer-stub.exe"],
+            ["pkg/arm-de/Ghostery-${version}.de.win64-aarch64.zip", "pkg/Ghostery-${version}.de.win64-aarch64.installer-stub.exe"],
+            ["pkg/arm-fr/Ghostery-${version}.fr.win64-aarch64.zip", "pkg/Ghostery-${version}.fr.win64-aarch64.installer-stub.exe"],
+        ]
+
+        withMach('windows-arm') { settings ->
+            for (installer in installersARM) {
+                sh """
+                   ./mach repackage installer \
+                        -o ${env.WORKSPACE}/${installer[1]} \
+                        --tag browser/installer/windows/stub.tag \
+                        --setupexe ${settings.objDir}/browser/installer/windows/instgen/setup-stub.exe \
+                        --sfx-stub other-licenses/7zstub/firefox/7zSD.Win32.sfx \
+                        --use-upx
+                """
             }
         }
     }
@@ -354,6 +397,31 @@ def buildAndPackage(platform) {
     )
 
     /*
+    withMach(platform) {
+        sh 'rm -f `pwd`/MacOSX10.12.sdk; ln -s /builds/worker/fetches/MacOSX10.12.sdk `pwd`/MacOSX10.12.sdk'
+        sh 'rm -f `pwd`/MacOSX11.0.sdk; ln -s /builds/worker/fetches/MacOSX11.0.sdk `pwd`/MacOSX11.0.sdk'
+
+        if (params.Clobber) {
+            sh './mach clobber'
+        }
+
+        sh './mach build'
+
+        sh './mach package'
+
+        for (String locale in LOCALES) {
+            sh "./mach build installers-${locale}"
+        }
+    }
+    */
+
+    // stash name: "pkg-${platform}", includes: "mozilla-release/${settings.objDir}/dist/Ghostery-*.${settings.packageFormat == 'ZIP' ? 'zip' : 'tar.gz'}"
+}
+
+def withMach(platform, task) {
+    def settings = SETTINGS[platform]
+    def image = docker.image("ua-build-${settings.name.toLowerCase()}")
+
     image.inside(
         '-v /mnt/vfat/vs2017_15.9.29/:/builds/worker/fetches/vs2017_15.9.29'
     ) {
@@ -371,26 +439,10 @@ def buildAndPackage(platform) {
             sh "./fern.js config --print --force -l --platform ${settings.targetPlatform} --brand ghostery"
 
             dir('mozilla-release') {
-                sh 'rm -f `pwd`/MacOSX10.12.sdk; ln -s /builds/worker/fetches/MacOSX10.12.sdk `pwd`/MacOSX10.12.sdk'
-                sh 'rm -f `pwd`/MacOSX11.0.sdk; ln -s /builds/worker/fetches/MacOSX11.0.sdk `pwd`/MacOSX11.0.sdk'
-
-                if (params.Clobber) {
-                    sh './mach clobber'
-                }
-
-                sh './mach build'
-
-                sh './mach package'
-
-                for (String locale in LOCALES) {
-                    sh "./mach build installers-${locale}"
-                }
+                task(settings)
             }
         }
     }
-    */
-
-    // stash name: "pkg-${platform}", includes: "mozilla-release/${settings.objDir}/dist/Ghostery-*.${settings.packageFormat == 'ZIP' ? 'zip' : 'tar.gz'}"
 }
 
 def download(filename) {
