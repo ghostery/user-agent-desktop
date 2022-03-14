@@ -67,7 +67,7 @@ stage('Prepare') {
 
 stage('Build Linux') {
     node('browser-builder') {
-        // buildAndPackage('linux-x86')
+        buildAndPackage('linux-x86')
     }
 }
 
@@ -85,13 +85,13 @@ stage('Build MacOS ARM') {
 
 stage('Build Windows x86') {
     node('browser-builder') {
-        // buildAndPackage('windows-x86')
+        buildAndPackage('windows-x86')
     }
 }
 
 stage('Build Windows ARM') {
     node('browser-builder') {
-        // buildAndPackage('windows-arm')
+        buildAndPackage('windows-arm')
     }
 }
 
@@ -184,11 +184,11 @@ stage('Sign') {
         node('browser-builder-windows') {
             checkout scm
 
-            // bat 'del /s /q mozilla-release'
-            // bat 'del /s /q pkg'
+            bat 'del /s /q mozilla-release'
+            bat 'del /s /q pkg'
 
-            // unstash 'pkg-windows-x86'
-            // unstash 'pkg-windows-arm'
+            unstash 'pkg-windows-x86'
+            unstash 'pkg-windows-arm'
 
             def packages = [
                 ["mozilla-release\\obj-aarch64-windows-mingw32\\dist\\Ghostery-${version}.en-US.win64-aarch64.zip", 'pkg\\arm-en'],
@@ -200,22 +200,22 @@ stage('Sign') {
             ]
 
             for (pkg in packages) {
-                // powershell "Expand-Archive -Force ${pkg[0]} ${pkg[1]}"
+                powershell "Expand-Archive -Force ${pkg[0]} ${pkg[1]}"
 
                 withCredentials([
                     file(credentialsId: "7da7d2de-5a10-45e6-9ffd-4e49f83753a8", variable: 'WIN_CERT'),
                     string(credentialsId: "33b3705c-1c2e-4462-9354-56a76bbb164c", variable: 'WIN_CERT_PASS'),
                 ]) {
-                    // bat "ci\\win_signer.bat ${pkg[1]}\\Ghostery"
+                    bat "ci\\win_signer.bat ${pkg[1]}\\Ghostery"
                 }
 
                 def archiveName = pkg[0].split('\\\\').last()
 
                 // bat "c:\\mozilla-build\\bin\\7z.exe a -tzip -o${pkg[1]} ${archiveName} ${pkg[1]}\\Ghostery -aoa"
-                // powershell "Compress-Archive -Force -DestinationPath ${pkg[1]}\\${archiveName} -Path ${pkg[1]}\\Ghostery*"
+                powershell "Compress-Archive -Force -DestinationPath ${pkg[1]}\\${archiveName} -Path ${pkg[1]}\\Ghostery*"
             }
 
-            // stash name: 'signed-pkg-windows', includes: 'pkg/*/*.zip'
+            stash name: 'signed-pkg-windows', includes: 'pkg/*/*.zip'
         }
     }
 
@@ -224,10 +224,10 @@ stage('Sign') {
 
 stage('Repackage installers') {
     node('browser-builder') {
-        // sh 'rm -rf pkg'
+        sh 'rm -rf pkg'
 
         unstash 'signed-pkg-mac'
-        // unstash 'signed-pkg-windows'
+        unstash 'signed-pkg-windows'
 
         def dmgs = [
             ["pkg/arm-en/Ghostery-${version}.en-US.mac.tar.gz", "pkg/Ghostery-${version}.en.mac-arm.dmg"],
@@ -260,16 +260,16 @@ stage('Repackage installers') {
 
         withMach('windows-x86') { settings ->
             for (installer in installersX86) {
-                // sh """
-                //     ./mach repackage installer \
-                //         -o ${env.WORKSPACE}/${installer[1]} \
-                //         --package-name 'Ghostery' \
-                //         --package ${env.WORKSPACE}/${installer[0]} \
-                //         --tag browser/installer/windows/app.tag \
-                //         --setupexe ${settings.objDir}/browser/installer/windows/instgen/setup.exe \
-                //         --sfx-stub other-licenses/7zstub/firefox/7zSD.Win32.sfx \
-                //         --use-upx
-                // """
+                sh """
+                    ./mach repackage installer \
+                        -o ${env.WORKSPACE}/${installer[1]} \
+                        --package-name 'Ghostery' \
+                        --package ${env.WORKSPACE}/${installer[0]} \
+                        --tag browser/installer/windows/app.tag \
+                        --setupexe ${settings.objDir}/browser/installer/windows/instgen/setup.exe \
+                        --sfx-stub other-licenses/7zstub/firefox/7zSD.Win32.sfx \
+                        --use-upx
+                """
             }
         }
 
@@ -281,16 +281,16 @@ stage('Repackage installers') {
 
         withMach('windows-arm') { settings ->
             for (installer in installersARM) {
-                // sh """
-                //     ./mach repackage installer \
-                //         -o ${env.WORKSPACE}/${installer[1]} \
-                //         --package-name 'Ghostery' \
-                //         --package ${env.WORKSPACE}/${installer[0]} \
-                //         --tag browser/installer/windows/app.tag \
-                //         --setupexe ${settings.objDir}/browser/installer/windows/instgen/setup.exe \
-                //         --sfx-stub other-licenses/7zstub/firefox/7zSD.Win32.sfx \
-                //         --use-upx
-                // """
+                sh """
+                    ./mach repackage installer \
+                        -o ${env.WORKSPACE}/${installer[1]} \
+                        --package-name 'Ghostery' \
+                        --package ${env.WORKSPACE}/${installer[0]} \
+                        --tag browser/installer/windows/app.tag \
+                        --setupexe ${settings.objDir}/browser/installer/windows/instgen/setup.exe \
+                        --sfx-stub other-licenses/7zstub/firefox/7zSD.Win32.sfx \
+                        --use-upx
+                """
             }
         }
 
@@ -302,14 +302,14 @@ stage('Repackage installers') {
 
         withMach('windows-x86') { settings ->
             for (installer in stubInstallersX86) {
-                // sh """
-                //    ./mach repackage installer \
-                //         -o ${env.WORKSPACE}/${installer[1]} \
-                //         --tag browser/installer/windows/stub.tag \
-                //         --setupexe ${settings.objDir}/browser/installer/windows/instgen/setup-stub.exe \
-                //         --sfx-stub other-licenses/7zstub/firefox/7zSD.Win32.sfx \
-                //         --use-upx
-                // """
+                sh """
+                   ./mach repackage installer \
+                        -o ${env.WORKSPACE}/${installer[1]} \
+                        --tag browser/installer/windows/stub.tag \
+                        --setupexe ${settings.objDir}/browser/installer/windows/instgen/setup-stub.exe \
+                        --sfx-stub other-licenses/7zstub/firefox/7zSD.Win32.sfx \
+                        --use-upx
+                """
             }
         }
 
@@ -321,18 +321,18 @@ stage('Repackage installers') {
 
         withMach('windows-arm') { settings ->
             for (installer in stubInstallersARM) {
-                // sh """
-                //    ./mach repackage installer \
-                //         -o ${env.WORKSPACE}/${installer[1]} \
-                //         --tag browser/installer/windows/stub.tag \
-                //         --setupexe ${settings.objDir}/browser/installer/windows/instgen/setup-stub.exe \
-                //         --sfx-stub other-licenses/7zstub/firefox/7zSD.Win32.sfx \
-                //         --use-upx
-                // """
+                sh """
+                   ./mach repackage installer \
+                        -o ${env.WORKSPACE}/${installer[1]} \
+                        --tag browser/installer/windows/stub.tag \
+                        --setupexe ${settings.objDir}/browser/installer/windows/instgen/setup-stub.exe \
+                        --sfx-stub other-licenses/7zstub/firefox/7zSD.Win32.sfx \
+                        --use-upx
+                """
             }
         }
 
-        // stash name: 'installers-windows', includes: 'pkg/*.exe'
+        stash name: 'installers-windows', includes: 'pkg/*.exe'
     }
 }
 
@@ -341,20 +341,20 @@ stage('Prepare installers') {
 
     parallelPrepareInstallers['windows'] = {
         node('browser-builder-windows') {
-            // unstash 'installers-windows'
+            unstash 'installers-windows'
 
             withCredentials([
                 file(credentialsId: "7da7d2de-5a10-45e6-9ffd-4e49f83753a8", variable: 'WIN_CERT'),
                 string(credentialsId: "33b3705c-1c2e-4462-9354-56a76bbb164c", variable: 'WIN_CERT_PASS'),
             ]) {
-                // bat "ci\\win_signer.bat pkg"
+                bat "ci\\win_signer.bat pkg"
             }
 
             stash name: 'signed-installers-windows', includes: 'pkg/*.exe'
         }
 
         node('browser-builder') {
-            // unstash name: 'signed-installers-windows'
+            unstash name: 'signed-installers-windows'
         }
     }
 
