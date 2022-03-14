@@ -9,11 +9,17 @@ BUNDLE=$OUTPUT/$APP_NAME/$PKG_NAME.app
 BROWSER_ENTITLEMENTS_FILE=mozilla-release/security/mac/hardenedruntime/browser.production.entitlements.xml
 PLUGINCONTAINER_ENTITLEMENTS_FILE=mozilla-release/security/mac/hardenedruntime/plugin-container.production.entitlements.xml
 
-echo "***** MAC SIGNING *****"
+
+echo "Processing $OUTPUT..."
 
 rm -f -rf $OUTPUT
-mkdir -p $OUTPUT
-tar zxf $INPUT -C $OUTPUT
+mkdir -p $OUTPUT/$APP_NAME
+
+mozilla-release/build/package/mac_osx/unpack-diskimage $INPUT /Volumes/$APP_NAME $OUTPUT/$APP_NAME
+
+ls -la $OUTPUT
+
+echo "***** SIGNING *****"
 
 security unlock-keychain -p cliqz cliqz
 

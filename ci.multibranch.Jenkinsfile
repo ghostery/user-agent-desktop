@@ -60,6 +60,7 @@ stage('Prepare') {
             stash name: 'mac-entitlements', includes: [
                 'mozilla-release/security/mac/hardenedruntime/browser.production.entitlements.xml',
                 'mozilla-release/security/mac/hardenedruntime/plugin-container.production.entitlements.xml',
+                'mozilla-release/build/package/mac_osx/unpack-diskimage',
             ].join(',')
         }
     }
@@ -73,13 +74,13 @@ stage('Build Linux') {
 
 stage('Build MacOS x86') {
     node('browser-builder') {
-        buildAndPackage('macos-x86')
+        // buildAndPackage('macos-x86')
     }
 }
 
 stage('Build MacOS ARM') {
     node('browser-builder') {
-        buildAndPackage('macos-arm')
+        // buildAndPackage('macos-arm')
     }
 }
 
@@ -95,154 +96,49 @@ stage('Build Windows ARM') {
     }
 }
 
-stage('Sign') {
-    def parallelSigning = [:]
+stage('Sign Windows') {
+    node('browser-builder-windows') {
+        checkout scm
 
-    parallelSigning['mac'] = {
-        node('gideon') {
-            checkout scm
+        // if (clobber)
+        // bat 'del /s /q mozilla-release'
+        // bat 'del /s /q pkg'
 
-            // clear mozilla-release to find packages easily
-            sh 'rm -rf mozilla-release'
-            sh 'rm -rf pkg'
+        unstash 'pkg-windows-x86'
+        unstash 'pkg-windows-arm'
 
-            unstash 'pkg-macos-x86'
-            unstash 'pkg-macos-arm'
-            unstash 'mac-entitlements'
-
-            def packages = [
-                ["mozilla-release/obj-aarch64-apple-darwin/dist/Ghostery-${version}.en-US.mac.tar.gz", 'pkg/arm-en'],
-                ["mozilla-release/obj-aarch64-apple-darwin/dist/Ghostery-${version}.de.mac.tar.gz", 'pkg/arm-de'],
-                ["mozilla-release/obj-aarch64-apple-darwin/dist/Ghostery-${version}.fr.mac.tar.gz", 'pkg/arm-fr'],
-                ["mozilla-release/obj-x86_64-apple-darwin/dist/Ghostery-${version}.en-US.mac.tar.gz", 'pkg/x86-en'],
-                ["mozilla-release/obj-x86_64-apple-darwin/dist/Ghostery-${version}.de.mac.tar.gz", 'pkg/x86-de'],
-                ["mozilla-release/obj-x86_64-apple-darwin/dist/Ghostery-${version}.fr.mac.tar.gz", 'pkg/x86-fr'],
-            ]
-
-            withEnv([
-                "APP_NAME=Ghostery",
-                "PKG_NAME=Ghostery Dawn",
-            ]) {
-                withCredentials([
-                    file(credentialsId: '5f834aab-07ff-4c3f-9848-c2ac02b3b532', variable: 'MAC_CERT'),
-                    string(credentialsId: 'b21cbf0b-c5e1-4c0f-9df7-20bb8ba61a2c', variable: 'MAC_CERT_PASS'),
-                ]) {
-                    try {
-                        // create temporary keychain and make it a default one
-                        sh '''#!/bin/bash -l -x
-                            security create-keychain -p cliqz cliqz
-                            security list-keychains -s cliqz
-                            security default-keychain -s cliqz
-                            security unlock-keychain -p cliqz cliqz
-                        '''
-
-                        sh '''#!/bin/bash -l +x
-                            security import $MAC_CERT -P $MAC_CERT_PASS -k cliqz -A
-                            security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k cliqz cliqz
-                        '''
-
-                        withEnv([
-                            "MAC_CERT_NAME=HPY23A294X",
-                        ]){
-                            for (pkg in packages) {
-                               sh "./ci/sign_mac.sh ${pkg[0]} ${pkg[1]}"
-                            }
-                        }
-                    } finally {
-                        sh '''#!/bin/bash -l -x
-                            security delete-keychain cliqz
-                            security list-keychains -s login.keychain
-                            security default-keychain -s login.keychain
-                            true
-                        '''
-                    }
-                }
-
-                withCredentials([
-                    usernamePassword(
-                        credentialsId: '840e974f-f733-4f02-809f-54dc68f5fa46',
-                        passwordVariable: 'MAC_NOTARY_PASS',
-                        usernameVariable: 'MAC_NOTARY_USER'
-                    ),
-                ]) {
-                    for (pkg in packages) {
-                       sh "./ci/notarize_mac_app.sh ${pkg[1]}"
-                    }
-                }
-
-                for (pkg in packages) {
-                    def archiveName = pkg[0].split('/').last()
-                    sh "tar zcf ${pkg[1]}/${archiveName} -C ${pkg[1]}/${env.APP_NAME} ."
-                }
-
-                stash name: 'signed-pkg-mac', includes: 'pkg/*/*.tar.gz'
-            }
-        }
-    }
-
-    parallelSigning['windows'] = {
-        node('browser-builder-windows') {
-            checkout scm
-
-            bat 'del /s /q mozilla-release'
-            bat 'del /s /q pkg'
-
-            unstash 'pkg-windows-x86'
-            unstash 'pkg-windows-arm'
-
-            def packages = [
-                ["mozilla-release\\obj-aarch64-windows-mingw32\\dist\\Ghostery-${version}.en-US.win64-aarch64.zip", 'pkg\\arm-en'],
-                ["mozilla-release\\obj-aarch64-windows-mingw32\\dist\\Ghostery-${version}.de.win64-aarch64.zip", 'pkg\\arm-de'],
-                ["mozilla-release\\obj-aarch64-windows-mingw32\\dist\\Ghostery-${version}.fr.win64-aarch64.zip", 'pkg\\arm-fr'],
-                ["mozilla-release\\obj-x86_64-pc-mingw32\\dist\\Ghostery-${version}.en-US.win64.zip", 'pkg\\x86-en'],
-                ["mozilla-release\\obj-x86_64-pc-mingw32\\dist\\Ghostery-${version}.de.win64.zip", 'pkg\\x86-de'],
-                ["mozilla-release\\obj-x86_64-pc-mingw32\\dist\\Ghostery-${version}.fr.win64.zip", 'pkg\\x86-fr'],
-            ]
-
-            for (pkg in packages) {
-                powershell "Expand-Archive -Force ${pkg[0]} ${pkg[1]}"
-
-                withCredentials([
-                    file(credentialsId: "7da7d2de-5a10-45e6-9ffd-4e49f83753a8", variable: 'WIN_CERT'),
-                    string(credentialsId: "33b3705c-1c2e-4462-9354-56a76bbb164c", variable: 'WIN_CERT_PASS'),
-                ]) {
-                    bat "ci\\win_signer.bat ${pkg[1]}\\Ghostery"
-                }
-
-                def archiveName = pkg[0].split('\\\\').last()
-
-                // bat "c:\\mozilla-build\\bin\\7z.exe a -tzip -o${pkg[1]} ${archiveName} ${pkg[1]}\\Ghostery -aoa"
-                powershell "Compress-Archive -Force -DestinationPath ${pkg[1]}\\${archiveName} -Path ${pkg[1]}\\Ghostery*"
-            }
-
-            stash name: 'signed-pkg-windows', includes: 'pkg/*/*.zip'
-        }
-    }
-
-    parallel parallelSigning
-}
-
-stage('Repackage installers') {
-    node('browser-builder') {
-        sh 'rm -rf pkg'
-
-        unstash 'signed-pkg-mac'
-        unstash 'signed-pkg-windows'
-
-        def dmgs = [
-            ["pkg/arm-en/Ghostery-${version}.en-US.mac.tar.gz", "pkg/Ghostery-${version}.en.mac-arm.dmg"],
-            ["pkg/arm-de/Ghostery-${version}.de.mac.tar.gz", "pkg/Ghostery-${version}.de.mac-arm.dmg"],
-            ["pkg/arm-fr/Ghostery-${version}.fr.mac.tar.gz", "pkg/Ghostery-${version}.fr.mac-arm.dmg"],
-            ["pkg/x86-en/Ghostery-${version}.en-US.mac.tar.gz", "pkg/Ghostery-${version}.en.mac-x86.dmg"],
-            ["pkg/x86-de/Ghostery-${version}.de.mac.tar.gz", "pkg/Ghostery-${version}.de.mac-x86.dmg"],
-            ["pkg/x86-fr/Ghostery-${version}.fr.mac.tar.gz", "pkg/Ghostery-${version}.fr.mac-x86.dmg"],
+        def packages = [
+            ["mozilla-release\\obj-aarch64-windows-mingw32\\dist\\Ghostery-${version}.en-US.win64-aarch64.zip", 'pkg\\arm-en'],
+            ["mozilla-release\\obj-aarch64-windows-mingw32\\dist\\Ghostery-${version}.de.win64-aarch64.zip", 'pkg\\arm-de'],
+            ["mozilla-release\\obj-aarch64-windows-mingw32\\dist\\Ghostery-${version}.fr.win64-aarch64.zip", 'pkg\\arm-fr'],
+            ["mozilla-release\\obj-x86_64-pc-mingw32\\dist\\Ghostery-${version}.en-US.win64.zip", 'pkg\\x86-en'],
+            ["mozilla-release\\obj-x86_64-pc-mingw32\\dist\\Ghostery-${version}.de.win64.zip", 'pkg\\x86-de'],
+            ["mozilla-release\\obj-x86_64-pc-mingw32\\dist\\Ghostery-${version}.fr.win64.zip", 'pkg\\x86-fr'],
         ]
 
-        withMach('macos-x86') {
-            for (dmg in dmgs) {
-                sh "./mach repackage dmg -i ${env.WORKSPACE}/${dmg[0]} -o ${env.WORKSPACE}/${dmg[1]}"
+        for (pkg in packages) {
+            powershell "Expand-Archive -Force ${pkg[0]} ${pkg[1]}"
+
+            withCredentials([
+                file(credentialsId: "7da7d2de-5a10-45e6-9ffd-4e49f83753a8", variable: 'WIN_CERT'),
+                string(credentialsId: "33b3705c-1c2e-4462-9354-56a76bbb164c", variable: 'WIN_CERT_PASS'),
+            ]) {
+                bat "ci\\win_signer.bat ${pkg[1]}\\Ghostery"
             }
+
+            def archiveName = pkg[0].split('\\\\').last()
+
+            // bat "c:\\mozilla-build\\bin\\7z.exe a -tzip -o${pkg[1]} ${archiveName} ${pkg[1]}\\Ghostery -aoa"
+            powershell "Compress-Archive -Force -DestinationPath ${pkg[1]}\\${archiveName} -Path ${pkg[1]}\\Ghostery*"
         }
+
+        stash name: 'signed-pkg-windows', includes: 'pkg/*/*.zip'
+    }
+}
+
+stage('Repackage Windows installers') {
+    node('browser-builder') {
+        unstash 'signed-pkg-windows'
 
         // Fix ZIP paths
         sh '''
@@ -336,48 +232,147 @@ stage('Repackage installers') {
     }
 }
 
-stage('Prepare installers') {
-    def parallelPrepareInstallers = [:]
+stage('Sign Windows installers') {
+    node('browser-builder-windows') {
+        unstash 'installers-windows'
 
-    parallelPrepareInstallers['windows'] = {
-        node('browser-builder-windows') {
-            unstash 'installers-windows'
-
-            withCredentials([
-                file(credentialsId: "7da7d2de-5a10-45e6-9ffd-4e49f83753a8", variable: 'WIN_CERT'),
-                string(credentialsId: "33b3705c-1c2e-4462-9354-56a76bbb164c", variable: 'WIN_CERT_PASS'),
-            ]) {
-                bat "ci\\win_signer.bat pkg"
-            }
-
-            stash name: 'signed-installers-windows', includes: 'pkg/*.exe'
+        withCredentials([
+            file(credentialsId: "7da7d2de-5a10-45e6-9ffd-4e49f83753a8", variable: 'WIN_CERT'),
+            string(credentialsId: "33b3705c-1c2e-4462-9354-56a76bbb164c", variable: 'WIN_CERT_PASS'),
+        ]) {
+            bat "ci\\win_signer.bat pkg"
         }
 
-        node('browser-builder') {
-            unstash name: 'signed-installers-windows'
-        }
+        stash name: 'signed-installers-windows', includes: 'pkg/*.exe'
     }
 
-    parallelPrepareInstallers['macos'] = {
-        node('browser-builder') {
-            def dmgs = [
-                ["pkg/Ghostery-${version}.en.mac-arm.dmg", "pkg/Ghostery-${version}.en.mac-x86.dmg", "pkg/Ghostery-${version}.en.dmg"],
-                ["pkg/Ghostery-${version}.de.mac-arm.dmg", "pkg/Ghostery-${version}.de.mac-x86.dmg", "pkg/Ghostery-${version}.de.dmg"],
-                ["pkg/Ghostery-${version}.fr.mac-arm.dmg", "pkg/Ghostery-${version}.fr.mac-x86.dmg", "pkg/Ghostery-${version}.fr.dmg"],
-            ]
+    node('browser-builder') {
+        unstash name: 'signed-installers-windows'
+    }
+}
 
-            withMach('macos-arm') {
-                for (dmg in dmgs) {
-                    sh """
-                        cd ${env.WORKSPACE}
-                        ./ci/unify_mac_dmg.sh ${dmg[0]} ${dmg[1]} ${dmg[2]}
-                    """
+stage('Unify Mac DMG') {
+     node('browser-builder') {
+        def armObjDir = SETTINGS['macos-arm'].objDir
+        def x86ObjDir = SETTINGS['macos-x86'].objDir
+
+        def dmgs = [
+            ["mozilla-release/${armObjDir}/dist/Ghostery-${version}.en-US.mac.dmg", "mozilla-release/${x86ObjDir}/dist/Ghostery-${version}.en-US.mac.dmg", "pkg/Ghostery-${version}.en.dmg"],
+            ["mozilla-release/${armObjDir}/dist/Ghostery-${version}.de.mac.dmg", "mozilla-release/${x86ObjDir}/dist/Ghostery-${version}.de.mac.dmg", "pkg/Ghostery-${version}.de.dmg"],
+            ["mozilla-release/${armObjDir}/dist/Ghostery-${version}.fr.mac.dmg", "mozilla-release/${x86ObjDir}/dist/Ghostery-${version}.fr.mac.dmg", "pkg/Ghostery-${version}.fr.dmg"],
+        ]
+
+        withMach('macos-arm') {
+            for (dmg in dmgs) {
+                /*
+                sh """
+                    cd ${env.WORKSPACE}
+                    ./ci/unify_mac_dmg.sh ${dmg[0]} ${dmg[1]} ${dmg[2]}
+                """
+                */
+            }
+        }
+
+        // stash name: 'mac-unified-dmg', includes: 'pkg/*.dmg'
+    }
+}
+
+stage('Sign Mac') {
+    node('gideon') {
+        checkout scm
+
+        // clear mozilla-release to find packages easily
+        // sh 'rm -rf mozilla-release'
+        // sh 'rm -rf pkg'
+
+        // unstash 'mac-unified-dmg'
+        // unstash 'mac-entitlements'
+
+        def packages = [
+            ["pkg/Ghostery-${version}.en.dmg", "pkg/mac-en"],
+            ["pkg/Ghostery-${version}.de.dmg", "pkg/mac-de"],
+            ["pkg/Ghostery-${version}.fr.dmg", "pkg/mac-fr"],
+        ]
+
+        withEnv([
+            "APP_NAME=Ghostery",
+            "PKG_NAME=Ghostery Dawn",
+        ]) {
+            withCredentials([
+                file(credentialsId: '5f834aab-07ff-4c3f-9848-c2ac02b3b532', variable: 'MAC_CERT'),
+                string(credentialsId: 'b21cbf0b-c5e1-4c0f-9df7-20bb8ba61a2c', variable: 'MAC_CERT_PASS'),
+            ]) {
+                try {
+                    // create temporary keychain and make it a default one
+                    sh '''#!/bin/bash -l -x
+                        security create-keychain -p cliqz cliqz
+                        security list-keychains -s cliqz
+                        security default-keychain -s cliqz
+                        security unlock-keychain -p cliqz cliqz
+                    '''
+
+                    sh '''#!/bin/bash -l +x
+                        security import $MAC_CERT -P $MAC_CERT_PASS -k cliqz -A
+                        security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k cliqz cliqz
+                    '''
+
+                    withEnv([
+                        "MAC_CERT_NAME=HPY23A294X",
+                    ]){
+                        for (pkg in packages) {
+                            // sh "./ci/sign_mac.sh ${pkg[0]} ${pkg[1]}"
+                        }
+                    }
+                } finally {
+                    sh '''#!/bin/bash -l -x
+                        security delete-keychain cliqz
+                        security list-keychains -s login.keychain
+                        security default-keychain -s login.keychain
+                        true
+                    '''
                 }
             }
+
+            withCredentials([
+                usernamePassword(
+                    credentialsId: '840e974f-f733-4f02-809f-54dc68f5fa46',
+                    passwordVariable: 'MAC_NOTARY_PASS',
+                    usernameVariable: 'MAC_NOTARY_USER'
+                ),
+            ]) {
+                for (pkg in packages) {
+                    // sh "./ci/notarize_mac_app.sh ${pkg[1]}"
+                }
+            }
+
+            for (pkg in packages) {
+                def archiveName = pkg[0].split('/').last()[0..-4] + 'tar.gz'
+                // sh "tar zcf ${pkg[1]}/${archiveName} -C ${pkg[1]}/${env.APP_NAME} ."
+            }
+
+            // stash name: 'signed-pkg-mac', includes: 'pkg/*/*.tar.gz'
         }
     }
+}
 
-    parallel parallelPrepareInstallers
+stage('Repackage Mac') {
+    node('browser-builder') {
+        // unstash 'signed-pkg-mac'
+
+        def dmgs = [
+            ["pkg/mac-en/Ghostery-${version}.en.tar.gz", "pkg/Ghostery-${version}.en.dmg"],
+            ["pkg/mac-de/Ghostery-${version}.de.tar.gz", "pkg/Ghostery-${version}.de.dmg"],
+            ["pkg/mac-fr/Ghostery-${version}.fr.tar.gz", "pkg/Ghostery-${version}.fr.dmg"],
+        ]
+
+        withMach('macos-x86') {
+            for (dmg in dmgs) {
+                // sh "./mach repackage dmg -i ${env.WORKSPACE}/${dmg[0]} -o ${env.WORKSPACE}/${dmg[1]}"
+            }
+        }
+
+        archiveArtifacts artifacts: 'pkg/*.dmg'
+    }
 }
 
 // PIPELINE FIELDS
@@ -404,14 +399,14 @@ def SETTINGS = [
         'name': 'MacOSX64',
         'dockerFile': 'MacOSX.dockerfile',
         'targetPlatform': 'macosx',
-        'packageFormat': 'TGZ',
+        'packageFormat': 'DMG',
         'objDir': 'obj-x86_64-apple-darwin',
     ],
     'macos-arm': [
         'name': 'MacOSARM',
         'dockerFile': 'MacOSARM.dockerfile',
         'targetPlatform': 'macosx-aarch64',
-        'packageFormat': 'TGZ',
+        'packageFormat': 'DMG',
         'objDir': 'obj-aarch64-apple-darwin',
     ],
     'windows-x86': [
@@ -441,7 +436,7 @@ def buildAndPackage(platform) {
         "ua-build-${settings.name.toLowerCase()}",
         "-f build/${settings.dockerFile} ./build"
     )
-
+    ///*
     withMach(platform) {
         sh 'rm -f `pwd`/MacOSX10.12.sdk; ln -s /builds/worker/fetches/MacOSX10.12.sdk `pwd`/MacOSX10.12.sdk'
         sh 'rm -f `pwd`/MacOSX11.0.sdk; ln -s /builds/worker/fetches/MacOSX11.0.sdk `pwd`/MacOSX11.0.sdk'
@@ -459,7 +454,12 @@ def buildAndPackage(platform) {
         }
     }
 
-    stash name: "pkg-${platform}", includes: "mozilla-release/${settings.objDir}/dist/Ghostery-*.${settings.packageFormat == 'ZIP' ? 'zip' : 'tar.gz'}"
+    stash name: "pkg-${platform}", includes: [
+        "mozilla-release/${settings.objDir}/dist/Ghostery-*.zip",
+        "mozilla-release/${settings.objDir}/dist/Ghostery-*.tar.gz",
+        "mozilla-release/${settings.objDir}/dist/Ghostery-*.dmg",
+    ].join(',')
+    //*/
 }
 
 def withMach(platform, task) {
