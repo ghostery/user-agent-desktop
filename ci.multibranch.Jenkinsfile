@@ -474,6 +474,111 @@ stage('Repackage MAR') {
     }
 }
 
+stage('Publish to github') {
+    if (shouldRelease) {
+        node('browser-builder') {
+            docker.image('ua-build-base').inside() {
+
+                def artifacts = [
+                    "pkg/Ghostery-${version}.en.mac.dmg",
+                    "pkg/Ghostery-${version}.de.mac.dmg",
+                    "pkg/Ghostery-${version}.fr.mac.dmg",
+                    "pkg/linux/Ghostery-${version}.en.linux.tar.gz",
+                    "pkg/linux/Ghostery-${version}.de.linux.tar.gz",
+                    "pkg/linux/Ghostery-${version}.fr.linux.tar.gz",
+                    "pkg/Ghostery-${version}.en.win64.installer.exe",
+                    "pkg/Ghostery-${version}.de.win64.installer.exe",
+                    "pkg/Ghostery-${version}.fr.win64.installer.exe",
+                    "pkg/Ghostery-${version}.en.win64-aarch64.installer.exe",
+                    "pkg/Ghostery-${version}.de.win64-aarch64.installer.exe",
+                    "pkg/Ghostery-${version}.fr.win64-aarch64.installer.exe",
+                    "pkg/Ghostery-${version}.en.win64.installer-stub.exe",
+                    "pkg/Ghostery-${version}.de.win64.installer-stub.exe",
+                    "pkg/Ghostery-${version}.fr.win64.installer-stub.exe",
+                    "pkg/Ghostery-${version}.en.win64-aarch64.installer-stub.exe",
+                    "pkg/Ghostery-${version}.de.win64-aarch64.installer-stub.exe",
+                    "pkg/Ghostery-${version}.fr.win64-aarch64.installer-stub.exe",
+                ]
+
+                withCredentials([
+                    usernamePassword(
+                        credentialsId: 'd60e38ae-4a5a-4eeb-ab64-32fd1fad4a28',
+                        passwordVariable: 'GITHUB_TOKEN',
+                        usernameVariable: 'GITHUB_USERNAME'
+                    )
+                ]) {
+                    def id = sh(returnStdout: true, script: """
+                      curl \
+                        -H "Accept: application/vnd.github.v3+json" \
+                        --header "authorization: Bearer $GITHUB_TOKEN" \
+                        https://api.github.com/repos/ghostery/user-agent-desktop/releases/tags/${params.ReleaseName} \
+                      | jq .id
+                    """).trim()
+
+                    for(String artifactPath in artifacts) {
+                        def artifactName = artifactPath.split('/').last()
+                        sh("""
+                          curl \
+                           -X POST \
+                           --header "authorization: Bearer $GITHUB_TOKEN" \
+                           -H "Accept: application/vnd.github.v3+json" \
+                           -H "Content-Type: application/octet-stream" \
+                           --data-binary @$artifactPath \
+                           "https://uploads.github.com/repos/ghostery/user-agent-desktop/releases/$id/assets?name=$artifactName"
+                        """)
+                    }
+                }
+            }
+        }
+    }
+}
+
+stage('publish to balrog') {
+    if (shouldRelease) {
+        node('browser-builder') {
+            docker.image('ua-build-base').inside('--dns 1.1.1.1') {
+                def artifacts = sh(returnStdout: true, script: 'find pkg/mars -type f -name *.mar').trim().split("\\r?\\n")
+
+                withCredentials([usernamePassword(
+                    credentialsId: 'dd3e97c0-5a9c-4ba9-bf34-f0071f6c3afa',
+                    passwordVariable: 'AUTH0_M2M_CLIENT_SECRET',
+                    usernameVariable: 'AUTH0_M2M_CLIENT_ID'
+                )]) {
+                    // create release on balrog
+                    sh """
+                        python3 ci/submitter.py release --tag "${params.ReleaseName}" \
+                            --moz-root artifacts/mozilla-release \
+                            --client-id "$AUTH0_M2M_CLIENT_ID" \
+                            --client-secret "$AUTH0_M2M_CLIENT_SECRET"
+                    """
+
+                    // publish builds
+                    for(String artifactPath in artifacts) {
+                        sh """
+                            python3 ci/submitter.py build --tag "${params.ReleaseName}" \
+                                --bid "${buildId}" \
+                                --mar "${artifactPath}" \
+                                --moz-root artifacts/mozilla-release \
+                                --client-id "$AUTH0_M2M_CLIENT_ID" \
+                                --client-secret "$AUTH0_M2M_CLIENT_SECRET"
+                        """
+                    }
+
+                    if (params.Nightly) {
+                        // copy this release to nightly
+                        sh """
+                            python3 ci/submitter.py nightly --tag "${params.ReleaseName}" \
+                                --moz-root artifacts/mozilla-release \
+                                --client-id "$AUTH0_M2M_CLIENT_ID" \
+                                --client-secret "$AUTH0_M2M_CLIENT_SECRET"
+                        """
+                    }
+                }
+            }
+        }
+    }
+}
+
 // PIPELINE FIELDS
 
 @Field
