@@ -28,7 +28,7 @@ stage('Prepare') {
         def image = docker.build('ua-build-base', '-f build/Base.dockerfile ./build/ --build-arg user=`whoami` --build-arg UID=`id -u` --build-arg GID=`id -g`')
 
         image.inside() {
-            version = sh(returnStdout: true, script: "cat .workspace | jq -r .app").trim()
+
 
             sh 'npm ci'
 
@@ -59,6 +59,9 @@ stage('Prepare') {
             sh './fern.js reset'
 
             sh './fern.js import-patches'
+
+            version = readFile('mozilla-release/browser/config/version.txt').trim()
+            displayVersion = readFile('mozilla-release/browser/config/version_display.txt').trim()
 
             stash name: 'mac-entitlements', includes: [
                 'mozilla-release/security/mac/hardenedruntime/browser.production.entitlements.xml',
@@ -406,32 +409,32 @@ stage('Repackage MAR') {
         def pwd = sh(returnStdout: true, script: 'pwd').trim()
 
         def packages = [
-            ['x86_64', "pkg/linux/Ghostery-${version}.en.linux.tar.gz", "pkg/mars/Ghostery-${version}.en.linux-x86.mar"],
-            ['x86_64', "pkg/linux/Ghostery-${version}.de.linux.tar.gz", "pkg/mars/Ghostery-${version}.de.linux-x86.mar"],
-            ['x86_64', "pkg/linux/Ghostery-${version}.fr.linux.tar.gz", "pkg/mars/Ghostery-${version}.fr.linux-x86.mar"],
-            ['macos-x86_64-aarch64', "pkg/mac-en/Ghostery-${version}.en.tar.gz", "pkg/mars/Ghostery-${version}.en.mac.mar"],
-            ['macos-x86_64-aarch64', "pkg/mac-de/Ghostery-${version}.de.tar.gz", "pkg/mars/Ghostery-${version}.de.mac.mar"],
-            ['macos-x86_64-aarch64', "pkg/mac-fr/Ghostery-${version}.fr.tar.gz", "pkg/mars/Ghostery-${version}.fr.mac.mar"],
-            ['x86', "pkg/x86-en/Ghostery-${version}.en-US.win64.zip", "pkg/mars/Ghostery-${version}.en.windows-x86.mar"],
-            ['x86', "pkg/x86-de/Ghostery-${version}.de.win64.zip", "pkg/mars/Ghostery-${version}.de.windows-x86.mar"],
-            ['x86', "pkg/x86-fr/Ghostery-${version}.fr.win64.zip", "pkg/mars/Ghostery-${version}.fr.windows-x86.mar"],
-            ['aarch64', "pkg/arm-en/Ghostery-${version}.en-US.win64-aarch64.zip", "pkg/mars/Ghostery-${version}.en.windows-aarch64.mar"],
-            ['aarch64', "pkg/arm-de/Ghostery-${version}.de.win64-aarch64.zip", "pkg/mars/Ghostery-${version}.de.windows-aarch64.mar"],
-            ['aarch64', , "pkg/arm-fr/Ghostery-${version}.fr.win64-aarch64.zip", "pkg/mars/Ghostery-${version}.fr.windows-aarch64.mar"],
+            ['x86_64', "pkg/linux/Ghostery-${version}.en.linux.tar.gz", "pkg/mars/Ghostery-${version}.en-US.linux-x86_64.complete.mar"],
+            // ['x86_64', "pkg/linux/Ghostery-${version}.de.linux.tar.gz", "pkg/mars/Ghostery-${version}.de.linux-x86_64.complete.mar"],
+            // ['x86_64', "pkg/linux/Ghostery-${version}.fr.linux.tar.gz", "pkg/mars/Ghostery-${version}.fr.linux-x86_64.complete.mar"],
+            ['macos-x86_64-aarch64', "pkg/mac-en/Ghostery-${version}.en.tar.gz", "pkg/mars/Ghostery-${version}.en-US.mac.complete.mar"],
+            // ['macos-x86_64-aarch64', "pkg/mac-de/Ghostery-${version}.de.tar.gz", "pkg/mars/Ghostery-${version}.de.mac.complete.mar"],
+            // ['macos-x86_64-aarch64', "pkg/mac-fr/Ghostery-${version}.fr.tar.gz", "pkg/mars/Ghostery-${version}.fr.mac.complete.mar"],
+            ['x86', "pkg/x86-en/Ghostery-${version}.en-US.win64.zip", "pkg/mars/Ghostery-${version}.en-US.win64.complete.mar"],
+            // ['x86', "pkg/x86-de/Ghostery-${version}.de.win64.zip", "pkg/mars/Ghostery-${version}.de.win64.complete.mar"],
+            // ['x86', "pkg/x86-fr/Ghostery-${version}.fr.win64.zip", "pkg/mars/Ghostery-${version}.fr.win64.complete.mar"],
+            ['aarch64', "pkg/arm-en/Ghostery-${version}.en-US.win64-aarch64.zip", "pkg/mars/Ghostery-${version}.en-US.win64-aarch64.complete.mar"],
+            // ['aarch64', "pkg/arm-de/Ghostery-${version}.de.win64-aarch64.zip", "pkg/mars/Ghostery-${version}.de.win64-aarch64.complete.mar"],
+            // ['aarch64', , "pkg/arm-fr/Ghostery-${version}.fr.win64-aarch64.zip", "pkg/mars/Ghostery-${version}.fr.win64-aarch64.complete.mar"],
         ]
 
         sh 'mkdir -p pkg/mars'
 
         withMach('linux-x86') {
             for (pkg in packages) {
-                // sh """
-                //     ./mach repackage mar \
-                //         --arch ${pkg[0]} \
-                //         --mar-channel-id $MAR_CHANNEL_ID \
-                //         --input ${pwd}/${pkg[1]} \
-                //         --mar /builds/worker/bin/mar  \
-                //         --output ${pwd}/${pkg[2]}
-                // """
+                sh """
+                    ./mach repackage mar \
+                        --arch ${pkg[0]} \
+                        --mar-channel-id $MAR_CHANNEL_ID \
+                        --input ${pwd}/${pkg[1]} \
+                        --mar /builds/worker/bin/mar  \
+                        --output ${pwd}/${pkg[2]}
+                """
             }
 
             withEnv(['CERT_DB_PATH=/tmp/certs']) {
@@ -454,15 +457,15 @@ stage('Repackage MAR') {
 
                     for (pkg in packages) {
                         def marPath = "${pwd}/${pkg[2]}"
-                        // sh """#!/bin/bash
-                        //     set -x
-                        //     set -e
-                        //     ${pwd}/signmar -d \$CERT_DB_PATH \
-                        //         -n 'Release Cliqz MAR signing key' \
-                        //         -s "${marPath}" "${marPath}.signed"
-                        //     rm "${marPath}"
-                        //     mv "${marPath}.signed" "${marPath}"
-                        // """
+                        sh """#!/bin/bash
+                            set -x
+                            set -e
+                            ${pwd}/signmar -d \$CERT_DB_PATH \
+                                -n 'Release Cliqz MAR signing key' \
+                                -s "${marPath}" "${marPath}.signed"
+                            rm "${marPath}"
+                            mv "${marPath}.signed" "${marPath}"
+                        """
                     }
                 } catch (err) {
                     error = err
@@ -483,26 +486,37 @@ stage('Publish to github') {
     if (shouldRelease) {
         node('browser-builder') {
             docker.image('ua-build-base').inside() {
-
                 def artifacts = [
-                    "pkg/Ghostery-${version}.en.mac.dmg",
-                    "pkg/Ghostery-${version}.de.mac.dmg",
-                    "pkg/Ghostery-${version}.fr.mac.dmg",
-                    "pkg/linux/Ghostery-${version}.en.linux.tar.gz",
-                    "pkg/linux/Ghostery-${version}.de.linux.tar.gz",
-                    "pkg/linux/Ghostery-${version}.fr.linux.tar.gz",
-                    "pkg/Ghostery-${version}.en.win64.installer.exe",
-                    "pkg/Ghostery-${version}.de.win64.installer.exe",
-                    "pkg/Ghostery-${version}.fr.win64.installer.exe",
-                    "pkg/Ghostery-${version}.en.win64-aarch64.installer.exe",
-                    "pkg/Ghostery-${version}.de.win64-aarch64.installer.exe",
-                    "pkg/Ghostery-${version}.fr.win64-aarch64.installer.exe",
-                    "pkg/Ghostery-${version}.en.win64.installer-stub.exe",
-                    "pkg/Ghostery-${version}.de.win64.installer-stub.exe",
-                    "pkg/Ghostery-${version}.fr.win64.installer-stub.exe",
-                    "pkg/Ghostery-${version}.en.win64-aarch64.installer-stub.exe",
-                    "pkg/Ghostery-${version}.de.win64-aarch64.installer-stub.exe",
-                    "pkg/Ghostery-${version}.fr.win64-aarch64.installer-stub.exe",
+                    // "pkg/Ghostery-${version}.en.mac.dmg",
+                    // "pkg/Ghostery-${version}.de.mac.dmg",
+                    // "pkg/Ghostery-${version}.fr.mac.dmg",
+                    // "pkg/linux/Ghostery-${version}.en.linux.tar.gz",
+                    // "pkg/linux/Ghostery-${version}.de.linux.tar.gz",
+                    // "pkg/linux/Ghostery-${version}.fr.linux.tar.gz",
+                    // "pkg/Ghostery-${version}.en.win64.installer.exe",
+                    // "pkg/Ghostery-${version}.de.win64.installer.exe",
+                    // "pkg/Ghostery-${version}.fr.win64.installer.exe",
+                    // "pkg/Ghostery-${version}.en.win64-aarch64.installer.exe",
+                    // "pkg/Ghostery-${version}.de.win64-aarch64.installer.exe",
+                    // "pkg/Ghostery-${version}.fr.win64-aarch64.installer.exe",
+                    // "pkg/Ghostery-${version}.en.win64.installer-stub.exe",
+                    // "pkg/Ghostery-${version}.de.win64.installer-stub.exe",
+                    // "pkg/Ghostery-${version}.fr.win64.installer-stub.exe",
+                    // "pkg/Ghostery-${version}.en.win64-aarch64.installer-stub.exe",
+                    // "pkg/Ghostery-${version}.de.win64-aarch64.installer-stub.exe",
+                    // "pkg/Ghostery-${version}.fr.win64-aarch64.installer-stub.exe",
+                    "pkg/mars/Ghostery-${version}.en-US.linux-x86_64.complete.mar",
+                    // "pkg/mars/Ghostery-${version}.de.linux-x86_64.complete.mar",
+                    // "pkg/mars/Ghostery-${version}.fr.linux-x86_64.complete.mar",
+                    "pkg/mars/Ghostery-${version}.en-US.mac.complete.mar",
+                    // "pkg/mars/Ghostery-${version}.de.mac.complete.mar",
+                    // "pkg/mars/Ghostery-${version}.fr.mac.complete.mar",
+                    "pkg/mars/Ghostery-${version}.en-US.win64.complete.mar",
+                    // "pkg/mars/Ghostery-${version}.de.win64.complete.mar",
+                    // "pkg/mars/Ghostery-${version}.fr.win64.complete.mar",
+                    "pkg/mars/Ghostery-${version}.en-US.win64-aarch64.complete.mar",
+                    // "pkg/mars/Ghostery-${version}.de.win64-aarch64.complete.mar",
+                    // "pkg/mars/Ghostery-${version}.fr.win64-aarch64.complete.mar",
                 ]
 
                 withCredentials([
@@ -513,23 +527,25 @@ stage('Publish to github') {
                     )
                 ]) {
                     def id = sh(returnStdout: true, script: """
-                      curl \
-                        -H "Accept: application/vnd.github.v3+json" \
-                        --header "authorization: Bearer $GITHUB_TOKEN" \
-                        https://api.github.com/repos/ghostery/user-agent-desktop/releases/tags/${params.ReleaseName} \
-                      | jq .id
+                        curl \
+                            --fail \
+                            -H "Accept: application/vnd.github.v3+json" \
+                            --header "authorization: Bearer $GITHUB_TOKEN" \
+                            https://api.github.com/repos/ghostery/user-agent-desktop/releases/tags/${params.ReleaseName} \
+                        | jq .id
                     """).trim()
 
                     for(String artifactPath in artifacts) {
                         def artifactName = artifactPath.split('/').last()
                         sh("""
-                          curl \
-                           -X POST \
-                           --header "authorization: Bearer $GITHUB_TOKEN" \
-                           -H "Accept: application/vnd.github.v3+json" \
-                           -H "Content-Type: application/octet-stream" \
-                           --data-binary @$artifactPath \
-                           "https://uploads.github.com/repos/ghostery/user-agent-desktop/releases/$id/assets?name=$artifactName"
+                            curl \
+                                --fail \
+                                -X POST \
+                                --header "authorization: Bearer $GITHUB_TOKEN" \
+                                -H "Accept: application/vnd.github.v3+json" \
+                                -H "Content-Type: application/octet-stream" \
+                                --data-binary @$artifactPath \
+                                "https://uploads.github.com/repos/ghostery/user-agent-desktop/releases/$id/assets?name=$artifactName"
                         """)
                     }
                 }
@@ -550,12 +566,14 @@ stage('publish to balrog') {
                     usernameVariable: 'AUTH0_M2M_CLIENT_ID'
                 )]) {
                     // create release on balrog
-                    sh """
-                        python3 ci/submitter.py release --tag "${params.ReleaseName}" \
-                            --moz-root artifacts/mozilla-release \
-                            --client-id "$AUTH0_M2M_CLIENT_ID" \
-                            --client-secret "$AUTH0_M2M_CLIENT_SECRET"
-                    """
+                    // sh """
+                    //     python3 ci/submitter.py release --tag "${params.ReleaseName}" \
+                    //         --moz-root artifacts/mozilla-release \
+                    //         --version ${version} \
+                    //         --display-version "${displayVersion}" \
+                    //         --client-id "$AUTH0_M2M_CLIENT_ID" \
+                    //         --client-secret "$AUTH0_M2M_CLIENT_SECRET"
+                    // """
 
                     // publish builds
                     for(String artifactPath in artifacts) {
@@ -564,6 +582,8 @@ stage('publish to balrog') {
                                 --bid "${buildId}" \
                                 --mar "${artifactPath}" \
                                 --moz-root artifacts/mozilla-release \
+                                --version ${version} \
+                                --display-version "${displayVersion}" \
                                 --client-id "$AUTH0_M2M_CLIENT_ID" \
                                 --client-secret "$AUTH0_M2M_CLIENT_SECRET"
                         """
@@ -574,6 +594,8 @@ stage('publish to balrog') {
                         sh """
                             python3 ci/submitter.py nightly --tag "${params.ReleaseName}" \
                                 --moz-root artifacts/mozilla-release \
+                                --version ${version} \
+                                --display-version "${displayVersion}" \
                                 --client-id "$AUTH0_M2M_CLIENT_ID" \
                                 --client-secret "$AUTH0_M2M_CLIENT_SECRET"
                         """
@@ -591,6 +613,9 @@ def triggeringCommitHash
 
 @Field
 def version
+
+@Field
+def displayVersion
 
 @Field
 def buildId = new Date().format('yyyyMMddHHmmss')

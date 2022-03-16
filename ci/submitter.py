@@ -1,7 +1,6 @@
 import argparse
 import os.path
 import json
-import subprocess
 from balrogclient import Release, SingleLocale, Rule
 from uadpy.common import balrog_api_opts, get_build_target_for_platform, get_update_url, get_file_hash
 from uadpy.const import PRODUCT_NAME, RELEASE_CHANNELS, NIGHTLY_RULE_ID
@@ -10,6 +9,8 @@ parser = argparse.ArgumentParser()
 parser.add_argument("action", help="'release', 'build', or 'nightly")
 parser.add_argument("--tag", help="Tag name for this release")
 parser.add_argument("--bid", help="CI buildId")
+parser.add_argument("--version", help="Browser version")
+parser.add_argument("--display-version", help="Browser display version")
 parser.add_argument("--client-id", help="M2M Client ID for auth")
 parser.add_argument("--client-secret", help="M2M Client secret for auth")
 parser.add_argument("--mar", help="Mar file for this build")
@@ -19,10 +20,8 @@ args = parser.parse_args()
 balrog_opts = balrog_api_opts(args.client_id, args.client_secret)
 name = f"{PRODUCT_NAME}-{args.tag}"
 
-app_version = open(os.path.join(args.moz_root, 'browser',
-                                'config', 'version.txt'), 'r').read()
-display_version = open(os.path.join(
-    args.moz_root, 'browser', 'config', 'version_display.txt'), 'r').read()
+app_version = args.version
+display_version = args.display_version
 
 fileUrls = {}
 for channel in RELEASE_CHANNELS + ['*']:
