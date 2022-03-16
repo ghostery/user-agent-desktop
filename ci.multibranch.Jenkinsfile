@@ -2,17 +2,24 @@ import groovy.transform.Field
 
 properties([
     parameters([
-        booleanParam(name: 'Reset', defaultValue: false, description: 'clean workspace files'),
-        booleanParam(name: 'Clobber', defaultValue: false, description: 'run mach clobber'),
+        booleanParam(name: 'Clean', defaultValue: false, description: 'clean workspace files'),
         string(name: 'ReleaseName', defaultValue: '', description: ''),
+        booleanParam(name: 'Nightly', defaultValue: false, description: 'Push release to nightly'),
     ]),
 ])
+
+def shouldRelease = params.ReleaseName?.trim()
 
 stage('Prepare') {
     node('browser-builder') {
         checkout scm
 
         triggeringCommitHash = sh(returnStdout: true, script: "git log -n 1 --pretty=format:'%h'").trim()
+
+        if (params.Clean) {
+            sh 'rm -rf mozilla-release/obj*'
+            sh 'rm -rf .cache'
+        }
 
         download('makecab.exe')
         download('MacOSX10.12.sdk.tar.bz2')
@@ -24,10 +31,6 @@ stage('Prepare') {
             version = sh(returnStdout: true, script: "cat .workspace | jq -r .app").trim()
 
             sh 'npm ci'
-
-            if (params.Reset) {
-                sh 'rm -rf .cache'
-            }
 
             sh 'rm -rf mozilla-release'
 
@@ -111,9 +114,10 @@ stage('Sign Windows') {
     node('browser-builder-windows') {
         checkout scm
 
-        // if (clobber)
-        // bat 'del /s /q mozilla-release'
-        // bat 'del /s /q pkg'
+        if (params.Clean) {
+            bat 'del /s /q mozilla-release'
+            bat 'del /s /q pkg'
+        }
 
         // unstash 'pkg-windows-x86'
         // unstash 'pkg-windows-arm'
@@ -294,9 +298,10 @@ stage('Sign Mac') {
     node('gideon') {
         checkout scm
 
-        // clear mozilla-release to find packages easily
-        // sh 'rm -rf mozilla-release'
-        // sh 'rm -rf pkg'
+        if (params.Clean) {
+            sh 'rm -rf mozilla-release'
+            sh 'rm -rf pkg'
+        }
 
         // unstash 'mac-unified-dmg'
         // unstash 'mac-entitlements'
@@ -644,10 +649,6 @@ def buildAndPackage(platform) {
     withMach(platform) {
         sh 'rm -f `pwd`/MacOSX10.12.sdk; ln -s /builds/worker/fetches/MacOSX10.12.sdk `pwd`/MacOSX10.12.sdk'
         sh 'rm -f `pwd`/MacOSX11.0.sdk; ln -s /builds/worker/fetches/MacOSX11.0.sdk `pwd`/MacOSX11.0.sdk'
-
-        if (params.Clobber) {
-            sh './mach clobber'
-        }
 
         sh './mach build'
 
