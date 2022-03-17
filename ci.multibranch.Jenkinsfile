@@ -29,7 +29,6 @@ stage('Prepare') {
 
         image.inside() {
 
-
             sh 'npm ci'
 
             sh 'rm -rf mozilla-release'
@@ -85,7 +84,7 @@ stage('Build Linux') {
             cp mozilla-release/${settings.objDir}/dist/Ghostery-${version}.fr.linux-x86_64.tar.gz pkg/linux/Ghostery-${version}.fr.linux.tar.gz
         """
 
-        // archiveArtifacts artifacts: 'pkg/linux/*.tar.gz'
+        archiveArtifacts artifacts: 'pkg/linux/*.tar.gz'
     }
 }
 
@@ -122,8 +121,8 @@ stage('Sign Windows') {
             bat 'del /s /q pkg'
         }
 
-        // unstash 'pkg-windows-x86'
-        // unstash 'pkg-windows-arm'
+        unstash 'pkg-windows-x86'
+        unstash 'pkg-windows-arm'
 
         def packages = [
             ["mozilla-release\\obj-aarch64-windows-mingw32\\dist\\Ghostery-${version}.en-US.win64-aarch64.zip", 'pkg\\arm-en'],
@@ -135,28 +134,27 @@ stage('Sign Windows') {
         ]
 
         for (pkg in packages) {
-            // powershell "Expand-Archive -Force ${pkg[0]} ${pkg[1]}"
+            powershell "Expand-Archive -Force ${pkg[0]} ${pkg[1]}"
 
             withCredentials([
                 file(credentialsId: "7da7d2de-5a10-45e6-9ffd-4e49f83753a8", variable: 'WIN_CERT'),
                 string(credentialsId: "33b3705c-1c2e-4462-9354-56a76bbb164c", variable: 'WIN_CERT_PASS'),
             ]) {
-                // bat "ci\\win_signer.bat ${pkg[1]}\\Ghostery"
+                bat "ci\\win_signer.bat ${pkg[1]}\\Ghostery"
             }
 
             def archiveName = pkg[0].split('\\\\').last()
 
-            // bat "c:\\mozilla-build\\bin\\7z.exe a -tzip -o${pkg[1]} ${archiveName} ${pkg[1]}\\Ghostery -aoa"
-            // powershell "Compress-Archive -Force -DestinationPath ${pkg[1]}\\${archiveName} -Path ${pkg[1]}\\Ghostery*"
+            powershell "Compress-Archive -Force -DestinationPath ${pkg[1]}\\${archiveName} -Path ${pkg[1]}\\Ghostery*"
         }
 
-        // stash name: 'signed-pkg-windows', includes: 'pkg/*/*.zip'
+        stash name: 'signed-pkg-windows', includes: 'pkg/*/*.zip'
     }
 }
 
 stage('Repackage Windows installers') {
     node('browser-builder') {
-        // unstash 'signed-pkg-windows'
+        unstash 'signed-pkg-windows'
 
         // Fix ZIP paths
         sh '''
@@ -174,16 +172,16 @@ stage('Repackage Windows installers') {
 
         withMach('windows-x86') { settings ->
             for (installer in installersX86) {
-                // sh """
-                //     ./mach repackage installer \
-                //         -o ${env.WORKSPACE}/${installer[1]} \
-                //         --package-name 'Ghostery' \
-                //         --package ${env.WORKSPACE}/${installer[0]} \
-                //         --tag browser/installer/windows/app.tag \
-                //         --setupexe ${settings.objDir}/browser/installer/windows/instgen/setup.exe \
-                //         --sfx-stub other-licenses/7zstub/firefox/7zSD.Win32.sfx \
-                //         --use-upx
-                // """
+                sh """
+                    ./mach repackage installer \
+                        -o ${env.WORKSPACE}/${installer[1]} \
+                        --package-name 'Ghostery' \
+                        --package ${env.WORKSPACE}/${installer[0]} \
+                        --tag browser/installer/windows/app.tag \
+                        --setupexe ${settings.objDir}/browser/installer/windows/instgen/setup.exe \
+                        --sfx-stub other-licenses/7zstub/firefox/7zSD.Win32.sfx \
+                        --use-upx
+                """
             }
         }
 
@@ -195,16 +193,16 @@ stage('Repackage Windows installers') {
 
         withMach('windows-arm') { settings ->
             for (installer in installersARM) {
-                // sh """
-                //     ./mach repackage installer \
-                //         -o ${env.WORKSPACE}/${installer[1]} \
-                //         --package-name 'Ghostery' \
-                //         --package ${env.WORKSPACE}/${installer[0]} \
-                //         --tag browser/installer/windows/app.tag \
-                //         --setupexe ${settings.objDir}/browser/installer/windows/instgen/setup.exe \
-                //         --sfx-stub other-licenses/7zstub/firefox/7zSD.Win32.sfx \
-                //         --use-upx
-                // """
+                sh """
+                    ./mach repackage installer \
+                        -o ${env.WORKSPACE}/${installer[1]} \
+                        --package-name 'Ghostery' \
+                        --package ${env.WORKSPACE}/${installer[0]} \
+                        --tag browser/installer/windows/app.tag \
+                        --setupexe ${settings.objDir}/browser/installer/windows/instgen/setup.exe \
+                        --sfx-stub other-licenses/7zstub/firefox/7zSD.Win32.sfx \
+                        --use-upx
+                """
             }
         }
 
@@ -216,14 +214,14 @@ stage('Repackage Windows installers') {
 
         withMach('windows-x86') { settings ->
             for (installer in stubInstallersX86) {
-                // sh """
-                //    ./mach repackage installer \
-                //         -o ${env.WORKSPACE}/${installer[1]} \
-                //         --tag browser/installer/windows/stub.tag \
-                //         --setupexe ${settings.objDir}/browser/installer/windows/instgen/setup-stub.exe \
-                //         --sfx-stub other-licenses/7zstub/firefox/7zSD.Win32.sfx \
-                //         --use-upx
-                // """
+                sh """
+                   ./mach repackage installer \
+                        -o ${env.WORKSPACE}/${installer[1]} \
+                        --tag browser/installer/windows/stub.tag \
+                        --setupexe ${settings.objDir}/browser/installer/windows/instgen/setup-stub.exe \
+                        --sfx-stub other-licenses/7zstub/firefox/7zSD.Win32.sfx \
+                        --use-upx
+                """
             }
         }
 
@@ -235,39 +233,39 @@ stage('Repackage Windows installers') {
 
         withMach('windows-arm') { settings ->
             for (installer in stubInstallersARM) {
-                // sh """
-                //    ./mach repackage installer \
-                //         -o ${env.WORKSPACE}/${installer[1]} \
-                //         --tag browser/installer/windows/stub.tag \
-                //         --setupexe ${settings.objDir}/browser/installer/windows/instgen/setup-stub.exe \
-                //         --sfx-stub other-licenses/7zstub/firefox/7zSD.Win32.sfx \
-                //         --use-upx
-                // """
+                sh """
+                   ./mach repackage installer \
+                        -o ${env.WORKSPACE}/${installer[1]} \
+                        --tag browser/installer/windows/stub.tag \
+                        --setupexe ${settings.objDir}/browser/installer/windows/instgen/setup-stub.exe \
+                        --sfx-stub other-licenses/7zstub/firefox/7zSD.Win32.sfx \
+                        --use-upx
+                """
             }
         }
 
-        // stash name: 'installers-windows', includes: 'pkg/*.exe'
+        stash name: 'installers-windows', includes: 'pkg/*.exe'
     }
 }
 
 stage('Sign Windows installers') {
     node('browser-builder-windows') {
-        // unstash 'installers-windows'
+        unstash 'installers-windows'
 
         withCredentials([
             file(credentialsId: "7da7d2de-5a10-45e6-9ffd-4e49f83753a8", variable: 'WIN_CERT'),
             string(credentialsId: "33b3705c-1c2e-4462-9354-56a76bbb164c", variable: 'WIN_CERT_PASS'),
         ]) {
-            // bat "ci\\win_signer.bat pkg"
+            bat "ci\\win_signer.bat pkg"
         }
 
-        // stash name: 'signed-installers-windows', includes: 'pkg/*.exe'
+        stash name: 'signed-installers-windows', includes: 'pkg/*.exe'
     }
 
     node('browser-builder') {
-        // unstash name: 'signed-installers-windows'
+        unstash name: 'signed-installers-windows'
 
-        // archiveArtifacts artifacts: 'pkg/*.exe'
+        archiveArtifacts artifacts: 'pkg/*.exe'
     }
 }
 
@@ -284,16 +282,14 @@ stage('Unify Mac DMG') {
 
         withMach('macos-arm') {
             for (dmg in dmgs) {
-                /*
                 sh """
                     cd ${env.WORKSPACE}
                     ./ci/unify_mac_dmg.sh ${dmg[0]} ${dmg[1]} ${dmg[2]}
                 """
-                */
             }
         }
 
-        // stash name: 'mac-unified-dmg', includes: 'pkg/*.dmg'
+        stash name: 'mac-unified-dmg', includes: 'pkg/*.dmg'
     }
 }
 
@@ -306,8 +302,8 @@ stage('Sign Mac') {
             sh 'rm -rf pkg'
         }
 
-        // unstash 'mac-unified-dmg'
-        // unstash 'mac-entitlements'
+        unstash 'mac-unified-dmg'
+        unstash 'mac-entitlements'
 
         def packages = [
             ["pkg/Ghostery-${version}.en.dmg", "pkg/mac-en"],
@@ -341,7 +337,7 @@ stage('Sign Mac') {
                         "MAC_CERT_NAME=HPY23A294X",
                     ]){
                         for (pkg in packages) {
-                            // sh "./ci/sign_mac.sh ${pkg[0]} ${pkg[1]}"
+                            sh "./ci/sign_mac.sh ${pkg[0]} ${pkg[1]}"
                         }
                     }
                 } finally {
@@ -362,23 +358,23 @@ stage('Sign Mac') {
                 ),
             ]) {
                 for (pkg in packages) {
-                    // sh "./ci/notarize_mac_app.sh ${pkg[1]}"
+                    sh "./ci/notarize_mac_app.sh ${pkg[1]}"
                 }
             }
 
             for (pkg in packages) {
                 def archiveName = pkg[0].split('/').last()[0..-4] + 'tar.gz'
-                // sh "tar zcf ${pkg[1]}/${archiveName} -C \"${pkg[1]}/${env.APP_NAME}\" .DS_Store .VolumeIcon.icns \"${env.PKG_NAME}.app\" .background"
+                sh "tar zcf ${pkg[1]}/${archiveName} -C \"${pkg[1]}/${env.APP_NAME}\" .DS_Store .VolumeIcon.icns \"${env.PKG_NAME}.app\" .background"
             }
 
-            // stash name: 'signed-pkg-mac', includes: 'pkg/*/*.tar.gz'
+            stash name: 'signed-pkg-mac', includes: 'pkg/*/*.tar.gz'
         }
     }
 }
 
 stage('Repackage Mac') {
     node('browser-builder') {
-        // unstash 'signed-pkg-mac'
+        unstash 'signed-pkg-mac'
 
         def dmgs = [
             ["pkg/mac-en/Ghostery-${version}.en.tar.gz", "pkg/Ghostery-${version}.en.mac.dmg"],
@@ -388,11 +384,11 @@ stage('Repackage Mac') {
 
         withMach('macos-x86') {
             for (dmg in dmgs) {
-                // sh "./mach repackage dmg -i ${env.WORKSPACE}/${dmg[0]} -o ${env.WORKSPACE}/${dmg[1]}"
+                sh "./mach repackage dmg -i ${env.WORKSPACE}/${dmg[0]} -o ${env.WORKSPACE}/${dmg[1]}"
             }
         }
 
-        // archiveArtifacts artifacts: 'pkg/*.dmg'
+        archiveArtifacts artifacts: 'pkg/*.dmg'
     }
 }
 
@@ -410,17 +406,17 @@ stage('Repackage MAR') {
 
         def packages = [
             ['x86_64', "pkg/linux/Ghostery-${version}.en.linux.tar.gz", "pkg/mars/Ghostery-${version}.en-US.linux-x86_64.complete.mar"],
-            // ['x86_64', "pkg/linux/Ghostery-${version}.de.linux.tar.gz", "pkg/mars/Ghostery-${version}.de.linux-x86_64.complete.mar"],
-            // ['x86_64', "pkg/linux/Ghostery-${version}.fr.linux.tar.gz", "pkg/mars/Ghostery-${version}.fr.linux-x86_64.complete.mar"],
+            ['x86_64', "pkg/linux/Ghostery-${version}.de.linux.tar.gz", "pkg/mars/Ghostery-${version}.de.linux-x86_64.complete.mar"],
+            ['x86_64', "pkg/linux/Ghostery-${version}.fr.linux.tar.gz", "pkg/mars/Ghostery-${version}.fr.linux-x86_64.complete.mar"],
             ['macos-x86_64-aarch64', "pkg/mac-en/Ghostery-${version}.en.tar.gz", "pkg/mars/Ghostery-${version}.en-US.mac.complete.mar"],
-            // ['macos-x86_64-aarch64', "pkg/mac-de/Ghostery-${version}.de.tar.gz", "pkg/mars/Ghostery-${version}.de.mac.complete.mar"],
-            // ['macos-x86_64-aarch64', "pkg/mac-fr/Ghostery-${version}.fr.tar.gz", "pkg/mars/Ghostery-${version}.fr.mac.complete.mar"],
+            ['macos-x86_64-aarch64', "pkg/mac-de/Ghostery-${version}.de.tar.gz", "pkg/mars/Ghostery-${version}.de.mac.complete.mar"],
+            ['macos-x86_64-aarch64', "pkg/mac-fr/Ghostery-${version}.fr.tar.gz", "pkg/mars/Ghostery-${version}.fr.mac.complete.mar"],
             ['x86', "pkg/x86-en/Ghostery-${version}.en-US.win64.zip", "pkg/mars/Ghostery-${version}.en-US.win64.complete.mar"],
-            // ['x86', "pkg/x86-de/Ghostery-${version}.de.win64.zip", "pkg/mars/Ghostery-${version}.de.win64.complete.mar"],
-            // ['x86', "pkg/x86-fr/Ghostery-${version}.fr.win64.zip", "pkg/mars/Ghostery-${version}.fr.win64.complete.mar"],
+            ['x86', "pkg/x86-de/Ghostery-${version}.de.win64.zip", "pkg/mars/Ghostery-${version}.de.win64.complete.mar"],
+            ['x86', "pkg/x86-fr/Ghostery-${version}.fr.win64.zip", "pkg/mars/Ghostery-${version}.fr.win64.complete.mar"],
             ['aarch64', "pkg/arm-en/Ghostery-${version}.en-US.win64-aarch64.zip", "pkg/mars/Ghostery-${version}.en-US.win64-aarch64.complete.mar"],
-            // ['aarch64', "pkg/arm-de/Ghostery-${version}.de.win64-aarch64.zip", "pkg/mars/Ghostery-${version}.de.win64-aarch64.complete.mar"],
-            // ['aarch64', , "pkg/arm-fr/Ghostery-${version}.fr.win64-aarch64.zip", "pkg/mars/Ghostery-${version}.fr.win64-aarch64.complete.mar"],
+            ['aarch64', "pkg/arm-de/Ghostery-${version}.de.win64-aarch64.zip", "pkg/mars/Ghostery-${version}.de.win64-aarch64.complete.mar"],
+            ['aarch64', , "pkg/arm-fr/Ghostery-${version}.fr.win64-aarch64.zip", "pkg/mars/Ghostery-${version}.fr.win64-aarch64.complete.mar"],
         ]
 
         sh 'mkdir -p pkg/mars'
@@ -478,7 +474,7 @@ stage('Repackage MAR') {
             }
         }
 
-        // archiveArtifacts artifacts: 'pkg/mars/*.mar'
+        archiveArtifacts artifacts: 'pkg/mars/*.mar'
     }
 }
 
@@ -487,36 +483,36 @@ stage('Publish to github') {
         node('browser-builder') {
             docker.image('ua-build-base').inside() {
                 def artifacts = [
-                    // "pkg/Ghostery-${version}.en.mac.dmg",
-                    // "pkg/Ghostery-${version}.de.mac.dmg",
-                    // "pkg/Ghostery-${version}.fr.mac.dmg",
-                    // "pkg/linux/Ghostery-${version}.en.linux.tar.gz",
-                    // "pkg/linux/Ghostery-${version}.de.linux.tar.gz",
-                    // "pkg/linux/Ghostery-${version}.fr.linux.tar.gz",
-                    // "pkg/Ghostery-${version}.en.win64.installer.exe",
-                    // "pkg/Ghostery-${version}.de.win64.installer.exe",
-                    // "pkg/Ghostery-${version}.fr.win64.installer.exe",
-                    // "pkg/Ghostery-${version}.en.win64-aarch64.installer.exe",
-                    // "pkg/Ghostery-${version}.de.win64-aarch64.installer.exe",
-                    // "pkg/Ghostery-${version}.fr.win64-aarch64.installer.exe",
-                    // "pkg/Ghostery-${version}.en.win64.installer-stub.exe",
-                    // "pkg/Ghostery-${version}.de.win64.installer-stub.exe",
-                    // "pkg/Ghostery-${version}.fr.win64.installer-stub.exe",
-                    // "pkg/Ghostery-${version}.en.win64-aarch64.installer-stub.exe",
-                    // "pkg/Ghostery-${version}.de.win64-aarch64.installer-stub.exe",
-                    // "pkg/Ghostery-${version}.fr.win64-aarch64.installer-stub.exe",
+                    "pkg/Ghostery-${version}.en.mac.dmg",
+                    "pkg/Ghostery-${version}.de.mac.dmg",
+                    "pkg/Ghostery-${version}.fr.mac.dmg",
+                    "pkg/linux/Ghostery-${version}.en.linux.tar.gz",
+                    "pkg/linux/Ghostery-${version}.de.linux.tar.gz",
+                    "pkg/linux/Ghostery-${version}.fr.linux.tar.gz",
+                    "pkg/Ghostery-${version}.en.win64.installer.exe",
+                    "pkg/Ghostery-${version}.de.win64.installer.exe",
+                    "pkg/Ghostery-${version}.fr.win64.installer.exe",
+                    "pkg/Ghostery-${version}.en.win64-aarch64.installer.exe",
+                    "pkg/Ghostery-${version}.de.win64-aarch64.installer.exe",
+                    "pkg/Ghostery-${version}.fr.win64-aarch64.installer.exe",
+                    "pkg/Ghostery-${version}.en.win64.installer-stub.exe",
+                    "pkg/Ghostery-${version}.de.win64.installer-stub.exe",
+                    "pkg/Ghostery-${version}.fr.win64.installer-stub.exe",
+                    "pkg/Ghostery-${version}.en.win64-aarch64.installer-stub.exe",
+                    "pkg/Ghostery-${version}.de.win64-aarch64.installer-stub.exe",
+                    "pkg/Ghostery-${version}.fr.win64-aarch64.installer-stub.exe",
                     "pkg/mars/Ghostery-${version}.en-US.linux-x86_64.complete.mar",
-                    // "pkg/mars/Ghostery-${version}.de.linux-x86_64.complete.mar",
-                    // "pkg/mars/Ghostery-${version}.fr.linux-x86_64.complete.mar",
+                    "pkg/mars/Ghostery-${version}.de.linux-x86_64.complete.mar",
+                    "pkg/mars/Ghostery-${version}.fr.linux-x86_64.complete.mar",
                     "pkg/mars/Ghostery-${version}.en-US.mac.complete.mar",
-                    // "pkg/mars/Ghostery-${version}.de.mac.complete.mar",
-                    // "pkg/mars/Ghostery-${version}.fr.mac.complete.mar",
+                    "pkg/mars/Ghostery-${version}.de.mac.complete.mar",
+                    "pkg/mars/Ghostery-${version}.fr.mac.complete.mar",
                     "pkg/mars/Ghostery-${version}.en-US.win64.complete.mar",
-                    // "pkg/mars/Ghostery-${version}.de.win64.complete.mar",
-                    // "pkg/mars/Ghostery-${version}.fr.win64.complete.mar",
+                    "pkg/mars/Ghostery-${version}.de.win64.complete.mar",
+                    "pkg/mars/Ghostery-${version}.fr.win64.complete.mar",
                     "pkg/mars/Ghostery-${version}.en-US.win64-aarch64.complete.mar",
-                    // "pkg/mars/Ghostery-${version}.de.win64-aarch64.complete.mar",
-                    // "pkg/mars/Ghostery-${version}.fr.win64-aarch64.complete.mar",
+                    "pkg/mars/Ghostery-${version}.de.win64-aarch64.complete.mar",
+                    "pkg/mars/Ghostery-${version}.fr.win64-aarch64.complete.mar",
                 ]
 
                 withCredentials([
@@ -566,14 +562,14 @@ stage('publish to balrog') {
                     usernameVariable: 'AUTH0_M2M_CLIENT_ID'
                 )]) {
                     // create release on balrog
-                    // sh """
-                    //     python3 ci/submitter.py release --tag "${params.ReleaseName}" \
-                    //         --moz-root artifacts/mozilla-release \
-                    //         --version ${version} \
-                    //         --display-version "${displayVersion}" \
-                    //         --client-id "$AUTH0_M2M_CLIENT_ID" \
-                    //         --client-secret "$AUTH0_M2M_CLIENT_SECRET"
-                    // """
+                    sh """
+                        python3 ci/submitter.py release --tag "${params.ReleaseName}" \
+                            --moz-root artifacts/mozilla-release \
+                            --version ${version} \
+                            --display-version "${displayVersion}" \
+                            --client-id "$AUTH0_M2M_CLIENT_ID" \
+                            --client-secret "$AUTH0_M2M_CLIENT_SECRET"
+                    """
 
                     // publish builds
                     for(String artifactPath in artifacts) {
@@ -670,7 +666,6 @@ def buildAndPackage(platform) {
         "ua-build-${settings.name.toLowerCase()}",
         "-f build/${settings.dockerFile} ./build"
     )
-    /*
     withMach(platform) {
         sh 'rm -f `pwd`/MacOSX10.12.sdk; ln -s /builds/worker/fetches/MacOSX10.12.sdk `pwd`/MacOSX10.12.sdk'
         sh 'rm -f `pwd`/MacOSX11.0.sdk; ln -s /builds/worker/fetches/MacOSX11.0.sdk `pwd`/MacOSX11.0.sdk'
@@ -689,7 +684,6 @@ def buildAndPackage(platform) {
         "mozilla-release/${settings.objDir}/dist/Ghostery-*.tar.gz",
         "mozilla-release/${settings.objDir}/dist/Ghostery-*.dmg",
     ].join(',')
-    */
 }
 
 def withMach(platform, task) {
