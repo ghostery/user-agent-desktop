@@ -11,8 +11,6 @@ INPUT_ARM_PATH="$1"
 INPUT_X86_PATH="$2"
 OUTPUT_PATH="$3"
 
-pwd
-
 rm -rf pkg/tmp
 mkdir -p pkg/tmp
 mkdir -p $MOZ_FETCHES_DIR/aarch64
