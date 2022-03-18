@@ -1,4 +1,3 @@
-SET CQZ_WORKSPACE=%CD%
 SET CLZ_SIGNTOOL_PATH=C:\Program Files (x86)\Windows Kits\10\\bin\10.0.22000.0\x64\signtool.exe
 SET BUILD_SHELL=c:\mozilla-build\start-shell.bat
 set timestamp_server_sha1=http://timestamp.digicert.com
