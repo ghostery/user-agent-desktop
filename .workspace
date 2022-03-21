@@ -16,18 +16,7 @@
   "app": "2022.3",
   "s3bucket": "ghostery-user-agent-cache-public",
   "locales": {
-    "de": "de1025e5e9a9f831271dc1aa8437aba18a631662",
-    "es-ES": "03999023061f89bb1bf060582067b9ca42b497a3",
-    "fr": "488081a1079cf371792982b059c15a5224f309e5",
-    "hu": "f1966386fcaccf4f33364181d911dfcc6f63393e",
-    "it": "7072749a6bf89a986d67e4b20bc5bb2bd9340222",
-    "ja": "7846e370cfc34c44532264b4b40f40e687441d0b",
-    "ko": "6922344820f5d25fcf2b86cc2cc252d10fe1a27f",
-    "nl": "830d7f9471cd754f41f7e22e9eee2c2da2c22c26",
-    "pl": "ce49e72c5a36db5fd5ce2f4614566749d0b10445",
-    "pt-BR": "9bda93095b69e05f536209c900d6ff1f3c49dda0",
-    "ru": "7cb19cee6ff725f689ab1dc1dc26fe2491dbf574",
-    "zh-CN": "0b224fd194702a95f7bcd582d3227319f28f99d7",
-    "zh-TW": "34d1161f0ded06844184bcd51b5dd2f89274c430"
+    "de": "3aa060a4eb096bff283d9672f6983375367d5a6f",
+    "fr": "bf61dd44e1c6b5292077ca980a4dc0e2c6a17f06"
   }
 }
