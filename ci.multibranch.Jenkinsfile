@@ -148,7 +148,17 @@ stage('Sign Windows') {
             powershell "Compress-Archive -Force -DestinationPath ${pkg[1]}\\${archiveName} -Path ${pkg[1]}\\Ghostery*"
         }
 
-        stash name: 'signed-pkg-windows', includes: 'pkg/*/*.zip'
+        withCredentials([
+            file(credentialsId: "7da7d2de-5a10-45e6-9ffd-4e49f83753a8", variable: 'WIN_CERT'),
+            string(credentialsId: "33b3705c-1c2e-4462-9354-56a76bbb164c", variable: 'WIN_CERT_PASS'),
+        ]) {
+            bat "ci\\win_signer.bat pkg\\installers"
+        }
+
+        stash name: 'signed-pkg-windows', includes: [
+            'pkg/*/*.zip',
+            'pkg/installers/*.exe'
+        ].join(',')
     }
 }
 
@@ -165,9 +175,9 @@ stage('Repackage Windows installers') {
         '''
 
         def installersX86 = [
-            ["pkg/x86-en/Ghostery-${version}.en-US.win64.zip", "pkg/Ghostery-${version}.en.win64.installer.exe"],
-            ["pkg/x86-de/Ghostery-${version}.de.win64.zip", "pkg/Ghostery-${version}.de.win64.installer.exe"],
-            ["pkg/x86-fr/Ghostery-${version}.fr.win64.zip", "pkg/Ghostery-${version}.fr.win64.installer.exe"],
+            ["pkg/x86-en/Ghostery-${version}.en-US.win64.zip", "pkg/Ghostery-${version}.en.win64.installer.exe", 'en'],
+            ["pkg/x86-de/Ghostery-${version}.de.win64.zip", "pkg/Ghostery-${version}.de.win64.installer.exe", 'de'],
+            ["pkg/x86-fr/Ghostery-${version}.fr.win64.zip", "pkg/Ghostery-${version}.fr.win64.installer.exe", 'fr'],
         ]
 
         withMach('windows-x86') { settings ->
@@ -178,7 +188,7 @@ stage('Repackage Windows installers') {
                         --package-name 'Ghostery' \
                         --package ${env.WORKSPACE}/${installer[0]} \
                         --tag browser/installer/windows/app.tag \
-                        --setupexe ${settings.objDir}/browser/installer/windows/instgen/setup.exe \
+                        --setupexe pkg/installers/setup.win64.${installer[2]}.exe \
                         --sfx-stub other-licenses/7zstub/firefox/7zSD.Win32.sfx \
                         --use-upx
                 """
@@ -186,9 +196,9 @@ stage('Repackage Windows installers') {
         }
 
         def installersARM = [
-            ["pkg/arm-en/Ghostery-${version}.en-US.win64-aarch64.zip", "pkg/Ghostery-${version}.en.win64-aarch64.installer.exe"],
-            ["pkg/arm-de/Ghostery-${version}.de.win64-aarch64.zip", "pkg/Ghostery-${version}.de.win64-aarch64.installer.exe"],
-            ["pkg/arm-fr/Ghostery-${version}.fr.win64-aarch64.zip", "pkg/Ghostery-${version}.fr.win64-aarch64.installer.exe"],
+            ["pkg/arm-en/Ghostery-${version}.en-US.win64-aarch64.zip", "pkg/Ghostery-${version}.en.win64-aarch64.installer.exe", 'en'],
+            ["pkg/arm-de/Ghostery-${version}.de.win64-aarch64.zip", "pkg/Ghostery-${version}.de.win64-aarch64.installer.exe", 'de'],
+            ["pkg/arm-fr/Ghostery-${version}.fr.win64-aarch64.zip", "pkg/Ghostery-${version}.fr.win64-aarch64.installer.exe", 'fr'],
         ]
 
         withMach('windows-arm') { settings ->
@@ -199,7 +209,7 @@ stage('Repackage Windows installers') {
                         --package-name 'Ghostery' \
                         --package ${env.WORKSPACE}/${installer[0]} \
                         --tag browser/installer/windows/app.tag \
-                        --setupexe ${settings.objDir}/browser/installer/windows/instgen/setup.exe \
+                        --setupexe pkg/installers/setup.win64-aarch64.${installer[2]}.exe \
                         --sfx-stub other-licenses/7zstub/firefox/7zSD.Win32.sfx \
                         --use-upx
                 """
@@ -207,9 +217,9 @@ stage('Repackage Windows installers') {
         }
 
         def stubInstallersX86 = [
-            ["pkg/x86-en/Ghostery-${version}.en-US.win64.zip", "pkg/Ghostery-${version}.en.win64.installer-stub.exe"],
-            ["pkg/x86-de/Ghostery-${version}.de.win64.zip", "pkg/Ghostery-${version}.de.win64.installer-stub.exe"],
-            ["pkg/x86-fr/Ghostery-${version}.fr.win64.zip", "pkg/Ghostery-${version}.fr.win64.installer-stub.exe"],
+            ["pkg/x86-en/Ghostery-${version}.en-US.win64.zip", "pkg/Ghostery-${version}.en.win64.installer-stub.exe", 'en'],
+            ["pkg/x86-de/Ghostery-${version}.de.win64.zip", "pkg/Ghostery-${version}.de.win64.installer-stub.exe", 'de'],
+            ["pkg/x86-fr/Ghostery-${version}.fr.win64.zip", "pkg/Ghostery-${version}.fr.win64.installer-stub.exe", 'fr'],
         ]
 
         withMach('windows-x86') { settings ->
@@ -218,7 +228,7 @@ stage('Repackage Windows installers') {
                    ./mach repackage installer \
                         -o ${env.WORKSPACE}/${installer[1]} \
                         --tag browser/installer/windows/stub.tag \
-                        --setupexe ${settings.objDir}/browser/installer/windows/instgen/setup-stub.exe \
+                        --setupexe pkg/installers/setup-stub.win64.${installer[2]}.exe \
                         --sfx-stub other-licenses/7zstub/firefox/7zSD.Win32.sfx \
                         --use-upx
                 """
@@ -237,7 +247,7 @@ stage('Repackage Windows installers') {
                    ./mach repackage installer \
                         -o ${env.WORKSPACE}/${installer[1]} \
                         --tag browser/installer/windows/stub.tag \
-                        --setupexe ${settings.objDir}/browser/installer/windows/instgen/setup-stub.exe \
+                        --setupexe pkg/installers/setup-stub.win64-aarch64.${installer[2]}.exe \
                         --sfx-stub other-licenses/7zstub/firefox/7zSD.Win32.sfx \
                         --use-upx
                 """
@@ -666,7 +676,8 @@ def buildAndPackage(platform) {
         "ua-build-${settings.name.toLowerCase()}",
         "-f build/${settings.dockerFile} ./build"
     )
-    withMach(platform) {
+
+    withMach(platform) { settings ->
         sh 'rm -f `pwd`/MacOSX10.12.sdk; ln -s /builds/worker/fetches/MacOSX10.12.sdk `pwd`/MacOSX10.12.sdk'
         sh 'rm -f `pwd`/MacOSX11.0.sdk; ln -s /builds/worker/fetches/MacOSX11.0.sdk `pwd`/MacOSX11.0.sdk'
 
@@ -674,12 +685,24 @@ def buildAndPackage(platform) {
 
         sh './mach package'
 
+        if (settings.startsWith('win64')) {
+            sh 'mkdir -p ${env.WORKSPACE}/pkg/installers'
+            sh "cp ${settings.objDir}/browser/installer/windows/instgen/setup-stub.exe ${env.WORKSPACE}/pkg/installers/setup-stub.${settings.targetPlatform}.en.exe"
+            sh "cp ${settings.objDir}/browser/installer/windows/instgen/setup.exe ${env.WORKSPACE}/pkg/installers/setup.${settings.targetPlatform}.en.exe"
+        }
+
         for (String locale in LOCALES) {
             sh "./mach build installers-${locale}"
+
+            if (settings.startsWith('win64')) {
+                sh "cp ${settings.objDir}/browser/installer/windows/l10ngen/setup-stub.exe ${env.WORKSPACE}/pkg/installers/setup-stub.${settings.targetPlatform}.${locale}.exe"
+                sh "cp ${settings.objDir}/browser/installer/windows/l10ngen/setup.exe ${env.WORKSPACE}/pkg/installers/setup.${settings.targetPlatform}.${locale}.exe"
+            }
         }
     }
 
     stash name: "pkg-${platform}", includes: [
+        "pkg/installers/*.exe", // setup.exe and setup-stub.exe
         "mozilla-release/${settings.objDir}/dist/Ghostery-*.zip",
         "mozilla-release/${settings.objDir}/dist/Ghostery-*.tar.gz",
         "mozilla-release/${settings.objDir}/dist/Ghostery-*.dmg",
