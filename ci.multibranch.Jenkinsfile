@@ -152,12 +152,17 @@ stage('Sign Windows') {
             file(credentialsId: "7da7d2de-5a10-45e6-9ffd-4e49f83753a8", variable: 'WIN_CERT'),
             string(credentialsId: "33b3705c-1c2e-4462-9354-56a76bbb164c", variable: 'WIN_CERT_PASS'),
         ]) {
-            bat "ci\\win_signer.bat pkg\\installers"
+            bat "ci\\win_signer.bat pkg\\installers\\win64\\en"
+            bat "ci\\win_signer.bat pkg\\installers\\win64\\de"
+            bat "ci\\win_signer.bat pkg\\installers\\win64\\fr"
+            bat "ci\\win_signer.bat pkg\\installers\\win64-aarch64\\en"
+            bat "ci\\win_signer.bat pkg\\installers\\win64-aarch64\\de"
+            bat "ci\\win_signer.bat pkg\\installers\\win64-aarch64\\fr"
         }
 
         stash name: 'signed-pkg-windows', includes: [
             'pkg/*/*.zip',
-            'pkg/installers/*.exe'
+            'pkg/installers/**/**/*.exe'
         ].join(',')
     }
 }
@@ -707,7 +712,7 @@ def buildAndPackage(platform) {
     }
 
     stash name: "pkg-${platform}", includes: [
-        "pkg/installers/*.exe", // setup.exe and setup-stub.exe
+        "pkg/installers/**/**/*.exe", // setup.exe and setup-stub.exe
         "mozilla-release/${settings.objDir}/dist/Ghostery-*.zip",
         "mozilla-release/${settings.objDir}/dist/Ghostery-*.tar.gz",
         "mozilla-release/${settings.objDir}/dist/Ghostery-*.dmg",
