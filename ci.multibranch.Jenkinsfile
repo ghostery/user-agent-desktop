@@ -162,7 +162,7 @@ stage('Sign Windows') {
 
         stash name: 'signed-pkg-windows', includes: [
             'pkg/*/*.zip',
-            'pkg/installers/**/**/*.exe'
+            'pkg/installers/*/*/*.exe'
         ].join(',')
     }
 }
@@ -712,7 +712,7 @@ def buildAndPackage(platform) {
     }
 
     stash name: "pkg-${platform}", includes: [
-        "pkg/installers/**/**/*.exe", // setup.exe and setup-stub.exe
+        "pkg/installers/*/*/*.exe", // setup.exe and setup-stub.exe
         "mozilla-release/${settings.objDir}/dist/Ghostery-*.zip",
         "mozilla-release/${settings.objDir}/dist/Ghostery-*.tar.gz",
         "mozilla-release/${settings.objDir}/dist/Ghostery-*.dmg",
