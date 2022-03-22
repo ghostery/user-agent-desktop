@@ -31,9 +31,9 @@ stage('Prepare') {
 
             sh 'npm ci'
 
-            sh 'rm -rf mozilla-release'
+            // sh 'rm -rf mozilla-release'
 
-            sh './fern.js use'
+            // sh './fern.js use'
 
             withCredentials([
                 [
@@ -55,9 +55,9 @@ stage('Prepare') {
                 """
             }
 
-            sh './fern.js reset'
+            // sh './fern.js reset'
 
-            sh './fern.js import-patches'
+            // sh './fern.js import-patches'
 
             version = readFile('mozilla-release/browser/config/version.txt').trim()
             displayVersion = readFile('mozilla-release/browser/config/version_display.txt').trim()
