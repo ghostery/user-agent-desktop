@@ -15,7 +15,7 @@ X
  create mode 100644 toolkit/mozapps/extensions/default-theme/experiment10.css
 
 diff --git a/toolkit/modules/LightweightThemeConsumer.jsm b/toolkit/modules/LightweightThemeConsumer.jsm
-index b5b0da07cb..f041f9359e 100644
+index 11775cbadb..a1fedb8552 100644
 --- a/toolkit/modules/LightweightThemeConsumer.jsm
 +++ b/toolkit/modules/LightweightThemeConsumer.jsm
 @@ -24,7 +24,7 @@ ChromeUtils.defineModuleGetter(
@@ -374,10 +374,10 @@ index a095bbea50..501556c651 100644
    }
  }
 diff --git a/toolkit/mozapps/extensions/internal/XPIProvider.jsm b/toolkit/mozapps/extensions/internal/XPIProvider.jsm
-index 48d7a389a6..40c7bca8ba 100644
+index 30122508ba..76e0f35ce8 100644
 --- a/toolkit/mozapps/extensions/internal/XPIProvider.jsm
 +++ b/toolkit/mozapps/extensions/internal/XPIProvider.jsm
-@@ -2492,7 +2492,7 @@ var XPIProvider = {
+@@ -2500,7 +2500,7 @@ var XPIProvider = {
        }
        this.maybeInstallBuiltinAddon(
          "default-theme@mozilla.org",
@@ -386,7 +386,7 @@ index 48d7a389a6..40c7bca8ba 100644
          "resource://default-theme/"
        );
  
-@@ -2671,6 +2671,10 @@ var XPIProvider = {
+@@ -2679,6 +2679,10 @@ var XPIProvider = {
        logger.error("startup failed", e);
        AddonManagerPrivate.recordException("XPI", "startup failed", e);
      }
@@ -397,7 +397,7 @@ index 48d7a389a6..40c7bca8ba 100644
    },
  
    /**
-@@ -2944,6 +2948,20 @@ var XPIProvider = {
+@@ -2952,6 +2956,20 @@ var XPIProvider = {
      return installed;
    },
  
@@ -419,7 +419,7 @@ index 48d7a389a6..40c7bca8ba 100644
      return Array.from(XPIDatabase.getAddons()).filter(addon =>
        addon.dependencies.includes(aAddon.id)
 diff --git a/toolkit/mozapps/extensions/jar.mn b/toolkit/mozapps/extensions/jar.mn
-index 58f25876f2..ee32147456 100644
+index 58f25876f2..d8d8008b39 100644
 --- a/toolkit/mozapps/extensions/jar.mn
 +++ b/toolkit/mozapps/extensions/jar.mn
 @@ -25,4 +25,5 @@ toolkit.jar:

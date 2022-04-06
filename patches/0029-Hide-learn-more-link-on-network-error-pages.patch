@@ -7,7 +7,7 @@ Subject: Hide learn more link on network error pages
  1 file changed, 4 insertions(+)
 
 diff --git a/browser/themes/shared/aboutNetError.css b/browser/themes/shared/aboutNetError.css
-index e11ca575d1..af77dfb2ed 100644
+index 73f9d2760a..d2974dbfdb 100644
 --- a/browser/themes/shared/aboutNetError.css
 +++ b/browser/themes/shared/aboutNetError.css
 @@ -4,6 +4,10 @@

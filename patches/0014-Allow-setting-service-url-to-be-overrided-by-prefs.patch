@@ -7,7 +7,7 @@ Subject: Allow setting service url to be overrided by prefs
  1 file changed, 1 insertion(+), 6 deletions(-)
 
 diff --git a/services/settings/Utils.jsm b/services/settings/Utils.jsm
-index 4a5dd759a6..47a1f6a791 100644
+index bf3545250c..7a205a1d9b 100644
 --- a/services/settings/Utils.jsm
 +++ b/services/settings/Utils.jsm
 @@ -63,12 +63,7 @@ var Utils = {
