@@ -7,7 +7,7 @@ Subject: Move Ghostery icon to UrlBar
  1 file changed, 12 insertions(+), 1 deletion(-)
 
 diff --git a/browser/components/customizableui/CustomizableUI.jsm b/browser/components/customizableui/CustomizableUI.jsm
-index 87aede1449..5f0f4c9aa7 100644
+index 8255ed4505..eadeb3a07a 100644
 --- a/browser/components/customizableui/CustomizableUI.jsm
 +++ b/browser/components/customizableui/CustomizableUI.jsm
 @@ -1100,7 +1100,12 @@ var CustomizableUIInternal = {

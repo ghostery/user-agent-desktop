@@ -7,7 +7,7 @@ Subject: OpenURL on buildID changes
  1 file changed, 2 insertions(+), 8 deletions(-)
 
 diff --git a/browser/components/BrowserContentHandler.jsm b/browser/components/BrowserContentHandler.jsm
-index c584f9ec6d..07c22e09e2 100644
+index 5b6b5db42d..a443814336 100644
 --- a/browser/components/BrowserContentHandler.jsm
 +++ b/browser/components/BrowserContentHandler.jsm
 @@ -646,13 +646,13 @@ nsBrowserContentHandler.prototype = {
