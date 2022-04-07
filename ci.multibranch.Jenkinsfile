@@ -79,7 +79,7 @@ stage('Build Linux') {
 
         sh """
             mkdir -p pkg/linux
-            cp mozilla-release/${settings.objDir}/dist/Ghostery-${version}.en-US.linux-x86_64.tar.gz pkg/linux/Ghostery-${version}.en.linux.tar.gz
+            cp mozilla-release/${settings.objDir}/dist/Ghostery-${version}.en-US.linux-x86_64.tar.gz pkg/linux/Ghostery-${version}.en-US.linux.tar.gz
             cp mozilla-release/${settings.objDir}/dist/Ghostery-${version}.de.linux-x86_64.tar.gz pkg/linux/Ghostery-${version}.de.linux.tar.gz
             cp mozilla-release/${settings.objDir}/dist/Ghostery-${version}.fr.linux-x86_64.tar.gz pkg/linux/Ghostery-${version}.fr.linux.tar.gz
         """
@@ -180,7 +180,7 @@ stage('Repackage Windows installers') {
         '''
 
         def installersX86 = [
-            ["pkg/x86-en/Ghostery-${version}.en-US.win64.zip", "pkg/Ghostery-${version}.en.win64.installer.exe", 'en'],
+            ["pkg/x86-en/Ghostery-${version}.en-US.win64.zip", "pkg/Ghostery-${version}.en-US.win64.installer.exe", 'en-US'],
             ["pkg/x86-de/Ghostery-${version}.de.win64.zip", "pkg/Ghostery-${version}.de.win64.installer.exe", 'de'],
             ["pkg/x86-fr/Ghostery-${version}.fr.win64.zip", "pkg/Ghostery-${version}.fr.win64.installer.exe", 'fr'],
         ]
@@ -201,7 +201,7 @@ stage('Repackage Windows installers') {
         }
 
         def installersARM = [
-            ["pkg/arm-en/Ghostery-${version}.en-US.win64-aarch64.zip", "pkg/Ghostery-${version}.en.win64-aarch64.installer.exe", 'en'],
+            ["pkg/arm-en/Ghostery-${version}.en-US.win64-aarch64.zip", "pkg/Ghostery-${version}.en-US.win64-aarch64.installer.exe", 'en-US'],
             ["pkg/arm-de/Ghostery-${version}.de.win64-aarch64.zip", "pkg/Ghostery-${version}.de.win64-aarch64.installer.exe", 'de'],
             ["pkg/arm-fr/Ghostery-${version}.fr.win64-aarch64.zip", "pkg/Ghostery-${version}.fr.win64-aarch64.installer.exe", 'fr'],
         ]
@@ -222,7 +222,7 @@ stage('Repackage Windows installers') {
         }
 
         def stubInstallersX86 = [
-            ["pkg/x86-en/Ghostery-${version}.en-US.win64.zip", "pkg/Ghostery-${version}.en.win64.installer-stub.exe", 'en'],
+            ["pkg/x86-en/Ghostery-${version}.en-US.win64.zip", "pkg/Ghostery-${version}.en-US.win64.installer-stub.exe", 'en-US'],
             ["pkg/x86-de/Ghostery-${version}.de.win64.zip", "pkg/Ghostery-${version}.de.win64.installer-stub.exe", 'de'],
             ["pkg/x86-fr/Ghostery-${version}.fr.win64.zip", "pkg/Ghostery-${version}.fr.win64.installer-stub.exe", 'fr'],
         ]
@@ -241,7 +241,7 @@ stage('Repackage Windows installers') {
         }
 
         def stubInstallersARM = [
-            ["pkg/arm-en/Ghostery-${version}.en-US.win64-aarch64.zip", "pkg/Ghostery-${version}.en.win64-aarch64.installer-stub.exe", 'en'],
+            ["pkg/arm-en/Ghostery-${version}.en-US.win64-aarch64.zip", "pkg/Ghostery-${version}.en-US.win64-aarch64.installer-stub.exe", 'en-US'],
             ["pkg/arm-de/Ghostery-${version}.de.win64-aarch64.zip", "pkg/Ghostery-${version}.de.win64-aarch64.installer-stub.exe", 'de'],
             ["pkg/arm-fr/Ghostery-${version}.fr.win64-aarch64.zip", "pkg/Ghostery-${version}.fr.win64-aarch64.installer-stub.exe", 'fr'],
         ]
@@ -290,7 +290,7 @@ stage('Unify Mac DMG') {
         def x86ObjDir = SETTINGS['macos-x86'].objDir
 
         def dmgs = [
-            ["mozilla-release/${armObjDir}/dist/Ghostery-${version}.en-US.mac.dmg", "mozilla-release/${x86ObjDir}/dist/Ghostery-${version}.en-US.mac.dmg", "pkg/Ghostery-${version}.en.dmg"],
+            ["mozilla-release/${armObjDir}/dist/Ghostery-${version}.en-US.mac.dmg", "mozilla-release/${x86ObjDir}/dist/Ghostery-${version}.en-US.mac.dmg", "pkg/Ghostery-${version}.en-US.dmg"],
             ["mozilla-release/${armObjDir}/dist/Ghostery-${version}.de.mac.dmg", "mozilla-release/${x86ObjDir}/dist/Ghostery-${version}.de.mac.dmg", "pkg/Ghostery-${version}.de.dmg"],
             ["mozilla-release/${armObjDir}/dist/Ghostery-${version}.fr.mac.dmg", "mozilla-release/${x86ObjDir}/dist/Ghostery-${version}.fr.mac.dmg", "pkg/Ghostery-${version}.fr.dmg"],
         ]
@@ -321,7 +321,7 @@ stage('Sign Mac') {
         unstash 'mac-entitlements'
 
         def packages = [
-            ["pkg/Ghostery-${version}.en.dmg", "pkg/mac-en"],
+            ["pkg/Ghostery-${version}.en-US.dmg", "pkg/mac-en"],
             ["pkg/Ghostery-${version}.de.dmg", "pkg/mac-de"],
             ["pkg/Ghostery-${version}.fr.dmg", "pkg/mac-fr"],
         ]
@@ -392,7 +392,7 @@ stage('Repackage Mac') {
         unstash 'signed-pkg-mac'
 
         def dmgs = [
-            ["pkg/mac-en/Ghostery-${version}.en.tar.gz", "pkg/Ghostery-${version}.en.mac.dmg"],
+            ["pkg/mac-en/Ghostery-${version}.en-US.tar.gz", "pkg/Ghostery-${version}.en-US.mac.dmg"],
             ["pkg/mac-de/Ghostery-${version}.de.tar.gz", "pkg/Ghostery-${version}.de.mac.dmg"],
             ["pkg/mac-fr/Ghostery-${version}.fr.tar.gz", "pkg/Ghostery-${version}.fr.mac.dmg"],
         ]
@@ -420,10 +420,10 @@ stage('Repackage MAR') {
         def pwd = sh(returnStdout: true, script: 'pwd').trim()
 
         def packages = [
-            ['x86_64', "pkg/linux/Ghostery-${version}.en.linux.tar.gz", "pkg/mars/Ghostery-${version}.en-US.linux-x86_64.complete.mar"],
+            ['x86_64', "pkg/linux/Ghostery-${version}.en-US.linux.tar.gz", "pkg/mars/Ghostery-${version}.en-US.linux-x86_64.complete.mar"],
             ['x86_64', "pkg/linux/Ghostery-${version}.de.linux.tar.gz", "pkg/mars/Ghostery-${version}.de.linux-x86_64.complete.mar"],
             ['x86_64', "pkg/linux/Ghostery-${version}.fr.linux.tar.gz", "pkg/mars/Ghostery-${version}.fr.linux-x86_64.complete.mar"],
-            ['macos-x86_64-aarch64', "pkg/mac-en/Ghostery-${version}.en.tar.gz", "pkg/mars/Ghostery-${version}.en-US.mac.complete.mar"],
+            ['macos-x86_64-aarch64', "pkg/mac-en/Ghostery-${version}.en-US.tar.gz", "pkg/mars/Ghostery-${version}.en-US.mac.complete.mar"],
             ['macos-x86_64-aarch64', "pkg/mac-de/Ghostery-${version}.de.tar.gz", "pkg/mars/Ghostery-${version}.de.mac.complete.mar"],
             ['macos-x86_64-aarch64', "pkg/mac-fr/Ghostery-${version}.fr.tar.gz", "pkg/mars/Ghostery-${version}.fr.mac.complete.mar"],
             ['x86', "pkg/x86-en/Ghostery-${version}.en-US.win64.zip", "pkg/mars/Ghostery-${version}.en-US.win64.complete.mar"],
@@ -498,22 +498,22 @@ stage('Publish to github') {
         node('browser-builder') {
             docker.image('ua-build-base').inside() {
                 def artifacts = [
-                    "pkg/Ghostery-${version}.en.mac.dmg",
+                    "pkg/Ghostery-${version}.en-US.mac.dmg",
                     "pkg/Ghostery-${version}.de.mac.dmg",
                     "pkg/Ghostery-${version}.fr.mac.dmg",
-                    "pkg/linux/Ghostery-${version}.en.linux.tar.gz",
+                    "pkg/linux/Ghostery-${version}.en-US.linux.tar.gz",
                     "pkg/linux/Ghostery-${version}.de.linux.tar.gz",
                     "pkg/linux/Ghostery-${version}.fr.linux.tar.gz",
-                    "pkg/Ghostery-${version}.en.win64.installer.exe",
+                    "pkg/Ghostery-${version}.en-US.win64.installer.exe",
                     "pkg/Ghostery-${version}.de.win64.installer.exe",
                     "pkg/Ghostery-${version}.fr.win64.installer.exe",
-                    "pkg/Ghostery-${version}.en.win64-aarch64.installer.exe",
+                    "pkg/Ghostery-${version}.en-US.win64-aarch64.installer.exe",
                     "pkg/Ghostery-${version}.de.win64-aarch64.installer.exe",
                     "pkg/Ghostery-${version}.fr.win64-aarch64.installer.exe",
-                    "pkg/Ghostery-${version}.en.win64.installer-stub.exe",
+                    "pkg/Ghostery-${version}.en-US.win64.installer-stub.exe",
                     "pkg/Ghostery-${version}.de.win64.installer-stub.exe",
                     "pkg/Ghostery-${version}.fr.win64.installer-stub.exe",
-                    "pkg/Ghostery-${version}.en.win64-aarch64.installer-stub.exe",
+                    "pkg/Ghostery-${version}.en-US.win64-aarch64.installer-stub.exe",
                     "pkg/Ghostery-${version}.de.win64-aarch64.installer-stub.exe",
                     "pkg/Ghostery-${version}.fr.win64-aarch64.installer-stub.exe",
                     "pkg/mars/Ghostery-${version}.en-US.linux-x86_64.complete.mar",
@@ -691,9 +691,9 @@ def buildAndPackage(platform) {
         sh './mach package'
 
         if (settings.targetPlatform.startsWith('win64')) {
-            sh "mkdir -p ${env.WORKSPACE}/pkg/installers/${settings.targetPlatform}/en"
-            sh "cp ${settings.objDir}/browser/installer/windows/instgen/setup-stub.exe ${env.WORKSPACE}/pkg/installers/${settings.targetPlatform}/en/setup-stub.exe"
-            sh "cp ${settings.objDir}/browser/installer/windows/instgen/setup.exe ${env.WORKSPACE}/pkg/installers/${settings.targetPlatform}/en/setup.exe"
+            sh "mkdir -p ${env.WORKSPACE}/pkg/installers/${settings.targetPlatform}/en-US"
+            sh "cp ${settings.objDir}/browser/installer/windows/instgen/setup-stub.exe ${env.WORKSPACE}/pkg/installers/${settings.targetPlatform}/en-US/setup-stub.exe"
+            sh "cp ${settings.objDir}/browser/installer/windows/instgen/setup.exe ${env.WORKSPACE}/pkg/installers/${settings.targetPlatform}/en-US/setup.exe"
         }
 
         sh "cat ${settings.objDir}/dist/bin/updater.ini"
