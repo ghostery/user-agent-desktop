@@ -1,0 +1,24 @@
+From: Krzysztof Modras <chrmod@chrmod.net>
+Date: Thu, 7 Apr 2022 14:22:24 +0200
+Subject: debug stub installer
+
+---
+ browser/installer/windows/nsis/stub.nsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/browser/installer/windows/nsis/stub.nsi b/browser/installer/windows/nsis/stub.nsi
+index db216a4f8a..b54792d87c 100644
+--- a/browser/installer/windows/nsis/stub.nsi
++++ b/browser/installer/windows/nsis/stub.nsi
+@@ -88,7 +88,7 @@ Var ArchToInstall
+ 
+ ; Uncomment the following to prevent pinging the metrics server when testing
+ ; the stub installer
+-;!define STUB_DEBUG
++!define STUB_DEBUG
+ 
+ !define StubURLVersion "v8"
+ 
+-- 
+2.34.1
+
