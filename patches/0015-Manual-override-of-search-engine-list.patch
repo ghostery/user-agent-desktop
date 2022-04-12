@@ -776,11 +776,11 @@ index aeca0ef128..f4c669c147 100644
    "channelPref": {
      "message": "google_channel_row"
 diff --git a/browser/components/search/extensions/google/manifest.json b/browser/components/search/extensions/google/manifest.json
-index d62049705a..6a65689e7d 100644
+index 6cd4d2a423..5e5f2b960f 100644
 --- a/browser/components/search/extensions/google/manifest.json
 +++ b/browser/components/search/extensions/google/manifest.json
 @@ -5,7 +5,7 @@
-   "version": "1.1",
+   "version": "1.2",
    "applications": {
      "gecko": {
 -      "id": "google@search.mozilla.org"
@@ -1035,10 +1035,10 @@ index 0000000000..4348f01068
 +  }
 +}
 diff --git a/toolkit/components/search/SearchEngineSelector.jsm b/toolkit/components/search/SearchEngineSelector.jsm
-index c880b8ca05..93d5ed43b3 100644
+index 7a9697f1f4..12535a404a 100644
 --- a/toolkit/components/search/SearchEngineSelector.jsm
 +++ b/toolkit/components/search/SearchEngineSelector.jsm
-@@ -94,6 +94,112 @@ class SearchEngineSelector {
+@@ -95,6 +95,112 @@ class SearchEngineSelector {
      this._changeListener = listener;
    }
  

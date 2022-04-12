@@ -3,23 +3,20 @@ Date: Wed, 23 Sep 2020 17:02:37 +0200
 Subject: Allow setting service url to be overrided by prefs
 
 ---
- services/settings/Utils.jsm | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+ services/settings/Utils.jsm | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
 diff --git a/services/settings/Utils.jsm b/services/settings/Utils.jsm
-index bf3545250c..7a205a1d9b 100644
+index f91e5dcb67..db0d7948be 100644
 --- a/services/settings/Utils.jsm
 +++ b/services/settings/Utils.jsm
-@@ -63,12 +63,7 @@ var Utils = {
-     );
-     const isXpcshell = env.exists("XPCSHELL_TEST_PROFILE_DIR");
-     const isNotThunderbird = AppConstants.MOZ_APP_NAME != "thunderbird";
--    return AppConstants.RELEASE_OR_BETA &&
--      !Cu.isInAutomation &&
--      !isXpcshell &&
--      isNotThunderbird
--      ? "https://firefox.settings.services.mozilla.com/v1"
--      : gServerURL;
+@@ -88,9 +88,7 @@ function _isUndefined(value) {
+ 
+ var Utils = {
+   get SERVER_URL() {
+-    return allowServerURLOverride
+-      ? gServerURL
+-      : "https://firefox.settings.services.mozilla.com/v1";
 +    return gServerURL;
    },
  

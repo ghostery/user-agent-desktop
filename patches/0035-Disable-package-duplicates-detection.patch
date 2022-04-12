@@ -7,7 +7,7 @@ Subject: Disable package duplicates detection
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/toolkit/mozapps/installer/packager.mk b/toolkit/mozapps/installer/packager.mk
-index 04c0a229ce..701e842cb5 100644
+index 0ae27b95d5..57c0cdafd3 100644
 --- a/toolkit/mozapps/installer/packager.mk
 +++ b/toolkit/mozapps/installer/packager.mk
 @@ -15,8 +15,8 @@ endif

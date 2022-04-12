@@ -8,18 +8,18 @@ X
 ---
  toolkit/modules/LightweightThemeConsumer.jsm  |   2 +-
  .../extensions/default-theme/experiment10.css | 257 ++++++++++++++++++
- .../extensions/default-theme/manifest.json    |  53 +---
+ .../extensions/default-theme/manifest.json    |  49 +---
  .../extensions/internal/XPIProvider.jsm       |  20 +-
  toolkit/mozapps/extensions/jar.mn             |   1 +
- 5 files changed, 290 insertions(+), 43 deletions(-)
+ 5 files changed, 289 insertions(+), 40 deletions(-)
  create mode 100644 toolkit/mozapps/extensions/default-theme/experiment10.css
 
 diff --git a/toolkit/modules/LightweightThemeConsumer.jsm b/toolkit/modules/LightweightThemeConsumer.jsm
-index 11775cbadb..a1fedb8552 100644
+index cbf84ffe39..0ee18c3024 100644
 --- a/toolkit/modules/LightweightThemeConsumer.jsm
 +++ b/toolkit/modules/LightweightThemeConsumer.jsm
-@@ -24,7 +24,7 @@ ChromeUtils.defineModuleGetter(
-   "resource:///modules/ThemeVariableMap.jsm"
+@@ -29,7 +29,7 @@ ChromeUtils.defineModuleGetter(
+   "resource://gre/modules/PrivateBrowsingUtils.jsm"
  );
  
 -const DEFAULT_THEME_ID = "default-theme@mozilla.org";
@@ -291,10 +291,10 @@ index 0000000000..4aac8cba8e
 +  margin-inline-end: -6px !important;
 +}
 diff --git a/toolkit/mozapps/extensions/default-theme/manifest.json b/toolkit/mozapps/extensions/default-theme/manifest.json
-index a095bbea50..501556c651 100644
+index 5f62671c5f..151b48adf7 100644
 --- a/toolkit/mozapps/extensions/default-theme/manifest.json
 +++ b/toolkit/mozapps/extensions/default-theme/manifest.json
-@@ -7,20 +7,17 @@
+@@ -7,17 +7,14 @@
      }
    },
  
@@ -315,11 +315,7 @@ index a095bbea50..501556c651 100644
 -  "dark_theme": {
      "colors": {
        "tab_background_text": "#fbfbfe",
--      "tab_selected": "rgb(66,65,77)",
-+      "tab_selected": "#36393F",
-       "tab_text": "rgb(251,251,254)",
-       "icons": "rgb(251,251,254)",
-       "frame": "#1c1b22",
+       "tab_selected": "rgb(66,65,77)",
 @@ -28,12 +25,12 @@
        "popup_text": "rgb(251,251,254)",
        "popup_border": "rgb(82,82,94)",
@@ -339,7 +335,7 @@ index a095bbea50..501556c651 100644
        "toolbar_field_text": "rgb(251,251,254)",
        "toolbar_field_focus": "rgb(66,65,77)",
        "toolbar_text": "rgb(251, 251, 254)",
-@@ -71,32 +68,6 @@
+@@ -69,30 +66,6 @@
    },
  
    "theme_experiment": {
@@ -355,8 +351,6 @@ index a095bbea50..501556c651 100644
 -      "input_background": "--input-bgcolor",
 -      "input_color": "--input-color",
 -      "input_border": "--input-border-color",
--      "input_border_error": "--input-error-border-color",
--      "zoom_controls": "--zoom-controls-bgcolor",
 -      "autocomplete_popup_separator": "--autocomplete-popup-separator-color",
 -      "appmenu_update_icon_color": "--panel-banner-item-update-supported-bgcolor",
 -      "appmenu_info_icon_color": "--panel-banner-item-info-icon-bgcolor",
@@ -374,10 +368,10 @@ index a095bbea50..501556c651 100644
    }
  }
 diff --git a/toolkit/mozapps/extensions/internal/XPIProvider.jsm b/toolkit/mozapps/extensions/internal/XPIProvider.jsm
-index 30122508ba..76e0f35ce8 100644
+index 50b85a7b5c..9bf1f8b2f1 100644
 --- a/toolkit/mozapps/extensions/internal/XPIProvider.jsm
 +++ b/toolkit/mozapps/extensions/internal/XPIProvider.jsm
-@@ -2500,7 +2500,7 @@ var XPIProvider = {
+@@ -2510,7 +2510,7 @@ var XPIProvider = {
        }
        this.maybeInstallBuiltinAddon(
          "default-theme@mozilla.org",
@@ -386,7 +380,7 @@ index 30122508ba..76e0f35ce8 100644
          "resource://default-theme/"
        );
  
-@@ -2679,6 +2679,10 @@ var XPIProvider = {
+@@ -2689,6 +2689,10 @@ var XPIProvider = {
        logger.error("startup failed", e);
        AddonManagerPrivate.recordException("XPI", "startup failed", e);
      }
@@ -397,7 +391,7 @@ index 30122508ba..76e0f35ce8 100644
    },
  
    /**
-@@ -2952,6 +2956,20 @@ var XPIProvider = {
+@@ -2962,6 +2966,20 @@ var XPIProvider = {
      return installed;
    },
  

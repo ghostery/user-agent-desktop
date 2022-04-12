@@ -7,10 +7,10 @@ Subject: Allow update channel to be configured via prefs
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/toolkit/modules/UpdateUtils.jsm b/toolkit/modules/UpdateUtils.jsm
-index 360217be87..743158be71 100644
+index fc90a09b18..0ca5c47c0a 100644
 --- a/toolkit/modules/UpdateUtils.jsm
 +++ b/toolkit/modules/UpdateUtils.jsm
-@@ -44,7 +44,7 @@ var UpdateUtils = {
+@@ -43,7 +43,7 @@ var UpdateUtils = {
     *        Whether or not to include the partner bits. Default: true.
     */
    getUpdateChannel(aIncludePartners = true) {

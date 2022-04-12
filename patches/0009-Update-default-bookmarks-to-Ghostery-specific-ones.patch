@@ -4,41 +4,32 @@ Subject: Update default bookmarks to Ghostery-specific ones
 
 Fix bookmarks
 ---
- browser/locales/generic/profile/bookmarks.html.in | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ browser/base/content/default-bookmarks.html | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
-diff --git a/browser/locales/generic/profile/bookmarks.html.in b/browser/locales/generic/profile/bookmarks.html.in
-index c5ac0b45d9..af8f4e1d98 100644
---- a/browser/locales/generic/profile/bookmarks.html.in
-+++ b/browser/locales/generic/profile/bookmarks.html.in
-@@ -10,6 +10,8 @@
- #define mdn_icon data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAIAAAD8GO2jAAABgElEQVR4AWPouPiRpmjUAjgatSBj+aG0OVuyVhymsgWl2y475zXySikwwIC4lpFDVk3avG0BrXP9mmeV7bhCvgXuxW3M7JwMeAGfpByZFpjHFzAQB2KmrSfZAtuMKgaiAZ+MUuLc7SRY4FbYwkA60HAJiJm8uubQAwIWeJV1MlAAOAREHDJrcFqQMG+ngIK6oKyykLwqAyMjeXZwiUjgtKD+yGMIwyGzmoGBTAs4hcXrgObgi4OiVkpCiUtYov7YU5wW1B194t0ww69ldvjktYouwWRYIGdkQ1Q+iJ28hp2Xn7B5zKzIPAlNw6S52wlbkL3mJJecOq+CBqeIJC6TjUJTMlcdz9lwLmriSuPgJBVbj/D+5SSXRequQVhNN4nIoEJhV77jKgs7B6bprJw85XtuU8GCpNlbSS3gSA4ii4QiTAvElDWpWeH41kxg5eZDSypUrtFKd1zTcA1EpHRDS5rUyQEts+VN7JjYOGR0TWhY6RdsOhc/Y9NoswUJjVoAAE+h555Rgcg2AAAAAElFTkSuQmCC
- 
- #define addon_icon data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAABOFBMVEUAAAAAzdwAydcAyNgA//8AzOYAydcAyNgAyNgA2NgAytoAzNkAytgAydgA29sA0egAyNgAyNgA//8AyNgAydgA//8Ay9cAydcAytkAz90Ay9gA1eoAydgAytsAyNgAytgAydkAydgAydgAyNgAydgAyNcAy9oAydgA//8AytsAy9kAytkAyNgAydgAydkAy9kAzP8AydgAydgAydgAz98AzN0AyNcAyNsAydcAydgAydgAydcAytgAytcAydcAydcAytcAydcAyNcAydcAy9gAztgAydcAydgAzOAAydcAyNgAyNgAytwAyNcAyNgAy9wAyNcAyNcAyNgAydgAyNcAydcAydgA0uEAydkAyNgAyeQA4+MAyNgAydkAzN0AyNsA1f8AyNgAydgAydcA1eMAydgAydcAyNdj6PGJAAAAZ3RSTlMAJFpBAQqm8qwNPiiPygcLv8QEw5cDQMA1JU4MwiuDbl/+6+m4+0XLAj9KePz9cjYFvervEA/IDsfFr+xcgeaOYIDo+ica1OMZ9bXlHe73LM3M35itxs8Rf5ATCbFeHjgGttC5ErzO3WvwaAAAAWxJREFUOMt9kudCwkAQhFcITQWCoaggiBqxoaixYUVsYMMGCmLXff838LIXCJAL84fvmCHsTg4AYMDhlIDkcnu8Po4w6BjiIA0joj+gY1BmGKLEiMIwHNFR9xGjuh8jpMQoYZjRGBGOA8QTHDEUB4hynABwcEqCT8GW2DNSnCYBnJzSoSk0NT2jcphlM/rRXpk5NkRgfmFxSWBml6MrOWNlWBUEEmDKtyYIrGttP66gSP4Nww8mUKzNLd5/zHaJbb1Tl9xnzR2WcGM/5QE8BLvJvf0Dc4HDo8IxUVECL5Vywv7s9Mzwz/WLcFHSsWy8w0sa9+qa/JtbOlUY3mnGLbjnCz9Q4JEfnhCrNb5nXi3w754p8MIPKVWpt6psGJ+vFJBbBUO3GlozzYdsSmCV1NlntiTnegNvPQ29Wx7h7fKrEUvg47PD/6oLpgh8m7//AZEav4b/J/bbb75SAzvR3crY+6y8fLGsQV9ZSvwHF4LQIhDjT+8AAAAASUVORK5CYII=
-+
-+#define ghostery_icon data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAChVBMVEUAAAAArvEAr/EAr/AArvAAsPIAr/IAt/cArvAArvAArvAArvAArvAArvAArvAArvAAr/EAr/AArvAArvAArvAArvAArvAArvAArvAArvAArvAArvAAr/AArvAArvAArvAArvAArvAArvAArvAArvAArvAArvAArvAArvAArvAArvAArvAArvAArvAArvAArvAArvAArvAArvAArvAArvAArvAArvAArvAArvAAr/AArvAArvAArvAArvAArvAArvAArvAAr/AArvAArvAArvAArvAArvAArvAArvAArvAArvAArvAArvAAsPIArvAArvAAr/EArvAArvAArvAArvAArvAArvAArvAArvAArvAArvAArvAArvAArvAArvAArvAArvAArvAArvAArvAArvAArvAArvAArvAArvAArvAArvAArvAArvAArvAArvAArvAArvAArvAArvAArvAArvAArvAArvABrvAQs/EJsfAArfAKsfEPs/FZyvXL7vyt5foluvInuvKu5frK7vxXyfUou/Le9f3///+d4PkDr/AEr/Cf4fnd9P0muvJjzfYbt/Idt/L+//9gzfZ61ffr+f4pu/IrvPPs+f531PdmzvYfuPLg9f0svPPi9v2i4foFsPCl4vrh9f0qu/JizfbV8vy46Psru/K56fvU8fxgzPYCrvAWtfENsvEOsvEVtfEDrvA+wvQYtfEArPBDw/QHsPBFxPSk4vowvfMhufKX3vkIsPCj4vrn9/6V3flSyPU0v/MyvvNLxvSH2fjc9P3A6/sVtPEiuPLD7Pv7/v/w+v7v+v75/f/Z8/04v/MkufLz+/74/f82v/MKsfA/wvRx0vd20/dJxfQE43kXAAAAdnRSTlMAAAAAAAAAABAzVGdoVTQRAQEofMPp9/z4xX8rAnng430TIa79syUdusAKn6YMWvlhD8ZD9EqFpKwDBra8CAe5vwkJFNLYGCzuMlj+YAGYoAIe3iNvLev64fHywt/vIKGPUgtpcE+MoyQDoqhqpeKpDR+EMAWBu9Y99QAAAAFiS0dEh/vZC8sAAAAHdElNRQfhAg4PHREVU00HAAACG0lEQVQ4y2NggANGJg5OLm4eXj5+AWYGTMAiKCQsIiomLi4hKiklLcOCJs3Iwi8rVwYH8gqKLKzI8swsSsriZUhARVWNhQkhz8airlGGBjSVWBAuYdHSLsMAOrosCAv0xEBC5RWVVWVlVdU15SCevgHcEhZDTbCe2rr6hqqqxqbmFjDXSBFmBIuxCZBf1drW3t7R2dXd3t7TCzSpTMwUqoCJRQGkoaqvHSjVPwGobOIkkIIyM6gdLALmYAWTgQqmTJ02HUjNACuwsIQYwWJlDVYwEyjTNmHWbCDVB1ZgYwtVYGcPVjBnbnv7vK75C9rbFy4CK3BwZEZWUFa+eMnSZVVVc5avWAn2J7qC8s5Vq9eAwmHtulXry7Ep2LBxEyQMq9Zs3oJFQdXWbdtXVYHAjp2Lsbph1+49e/ftP3Dw0OEjR7G5oazq2PH2EydPnW4/c7YKq4KyqnMLzre3X1h+sQoa4zAFTg7QGK66dPnK1WsVUPkyI2iEszi7wBMByI1wjqsbVIG7aBlW4OEJVsDO4iWOXYG3Dzg6WXz9ynAA/wCQESyBrrgUBAWzgJILtwouBd4hQDtYdG3KcAIRQxYGltCwsvAIEclIVKkoo+gY/bJYTqCCuPiERKUkrWQxZHn9lKSkuNS09AwWBiamTEFmUN7JAmY4+eyc5Nw8oJvyC4DOY2bOZGRE5L5CbaOiYisWlpLQUknzYBY2qAQAlLVKscYUuesAAAAldEVYdGRhdGU6Y3JlYXRlADIwMTctMDItMTRUMTU6Mjk6MTcrMDE6MDCta3mhAAAAJXRFWHRkYXRlOm1vZGlmeQAyMDE3LTAyLTE0VDE1OjI5OjE3KzAxOjAw3DbBHQAAAFd6VFh0UmF3IHByb2ZpbGUgdHlwZSBpcHRjAAB4nOPyDAhxVigoyk/LzEnlUgADIwsuYwsTIxNLkxQDEyBEgDTDZAMjs1Qgy9jUyMTMxBzEB8uASKBKLgDqFxF08kI1lQAAAABJRU5ErkJggg==
- <!-- This Source Code Form is subject to the terms of the Mozilla Public
-    - License, v. 2.0. If a copy of the MPL was not distributed with this
-    - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
-@@ -23,14 +25,12 @@
-     <dd>@bookmarks_toolbarfolder_description@
+diff --git a/browser/base/content/default-bookmarks.html b/browser/base/content/default-bookmarks.html
+index b2d18d3098..41aabec9f0 100644
+--- a/browser/base/content/default-bookmarks.html
++++ b/browser/base/content/default-bookmarks.html
+@@ -31,14 +31,12 @@
+     <dd data-l10n-id="default-bookmarks-toolbarfolder-description">default-bookmarks-toolbarfolder-description</dd>
  #ifndef NIGHTLY_BUILD
-         <dl>
--            <p><dt><a href="https://www.mozilla.org/@AB_CD@/firefox/central/" icon="@firefox_icon@">@getting_started@</a></dt>
-         </dl>
--    <p><dt><h3>@firefox_heading@</h3></dt>
-+    <p><dt><h3>@ghostery_heading@</h3></dt>
          <dl><p>
--            <dt><a href="https://support.mozilla.org/@AB_CD@/products/firefox" icon="@firefox_icon@">@firefox_get_help@</a>
--            <dt><a href="https://support.mozilla.org/@AB_CD@/kb/customize-firefox-controls-buttons-and-toolbars?utm_source=firefox-browser&utm_medium=default-bookmarks&utm_campaign=customize" icon="@firefox_icon@">@firefox_customize@</a>
--            <dt><a href="https://www.mozilla.org/@AB_CD@/contribute/" icon="@mozilla_icon@">@firefox_community@</a>
--            <dt><a href="https://www.mozilla.org/@AB_CD@/about/" icon="@mozilla_icon@">@firefox_about@</a>
-+            <dt><a href="https://www.ghostery.com/support/" icon="@ghostery_icon@">@ghostery_help@</a>
-+            <dt><a href="https://www.ghostery.com/pricing/" icon="@ghostery_icon@">@ghostery_plans@</a>
-+            <dt><a href="https://www.ghostery.com/about-ghostery/" icon="@ghostery_icon@">@ghostery_about_us@</a>
-         </dl>
+-            <dt><a href="https://www.mozilla.org/firefox/central/" icon="@firefox_icon@" data-l10n-id="default-bookmarks-getting-started">default-bookmarks-getting-started</a></dt>
+         </dl><p>
+-    <dt><h3 data-l10n-id="default-bookmarks-firefox-heading">default-bookmarks-firefox-heading</h3></dt>
++    <dt><h3 data-l10n-id="ghostery_heading">ghostery_heading</h3></dt>
+         <dl><p>
+-            <dt><a href="https://support.mozilla.org/products/firefox" icon="@firefox_icon@" data-l10n-id="default-bookmarks-firefox-get-help">default-bookmarks-firefox-get-help</a></dt>
+-            <dt><a href="https://support.mozilla.org/kb/customize-firefox-controls-buttons-and-toolbars?utm_source=firefox-browser&utm_medium=default-bookmarks&utm_campaign=customize" icon="@firefox_icon@" data-l10n-id="default-bookmarks-firefox-customize">default-bookmarks-firefox-customize</a></dt>
+-            <dt><a href="https://www.mozilla.org/contribute/" icon="@mozilla_icon@" data-l10n-id="default-bookmarks-firefox-community">default-bookmarks-firefox-community</a></dt>
+-            <dt><a href="https://www.mozilla.org/about/" icon="@mozilla_icon@" data-l10n-id="default-bookmarks-firefox-about">default-bookmarks-firefox-about</a></dt>
++            <dt><a href="https://www.ghostery.com/support/" icon="@ghostery_icon@" data-l10n-id="ghostery_help">ghostery_help</a></dt>
++            <dt><a href="https://www.ghostery.com/pricing/" icon="@ghostery_icon@" data-l10n-id="ghostery_plans">ghostery_plans</a></dt>
++            <dt><a href="https://www.ghostery.com/ghostery-manifesto/" icon="@ghostery_icon@" data-l10n-id="ghostery_about_us">ghostery_about_us</a></dt>
+         </dl><p>
  #else
-         <dl>
+         <dl><p>
 -- 
 2.34.1
 

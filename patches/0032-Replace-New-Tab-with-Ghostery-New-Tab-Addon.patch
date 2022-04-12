@@ -5,7 +5,7 @@ Subject: Replace New Tab with Ghostery New Tab Addon
 ---
  browser/components/extensions/parent/ext-url-overrides.js | 2 +-
  browser/components/urlbar/UrlbarInput.jsm                 | 7 +++++++
- browser/themes/shared/preferences/preferences.inc.css     | 4 ++++
+ browser/themes/shared/preferences/preferences.css         | 4 ++++
  3 files changed, 12 insertions(+), 1 deletion(-)
 
 diff --git a/browser/components/extensions/parent/ext-url-overrides.js b/browser/components/extensions/parent/ext-url-overrides.js
@@ -22,10 +22,10 @@ index af2c367e1f..5447fd1a2a 100644
      let policy = ExtensionParent.WebExtensionPolicy.getByID(extensionId);
      Services.prefs.setBoolPref(
 diff --git a/browser/components/urlbar/UrlbarInput.jsm b/browser/components/urlbar/UrlbarInput.jsm
-index d6af2c41eb..656e119066 100644
+index 250b6f65ce..4804223698 100644
 --- a/browser/components/urlbar/UrlbarInput.jsm
 +++ b/browser/components/urlbar/UrlbarInput.jsm
-@@ -357,6 +357,13 @@ class UrlbarInput {
+@@ -358,6 +358,13 @@ class UrlbarInput {
  
        valid =
          !this.window.isBlankPageURL(uri.spec) || uri.schemeIs("moz-extension");
@@ -39,11 +39,11 @@ index d6af2c41eb..656e119066 100644
      } else if (
        this.window.isInitialPage(value) &&
        BrowserUIUtils.checkEmptyPageOrigin(this.window.gBrowser.selectedBrowser)
-diff --git a/browser/themes/shared/preferences/preferences.inc.css b/browser/themes/shared/preferences/preferences.inc.css
-index 0040eaa77e..f0f56eaf3f 100644
---- a/browser/themes/shared/preferences/preferences.inc.css
-+++ b/browser/themes/shared/preferences/preferences.inc.css
-@@ -1194,6 +1194,10 @@ richlistitem .text-link:hover {
+diff --git a/browser/themes/shared/preferences/preferences.css b/browser/themes/shared/preferences/preferences.css
+index d3688d780c..1eccf04abb 100644
+--- a/browser/themes/shared/preferences/preferences.css
++++ b/browser/themes/shared/preferences/preferences.css
+@@ -1219,6 +1219,10 @@ richlistitem .text-link:hover {
    margin-inline-start: 6px;
  }
  
@@ -51,9 +51,9 @@ index 0040eaa77e..f0f56eaf3f 100644
 +  display: none;
 +}
 +
- #moreFromMozillaCategory-header .subtitle {
-   color: var(--in-content-deemphasized-text);
-   margin: 4px 0 10px;
+ #moreFromMozillaCategory-header .title {
+   margin-block-end: 4px;
+ }
 -- 
 2.34.1
 

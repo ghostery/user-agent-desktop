@@ -9,10 +9,10 @@ Subject: Change new tab page and home page url
  3 files changed, 3 insertions(+), 16 deletions(-)
 
 diff --git a/browser/app/profile/firefox.js b/browser/app/profile/firefox.js
-index af088110a4..d58c7eac69 100644
+index af9c349671..356ab7191c 100644
 --- a/browser/app/profile/firefox.js
 +++ b/browser/app/profile/firefox.js
-@@ -267,7 +267,7 @@ pref("browser.shell.setDefaultBrowserUserChoice", true);
+@@ -281,7 +281,7 @@ pref("browser.shell.setDefaultPDFHandler", false);
  // 0 = blank, 1 = home (browser.startup.homepage), 2 = last visited page, 3 = resume previous browser session
  // The behavior of option 3 is detailed at: http://wiki.mozilla.org/Session_Restore
  pref("browser.startup.page",                1);
