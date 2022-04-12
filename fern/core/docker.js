@@ -61,7 +61,10 @@ async function loadToolchains(root) {
         }
 
         if (v.run["toolchain-alias"] !== undefined) {
-          toolchains.set(v.run["toolchain-alias"], v);
+          const aliases = v.run["toolchain-alias"];
+          for (const alias of Array.isArray(aliases) ? aliases : [aliases]) {
+            toolchains.set(alias, v);
+          }
           v.name = k;
         }
 
@@ -247,7 +250,6 @@ async function generate(artifactBaseDir) {
   const workspace = await loadWorkspace();
   const s3bucket = workspace["s3bucket"];
   const ffVersion = workspace["firefox"];
-
   buildInfos.forEach((job, i) => {
     for (const key of job.fetches.toolchain) {
       if (
