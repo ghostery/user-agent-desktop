@@ -72,5 +72,5 @@ index f9bcba3b49..610f531b0b 100644
    --section-highlight-background-color: color-mix(in srgb, var(--in-content-accent-color) 20%, transparent);
  }
 -- 
-2.34.1
+2.35.1
 

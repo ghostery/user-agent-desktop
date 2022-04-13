@@ -23,5 +23,5 @@ index fde5776868..4892a7af09 100644
  
      if (AppConstants.NIGHTLY_BUILD) {
 -- 
-2.34.1
+2.35.1
 

@@ -1,0 +1,49 @@
+From: Sam Macbeth <sam@cliqz.com>
+Date: Tue, 22 Sep 2020 11:50:13 +0200
+Subject: Clean up preferences
+
+---
+ browser/themes/shared/preferences/preferences.css | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+
+diff --git a/browser/themes/shared/preferences/preferences.css b/browser/themes/shared/preferences/preferences.css
+index 8b110d3eed..56eec39892 100644
+--- a/browser/themes/shared/preferences/preferences.css
++++ b/browser/themes/shared/preferences/preferences.css
+@@ -25,6 +25,10 @@ body {
+   }
+ }
+ 
++#homeContentsGroup {
++  display: none;
++}
++
+ #preferences-root {
+   text-rendering: optimizeLegibility;
+ }
+@@ -152,6 +156,7 @@ checkbox {
+ }
+ 
+ .learnMore {
++  display: none;
+   margin-inline-start: 0;
+   font-weight: normal;
+   white-space: nowrap;
+@@ -1214,6 +1219,14 @@ richlistitem .text-link:hover {
+   margin-inline-start: 6px;
+ }
+ 
++#category-more-from-mozilla {
++  display: none;
++}
++
++#category-home {
++  display: none;
++}
++
+ #moreFromMozillaCategory-header .title {
+   margin-block-end: 4px;
+ }
+-- 
+2.35.1
+
