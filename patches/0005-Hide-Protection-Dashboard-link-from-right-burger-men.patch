@@ -8,7 +8,7 @@ Subject: Hide Protection Dashboard link from right burger menu
  2 files changed, 4 insertions(+)
 
 diff --git a/browser/base/content/appmenu-viewcache.inc.xhtml b/browser/base/content/appmenu-viewcache.inc.xhtml
-index 266c0e5a47..f001bef60e 100644
+index 29269b96ee..b700c48ef0 100644
 --- a/browser/base/content/appmenu-viewcache.inc.xhtml
 +++ b/browser/base/content/appmenu-viewcache.inc.xhtml
 @@ -25,6 +25,7 @@
@@ -28,10 +28,10 @@ index 266c0e5a47..f001bef60e 100644
                       class="subviewbutton"
                       data-l10n-id="appmenuitem-new-tab"
 diff --git a/browser/base/content/navigator-toolbox.inc.xhtml b/browser/base/content/navigator-toolbox.inc.xhtml
-index 74104ac893..ceeb5318b9 100644
+index 256ee8ee74..c58c5f4316 100644
 --- a/browser/base/content/navigator-toolbox.inc.xhtml
 +++ b/browser/base/content/navigator-toolbox.inc.xhtml
-@@ -171,6 +171,7 @@
+@@ -175,6 +175,7 @@
                   class="chromeclass-toolbar-additional"/>
              <!-- Use onclick instead of normal popup= syntax since the popup
                   code fires onmousedown, and hence eats our favicon drag events. -->
@@ -39,7 +39,7 @@ index 74104ac893..ceeb5318b9 100644
              <box id="tracking-protection-icon-container" align="center"
                   role="button"
                   onclick="gProtectionsHandler.handleProtectionsButtonEvent(event);"
-@@ -185,6 +186,7 @@
+@@ -189,6 +190,7 @@
                  <description id="tracking-protection-icon-tooltip-label" class="tooltip-label"/>
                </tooltip>
              </box>
@@ -48,5 +48,5 @@ index 74104ac893..ceeb5318b9 100644
                   pageproxystate="invalid"
                   ondragstart="gIdentityHandler.onDragStart(event);">
 -- 
-2.34.1
+2.35.1
 

@@ -8,7 +8,7 @@ Subject: Custom brand styling on new private window
  2 files changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/browser/components/privatebrowsing/content/aboutPrivateBrowsing.html b/browser/components/privatebrowsing/content/aboutPrivateBrowsing.html
-index 10ee1d8f95..5d1a44547d 100644
+index ec0c5f2121..0a91c1dcf7 100644
 --- a/browser/components/privatebrowsing/content/aboutPrivateBrowsing.html
 +++ b/browser/components/privatebrowsing/content/aboutPrivateBrowsing.html
 @@ -13,6 +13,7 @@
@@ -20,10 +20,10 @@ index 10ee1d8f95..5d1a44547d 100644
      <link rel="localization" href="browser/branding/brandings.ftl"/>
      <link rel="localization" href="browser/aboutPrivateBrowsing.ftl"/>
 diff --git a/browser/themes/shared/tabs.inc.css b/browser/themes/shared/tabs.inc.css
-index bd615298e7..1a7237a5f1 100644
+index d3b4d3fe8f..fc5729c672 100644
 --- a/browser/themes/shared/tabs.inc.css
 +++ b/browser/themes/shared/tabs.inc.css
-@@ -24,7 +24,7 @@
+@@ -19,7 +19,7 @@
    :root {
      /* --tabpanel-background-color matches $in-content-page-background in newtab
         (browser/components/newtab/content-src/styles/_variables.scss) */
@@ -33,5 +33,5 @@ index bd615298e7..1a7237a5f1 100644
  }
  
 -- 
-2.34.1
+2.35.1
 

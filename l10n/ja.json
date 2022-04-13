@@ -130,7 +130,7 @@
       "string": "In Ghostery’s private browsing mode, your activity will be kept confidential from others who use this device. The following will be automatically erased from Ghostery Dawn at the end of this session: <em>Browsing history</em><em>Search history</em><em>Cookies</em><em>Download history</em>However, files you download will be retained by your device and pages you bookmark will be saved."
     }
   },
-  "browser/profile/bookmarks.inc": {
+  "browser/browser/profile/default-bookmarks.ftl": {
     "ghostery_heading": {
       "string": "Ghostery",
       "context": "Ghostery links folder name"

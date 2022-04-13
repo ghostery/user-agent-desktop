@@ -7,10 +7,10 @@ Subject: OpenURL on buildID changes
  1 file changed, 2 insertions(+), 8 deletions(-)
 
 diff --git a/browser/components/BrowserContentHandler.jsm b/browser/components/BrowserContentHandler.jsm
-index 5b6b5db42d..a443814336 100644
+index 1f57e16413..a1e50cc260 100644
 --- a/browser/components/BrowserContentHandler.jsm
 +++ b/browser/components/BrowserContentHandler.jsm
-@@ -646,13 +646,13 @@ nsBrowserContentHandler.prototype = {
+@@ -658,13 +658,13 @@ nsBrowserContentHandler.prototype = {
              // we may open the startPage in addition to restoring the session.
              willRestoreSession = SessionStartup.isAutomaticRestoreEnabled();
  
@@ -26,7 +26,7 @@ index 5b6b5db42d..a443814336 100644
              ) {
                overridePage = getPostUpdateOverridePage(update, overridePage);
                // Send the update ping to signal that the update was successful.
-@@ -661,12 +661,6 @@ nsBrowserContentHandler.prototype = {
+@@ -673,12 +673,6 @@ nsBrowserContentHandler.prototype = {
  
              overridePage = overridePage.replace("%OLD_VERSION%", old_mstone);
              break;
@@ -40,5 +40,5 @@ index 5b6b5db42d..a443814336 100644
        }
      } catch (ex) {}
 -- 
-2.34.1
+2.35.1
 

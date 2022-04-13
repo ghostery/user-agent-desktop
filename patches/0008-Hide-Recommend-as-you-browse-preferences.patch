@@ -8,10 +8,10 @@ Subject: Hide "Recommend as you browse" preferences
  2 files changed, 9 insertions(+), 9 deletions(-)
 
 diff --git a/browser/components/preferences/main.inc.xhtml b/browser/components/preferences/main.inc.xhtml
-index c537a22888..9b9afbee75 100644
+index 9d17b7be8c..6d8fc8f67f 100644
 --- a/browser/components/preferences/main.inc.xhtml
 +++ b/browser/components/preferences/main.inc.xhtml
-@@ -674,13 +674,13 @@
+@@ -683,13 +683,13 @@
              preference="media.hardwaremediakeys.enabled"/>
      <label id="mediaControlLearnMore" class="learnMore" data-l10n-id="browsing-media-control-learn-more" is="text-link"/>
    </hbox>
@@ -28,10 +28,10 @@ index c537a22888..9b9afbee75 100644
      <checkbox id="cfrRecommendations-features"
              class="tail-with-learn-more"
 diff --git a/browser/components/preferences/main.js b/browser/components/preferences/main.js
-index ceee50df37..3f42f53240 100644
+index ffab8ce2bf..e191fa744f 100644
 --- a/browser/components/preferences/main.js
 +++ b/browser/components/preferences/main.js
-@@ -336,13 +336,13 @@ var gMainPane = {
+@@ -341,13 +341,13 @@ var gMainPane = {
      // listener for future menu changes.
      gMainPane.initDefaultZoomValues();
  
@@ -53,5 +53,5 @@ index ceee50df37..3f42f53240 100644
      if (
        Services.prefs.getBoolPref(
 -- 
-2.34.1
+2.35.1
 

@@ -130,7 +130,7 @@
       "string": "En mode de navigation privée Ghostery, votre activité ne sera pas connue des autres utilisateurs de l'appareil. Les éléments suivants seront automatiquement supprimés de Ghostery Dawn en fin de session : <em>Historique de navigation</em><em>Historique de recherche</em><em>Cookies</em><em>Historique de téléchargement</em>Cependant, les fichiers que vous avez téléchargés seront conservés par votre appareil et les pages pour lesquelles vous avez créé un signet seront enregistrées."
     }
   },
-  "browser/profile/bookmarks.inc": {
+  "browser/browser/profile/default-bookmarks.ftl": {
     "ghostery_heading": {
       "string": "Ghostery",
       "context": "Ghostery links folder name"
