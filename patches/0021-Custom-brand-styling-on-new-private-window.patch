@@ -4,11 +4,11 @@ Subject: Custom brand styling on new private window
 
 ---
  .../privatebrowsing/content/aboutPrivateBrowsing.html           | 1 +
- browser/themes/shared/tabs.inc.css                              | 2 +-
+ browser/themes/shared/tabs.css                                  | 2 +-
  2 files changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/browser/components/privatebrowsing/content/aboutPrivateBrowsing.html b/browser/components/privatebrowsing/content/aboutPrivateBrowsing.html
-index ec0c5f2121..0a91c1dcf7 100644
+index d305799935..56103fbdbe 100644
 --- a/browser/components/privatebrowsing/content/aboutPrivateBrowsing.html
 +++ b/browser/components/privatebrowsing/content/aboutPrivateBrowsing.html
 @@ -13,6 +13,7 @@
@@ -19,19 +19,19 @@ index ec0c5f2121..0a91c1dcf7 100644
      <link rel="localization" href="branding/brand.ftl"/>
      <link rel="localization" href="browser/branding/brandings.ftl"/>
      <link rel="localization" href="browser/aboutPrivateBrowsing.ftl"/>
-diff --git a/browser/themes/shared/tabs.inc.css b/browser/themes/shared/tabs.inc.css
-index d3b4d3fe8f..fc5729c672 100644
---- a/browser/themes/shared/tabs.inc.css
-+++ b/browser/themes/shared/tabs.inc.css
-@@ -19,7 +19,7 @@
-   :root {
-     /* --tabpanel-background-color matches $in-content-page-background in newtab
-        (browser/components/newtab/content-src/styles/_variables.scss) */
--    --tabpanel-background-color: #2B2A33;
-+    --tabpanel-background-color: #36393f;
-   }
- }
- 
+diff --git a/browser/themes/shared/tabs.css b/browser/themes/shared/tabs.css
+index 65eb052999..1d08cb278a 100644
+--- a/browser/themes/shared/tabs.css
++++ b/browser/themes/shared/tabs.css
+@@ -8,7 +8,7 @@
+   --tab-min-height: 36px;
+   --inline-tab-padding: 8px;
+   /* Value for --in-content-page-background in in-content/common.inc.css */
+-  --tabpanel-background-color: #f9f9fa;
++  --tabpanel-background-color: #36393f;
+   --tab-border-radius: 4px;
+   --tab-shadow-max-size: 6px;
+   --tab-block-margin: 4px;
 -- 
-2.35.1
+2.36.0
 

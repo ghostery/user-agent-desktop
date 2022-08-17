@@ -168,11 +168,11 @@ index 782b860a67..1a7e7ac918 100644
        "suggest_url": "https://ac.duckduckgo.com/ac/",
        "suggest_url_get_params": "q={searchTerms}&type=list"
 diff --git a/browser/components/search/extensions/ecosia/manifest.json b/browser/components/search/extensions/ecosia/manifest.json
-index 15837ed91e..0e223c7082 100644
+index 59ea5c0b83..4d2c43c9e7 100644
 --- a/browser/components/search/extensions/ecosia/manifest.json
 +++ b/browser/components/search/extensions/ecosia/manifest.json
 @@ -5,7 +5,7 @@
-   "version": "1.0",
+   "version": "1.1",
    "applications": {
      "gecko": {
 -      "id": "ecosia@search.mozilla.org"
@@ -1035,10 +1035,10 @@ index 0000000000..4348f01068
 +  }
 +}
 diff --git a/toolkit/components/search/SearchEngineSelector.jsm b/toolkit/components/search/SearchEngineSelector.jsm
-index 7a9697f1f4..12535a404a 100644
+index 5a409a2391..8d582bdf82 100644
 --- a/toolkit/components/search/SearchEngineSelector.jsm
 +++ b/toolkit/components/search/SearchEngineSelector.jsm
-@@ -95,6 +95,112 @@ class SearchEngineSelector {
+@@ -96,6 +96,112 @@ class SearchEngineSelector {
      this._changeListener = listener;
    }
  
@@ -1152,5 +1152,5 @@ index 7a9697f1f4..12535a404a 100644
     * Handles getting the configuration from remote settings.
     */
 -- 
-2.35.1
+2.36.0
 

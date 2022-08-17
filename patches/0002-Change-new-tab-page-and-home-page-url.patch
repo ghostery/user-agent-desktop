@@ -9,10 +9,10 @@ Subject: Change new tab page and home page url
  3 files changed, 3 insertions(+), 16 deletions(-)
 
 diff --git a/browser/app/profile/firefox.js b/browser/app/profile/firefox.js
-index af9c349671..356ab7191c 100644
+index 04dd3e263a..59d7d6fc0d 100644
 --- a/browser/app/profile/firefox.js
 +++ b/browser/app/profile/firefox.js
-@@ -281,7 +281,7 @@ pref("browser.shell.setDefaultPDFHandler", false);
+@@ -286,7 +286,7 @@ pref("browser.shell.setDefaultPDFHandler.onlyReplaceBrowsers", true);
  // 0 = blank, 1 = home (browser.startup.homepage), 2 = last visited page, 3 = resume previous browser session
  // The behavior of option 3 is detailed at: http://wiki.mozilla.org/Session_Restore
  pref("browser.startup.page",                1);
@@ -22,10 +22,10 @@ index af9c349671..356ab7191c 100644
  pref("browser.startup.homepage.abouthome_cache.enabled", true);
  #else
 diff --git a/browser/components/newtab/AboutNewTabService.jsm b/browser/components/newtab/AboutNewTabService.jsm
-index f3bc40019f..1c16200a65 100644
+index 1dd6be9e01..3432f1ace9 100644
 --- a/browser/components/newtab/AboutNewTabService.jsm
 +++ b/browser/components/newtab/AboutNewTabService.jsm
-@@ -420,20 +420,7 @@ class BaseAboutNewTabService {
+@@ -422,20 +422,7 @@ class BaseAboutNewTabService {
     * the newtab page has no effect on the result of this function.
     */
    get defaultURL() {
@@ -48,10 +48,10 @@ index f3bc40019f..1c16200a65 100644
  
    get welcomeURL() {
 diff --git a/browser/modules/HomePage.jsm b/browser/modules/HomePage.jsm
-index f73b0f3e6c..6535b4ae13 100644
+index 5a21f7067e..4b034440d0 100644
 --- a/browser/modules/HomePage.jsm
 +++ b/browser/modules/HomePage.jsm
-@@ -21,7 +21,7 @@ XPCOMUtils.defineLazyModuleGetters(this, {
+@@ -23,7 +23,7 @@ XPCOMUtils.defineLazyModuleGetters(lazy, {
  });
  
  const kPrefName = "browser.startup.homepage";
@@ -61,5 +61,5 @@ index f73b0f3e6c..6535b4ae13 100644
    "browser.startup.homepage_override.extensionControlled";
  const kHomePageIgnoreListId = "homepage-urls";
 -- 
-2.35.1
+2.36.0
 

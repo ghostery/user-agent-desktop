@@ -9,10 +9,10 @@ Subject: Remove tracking protection panel from url bar
  3 files changed, 15 insertions(+), 15 deletions(-)
 
 diff --git a/browser/base/content/browser-siteIdentity.js b/browser/base/content/browser-siteIdentity.js
-index a0987058af..a88ab960ec 100644
+index 81458c6a6e..77d38e33a3 100644
 --- a/browser/base/content/browser-siteIdentity.js
 +++ b/browser/base/content/browser-siteIdentity.js
-@@ -901,10 +901,10 @@ var gIdentityHandler = {
+@@ -899,10 +899,10 @@ var gIdentityHandler = {
      }
  
      // Hide the shield icon if it is a chrome page.
@@ -28,10 +28,10 @@ index a0987058af..a88ab960ec 100644
  
    /**
 diff --git a/browser/base/content/browser.js b/browser/base/content/browser.js
-index f42dca1f56..4c74607566 100644
+index f59f732f92..68546780a3 100644
 --- a/browser/base/content/browser.js
 +++ b/browser/base/content/browser.js
-@@ -1929,7 +1929,7 @@ var gBrowserInit = {
+@@ -1936,7 +1936,7 @@ var gBrowserInit = {
  
      BookmarkingUI.init();
      BrowserSearch.delayedStartupInit();
@@ -40,7 +40,7 @@ index f42dca1f56..4c74607566 100644
      HomePage.delayedStartup().catch(Cu.reportError);
  
      let safeMode = document.getElementById("helpSafeMode");
-@@ -2505,7 +2505,7 @@ var gBrowserInit = {
+@@ -2540,7 +2540,7 @@ var gBrowserInit = {
        Services.prefs.removeObserver(ctrlTab.prefName, ctrlTab);
        ctrlTab.uninit();
        gBrowserThumbnails.uninit();
@@ -49,7 +49,7 @@ index f42dca1f56..4c74607566 100644
        FullZoom.destroy();
  
        Services.obs.removeObserver(gIdentityHandler, "perm-changed");
-@@ -5206,7 +5206,7 @@ var XULBrowserWindow = {
+@@ -5241,7 +5241,7 @@ var XULBrowserWindow = {
      const nsIWebProgressListener = Ci.nsIWebProgressListener;
  
      let browser = gBrowser.selectedBrowser;
@@ -58,7 +58,7 @@ index f42dca1f56..4c74607566 100644
  
      if (
        aStateFlags & nsIWebProgressListener.STATE_START &&
-@@ -5400,7 +5400,7 @@ var XULBrowserWindow = {
+@@ -5439,7 +5439,7 @@ var XULBrowserWindow = {
  
      gPermissionPanel.onLocationChange();
  
@@ -67,7 +67,7 @@ index f42dca1f56..4c74607566 100644
  
      BrowserPageActions.onLocationChange();
  
-@@ -5590,12 +5590,12 @@ var XULBrowserWindow = {
+@@ -5629,12 +5629,12 @@ var XULBrowserWindow = {
        );
      }
  
@@ -87,10 +87,10 @@ index f42dca1f56..4c74607566 100644
      // We need the state of the previous content blocking event, so update
      // event after onContentBlockingEvent is called.
 diff --git a/browser/base/content/browser.xhtml b/browser/base/content/browser.xhtml
-index 2c20aab751..e8f216d483 100644
+index 85acb258e2..75659e1b1c 100644
 --- a/browser/base/content/browser.xhtml
 +++ b/browser/base/content/browser.xhtml
-@@ -66,7 +66,7 @@
+@@ -70,7 +70,7 @@
    <link rel="localization" href="browser/browserContext.ftl"/>
    <link rel="localization" href="browser/browserSets.ftl"/>
    <link rel="localization" href="browser/menubar.ftl"/>
@@ -100,5 +100,5 @@ index 2c20aab751..e8f216d483 100644
    <link rel="localization" href="browser/panelUI.ftl"/>
    <link rel="localization" href="preview/interventions.ftl"/>
 -- 
-2.35.1
+2.36.0
 

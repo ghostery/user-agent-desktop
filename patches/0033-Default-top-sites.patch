@@ -447,7 +447,7 @@ index 82764a0527..7d8fd3f75a 100644
    }
  ]
 diff --git a/browser/components/newtab/lib/DefaultSites.jsm b/browser/components/newtab/lib/DefaultSites.jsm
-index 9bb9ef66ce..9494826954 100644
+index f52cab278d..a0fca2cb14 100644
 --- a/browser/components/newtab/lib/DefaultSites.jsm
 +++ b/browser/components/newtab/lib/DefaultSites.jsm
 @@ -4,6 +4,7 @@
@@ -465,8 +465,8 @@ index 9bb9ef66ce..9494826954 100644
 +*/
 +const DEFAULT_SITES_MAP = new Map([["", "https://www.ghostery.com/,https://whotracks.me/,https://privacytools.io/,https://alternativeto.net/,https://addons.mozilla.org"]]);
  
- this.EXPORTED_SYMBOLS = ["DEFAULT_SITES"];
+ const EXPORTED_SYMBOLS = ["DEFAULT_SITES"];
  
 -- 
-2.35.1
+2.36.0
 

@@ -8,7 +8,7 @@ Subject: Firefox profile import
  2 files changed, 324 insertions(+), 18 deletions(-)
 
 diff --git a/browser/components/migration/FirefoxProfileMigrator.jsm b/browser/components/migration/FirefoxProfileMigrator.jsm
-index bba617374f..ab7d30b6d2 100644
+index ca5acd1ced..b95e25c6ec 100644
 --- a/browser/components/migration/FirefoxProfileMigrator.jsm
 +++ b/browser/components/migration/FirefoxProfileMigrator.jsm
 @@ -17,6 +17,7 @@ const { MigrationUtils, MigratorPrototype } = ChromeUtils.import(
@@ -17,9 +17,9 @@ index bba617374f..ab7d30b6d2 100644
  const { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
 +const { NetUtil } = ChromeUtils.import("resource://gre/modules/NetUtil.jsm");
  
- ChromeUtils.defineModuleGetter(
-   this,
-@@ -40,6 +41,76 @@ ChromeUtils.defineModuleGetter(
+ const lazy = {};
+ 
+@@ -42,6 +43,76 @@ ChromeUtils.defineModuleGetter(
    "resource://gre/modules/ProfileAge.jsm"
  );
  
@@ -96,7 +96,7 @@ index bba617374f..ab7d30b6d2 100644
  function FirefoxProfileMigrator() {
    this.wrappedJSObject = this; // for testing...
  }
-@@ -47,22 +118,45 @@ function FirefoxProfileMigrator() {
+@@ -49,22 +120,45 @@ function FirefoxProfileMigrator() {
  FirefoxProfileMigrator.prototype = Object.create(MigratorPrototype);
  
  FirefoxProfileMigrator.prototype._getAllProfiles = function() {
@@ -157,7 +157,7 @@ index bba617374f..ab7d30b6d2 100644
  };
  
  function sorter(a, b) {
-@@ -101,7 +195,12 @@ FirefoxProfileMigrator.prototype.getResources = function(aProfile) {
+@@ -103,7 +197,12 @@ FirefoxProfileMigrator.prototype.getResources = function(aProfile) {
  
    // Being a startup-only migrator, we can rely on
    // MigrationUtils.profileStartup being set.
@@ -171,7 +171,7 @@ index bba617374f..ab7d30b6d2 100644
  
    // Surely data cannot be imported from the current profile.
    if (sourceProfileDir.equals(currentProfileDir)) {
-@@ -153,6 +252,210 @@ FirefoxProfileMigrator.prototype._getResourcesInternal = function(
+@@ -155,6 +254,210 @@ FirefoxProfileMigrator.prototype._getResourcesInternal = function(
      Services.prefs.savePrefFile(newPrefsFile);
    }
  
@@ -382,7 +382,7 @@ index bba617374f..ab7d30b6d2 100644
    let types = MigrationUtils.resourceTypes;
    let places = getFileResource(types.HISTORY, [
      "places.sqlite",
-@@ -370,7 +673,7 @@ FirefoxProfileMigrator.prototype._getResourcesInternal = function(
+@@ -378,7 +681,7 @@ FirefoxProfileMigrator.prototype._getResourcesInternal = function(
  };
  
  Object.defineProperty(FirefoxProfileMigrator.prototype, "startupOnlyMigrator", {
@@ -412,5 +412,5 @@ index 0dbf8f66c6..9c7a1ab207 100644
      if CONFIG["ENABLE_TESTS"]:
          DIRS += [
 -- 
-2.35.1
+2.36.0
 

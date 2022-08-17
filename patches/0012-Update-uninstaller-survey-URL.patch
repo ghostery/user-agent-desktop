@@ -7,10 +7,10 @@ Subject: Update uninstaller survey URL
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/browser/installer/windows/nsis/uninstaller.nsi b/browser/installer/windows/nsis/uninstaller.nsi
-index 05988982a1..600a8e568f 100755
+index 4869ecd6c4..cf653a2451 100755
 --- a/browser/installer/windows/nsis/uninstaller.nsi
 +++ b/browser/installer/windows/nsis/uninstaller.nsi
-@@ -150,7 +150,7 @@ OutFile "helper.exe"
+@@ -151,7 +151,7 @@ OutFile "helper.exe"
  !endif
  ShowUnInstDetails nevershow
  
@@ -20,5 +20,5 @@ index 05988982a1..600a8e568f 100755
  ; Support for the profile refresh feature
  !define URLProfileRefreshHelp "https://support.mozilla.org/kb/refresh-firefox-reset-add-ons-and-settings"
 -- 
-2.35.1
+2.36.0
 

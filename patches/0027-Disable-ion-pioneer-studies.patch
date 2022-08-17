@@ -4,24 +4,24 @@ Subject: Disable ion / pioneer studies
 
 fix #358
 ---
- browser/components/BrowserGlue.jsm | 2 ++
- 1 file changed, 2 insertions(+)
+ browser/components/BrowserGlue.jsm | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/browser/components/BrowserGlue.jsm b/browser/components/BrowserGlue.jsm
-index fde5776868..4892a7af09 100644
+index 64ac529d54..3e7d25ab96 100644
 --- a/browser/components/BrowserGlue.jsm
 +++ b/browser/components/BrowserGlue.jsm
-@@ -2362,8 +2362,10 @@ BrowserGlue.prototype = {
+@@ -2341,8 +2341,8 @@ BrowserGlue.prototype = {
      this._monitorScreenshotsPref();
      this._monitorWebcompatReporterPref();
      this._monitorHTTPSOnlyPref();
-+    /*
-     this._monitorIonPref();
-     this._monitorIonStudies();
-+    */
+-    this._monitorIonPref();
+-    this._monitorIonStudies();
++    // this._monitorIonPref();
++    // this._monitorIonStudies();
      this._setupSearchDetection();
  
-     if (AppConstants.NIGHTLY_BUILD) {
+     this._monitorGPCPref();
 -- 
-2.35.1
+2.36.0
 

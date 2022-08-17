@@ -7,18 +7,18 @@ Subject: OpenURL on buildID changes
  1 file changed, 2 insertions(+), 8 deletions(-)
 
 diff --git a/browser/components/BrowserContentHandler.jsm b/browser/components/BrowserContentHandler.jsm
-index 1f57e16413..a1e50cc260 100644
+index 47647e8e91..6ccd150c02 100644
 --- a/browser/components/BrowserContentHandler.jsm
 +++ b/browser/components/BrowserContentHandler.jsm
-@@ -658,13 +658,13 @@ nsBrowserContentHandler.prototype = {
+@@ -688,13 +688,13 @@ nsBrowserContentHandler.prototype = {
              // we may open the startPage in addition to restoring the session.
-             willRestoreSession = SessionStartup.isAutomaticRestoreEnabled();
+             willRestoreSession = lazy.SessionStartup.isAutomaticRestoreEnabled();
  
 +          case OVERRIDE_NEW_BUILD_ID:
              overridePage = Services.urlFormatter.formatURLPref(
                "startup.homepage_override_url"
              );
-             let update = UpdateManager.readyUpdate;
+             let update = lazy.UpdateManager.readyUpdate;
              if (
 -              update &&
 -              Services.vc.compare(update.appVersion, old_mstone) > 0
@@ -26,19 +26,19 @@ index 1f57e16413..a1e50cc260 100644
              ) {
                overridePage = getPostUpdateOverridePage(update, overridePage);
                // Send the update ping to signal that the update was successful.
-@@ -673,12 +673,6 @@ nsBrowserContentHandler.prototype = {
+@@ -703,12 +703,6 @@ nsBrowserContentHandler.prototype = {
  
              overridePage = overridePage.replace("%OLD_VERSION%", old_mstone);
              break;
 -          case OVERRIDE_NEW_BUILD_ID:
--            if (UpdateManager.readyUpdate) {
+-            if (lazy.UpdateManager.readyUpdate) {
 -              // Send the update ping to signal that the update was successful.
--              UpdatePing.handleUpdateSuccess(old_mstone, old_buildId);
+-              lazy.UpdatePing.handleUpdateSuccess(old_mstone, old_buildId);
 -            }
 -            break;
          }
        }
      } catch (ex) {}
 -- 
-2.35.1
+2.36.0
 

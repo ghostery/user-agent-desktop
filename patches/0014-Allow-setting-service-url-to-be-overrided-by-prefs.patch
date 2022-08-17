@@ -7,20 +7,20 @@ Subject: Allow setting service url to be overrided by prefs
  1 file changed, 1 insertion(+), 3 deletions(-)
 
 diff --git a/services/settings/Utils.jsm b/services/settings/Utils.jsm
-index f91e5dcb67..db0d7948be 100644
+index 23d6bf1a20..57f2a7d84d 100644
 --- a/services/settings/Utils.jsm
 +++ b/services/settings/Utils.jsm
-@@ -88,9 +88,7 @@ function _isUndefined(value) {
+@@ -103,9 +103,7 @@ function _isUndefined(value) {
  
  var Utils = {
    get SERVER_URL() {
--    return allowServerURLOverride
--      ? gServerURL
--      : "https://firefox.settings.services.mozilla.com/v1";
-+    return gServerURL;
+-    return lazy.allowServerURLOverride
+-      ? lazy.gServerURL
+-      : AppConstants.REMOTE_SETTINGS_SERVER_URL;
++    return lazy.gServerURL;
    },
  
    CHANGES_PATH: "/buckets/monitor/collections/changes/changeset",
 -- 
-2.35.1
+2.36.0
 
