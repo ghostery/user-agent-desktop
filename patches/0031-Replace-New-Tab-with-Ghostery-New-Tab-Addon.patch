@@ -21,13 +21,13 @@ index af2c367e1f..5447fd1a2a 100644
      let policy = ExtensionParent.WebExtensionPolicy.getByID(extensionId);
      Services.prefs.setBoolPref(
 diff --git a/browser/components/urlbar/UrlbarInput.jsm b/browser/components/urlbar/UrlbarInput.jsm
-index 250b6f65ce..4804223698 100644
+index 15a255e54f..7bd94501a7 100644
 --- a/browser/components/urlbar/UrlbarInput.jsm
 +++ b/browser/components/urlbar/UrlbarInput.jsm
-@@ -358,6 +358,13 @@ class UrlbarInput {
- 
-       valid =
-         !this.window.isBlankPageURL(uri.spec) || uri.schemeIs("moz-extension");
+@@ -367,6 +367,13 @@ class UrlbarInput {
+         !dueToSessionRestore &&
+         (!this.window.isBlankPageURL(uri.spec) ||
+           uri.schemeIs("moz-extension"));
 +      try {
 +        const { WebExtensionPolicy } = Cu.getGlobalForObject(Services);
 +        const policy = WebExtensionPolicy.getByURI(uri);
@@ -39,5 +39,5 @@ index 250b6f65ce..4804223698 100644
        this.window.isInitialPage(value) &&
        BrowserUIUtils.checkEmptyPageOrigin(this.window.gBrowser.selectedBrowser)
 -- 
-2.35.1
+2.36.0
 

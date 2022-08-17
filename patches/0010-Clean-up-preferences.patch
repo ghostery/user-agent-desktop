@@ -7,7 +7,7 @@ Subject: Clean up preferences
  1 file changed, 13 insertions(+)
 
 diff --git a/browser/themes/shared/preferences/preferences.css b/browser/themes/shared/preferences/preferences.css
-index 8b110d3eed..56eec39892 100644
+index 97d49620f1..7d2204d8b3 100644
 --- a/browser/themes/shared/preferences/preferences.css
 +++ b/browser/themes/shared/preferences/preferences.css
 @@ -25,6 +25,10 @@ body {
@@ -29,7 +29,7 @@ index 8b110d3eed..56eec39892 100644
    margin-inline-start: 0;
    font-weight: normal;
    white-space: nowrap;
-@@ -1214,6 +1219,14 @@ richlistitem .text-link:hover {
+@@ -1226,6 +1231,14 @@ richlistitem .text-link:hover {
    margin-inline-start: 6px;
  }
  
@@ -45,5 +45,5 @@ index 8b110d3eed..56eec39892 100644
    margin-block-end: 4px;
  }
 -- 
-2.35.1
+2.36.0
 

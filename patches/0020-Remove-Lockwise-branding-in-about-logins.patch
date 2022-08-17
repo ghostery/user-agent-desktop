@@ -4,15 +4,15 @@ Subject: Remove Lockwise branding in about:logins
 
 ---
  browser/components/aboutlogins/content/aboutLogins.html       | 4 ++++
- .../components/aboutlogins/content/components/login-intro.js  | 2 ++
+ .../components/aboutlogins/content/components/login-intro.mjs | 2 ++
  browser/themes/shared/preferences/privacy.css                 | 4 ++++
  3 files changed, 10 insertions(+)
 
 diff --git a/browser/components/aboutlogins/content/aboutLogins.html b/browser/components/aboutlogins/content/aboutLogins.html
-index 3f8a99410e..0032217128 100644
+index 76bf16d52d..2bf04e71b8 100644
 --- a/browser/components/aboutlogins/content/aboutLogins.html
 +++ b/browser/components/aboutlogins/content/aboutLogins.html
-@@ -240,6 +240,7 @@
+@@ -238,6 +238,7 @@
        <img class="illustration" src="chrome://browser/content/aboutlogins/icons/intro-illustration.svg"/>
        <h1 class="heading" data-l10n-id="about-logins-login-intro-heading-logged-out2"></h1>
        <section>
@@ -20,7 +20,7 @@ index 3f8a99410e..0032217128 100644
          <p class="description" data-l10n-id="login-intro-description"></p>
          <ul>
            <li data-l10n-id="login-intro-instructions-fxa"></li>
-@@ -248,13 +249,16 @@
+@@ -246,13 +247,16 @@
              <a data-l10n-name="passwords-help-link" class="intro-help-link" target="_blank" rel="noreferrer"></a>
            </li>
          </ul>
@@ -37,10 +37,10 @@ index 3f8a99410e..0032217128 100644
        </section>
      </template>
  
-diff --git a/browser/components/aboutlogins/content/components/login-intro.js b/browser/components/aboutlogins/content/components/login-intro.js
+diff --git a/browser/components/aboutlogins/content/components/login-intro.mjs b/browser/components/aboutlogins/content/components/login-intro.mjs
 index 682ddb32d8..49fc0a7be1 100644
---- a/browser/components/aboutlogins/content/components/login-intro.js
-+++ b/browser/components/aboutlogins/content/components/login-intro.js
+--- a/browser/components/aboutlogins/content/components/login-intro.mjs
++++ b/browser/components/aboutlogins/content/components/login-intro.mjs
 @@ -49,12 +49,14 @@ export default class LoginIntro extends HTMLElement {
      this.shadowRoot
        .querySelector(".illustration")
@@ -72,5 +72,5 @@ index f9bcba3b49..610f531b0b 100644
    --section-highlight-background-color: color-mix(in srgb, var(--in-content-accent-color) 20%, transparent);
  }
 -- 
-2.35.1
+2.36.0
 

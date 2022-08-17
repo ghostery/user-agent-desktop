@@ -7,7 +7,7 @@ Subject: Fix Windows hidpi issue
  1 file changed, 2 insertions(+)
 
 diff --git a/browser/app/splash.rc b/browser/app/splash.rc
-index a5d418e812..c406b79850 100644
+index 259a8068c3..862b919ac6 100644
 --- a/browser/app/splash.rc
 +++ b/browser/app/splash.rc
 @@ -6,6 +6,8 @@
@@ -20,5 +20,5 @@ index a5d418e812..c406b79850 100644
  IDI_DOCUMENT ICON DOCUMENT_ICO
  IDI_APPLICATION ICON FIREFOX_ICO
 -- 
-2.35.1
+2.36.0
 

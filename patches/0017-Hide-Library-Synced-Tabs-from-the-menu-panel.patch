@@ -3,14 +3,14 @@ Date: Thu, 24 Sep 2020 14:05:20 +0200
 Subject: Hide Library -> Synced Tabs from the menu panel
 
 ---
- browser/themes/shared/menupanel.inc.css | 5 +++++
+ browser/themes/shared/menupanel.css | 5 +++++
  1 file changed, 5 insertions(+)
 
-diff --git a/browser/themes/shared/menupanel.inc.css b/browser/themes/shared/menupanel.inc.css
-index 4629e5e868..ed7132d3ca 100644
---- a/browser/themes/shared/menupanel.inc.css
-+++ b/browser/themes/shared/menupanel.inc.css
-@@ -23,3 +23,8 @@
+diff --git a/browser/themes/shared/menupanel.css b/browser/themes/shared/menupanel.css
+index e20b3cfaa4..8440a3496a 100644
+--- a/browser/themes/shared/menupanel.css
++++ b/browser/themes/shared/menupanel.css
+@@ -25,3 +25,8 @@
  #appMenu-fullscreen-button2[checked] {
    list-style-image: url(chrome://browser/skin/fullscreen-exit.svg);
  }
@@ -20,5 +20,5 @@ index 4629e5e868..ed7132d3ca 100644
 +  display: none;
 +}
 -- 
-2.35.1
+2.36.0
 

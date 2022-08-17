@@ -15,11 +15,11 @@ X
  create mode 100644 toolkit/mozapps/extensions/default-theme/experiment10.css
 
 diff --git a/toolkit/modules/LightweightThemeConsumer.jsm b/toolkit/modules/LightweightThemeConsumer.jsm
-index cbf84ffe39..0ee18c3024 100644
+index a12dfc7746..f80f2c9db3 100644
 --- a/toolkit/modules/LightweightThemeConsumer.jsm
 +++ b/toolkit/modules/LightweightThemeConsumer.jsm
-@@ -29,7 +29,7 @@ ChromeUtils.defineModuleGetter(
-   "resource://gre/modules/PrivateBrowsingUtils.jsm"
+@@ -41,7 +41,7 @@ XPCOMUtils.defineLazyPreferenceGetter(
+   false
  );
  
 -const DEFAULT_THEME_ID = "default-theme@mozilla.org";
@@ -368,10 +368,10 @@ index 5f62671c5f..151b48adf7 100644
    }
  }
 diff --git a/toolkit/mozapps/extensions/internal/XPIProvider.jsm b/toolkit/mozapps/extensions/internal/XPIProvider.jsm
-index 50b85a7b5c..9bf1f8b2f1 100644
+index 39fa8b4208..d881484d00 100644
 --- a/toolkit/mozapps/extensions/internal/XPIProvider.jsm
 +++ b/toolkit/mozapps/extensions/internal/XPIProvider.jsm
-@@ -2510,7 +2510,7 @@ var XPIProvider = {
+@@ -2518,7 +2518,7 @@ var XPIProvider = {
        }
        this.maybeInstallBuiltinAddon(
          "default-theme@mozilla.org",
@@ -380,7 +380,7 @@ index 50b85a7b5c..9bf1f8b2f1 100644
          "resource://default-theme/"
        );
  
-@@ -2689,6 +2689,10 @@ var XPIProvider = {
+@@ -2697,6 +2697,10 @@ var XPIProvider = {
        logger.error("startup failed", e);
        AddonManagerPrivate.recordException("XPI", "startup failed", e);
      }
@@ -391,7 +391,7 @@ index 50b85a7b5c..9bf1f8b2f1 100644
    },
  
    /**
-@@ -2962,6 +2966,20 @@ var XPIProvider = {
+@@ -2977,6 +2981,20 @@ var XPIProvider = {
      return installed;
    },
  
@@ -400,17 +400,17 @@ index 50b85a7b5c..9bf1f8b2f1 100644
 +      let existing = BuiltInLocation.get(aID);
 +      if (existing) {
 +        (async () => {
-+          const addon = await XPIDatabase.getVisibleAddonForID(aID);
++          const addon = await lazy.XPIDatabase.getVisibleAddonForID(aID);
 +          XPIStates.removeAddon(XPIInternal.BuiltInLocation, addon);
 +          XPIStates.save();
-+          XPIDatabase.removeAddonMetadata(addon);
++          lazy.XPIDatabase.removeAddonMetadata(addon);
 +        })();
 +      }
 +    }
 +  },
 +
    getDependentAddons(aAddon) {
-     return Array.from(XPIDatabase.getAddons()).filter(addon =>
+     return Array.from(lazy.XPIDatabase.getAddons()).filter(addon =>
        addon.dependencies.includes(aAddon.id)
 diff --git a/toolkit/mozapps/extensions/jar.mn b/toolkit/mozapps/extensions/jar.mn
 index 58f25876f2..d8d8008b39 100644
@@ -423,5 +423,5 @@ index 58f25876f2..d8d8008b39 100644
 +  content/mozapps/extensions/default-theme/experiment10.css      (default-theme/experiment10.css)
  #endif
 -- 
-2.35.1
+2.36.0
 
