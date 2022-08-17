@@ -1,10 +1,10 @@
 {
   "addons": {
-    "ghostery": "https://github.com/ghostery/ghostery-extension/releases/download/v8.7.5/ghostery-dawn-v8.7.5.zip",
+    "ghostery": "https://github.com/ghostery/ghostery-extension/releases/download/v8.6.0/ghostery-dawn-v8.6.0.zip",
     "ghostery-search": "https://github.com/ghostery/ghostery-search-extension/releases/download/v1.0.2/ghostery_glow-1.0.2.zip",
     "ghostery-newtab": "https://github.com/ghostery/ghostery-newtab-extension/releases/download/v0.5.1/ghostery_new_tab-0.5.1.zip",
     "ghostery-insights": "https://s3.amazonaws.com/ghostery-deployments/ghostery-insights/0.7.7/ghostery-insights-firefox-v0.7.7.xpi",
-    "ghostery-dawn-onboarding-extension": "https://github.com/ghostery/ghostery-dawn-onboarding-extension/releases/download/v1.0.4/ghostery_dawn_onboarding-1.0.4.zip"
+    "ghostery-dawn-onboarding-extension": "https://github.com/ghostery/ghostery-dawn-onboarding-extension/releases/download/v1.1.0/ghostery_dawn_onboarding-1.1.0.zip"
   },
   "firefoxAddons": [
     "screenshots",
@@ -12,8 +12,8 @@
     "pictureinpicture",
     "report-site-issue"
   ],
-  "firefox": "99.0",
-  "app": "2022.4.1",
+  "firefox": "103.0.2",
+  "app": "2022.8",
   "s3bucket": "ghostery-user-agent-cache-public",
   "locales": {
     "de": "3aa060a4eb096bff283d9672f6983375367d5a6f",
