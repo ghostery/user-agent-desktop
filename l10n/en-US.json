@@ -248,11 +248,6 @@
       "string": "Stay in Ghost Mode"
     }
   },
-  "devtools/client/performance.dtd": {
-    "performanceUI.unavailableNoticePB": {
-      "string": "Recording a profile is currently unavailable. Please close all Ghost Mode windows and try again."
-    }
-  },
   "browser/chrome/browser/tabbrowser.properties": {
     "tabs.closeWarningMultipleSessionRestore2": {
       "string": ";You are about to close #1 tabs. Tabs in non-Ghost Mode windows will be restored when you restart. Are you sure you want to continue?"
