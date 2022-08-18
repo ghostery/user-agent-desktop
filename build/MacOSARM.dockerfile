@@ -68,12 +68,6 @@ RUN wget -nv -O /builds/worker/fetches/sysroot-x86_64-linux-gnu.tar.zst https://
     tar -xf sysroot-x86_64-linux-gnu.tar.zst && \
     rm sysroot-x86_64-linux-gnu.tar.zst
 
-COPY MacOSX10.12.sdk.tar.bz2 /builds/worker/fetches/
-
-RUN cd /builds/worker/fetches/ && \
-    tar -xf MacOSX10.12.sdk.tar.bz2 && \
-    rm MacOSX10.12.sdk.tar.bz2
-
 COPY MacOSX11.0.sdk.tar.bz2 /builds/worker/fetches/
 
 RUN cd /builds/worker/fetches/ && \
