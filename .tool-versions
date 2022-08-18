@@ -1,2 +1,4 @@
 nodejs 14.17.1
 awscli 2.4.13
+rust 1.59.0
+python 3.9.13
