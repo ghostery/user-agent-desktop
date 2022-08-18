@@ -9,7 +9,6 @@ def build(opts, Closure postpackage={}, Closure archiving={}) {
 
         stage('prepare') {
             download('makecab.exe')
-            download('MacOSX10.12.sdk.tar.bz2')
             download('MacOSX11.0.sdk.tar.bz2')
         }
 
@@ -38,7 +37,6 @@ def build(opts, Closure postpackage={}, Closure archiving={}) {
                 }
 
                 dir('mozilla-release') {
-                    sh 'rm -f `pwd`/MacOSX10.12.sdk; ln -s /builds/worker/fetches/MacOSX10.12.sdk `pwd`/MacOSX10.12.sdk'
                     sh 'rm -f `pwd`/MacOSX11.0.sdk; ln -s /builds/worker/fetches/MacOSX11.0.sdk `pwd`/MacOSX11.0.sdk'
 
                     if (opts.PGO) {
