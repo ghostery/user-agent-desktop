@@ -13,6 +13,7 @@ const MOZ_FETCHES_DIR = "/builds/worker/fetches/";
 
 const SKIP_TOOLCHAINS = new Set([
   "win64-pdbstr",
+  "win64-vs2017",
   "macosx64-sdk-11.0",
   "macosx64-sdk-10.12",
 ]);
@@ -236,7 +237,7 @@ async function generate(artifactBaseDir) {
       const jobs = yaml.safeLoad(
         await fs.promises.readFile(buildPath, "utf-8")
       );
-      if (jobs["job-defaults"]) {
+      if (jobs["job-defaults"] && jobs["job-defaults"].fetches && jobs["job-defaults"].fetches.toolchain) {
         for (const toolchain of jobs["job-defaults"].fetches.toolchain) {
           jobs[key].fetches.toolchain.push(toolchain);
         }
