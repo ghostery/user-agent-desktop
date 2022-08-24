@@ -27,7 +27,7 @@ def build(opts, Closure postpackage={}, Closure archiving={}) {
             "MH_BRANCH=${env.BRANCH_NAME}",
             "MOZ_SOURCE_CHANGESET=${triggeringCommitHash}",
         ]
-        def dockerOpts = "-v /mnt/vfat/vs2017_15.9.29/:/builds/worker/fetches/vs2017_15.9.29"
+        def dockerOpts = "-v /mnt/vfat/vs/:/builds/worker/fetches/vs"
         def buildEnv = opts.buildEnv ?: []
 
         image.inside(dockerOpts) {

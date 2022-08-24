@@ -722,7 +722,7 @@ def withMach(platform, task) {
     def image = docker.image("ua-build-${settings.name.toLowerCase()}")
 
     image.inside(
-        '-v /mnt/vfat/vs2017_15.9.29/:/builds/worker/fetches/vs2017_15.9.29'
+        '-v /mnt/vfat/vs/:/builds/worker/fetches/vs'
     ) {
         withEnv([
             "MACH_USE_SYSTEM_PYTHON=1",

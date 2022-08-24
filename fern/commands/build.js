@@ -286,7 +286,7 @@ module.exports = (program) => {
           {
             title: "Check Windows 10 SDK exists",
             task: async () => {
-              const sdk = "vs2017_15.9.29.zip";
+              const sdk = "vs.tar.zstd";
               if ((await fileExists(path.join(buildFolder, sdk))) === false) {
                 throw new Error(
                   `Windows 10 SDK must be available at build/${sdk}`
@@ -320,16 +320,16 @@ module.exports = (program) => {
           },
           {
             title: "Extract Windows 10 SDK to VFAT Drive",
-            skip: () => folderExists("/mnt/vfat/vs2017_15.9.29"),
+            skip: () => folderExists("/mnt/vfat/vs"),
             task: async () => {
-              const vs2017 = "vs2017_15.9.29.zip";
+              const vs = "vs.tar.zstd";
               await fsExtra.copy(
-                path.join(buildFolder, vs2017),
-                `/mnt/vfat/${vs2017}`
+                path.join(buildFolder, vs),
+                `/mnt/vfat/${vs}`
               );
               await withCwd("/mnt/vfat", async () => {
-                await execa("unzip", [vs2017]);
-                await execa("rm", [vs2017]);
+                await execa("unzip", [vs]);
+                await execa("rm", [vs]);
               });
             },
           },
@@ -344,7 +344,7 @@ module.exports = (program) => {
                 out: logWriter,
                 registerCleanupTask,
                 Binds: [
-                  "/mnt/vfat/vs2017_15.9.29/:/builds/worker/fetches/vs2017_15.9.29",
+                  "/mnt/vfat/vs/:/builds/worker/fetches/vs",
                   `${path.join(
                     buildFolder,
                     "makecab.exe"
