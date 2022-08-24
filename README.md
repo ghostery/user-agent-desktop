@@ -66,7 +66,7 @@ we provide dockerised builds. These can be run using the `fern.js build` command
 Windows and Mac builds depend on platform frameworks being included. These should be placed in the
 `build` directory:
  * Mac: `MacOSX11.0.sdk.tar.bz2`. This can be found inside an XCode install.
- * Windows: `vs2017_15.8.4.zip` and `Makecab.exe`. See the end of this document to where to find these.
+ * Windows: `vs.tar.zstd` and `Makecab.exe`. See the end of this document to where to find these.
 
 ## Development workflow
 
@@ -137,13 +137,13 @@ Alternatively, the `build-*` scripts in this repo will prepare docker images wit
 
 ## Prerequisites
 
-### VS2017 Redist
+### VS Redist
 
 This can be built on windows after setting up a build environment as per [these instructions](https://firefox-source-docs.mozilla.org/setup/windows_build.html#building-firefox-on-windows).
-You will need to install the Windows 10 SDK at version `10.0.17134.0`. Then run the following to create `vs2017_15.8.4.zip`:
+You will need to install the Windows 10 SDK at version `10.0.19041.0`. Then run the following to create `vs.tar.zstd`:
 
 ```bash
-./mach python build/windows_toolchain.py create-zip vs2017_15.8.4
+./mach python --virtualenv build ./build/vs/pack_vs.py -o vs.tar.zstd ./build/vs/vs2017.yaml
 ```
 
 ### Makecab.exe
