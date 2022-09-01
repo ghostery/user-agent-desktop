@@ -95,7 +95,7 @@ html.private {
     "main sidebar";
   padding: 0;
   padding-inline-start: 0;
-  background-image: none;
+  background-image: none !important;
 }
 
 .info > h1 {
@@ -171,4 +171,8 @@ html.private {
 
 .info > #private-browsing-myths:hover strong {
   color: white;
+}
+
+.promo {
+  display: none !important;
 }
