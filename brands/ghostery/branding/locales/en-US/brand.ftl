@@ -7,4 +7,4 @@
 -brand-full-name = Ghostery Dawn
 -brand-product-name = Ghostery
 -vendor-short-name = Ghostery GmbH
-trademarkInfo = Ghostery and the Ghostery logos are trademarks of the Ghostery Inc.
+trademarkInfo = Ghostery and the Ghostery logos are trademarks of the Ghostery GmbH.
