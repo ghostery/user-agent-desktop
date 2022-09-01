@@ -21,10 +21,10 @@ index a12dfc7746..f80f2c9db3 100644
 @@ -41,7 +41,7 @@ XPCOMUtils.defineLazyPreferenceGetter(
    false
  );
- 
+
 -const DEFAULT_THEME_ID = "default-theme@mozilla.org";
 +const DEFAULT_THEME_ID = "__DOES_NOT_APPLY__"; // in Ghostery Browser default theme is a lightweight theme
- 
+
  // On Linux, the default theme picks up the right colors from dark GTK themes.
  const DEFAULT_THEME_RESPECTS_SYSTEM_COLOR_SCHEME =
 diff --git a/toolkit/mozapps/extensions/default-theme/experiment10.css b/toolkit/mozapps/extensions/default-theme/experiment10.css
@@ -297,7 +297,7 @@ index 5f62671c5f..151b48adf7 100644
 @@ -7,17 +7,14 @@
      }
    },
- 
+
 -  "name": "System theme — auto",
 -  "description": "Follow the operating system setting for buttons, menus, and windows.",
 -  "author": "Mozilla",
@@ -306,9 +306,9 @@ index 5f62671c5f..151b48adf7 100644
 +  "description": "",
 +  "author": "Ghostery",
 +  "version": "1.10",
- 
+
    "icons": {"32": "icon.svg"},
- 
+
    "theme": {
 -  },
 -
@@ -337,7 +337,7 @@ index 5f62671c5f..151b48adf7 100644
        "toolbar_text": "rgb(251, 251, 254)",
 @@ -69,30 +66,6 @@
    },
- 
+
    "theme_experiment": {
 -    "colors": {
 -      "button": "--button-bgcolor",
@@ -379,7 +379,7 @@ index 39fa8b4208..d881484d00 100644
 +        "1.10",
          "resource://default-theme/"
        );
- 
+
 @@ -2697,6 +2697,10 @@ var XPIProvider = {
        logger.error("startup failed", e);
        AddonManagerPrivate.recordException("XPI", "startup failed", e);
@@ -389,14 +389,14 @@ index 39fa8b4208..d881484d00 100644
 +    this.maybeUninstallBuiltinAddon("firefox-compact-dark@mozilla.org");
 +    this.maybeUninstallBuiltinAddon("firefox-alpenglow@mozilla.org");
    },
- 
+
    /**
 @@ -2977,6 +2981,20 @@ var XPIProvider = {
      return installed;
    },
- 
+
 +  async maybeUninstallBuiltinAddon(aID) {
-+    if (enabledScopes & BuiltInLocation.scope) {
++    if (lazy.enabledScopes & BuiltInLocation.scope) {
 +      let existing = BuiltInLocation.get(aID);
 +      if (existing) {
 +        (async () => {
@@ -422,6 +422,6 @@ index 58f25876f2..d8d8008b39 100644
    content/mozapps/extensions/default-theme/manifest.json        (default-theme/manifest.json)
 +  content/mozapps/extensions/default-theme/experiment10.css      (default-theme/experiment10.css)
  #endif
--- 
+--
 2.36.0
 
