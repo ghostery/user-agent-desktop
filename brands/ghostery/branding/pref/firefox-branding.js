@@ -15,7 +15,7 @@ pref("app.update.interval", 86400); // 24 hours
 pref("app.update.promptWaitTime", 86400);
 // URL user can browse to manually if for some reason all update installation
 // attempts fail.
-pref("app.update.url.manual", "https://www.ghostery.com/download/");
+pref("app.update.url.manual", "https://www.ghostery.com/dawn/");
 // A default value for the "More information about this update" link
 // supplied in the "An update is available" page of the update wizard.
 pref("app.update.url.details", "https://www.ghostery.com/%LOCALE%/browser/notes");
