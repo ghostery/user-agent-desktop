@@ -24,7 +24,7 @@
 0024-Allow-update-channel-to-be-configured-via-prefs.patch
 0025-Update-text-on-about-license.patch
 0026-Hide-addon-recommendation-badge.patch
-0027-Disable-ion-pioneer-studies.patch
+0027-Disable-ion-pioneer-studies-search-detection.patch
 0028-Hide-learn-more-link-on-network-error-pages.patch
 0029-OpenURL-on-buildID-changes.patch
 0030-Ignore-the-glinter.patch

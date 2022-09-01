@@ -1,0 +1,43 @@
+From: Krzysztof Jan Modras <chrmod@chrmod.net>
+Date: Wed, 18 Nov 2020 13:52:24 +0100
+Subject: Disable ion / pioneer studies / search detection
+
+fix #358
+---
+ browser/components/BrowserGlue.jsm                  | 6 +++---
+ toolkit/mozapps/extensions/internal/XPIProvider.jsm | 2 +-
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/browser/components/BrowserGlue.jsm b/browser/components/BrowserGlue.jsm
+index 64ac529d54..686ef931fa 100644
+--- a/browser/components/BrowserGlue.jsm
++++ b/browser/components/BrowserGlue.jsm
+@@ -2341,9 +2341,9 @@ BrowserGlue.prototype = {
+     this._monitorScreenshotsPref();
+     this._monitorWebcompatReporterPref();
+     this._monitorHTTPSOnlyPref();
+-    this._monitorIonPref();
+-    this._monitorIonStudies();
+-    this._setupSearchDetection();
++    // this._monitorIonPref();
++    // this._monitorIonStudies();
++    // this._setupSearchDetection();
+ 
+     this._monitorGPCPref();
+     this._monitorPrivacySegmentationPref();
+diff --git a/toolkit/mozapps/extensions/internal/XPIProvider.jsm b/toolkit/mozapps/extensions/internal/XPIProvider.jsm
+index d881484d00..bf6061cdb2 100644
+--- a/toolkit/mozapps/extensions/internal/XPIProvider.jsm
++++ b/toolkit/mozapps/extensions/internal/XPIProvider.jsm
+@@ -2982,7 +2982,7 @@ var XPIProvider = {
+   },
+ 
+   async maybeUninstallBuiltinAddon(aID) {
+-    if (enabledScopes & BuiltInLocation.scope) {
++    if (lazy.enabledScopes & BuiltInLocation.scope) {
+       let existing = BuiltInLocation.get(aID);
+       if (existing) {
+         (async () => {
+-- 
+2.37.2
+
