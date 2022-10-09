@@ -81,10 +81,19 @@ pref("network.cookie.sameSite.noneRequiresSecure", true); // FF 105=false
 
 
 /** OCSP & CERTS / HPKP ***/
-// CRLite
-// This will reduce the number of times an OCSP server needs to be contacted and therefore increase privacy.
+// enable CRLite
+// CRLite covers valid certs, and it doesn't fall back to OCSP in mode 2 [FF84+]
+// [1] https://bugzilla.mozilla.org/buglist.cgi?bug_id=1429800,1670985,1753071
+// [2] https://blog.mozilla.org/security/tag/crlite/
+// 2 = consult CRLite and enforce both "Revoked" and "Not Revoked" results
+// 3 = consult CRLite and enforce "Not Revoked" results, but defer to OCSP for "Revoked" [DEFAULT FF100+]
 pref("security.pki.crlite_mode", 2);
 pref("security.remote_settings.crlite_filters.enabled", true);
+
+// disable OCSP fetching to confirm current validity of certificates
+// [SETTING] Privacy & Security>Security>Certificates>Query OCSP responder servers...
+// 0=disabled, 1=enabled (default), 2=enabled for EV certificates only
+user_pref("security.OCSP.enabled", 0); // [DEFAULT: 1]
 
 
 /** TLS ***/
