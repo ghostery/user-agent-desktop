@@ -228,6 +228,10 @@ pref("browser.safebrowsing.downloads.remote.enabled", false);
 
 
 /** MOZILLA ***/
+// SITE PERMISSIONS
+// 0=always ask (default), 1=allow, 2=block
+pref("permissions.default.desktop-notification", 2);
+
 // GEOLOCATION
 // Geolocation URL (see #187, #405)
 //pref("geo.provider.network.url", "https://location.services.mozilla.com/v1/geolocate?key=%MOZILLA_API_KEY%");
@@ -249,12 +253,7 @@ pref("full-screen-api.warning.delay", 0);
 pref("full-screen-api.warning.timeout", 0);
 
 
-/** DOWNLOADS ***/
-// always ask where to download
-pref("browser.download.useDownloadDir", false);
-
-
-/** VARIOUS ***/
+/** URL BAR ***/
 // Dropdown options in the URL bar
 pref("browser.urlbar.suggest.bookmark", true);
 pref("browser.urlbar.suggest.engines", false);
@@ -262,12 +261,24 @@ pref("browser.urlbar.suggest.history", true);
 pref("browser.urlbar.suggest.openpage", false);
 pref("browser.urlbar.suggest.searches", false);
 pref("browser.urlbar.suggest.topsites", false);
+// enable features in URL bar
+pref("browser.urlbar.suggest.calculator", true);
+pref("browser.urlbar.unitConversion.enabled", true);
 
-// Default permission for Notifications
-// To add site exceptions: Page Info>Permissions>Receive Notifications.
-// To manage site exceptions: Options>Privacy & Security>Permissions>Notifications>Settings.
-// 0=always ask (default), 1=allow, 2=block
-pref("permissions.default.desktop-notification", 2);
+
+/** DOWNLOADS ***/
+// always ask where to download
+pref("browser.download.useDownloadDir", false);
+// 
+pref("browser.download.alwaysOpenPanel", false);
+//
+pref("browser.download.always_ask_before_handling_new_types", true);
+
+
+** PDF ***/
+pref("pdfjs.annotationEditorEnabled", true);
+pref("browser.download.open_pdf_attachments_inline", true);
+
 
 // Show all matches in Findbar
 pref("findbar.highlightAll", true);
@@ -275,10 +286,15 @@ pref("findbar.highlightAll", true);
 
 /** TAB BEHAVIOR ***/
 // Prevent scripts from moving and resizing open windows
+pref("browser.link.open_newwindow.restriction", 0);
 pref("dom.disable_window_move_resize", true);
 
+// load bookmarks in tabs
+pref("browser.tabs.loadBookmarksInTabs", true);
+// keep bookmark sidebar open after selecting navigation
+//pref("browser.bookmarks.openInTabClosesMenu", false);
+
 // Prevent password truncation when submitting form data
-// [1] https://www.ghacks.net/2020/05/18/firefox-77-wont-truncate-text-exceeding-max-length-to-address-password-pasting-issues/
 pref("editor.truncate_user_pastes", false);
 
 // Plain Text only when copying text
