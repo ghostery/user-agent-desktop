@@ -49,11 +49,21 @@ pref("layout.css.animation-composition.enabled", true);
 // enable Query Stripping
 pref("privacy.query_stripping.enabled", true);
 // We set the same query stripping list that Brave and LibreWolf uses:
+// [1] https://gitlab.com/librewolf-community/settings/-/blob/master/librewolf.cfg#L80
 pref("privacy.query_stripping.strip_list", "__hsfp __hssc __hstc __s _hsenc _openstat dclid fbclid gbraid gclid hsCtaTracking igshid mc_eid ml_subscriber ml_subscriber_hash msclkid oft_c oft_ck oft_d oft_id oft_ids oft_k oft_lk oft_sk oly_anon_id oly_enc_id rb_clickid s_cid twclid vero_conv vero_id wbraid wickedid yclid");
 
+// Referer: ignore ‘unsafe-url’, ‘no-referrer-when-downgrade’ and ‘origin-when-cross-origin’ for cross-site requests
+pref("network.http.referer.disallowCrossSiteRelaxingDefault.top_navigation", true);
+// network paritioning: OCSP cache
+pref("privacy.partition.network_state.ocsp_cache", true);
 // enable APS (Always Partitioning Storage) [FF104+]
 pref("privacy.partition.always_partition_third_party_non_cookie_storage", true);
 pref("privacy.partition.always_partition_third_party_non_cookie_storage.exempt_sessionstorage", false);
+
+// Smartblock
+// [1] https://support.mozilla.org/en-US/kb/smartblock-enhanced-tracking-protection
+// [2] https://searchfox.org/mozilla-central/source/browser/extensions/webcompat/data/shims.js
+//user_pref("extensions.webcompat.enable_shims", true);
 
 // Disable sending additional analytics to web servers
 pref("beacon.enabled", false);
