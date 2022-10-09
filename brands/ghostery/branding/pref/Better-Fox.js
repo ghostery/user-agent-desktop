@@ -174,9 +174,9 @@ pref("network.dns.skipTRR-when-parental-control-enabled", false);
 
 
 /** PROXY / SOCKS / IPv6 ***/
-user_pref("network.proxy.socks_remote_dns", true);
-user_pref("network.file.disable_unc_paths", true);
-user_pref("network.gio.supported-protocols", "");
+pref("network.proxy.socks_remote_dns", true);
+pref("network.file.disable_unc_paths", true);
+pref("network.gio.supported-protocols", "");
 
 
 /** PASSWORDS AND AUTOFILL ***/
