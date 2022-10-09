@@ -65,7 +65,7 @@ pref("privacy.partition.always_partition_third_party_non_cookie_storage.exempt_s
 // Respect adblockers
 // [1] https://support.mozilla.org/en-US/kb/smartblock-enhanced-tracking-protection
 // [2] https://searchfox.org/mozilla-central/source/browser/extensions/webcompat/data/shims.js
-//user_pref("extensions.webcompat.enable_shims", true);
+pref("extensions.webcompat.enable_shims", true);
 
 // Disable sending additional analytics to web servers
 pref("beacon.enabled", false);
