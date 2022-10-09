@@ -62,10 +62,6 @@ pref("beacon.enabled", false);
 // [NIGHTLY]
 pref("privacy.webrtc.globalMuteToggles", true);
 
-// Redirect Tracking Prevention
-// Doesn't due anything since Dawn disables FF ETP
-pref("privacy.purge_trackers.enabled", false);
-
 // Samesite Cookies
 pref("network.cookie.sameSite.laxByDefault", true); // FF 105=false
 pref("network.cookie.sameSite.noneRequiresSecure", true); // FF 105=false
