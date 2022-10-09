@@ -303,13 +303,10 @@ pref("findbar.highlightAll", true);
 
 /** TAB BEHAVIOR ***/
 // Prevent scripts from moving and resizing open windows
-pref("browser.link.open_newwindow.restriction", 0);
 pref("dom.disable_window_move_resize", true);
 
 // load bookmarks in tabs
 pref("browser.tabs.loadBookmarksInTabs", true);
-// keep bookmark sidebar open after selecting navigation
-//pref("browser.bookmarks.openInTabClosesMenu", false);
 
 // Prevent password truncation when submitting form data
 pref("editor.truncate_user_pastes", false);
