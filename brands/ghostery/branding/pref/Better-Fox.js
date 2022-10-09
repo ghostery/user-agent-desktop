@@ -64,13 +64,12 @@ pref("privacy.webrtc.globalMuteToggles", true);
 
 // Redirect Tracking Prevention
 // Doesn't due anything since Dawn disables FF ETP
-// https://github.com/yokoffing/Better-Fox/blob/77128d3d49ba371cb428209c053c35135ba3e4b8/SecureFox.js#L79-L86
 pref("privacy.purge_trackers.enabled", false);
 
 // Samesite Cookies
 pref("network.cookie.sameSite.laxByDefault", true); // FF 105=false
 pref("network.cookie.sameSite.noneRequiresSecure", true); // FF 105=false
-pref("network.cookie.sameSite.schemeful", true); // FF DEFAULT FF92+
+//pref("network.cookie.sameSite.schemeful", true); // FF DEFAULT FF92+
 
 
 /** OCSP & CERTS / HPKP ***/
@@ -80,7 +79,7 @@ pref("security.pki.crlite_mode", 2);
 pref("security.remote_settings.crlite_filters.enabled", true);
 
 
-/** SSL / TLS ***/
+/** TLS ***/
 pref("security.ssl.treat_unsafe_negotiation_as_broken", true);
 pref("browser.xul.error_pages.expert_bad_cert", true);
 pref("security.tls.enable_0rtt_data", false);
@@ -97,19 +96,28 @@ pref("privacy.cpd.cache", true); // Cache
 pref("privacy.cpd.cookies", true); // Cookies
 pref("privacy.cpd.sessions", true); // Active Logins
 pref("privacy.cpd.siteSettings", false); // Site Preferences
-// Reset default 'Time range to clear' for 'Clear Recent History'.
-// Firefox remembers your last choice. This will reset the value when you start Firefox.
+
+// default 'Time range to clear' for 'Clear Recent History'.
 // 0=everything, 1=last hour, 2=last two hours, 3=last four hours, 4=today
 pref("privacy.sanitize.timeSpan", 0);
 
 
 /** FONTS ***/
-pref("layout.css.font-visibility.private", 1);
+// limit font visibility (font fingerprinting)
+// [1] https://searchfox.org/mozilla-central/search?path=StandardFonts*.inc
+// 1=only base system fonts, 2=also fonts from optional language packs, 3=also user-installed fonts
+pref("layout.css.font-visibility.private", 1); // Private Browsing windows
+//pref("layout.css.font-visibility.standard", 1); // Normal Browsing windows with FF ETP disabled
 
 
 /** DISK AVOIDANCE ***/
+// disable media cache from writing to disk in Private Browsing
 pref("browser.privatebrowsing.forceMediaMemoryCache", true);
-pref("media.memory_cache_max_size", 65536);
+pref("media.memory_cache_max_size", 65536); // 8x default size of 8192 [performance enhancement]
+
+// disable storing extra session data
+// Whether sites save extra session data such as form content, cookies and POST data
+// 0=everywhere, 1=unencrypted sites, 2=nowhere
 pref("browser.sessionstore.privacy_level", 2);
 pref("browser.pagethumbnails.capturing_disabled", true);
 
@@ -180,11 +188,12 @@ pref("network.gio.supported-protocols", "");
 
 
 /** PASSWORDS AND AUTOFILL ***/
-// 
+// disable formless login capture
+// [1] https://bugzilla.mozilla.org/show_bug.cgi?id=1166947
 pref("signon.formlessCapture.enabled", false);
-// Autofilling saved passwords on HTTP pages
+// autofilling saved passwords on HTTP pages
 pref("signon.autofillForms.http", false);
-// Capturing credentials in private browsing
+// disable capturing credentials in private browsing
 pref("signon.privateBrowsingCapture.enabled", false);
 
 
@@ -193,13 +202,16 @@ pref("signon.privateBrowsingCapture.enabled", false);
 // 1=don't allow cross-origin sub-resources to open HTTP authentication credentials dialogs
 pref("network.auth.subresource-http-auth-allow", 1);
 
-// disable PDFs running scripts
+// deny PDFs to load javascript
 pref("pdfjs.enableScripting", false);
 
 // 3rd party extension install prompts
 pref("extensions.postDownloadThirdPartyPrompt", false);
 
-// 
+// Applies to cross-origin geolocation, camera, mic and screen-sharing
+// permissions, and fullscreen requests. Disabling delegation means any prompts
+// for these will show/use their correct 3rd party origin.
+// [1] https://groups.google.com/forum/#!topic/mozilla.dev.platform/BdFOMAuCGW8/discussion
 pref("permissions.delegation.enabled", false);
 
 
@@ -211,6 +223,7 @@ pref("network.http.referer.XOriginTrimmingPolicy", 2);
 
 
 /** CONTAINERS ***/
+// enable Containers UI
 pref("privacy.userContext.ui.enabled", true);
 
 
@@ -268,10 +281,10 @@ pref("browser.urlbar.unitConversion.enabled", true);
 
 /** DOWNLOADS ***/
 // always ask where to download
+// [SETTING] General>Downloads>Always ask you where to save files
 pref("browser.download.useDownloadDir", false);
-// 
-pref("browser.download.alwaysOpenPanel", false);
-//
+// enable user interaction for security by always asking how to handle new mimetypes
+// [SETTING] General>Files and Applications>What should Firefox do with other files
 pref("browser.download.always_ask_before_handling_new_types", true);
 
 
