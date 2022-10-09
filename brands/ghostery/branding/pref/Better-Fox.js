@@ -261,6 +261,11 @@ pref("permissions.default.desktop-notification", 2);
 /****************************************************************************
  * SECTION: PESKYFOX                                                        *
 ****************************************************************************/
+/** UI ***/
+// Show all matches in Findbar
+pref("findbar.highlightAll", true);
+
+
 /** FULLSCREEN ***/
 // transition time (instant)
 pref("full-screen-api.transition-duration.enter", "0 0");
@@ -295,10 +300,6 @@ pref("browser.download.always_ask_before_handling_new_types", true);
 ** PDF ***/
 pref("pdfjs.annotationEditorEnabled", true);
 pref("browser.download.open_pdf_attachments_inline", true);
-
-
-// Show all matches in Findbar
-pref("findbar.highlightAll", true);
 
 
 /** TAB BEHAVIOR ***/
