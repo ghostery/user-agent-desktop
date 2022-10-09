@@ -46,16 +46,20 @@ pref("layout.css.animation-composition.enabled", true);
  * SECTION: SECUREFOX                                                       *
 ****************************************************************************/
 /** TRACKING PROTECTION ***/
+// enable Query Stripping
+pref("privacy.query_stripping.enabled", true);
+// We set the same query stripping list that Brave and LibreWolf uses:
+pref("privacy.query_stripping.strip_list", "__hsfp __hssc __hstc __s _hsenc _openstat dclid fbclid gbraid gclid hsCtaTracking igshid mc_eid ml_subscriber ml_subscriber_hash msclkid oft_c oft_ck oft_d oft_id oft_ids oft_k oft_lk oft_sk oly_anon_id oly_enc_id rb_clickid s_cid twclid vero_conv vero_id wbraid wickedid yclid");
+
+// enable APS (Always Partitioning Storage) [FF104+]
+pref("privacy.partition.always_partition_third_party_non_cookie_storage", true);
+pref("privacy.partition.always_partition_third_party_non_cookie_storage.exempt_sessionstorage", false);
+
 // Disable sending additional analytics to web servers
 pref("beacon.enabled", false);
 
-// CRLite
-// This will reduce the number of times an OCSP server needs to be contacted and therefore increase privacy.
-pref("security.pki.crlite_mode", 2);
-pref("security.remote_settings.crlite_filters.enabled", true);
-
 // Microphone and camera kill switch (#370)
-// [EXPERIMENTAL]
+// [NIGHTLY]
 pref("privacy.webrtc.globalMuteToggles", true);
 
 // Redirect Tracking Prevention
@@ -66,7 +70,20 @@ pref("privacy.purge_trackers.enabled", false);
 // Samesite Cookies
 pref("network.cookie.sameSite.laxByDefault", true); // FF 105=false
 pref("network.cookie.sameSite.noneRequiresSecure", true); // FF 105=false
-pref("network.cookie.sameSite.schemeful", true);
+pref("network.cookie.sameSite.schemeful", true); // FF DEFAULT FF92+
+
+
+/** OCSP & CERTS / HPKP ***/
+// CRLite
+// This will reduce the number of times an OCSP server needs to be contacted and therefore increase privacy.
+pref("security.pki.crlite_mode", 2);
+pref("security.remote_settings.crlite_filters.enabled", true);
+
+
+/** SSL / TLS ***/
+pref("security.ssl.treat_unsafe_negotiation_as_broken", true);
+pref("browser.xul.error_pages.expert_bad_cert", true);
+pref("security.tls.enable_0rtt_data", false);
 
 
 /** CLEARING HISTORY DEFAULTS (MANUALLY) ***/
@@ -86,10 +103,22 @@ pref("privacy.cpd.siteSettings", false); // Site Preferences
 pref("privacy.sanitize.timeSpan", 0);
 
 
+/** FONTS ***/
+pref("layout.css.font-visibility.private", 1);
+
+
+/** DISK AVOIDANCE ***/
+pref("browser.privatebrowsing.forceMediaMemoryCache", true);
+pref("media.memory_cache_max_size", 65536);
+pref("browser.sessionstore.privacy_level", 2);
+pref("browser.pagethumbnails.capturing_disabled", true);
+
+
 /** SPECULATIVE CONNECTIONS ***/
 // Network Predictor
 // https://github.com/yokoffing/Better-Fox/blob/079be70df3e513507dc419c3cce1a413902ada13/SecureFox.js#L184-L195
 pref("network.predictor.enabled", false);
+pref("network.predictor.enable-prefetch", false);
 
 // DNS pre-resolve <link rel="dns-prefetch">
 // https://github.com/yokoffing/Better-Fox/blob/e9535084374c4f379bc20fda945b3236b7723c48/SecureFox.js#L201-L206
@@ -98,6 +127,7 @@ pref("network.dns.disablePrefetch", true);
 // Preconnect to the autocomplete URL in the address bar
 // https://github.com/yokoffing/Better-Fox/blob/079be70df3e513507dc419c3cce1a413902ada13/SecureFox.js#L209-L213
 pref("browser.urlbar.speculativeConnect.enabled", false);
+pref("browser.places.speculativeConnect.enabled", false);
 
 // Link prefetching <link rel="prefetch">
 // https://github.com/yokoffing/Better-Fox/blob/079be70df3e513507dc419c3cce1a413902ada13/SecureFox.js#L216-L225
@@ -108,10 +138,13 @@ pref("network.prefetch-next", false);
 pref("network.http.speculative-parallel-limit", 0);
 
 
-/** SEARCH ***/
+/** SEARCH / URL BAR ***/
 // Enable a seperate search engine for Private Windows
 pref("browser.search.separatePrivateDefault", true);
 pref("browser.search.separatePrivateDefault.ui.enabled", true);
+
+// enable "Add" button under search engine menu
+pref("browser.urlbar.update2.engineAliasRefresh", true);
 
 // Live search engine suggestions (Google, Bing, etc.)
 // Search engines keylog every character you type from the URL bar
@@ -129,7 +162,8 @@ pref("network.IDN_show_punycode", true);
 /** HTTPS-ONLY MODE ***/
 // HTTPS-only connections (#367)
 // Enable HTTPS-only Mode
-// add pref HERE
+pref("dom.security.https_only_mode", true);
+pref("dom.security.https_only_mode_error_page_user_suggestions", true);
 
 
 /** DNS-over-HTTPS (DOH) ***/
@@ -139,7 +173,15 @@ pref("network.trr.mode", 0);
 pref("network.dns.skipTRR-when-parental-control-enabled", false);
 
 
+/** PROXY / SOCKS / IPv6 ***/
+user_pref("network.proxy.socks_remote_dns", true);
+user_pref("network.file.disable_unc_paths", true);
+user_pref("network.gio.supported-protocols", "");
+
+
 /** PASSWORDS AND AUTOFILL ***/
+// 
+pref("signon.formlessCapture.enabled", false);
 // Autofilling saved passwords on HTTP pages
 pref("signon.autofillForms.http", false);
 // Capturing credentials in private browsing
@@ -148,19 +190,33 @@ pref("signon.privateBrowsingCapture.enabled", false);
 
 /** MIXED CONTENT + CROSS-SITE ***/
 // HTTP authentication credentials dialogs triggered by sub-resources
-// 0=don't allow sub-resources to open HTTP authentication credentials dialogs
 // 1=don't allow cross-origin sub-resources to open HTTP authentication credentials dialogs
-// 2=allow sub-resources to open HTTP authentication credentials dialogs (default)
 pref("network.auth.subresource-http-auth-allow", 1);
 
+// disable PDFs running scripts
+pref("pdfjs.enableScripting", false);
+
 // 3rd party extension install prompts
-// [1] https://bugzilla.mozilla.org/buglist.cgi?bug_id=1659530,1681331
 pref("extensions.postDownloadThirdPartyPrompt", false);
 
+// 
+pref("permissions.delegation.enabled", false);
+
+
+/** HEADERS / REFERERS ***/
 // Downgrade Cross-Origin Referers
 // Control the amount of information to send.
 // 0=send full URI (default), 1=scheme+host+port+path, 2=scheme+host+port
 pref("network.http.referer.XOriginTrimmingPolicy", 2);
+
+
+/** CONTAINERS ***/
+pref("privacy.userContext.ui.enabled", true);
+
+
+/** WEBRTC ***/
+pref("media.peerconnection.ice.proxy_only_if_behind_proxy", true);
+pref("media.peerconnection.ice.default_address_only", true);
 
 
 /** GOOGLE SAFE BROWSING (GSB) ***/
@@ -172,9 +228,14 @@ pref("browser.safebrowsing.downloads.remote.enabled", false);
 
 
 /** MOZILLA ***/
+// GEOLOCATION
 // Geolocation URL (see #187, #405)
-// pref("geo.provider.network.url", "https://location.services.mozilla.com/v1/geolocate?key=%MOZILLA_API_KEY%");
-pref("geo.provider.network.logging.enabled", false);
+//pref("geo.provider.network.url", "https://location.services.mozilla.com/v1/geolocate?key=%MOZILLA_API_KEY%");
+//pref("geo.provider.ms-windows-location", false); // WINDOWS
+//pref("geo.provider.use_corelocation", false); // MAC
+//pref("geo.provider.use_gpsd", false); // LINUX
+//pref("geo.provider.use_geoclue", false); // [FF102+] LINUX
+//pref("browser.region.update.enabled", false);
 
 /****************************************************************************
  * SECTION: PESKYFOX                                                        *
@@ -210,6 +271,7 @@ pref("permissions.default.desktop-notification", 2);
 
 // Show all matches in Findbar
 pref("findbar.highlightAll", true);
+
 
 /** TAB BEHAVIOR ***/
 // Prevent scripts from moving and resizing open windows
