@@ -11,19 +11,36 @@
 /****************************************************************************
  * SECTION: FASTFOX                                                         *
 ****************************************************************************/
-// JPEG XL
-// [EXPERIMENTAL]
-pref("image.jxl.enabled", true);
-
 // Lazy session restore
 pref("browser.sessionstore.restore_pinned_tabs_on_demand", true);
 
+// JPEG XL
+// [NIGHTLY]
+pref("image.jxl.enabled", true);
+
 // about:home startup cache
+// [NIGHTLY]
 pref("browser.startup.homepage.abouthome_cache.enabled", true);
 
 // CSS Masonry
-// [EXPERIMENTAL]
+// [NIGHTLY]
 pref("layout.css.grid-template-masonry-value.enabled", true);
+
+// Prioritized Task Scheduling API
+// [NIGHTLY]
+pref("dom.enable_web_task_scheduling", true);
+
+// OffscreenCanvas
+// [NIGHTLY]
+pref("gfx.offscreencanvas.enabled", true);
+
+// CSS Font Loading API in workers
+// [NIGHTLY]
+pref("layout.css.font-loading-api.workers.enabled", true);
+
+// Enable animation-composition
+// [NIGHTLY]
+pref("layout.css.animation-composition.enabled", true);
 
 /****************************************************************************
  * SECTION: SECUREFOX                                                       *
@@ -158,7 +175,6 @@ pref("browser.safebrowsing.downloads.remote.enabled", false);
 // Geolocation URL (see #187, #405)
 // pref("geo.provider.network.url", "https://location.services.mozilla.com/v1/geolocate?key=%MOZILLA_API_KEY%");
 pref("geo.provider.network.logging.enabled", false);
-
 
 /****************************************************************************
  * SECTION: PESKYFOX                                                        *
