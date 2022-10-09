@@ -177,12 +177,6 @@ pref("network.trr.mode", 0);
 pref("network.dns.skipTRR-when-parental-control-enabled", false);
 
 
-/** PROXY / SOCKS / IPv6 ***/
-pref("network.proxy.socks_remote_dns", true);
-pref("network.file.disable_unc_paths", true);
-pref("network.gio.supported-protocols", "");
-
-
 /** PASSWORDS AND AUTOFILL ***/
 // disable formless login capture
 // [1] https://bugzilla.mozilla.org/show_bug.cgi?id=1166947
@@ -224,7 +218,9 @@ pref("privacy.userContext.ui.enabled", true);
 
 
 /** WEBRTC ***/
+// force WebRTC inside the proxy, if one is used
 pref("media.peerconnection.ice.proxy_only_if_behind_proxy", true);
+// when using a system-wide proxy, it uses the proxy interface
 pref("media.peerconnection.ice.default_address_only", true);
 
 
