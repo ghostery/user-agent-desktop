@@ -47,6 +47,7 @@ pref("layout.css.animation-composition.enabled", true);
 ****************************************************************************/
 /** TRACKING PROTECTION ***/
 // enable Query Stripping
+// Ghostery doesn't do this natively
 pref("privacy.query_stripping.enabled", true);
 // We set the same query stripping list that Brave and LibreWolf uses:
 // [1] https://gitlab.com/librewolf-community/settings/-/blob/master/librewolf.cfg#L80
@@ -61,6 +62,7 @@ pref("privacy.partition.always_partition_third_party_non_cookie_storage", true);
 pref("privacy.partition.always_partition_third_party_non_cookie_storage.exempt_sessionstorage", false);
 
 // Smartblock
+// Respect adblockers
 // [1] https://support.mozilla.org/en-US/kb/smartblock-enhanced-tracking-protection
 // [2] https://searchfox.org/mozilla-central/source/browser/extensions/webcompat/data/shims.js
 //user_pref("extensions.webcompat.enable_shims", true);
