@@ -192,3 +192,6 @@ pref("devtools.selfxss.count", 0);
 // Disable "Firefox Suggest"
 pref("browser.urlbar.groupLabels.enabled", false);
 pref("browser.urlbar.quicksuggest.enabled", false);
+
+// Disable "Firefox View" [FF106+]
+pref("browser.tabs.firefox-view", false);
