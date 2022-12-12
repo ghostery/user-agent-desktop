@@ -20,7 +20,7 @@
     "chalk": "^4.1.0",
     "colors": "^1.4.0",
     "commander": "^6.0.0",
-    "dockerode": "^3.2.1",
+    "dockerode": "^3.3.4",
     "eslint": "^7.6.0",
     "execa": "^4.0.3",
     "fs-extra": "^9.0.1",
