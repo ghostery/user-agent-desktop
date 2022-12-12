@@ -17,8 +17,9 @@ stage('Prepare') {
         triggeringCommitHash = sh(returnStdout: true, script: "git log -n 1 --pretty=format:'%h'").trim()
 
         if (params.Clean) {
-            sh 'rm -rf mozilla-release/obj*'
+            sh 'rm -rf mozilla-release'
             sh 'rm -rf .cache'
+            sh 'rm -rf pkg'
         }
 
         download('makecab.exe')
@@ -568,7 +569,20 @@ stage('publish to balrog') {
     if (shouldRelease) {
         node('browser-builder') {
             docker.image('ua-build-base').inside('--dns 1.1.1.1') {
-                def artifacts = sh(returnStdout: true, script: 'find pkg/mars -type f -name *.mar').trim().split("\\r?\\n")
+                def artifacts = [
+                    "pkg/mars/Ghostery-${version}.en-US.linux-x86_64.complete.mar",
+                    "pkg/mars/Ghostery-${version}.de.linux-x86_64.complete.mar",
+                    "pkg/mars/Ghostery-${version}.fr.linux-x86_64.complete.mar",
+                    "pkg/mars/Ghostery-${version}.en-US.mac.complete.mar",
+                    "pkg/mars/Ghostery-${version}.de.mac.complete.mar",
+                    "pkg/mars/Ghostery-${version}.fr.mac.complete.mar",
+                    "pkg/mars/Ghostery-${version}.en-US.win64.complete.mar",
+                    "pkg/mars/Ghostery-${version}.de.win64.complete.mar",
+                    "pkg/mars/Ghostery-${version}.fr.win64.complete.mar",
+                    "pkg/mars/Ghostery-${version}.en-US.win64-aarch64.complete.mar",
+                    "pkg/mars/Ghostery-${version}.de.win64-aarch64.complete.mar",
+                    "pkg/mars/Ghostery-${version}.fr.win64-aarch64.complete.mar",
+                ]
 
                 withCredentials([usernamePassword(
                     credentialsId: 'dd3e97c0-5a9c-4ba9-bf34-f0071f6c3afa',
@@ -576,21 +590,9 @@ stage('publish to balrog') {
                     usernameVariable: 'AUTH0_M2M_CLIENT_ID'
                 )]) {
                     // create release on balrog
-                    sh """
-                        python3 ci/submitter.py release --tag "${params.ReleaseName}" \
-                            --moz-root artifacts/mozilla-release \
-                            --version ${version} \
-                            --display-version "${displayVersion}" \
-                            --client-id "$AUTH0_M2M_CLIENT_ID" \
-                            --client-secret "$AUTH0_M2M_CLIENT_SECRET"
-                    """
-
-                    // publish builds
-                    for(String artifactPath in artifacts) {
+                    retry(3) {
                         sh """
-                            python3 ci/submitter.py build --tag "${params.ReleaseName}" \
-                                --bid "${buildId}" \
-                                --mar "${artifactPath}" \
+                            python3 ci/submitter.py release --tag "${params.ReleaseName}" \
                                 --moz-root artifacts/mozilla-release \
                                 --version ${version} \
                                 --display-version "${displayVersion}" \
@@ -599,16 +601,34 @@ stage('publish to balrog') {
                         """
                     }
 
+                    // publish builds
+                    for(String artifactPath in artifacts) {
+                        retry(3) {
+                            sh """
+                                python3 ci/submitter.py build --tag "${params.ReleaseName}" \
+                                    --bid "${buildId}" \
+                                    --mar "${artifactPath}" \
+                                    --moz-root artifacts/mozilla-release \
+                                    --version ${version} \
+                                    --display-version "${displayVersion}" \
+                                    --client-id "$AUTH0_M2M_CLIENT_ID" \
+                                    --client-secret "$AUTH0_M2M_CLIENT_SECRET"
+                            """
+                        }
+                    }
+
+                    // copy this release to nightly
                     if (params.Nightly) {
-                        // copy this release to nightly
-                        sh """
-                            python3 ci/submitter.py nightly --tag "${params.ReleaseName}" \
-                                --moz-root artifacts/mozilla-release \
-                                --version ${version} \
-                                --display-version "${displayVersion}" \
-                                --client-id "$AUTH0_M2M_CLIENT_ID" \
-                                --client-secret "$AUTH0_M2M_CLIENT_SECRET"
-                        """
+                        retry(3) {
+                            sh """
+                                python3 ci/submitter.py nightly --tag "${params.ReleaseName}" \
+                                    --moz-root artifacts/mozilla-release \
+                                    --version ${version} \
+                                    --display-version "${displayVersion}" \
+                                    --client-id "$AUTH0_M2M_CLIENT_ID" \
+                                    --client-secret "$AUTH0_M2M_CLIENT_SECRET"
+                            """
+                        }
                     }
                 }
             }
