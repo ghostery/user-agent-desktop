@@ -1,6 +1,6 @@
 {
   "addons": {
-    "ghostery": "https://github.com/ghostery/ghostery-extension/releases/download/v8.9.7/ghostery-dawn-v8.9.7.zip",
+    "ghostery": "https://github.com/ghostery/ghostery-extension/releases/download/v8.9.8/ghostery-dawn-v8.9.8.zip",
     "ghostery-search": "https://github.com/ghostery/ghostery-search-extension/releases/download/v1.0.2/ghostery_glow-1.0.2.zip",
     "ghostery-newtab": "https://github.com/ghostery/ghostery-newtab-extension/releases/download/v0.5.1/ghostery_new_tab-0.5.1.zip",
     "ghostery-insights": "https://s3.amazonaws.com/ghostery-deployments/ghostery-insights/0.7.7/ghostery-insights-firefox-v0.7.7.xpi",
@@ -13,7 +13,7 @@
     "report-site-issue"
   ],
   "firefox": "103.0.2",
-  "app": "2022.8.2",
+  "app": "2022.8.3",
   "s3bucket": "ghostery-user-agent-cache-public",
   "locales": {
     "de": "d62917dd21a9c00da91a4be8a6e973c28d4410ef",
