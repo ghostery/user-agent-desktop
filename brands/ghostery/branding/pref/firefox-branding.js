@@ -51,6 +51,7 @@ pref("services.settings.server", "https://get.ghosterybrowser.com/settings/v1");
 pref("browser.contentblocking.category", "custom");
 pref("privacy.trackingprotection.enabled", false);
 pref("privacy.trackingprotection.pbmode.enabled", false);
+pref("privacy.purge_trackers.enabled", false); // Redirect Tracking Prevention; neutered since Dawn disables FF ETP
 pref("privacy.trackingprotection.cryptomining.enabled", false);
 pref("privacy.trackingprotection.fingerprinting.enabled", false);
 pref("privacy.trackingprotection.socialtracking.enabled", false);
@@ -191,3 +192,6 @@ pref("devtools.selfxss.count", 0);
 // Disable "Firefox Suggest"
 pref("browser.urlbar.groupLabels.enabled", false);
 pref("browser.urlbar.quicksuggest.enabled", false);
+
+// Disable "Firefox View" [FF106+]
+pref("browser.tabs.firefox-view", false);
