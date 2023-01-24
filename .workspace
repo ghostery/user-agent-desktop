@@ -12,8 +12,8 @@
     "pictureinpicture",
     "report-site-issue"
   ],
-  "firefox": "103.0.2",
-  "app": "2022.8.3",
+  "firefox": "109.0",
+  "app": "2023.1",
   "s3bucket": "ghostery-user-agent-cache-public",
   "locales": {
     "de": "d62917dd21a9c00da91a4be8a6e973c28d4410ef",

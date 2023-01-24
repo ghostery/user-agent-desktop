@@ -253,14 +253,8 @@
       "string": "L'enregistrement de profil est actuellement indisponible. Veuillez fermer toutes les fenêtres en mode Ghost et réessayer."
     }
   },
-  "browser/chrome/browser/tabbrowser.properties": {
-    "tabs.closeWarningMultipleSessionRestore2": {
-      "string": "Vous êtes sur le point de fermer #1 onglets. Les onglets des fenêtres qui ne sont pas en mode Ghost vont être restaurés au redémarrage. Êtes-vous sûr de vouloir continuer ?"
-    },
-    "tabs.closeWarningMultipleWindowsSessionRestore2": {
-      "string": "Vous êtes sur le point de fermer #1 fenêtres %S. Les onglets dans les fenêtres qui ne sont pas en mode Ghost vont être restaurés au redémarrage. Êtes-vous sûr de vouloir continuer ?"
-    },
-    "tabs.emptyPrivateTabTitle": {
+  "browser/browser/tabbrowser.ftl": {
+    "tabbrowser-empty-private-tab-title": {
       "string": "Mode Fantôme"
     }
   },

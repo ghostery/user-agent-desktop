@@ -253,14 +253,8 @@
       "string": "Derzeit kann kein Profil aufgezeichnet werden. Bitte schließen Sie alle Fenster im Ghost-Modus und versuchen Sie es erneut."
     }
   },
-  "browser/chrome/browser/tabbrowser.properties": {
-    "tabs.closeWarningMultipleSessionRestore2": {
-      "string": "Sie sind dabei, #1 Registerkarten zu schließen. Registerkarten in Fenstern, die nicht im Ghost-Modus sind, werden beim Neustart wiederhergestellt. Möchten Sie wirklich fortfahren?"
-    },
-    "tabs.closeWarningMultipleWindowsSessionRestore2": {
-      "string": "Sie sind dabei, #1 Fenster von %S zu schließen. Registerkarten in Fenstern, die nicht im Ghost-Modus sind, werden beim Neustart wiederhergestellt. Möchten Sie wirklich fortfahren?"
-    },
-    "tabs.emptyPrivateTabTitle": {
+  "browser/browser/tabbrowser.ftl": {
+    "tabbrowser-empty-private-tab-title": {
       "string": "Ghost-Modus"
     }
   },

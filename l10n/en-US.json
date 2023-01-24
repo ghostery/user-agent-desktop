@@ -248,14 +248,8 @@
       "string": "Stay in Ghost Mode"
     }
   },
-  "browser/chrome/browser/tabbrowser.properties": {
-    "tabs.closeWarningMultipleSessionRestore2": {
-      "string": ";You are about to close #1 tabs. Tabs in non-Ghost Mode windows will be restored when you restart. Are you sure you want to continue?"
-    },
-    "tabs.closeWarningMultipleWindowsSessionRestore2": {
-      "string": ";You are about to close #1 windows %S. Tabs in non-Ghost Mode windows will be restored when you restart. Are you sure you want to continue?"
-    },
-    "tabs.emptyPrivateTabTitle": {
+  "browser/browser/tabbrowser.ftl": {
+    "tabbrowser-empty-private-tab-title": {
       "string": "Ghost Mode"
     }
   },
