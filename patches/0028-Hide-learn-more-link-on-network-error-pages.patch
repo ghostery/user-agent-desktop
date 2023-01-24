@@ -3,17 +3,17 @@ Date: Thu, 19 Nov 2020 17:20:16 +0100
 Subject: Hide learn more link on network error pages
 
 ---
- browser/themes/shared/aboutNetError.css | 4 ++++
+ toolkit/themes/shared/aboutNetError.css | 4 ++++
  1 file changed, 4 insertions(+)
 
-diff --git a/browser/themes/shared/aboutNetError.css b/browser/themes/shared/aboutNetError.css
+diff --git a/toolkit/themes/shared/aboutNetError.css b/toolkit/themes/shared/aboutNetError.css
 index 73f9d2760a..d2974dbfdb 100644
---- a/browser/themes/shared/aboutNetError.css
-+++ b/browser/themes/shared/aboutNetError.css
+--- a/toolkit/themes/shared/aboutNetError.css
++++ b/toolkit/themes/shared/aboutNetError.css
 @@ -4,6 +4,10 @@
- 
- @import url("chrome://browser/skin/error-pages.css");
- 
+
+ @import url("chrome://global/skin/error-pages.css");
+
 +#learnMoreLink {
 +  display: none;
 +}
@@ -21,6 +21,6 @@ index 73f9d2760a..d2974dbfdb 100644
  body {
    --warning-color: #ffa436;
  }
--- 
+--
 2.36.0
 
