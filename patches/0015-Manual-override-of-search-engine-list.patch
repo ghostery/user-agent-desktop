@@ -1,3 +1,4 @@
+From 65c04d0b5418cd35b599ae3848de499a0748c544 Mon Sep 17 00:00:00 2001
 From: Sam Macbeth <sam@cliqz.com>
 Date: Mon, 19 Oct 2020 12:13:51 +0200
 Subject: Manual override of search engine list
@@ -11,21 +12,21 @@ Subject: Manual override of search engine list
  .../search/extensions/ekoru/manifest.json     |  27 +++++
  .../search/extensions/gibiru/favicon.ico      | Bin 0 -> 5430 bytes
  .../search/extensions/gibiru/manifest.json    |  27 +++++
- .../google/_locales/b-1-d/messages.json       |   6 +-
- .../google/_locales/b-1-e/messages.json       |   6 +-
- .../google/_locales/b-d/messages.json         |   6 +-
- .../google/_locales/b-e/messages.json         |   6 +-
  .../google/_locales/en/messages.json          |   6 +-
+ .../google/_locales/region-by/messages.json   |   2 +-
+ .../google/_locales/region-kz/messages.json   |   2 +-
+ .../google/_locales/region-ru/messages.json   |   2 +-
+ .../google/_locales/region-tr/messages.json   |   2 +-
  .../search/extensions/google/manifest.json    |   7 +-
  .../search/extensions/onesearch/manifest.json |  24 ++++
  .../onesearch/ui/img/Icon_128x128.png         | Bin 0 -> 3381 bytes
- .../search/extensions/qwant/manifest.json     |   5 +-
+ .../search/extensions/qwant/manifest.json     |   4 +-
  .../search/extensions/startpage/favicon.ico   | Bin 0 -> 1150 bytes
  .../search/extensions/startpage/manifest.json |  27 +++++
  .../search/extensions/yahoo/favicon.ico       | Bin 0 -> 5430 bytes
  .../search/extensions/yahoo/manifest.json     |  27 +++++
- .../search/SearchEngineSelector.jsm           | 106 ++++++++++++++++++
- 22 files changed, 280 insertions(+), 91 deletions(-)
+ .../search/SearchEngineSelector.sys.mjs       | 106 ++++++++++++++++++
+ 22 files changed, 271 insertions(+), 83 deletions(-)
  create mode 100644 browser/components/search/extensions/bing/manifest.json.rej
  create mode 100644 browser/components/search/extensions/ekoru/favicon.ico
  create mode 100644 browser/components/search/extensions/ekoru/manifest.json
@@ -39,12 +40,12 @@ Subject: Manual override of search engine list
  create mode 100644 browser/components/search/extensions/yahoo/manifest.json
 
 diff --git a/browser/components/search/extensions/bing/manifest.json b/browser/components/search/extensions/bing/manifest.json
-index dc8afe1db2..2e0a085b4a 100644
+index fb2c6e90b4..182b769f97 100644
 --- a/browser/components/search/extensions/bing/manifest.json
 +++ b/browser/components/search/extensions/bing/manifest.json
 @@ -5,7 +5,7 @@
-   "version": "1.3",
-   "applications": {
+   "version": "1.4",
+   "browser_specific_settings": {
      "gecko": {
 -      "id": "bing@search.mozilla.org"
 +      "id": "bing@search.ghostery.com"
@@ -99,7 +100,7 @@ index dc8afe1db2..2e0a085b4a 100644
        "suggest_url_get_params": "query={searchTerms}&form=OSDJAS&language={moz:locale}"
 diff --git a/browser/components/search/extensions/bing/manifest.json.rej b/browser/components/search/extensions/bing/manifest.json.rej
 new file mode 100644
-index 0000000000..b53b4b0811
+index 0000000000..e5ca5fd68d
 --- /dev/null
 +++ b/browser/components/search/extensions/bing/manifest.json.rej
 @@ -0,0 +1,14 @@
@@ -110,7 +111,7 @@ index 0000000000..b53b4b0811
 +   "manifest_version": 2,
 +-  "version": "1.2",
 ++  "version": "1.1",
-+   "applications": {
++   "browser_specific_settings": {
 +     "gecko": {
 +-      "id": "bing@search.mozilla.org"
 ++      "id": "bing@search.ghostery.com"
@@ -118,12 +119,12 @@ index 0000000000..b53b4b0811
 +   },
 +   "hidden": true,
 diff --git a/browser/components/search/extensions/ddg/manifest.json b/browser/components/search/extensions/ddg/manifest.json
-index 782b860a67..1a7e7ac918 100644
+index 9c71a9712c..74e0c6942e 100644
 --- a/browser/components/search/extensions/ddg/manifest.json
 +++ b/browser/components/search/extensions/ddg/manifest.json
 @@ -5,7 +5,7 @@
-   "version": "1.1",
-   "applications": {
+   "version": "1.2",
+   "browser_specific_settings": {
      "gecko": {
 -      "id": "ddg@search.mozilla.org"
 +      "id": "ddg@search.ghostery.com"
@@ -168,12 +169,12 @@ index 782b860a67..1a7e7ac918 100644
        "suggest_url": "https://ac.duckduckgo.com/ac/",
        "suggest_url_get_params": "q={searchTerms}&type=list"
 diff --git a/browser/components/search/extensions/ecosia/manifest.json b/browser/components/search/extensions/ecosia/manifest.json
-index 59ea5c0b83..4d2c43c9e7 100644
+index f78efd125f..7885986757 100644
 --- a/browser/components/search/extensions/ecosia/manifest.json
 +++ b/browser/components/search/extensions/ecosia/manifest.json
 @@ -5,7 +5,7 @@
-   "version": "1.1",
-   "applications": {
+   "version": "1.2",
+   "browser_specific_settings": {
      "gecko": {
 -      "id": "ecosia@search.mozilla.org"
 +      "id": "ecosia@search.ghostery.com"
@@ -559,7 +560,7 @@ HcmV?d00001
 
 diff --git a/browser/components/search/extensions/ekoru/manifest.json b/browser/components/search/extensions/ekoru/manifest.json
 new file mode 100644
-index 0000000000..137b096ed6
+index 0000000000..a338bddd77
 --- /dev/null
 +++ b/browser/components/search/extensions/ekoru/manifest.json
 @@ -0,0 +1,27 @@
@@ -568,7 +569,7 @@ index 0000000000..137b096ed6
 +  "description": "Every search helps clean and reforest our oceans",
 +  "manifest_version": 2,
 +  "version": "1.0",
-+  "applications": {
++  "browser_specific_settings": {
 +    "gecko": {
 +      "id": "ekoru@search.ghostery.com"
 +    }
@@ -639,7 +640,7 @@ HcmV?d00001
 
 diff --git a/browser/components/search/extensions/gibiru/manifest.json b/browser/components/search/extensions/gibiru/manifest.json
 new file mode 100644
-index 0000000000..979834a335
+index 0000000000..86afb3eda6
 --- /dev/null
 +++ b/browser/components/search/extensions/gibiru/manifest.json
 @@ -0,0 +1,27 @@
@@ -648,7 +649,7 @@ index 0000000000..979834a335
 +  "description": "This add-on sets gibiru.com as your default search engine.",
 +  "manifest_version": 2,
 +  "version": "1.0",
-+  "applications": {
++  "browser_specific_settings": {
 +    "gecko": {
 +      "id": "gibiru@search.ghostery.com"
 +    }
@@ -670,90 +671,6 @@ index 0000000000..979834a335
 +    }
 +  }
 +}
-diff --git a/browser/components/search/extensions/google/_locales/b-1-d/messages.json b/browser/components/search/extensions/google/_locales/b-1-d/messages.json
-index 1b9d05307d..3b7414f8df 100644
---- a/browser/components/search/extensions/google/_locales/b-1-d/messages.json
-+++ b/browser/components/search/extensions/google/_locales/b-1-d/messages.json
-@@ -9,13 +9,13 @@
-     "message": "https://www.google.com/search"
-   },
-   "searchForm": {
--    "message": "https://www.google.com/search?client=firefox-b-1-d&q={searchTerms}"
-+    "message": "https://www.google.com/search?q={searchTerms}"
-   },
-   "suggestUrl": {
--    "message": "https://www.google.com/complete/search?client=firefox&q={searchTerms}"
-+    "message": "https://www.google.com/complete/search?q={searchTerms}"
-   },
-   "searchUrlGetParams": {
--    "message": "client=firefox-b-1-d&q={searchTerms}"
-+    "message": "q={searchTerms}"
-   },
-   "channelPref": {
-     "message": "google_channel_us"
-diff --git a/browser/components/search/extensions/google/_locales/b-1-e/messages.json b/browser/components/search/extensions/google/_locales/b-1-e/messages.json
-index b470cd8443..3b7414f8df 100644
---- a/browser/components/search/extensions/google/_locales/b-1-e/messages.json
-+++ b/browser/components/search/extensions/google/_locales/b-1-e/messages.json
-@@ -9,13 +9,13 @@
-     "message": "https://www.google.com/search"
-   },
-   "searchForm": {
--    "message": "https://www.google.com/search?client=firefox-b-1-e&q={searchTerms}"
-+    "message": "https://www.google.com/search?q={searchTerms}"
-   },
-   "suggestUrl": {
--    "message": "https://www.google.com/complete/search?client=firefox&q={searchTerms}"
-+    "message": "https://www.google.com/complete/search?q={searchTerms}"
-   },
-   "searchUrlGetParams": {
--    "message": "client=firefox-b-1-e&q={searchTerms}"
-+    "message": "q={searchTerms}"
-   },
-   "channelPref": {
-     "message": "google_channel_us"
-diff --git a/browser/components/search/extensions/google/_locales/b-d/messages.json b/browser/components/search/extensions/google/_locales/b-d/messages.json
-index a6423089d9..7bff8bba1e 100644
---- a/browser/components/search/extensions/google/_locales/b-d/messages.json
-+++ b/browser/components/search/extensions/google/_locales/b-d/messages.json
-@@ -9,13 +9,13 @@
-     "message": "https://www.google.com/search"
-   },
-   "searchForm": {
--    "message": "https://www.google.com/search?client=firefox-b-d&q={searchTerms}"
-+    "message": "https://www.google.com/search?q={searchTerms}"
-   },
-   "suggestUrl": {
--    "message": "https://www.google.com/complete/search?client=firefox&q={searchTerms}"
-+    "message": "https://www.google.com/complete/search?q={searchTerms}"
-   },
-   "searchUrlGetParams": {
--    "message": "client=firefox-b-d&q={searchTerms}"
-+    "message": "q={searchTerms}"
-   },
-   "channelPref": {
-     "message": "google_channel_row"
-diff --git a/browser/components/search/extensions/google/_locales/b-e/messages.json b/browser/components/search/extensions/google/_locales/b-e/messages.json
-index 70939ee000..7bff8bba1e 100644
---- a/browser/components/search/extensions/google/_locales/b-e/messages.json
-+++ b/browser/components/search/extensions/google/_locales/b-e/messages.json
-@@ -9,13 +9,13 @@
-     "message": "https://www.google.com/search"
-   },
-   "searchForm": {
--    "message": "https://www.google.com/search?client=firefox-b-e&q={searchTerms}"
-+    "message": "https://www.google.com/search?q={searchTerms}"
-   },
-   "suggestUrl": {
--    "message": "https://www.google.com/complete/search?client=firefox&q={searchTerms}"
-+    "message": "https://www.google.com/complete/search?q={searchTerms}"
-   },
-   "searchUrlGetParams": {
--    "message": "client=firefox-b-e&q={searchTerms}"
-+    "message": "q={searchTerms}"
-   },
-   "channelPref": {
-     "message": "google_channel_row"
 diff --git a/browser/components/search/extensions/google/_locales/en/messages.json b/browser/components/search/extensions/google/_locales/en/messages.json
 index aeca0ef128..f4c669c147 100644
 --- a/browser/components/search/extensions/google/_locales/en/messages.json
@@ -775,13 +692,65 @@ index aeca0ef128..f4c669c147 100644
    },
    "channelPref": {
      "message": "google_channel_row"
+diff --git a/browser/components/search/extensions/google/_locales/region-by/messages.json b/browser/components/search/extensions/google/_locales/region-by/messages.json
+index 60e5ed5eda..ffcf375a30 100644
+--- a/browser/components/search/extensions/google/_locales/region-by/messages.json
++++ b/browser/components/search/extensions/google/_locales/region-by/messages.json
+@@ -12,7 +12,7 @@
+     "message": "https://www.google.by/search?q={searchTerms}"
+   },
+   "suggestUrl": {
+-    "message": "https://www.google.by/complete/search?client=firefox&q={searchTerms}"
++    "message": "https://www.google.by/complete/search?q={searchTerms}"
+   },
+   "searchUrlGetParams": {
+     "message": "q={searchTerms}"
+diff --git a/browser/components/search/extensions/google/_locales/region-kz/messages.json b/browser/components/search/extensions/google/_locales/region-kz/messages.json
+index 8e64096bc1..d94530101d 100644
+--- a/browser/components/search/extensions/google/_locales/region-kz/messages.json
++++ b/browser/components/search/extensions/google/_locales/region-kz/messages.json
+@@ -12,7 +12,7 @@
+     "message": "https://www.google.kz/search?q={searchTerms}"
+   },
+   "suggestUrl": {
+-    "message": "https://www.google.kz/complete/search?client=firefox&q={searchTerms}"
++    "message": "https://www.google.kz/complete/search?q={searchTerms}"
+   },
+   "searchUrlGetParams": {
+     "message": "q={searchTerms}"
+diff --git a/browser/components/search/extensions/google/_locales/region-ru/messages.json b/browser/components/search/extensions/google/_locales/region-ru/messages.json
+index 8a78bb4e7f..ba103cb631 100644
+--- a/browser/components/search/extensions/google/_locales/region-ru/messages.json
++++ b/browser/components/search/extensions/google/_locales/region-ru/messages.json
+@@ -12,7 +12,7 @@
+     "message": "https://www.google.ru/search?q={searchTerms}"
+   },
+   "suggestUrl": {
+-    "message": "https://www.google.ru/complete/search?client=firefox&q={searchTerms}"
++    "message": "https://www.google.ru/complete/search?q={searchTerms}"
+   },
+   "searchUrlGetParams": {
+     "message": "q={searchTerms}"
+diff --git a/browser/components/search/extensions/google/_locales/region-tr/messages.json b/browser/components/search/extensions/google/_locales/region-tr/messages.json
+index 8e373a4833..0087bc2135 100644
+--- a/browser/components/search/extensions/google/_locales/region-tr/messages.json
++++ b/browser/components/search/extensions/google/_locales/region-tr/messages.json
+@@ -12,7 +12,7 @@
+     "message": "https://www.google.com.tr/search?q={searchTerms}"
+   },
+   "suggestUrl": {
+-    "message": "https://www.google.com.tr/complete/search?client=firefox&q={searchTerms}"
++    "message": "https://www.google.com.tr/complete/search?q={searchTerms}"
+   },
+   "searchUrlGetParams": {
+     "message": "q={searchTerms}"
 diff --git a/browser/components/search/extensions/google/manifest.json b/browser/components/search/extensions/google/manifest.json
-index 6cd4d2a423..5e5f2b960f 100644
+index 1e71873d0d..64f1fe3fde 100644
 --- a/browser/components/search/extensions/google/manifest.json
 +++ b/browser/components/search/extensions/google/manifest.json
 @@ -5,7 +5,7 @@
-   "version": "1.2",
-   "applications": {
+   "version": "1.3",
+   "browser_specific_settings": {
      "gecko": {
 -      "id": "google@search.mozilla.org"
 +      "id": "google@search.ghostery.com"
@@ -802,7 +771,7 @@ index 6cd4d2a423..5e5f2b960f 100644
      }
 diff --git a/browser/components/search/extensions/onesearch/manifest.json b/browser/components/search/extensions/onesearch/manifest.json
 new file mode 100644
-index 0000000000..7b0ce90c30
+index 0000000000..14a455f1ba
 --- /dev/null
 +++ b/browser/components/search/extensions/onesearch/manifest.json
 @@ -0,0 +1,24 @@
@@ -811,7 +780,7 @@ index 0000000000..7b0ce90c30
 +  "description": "A powerful privacy-focused web search experience that gives you more control. Download the extension today!",
 +  "manifest_version": 2,
 +  "version": "1.0",
-+  "applications": {
++  "browser_specific_settings": {
 +    "gecko": {
 +      "id": "onesearch@search.ghostery.com"
 +    }
@@ -904,23 +873,21 @@ literal 0
 HcmV?d00001
 
 diff --git a/browser/components/search/extensions/qwant/manifest.json b/browser/components/search/extensions/qwant/manifest.json
-index 584392f772..bb2cb027e8 100644
+index 3fb83f307b..c983aa9559 100644
 --- a/browser/components/search/extensions/qwant/manifest.json
 +++ b/browser/components/search/extensions/qwant/manifest.json
 @@ -4,7 +4,7 @@
-   "version": "1.1",
-   "applications": {
+   "version": "1.4",
+   "browser_specific_settings": {
      "gecko": {
 -      "id": "qwant@search.mozilla.org"
 +      "id": "qwant@search.ghostery.com"
      }
    },
    "hidden": true,
-@@ -17,8 +17,9 @@
-   "chrome_settings_overrides": {
-     "search_provider": {
+@@ -19,7 +19,7 @@
+       "keyword": "@qwant",
        "name": "Qwant",
-+      "keyword": "@qwant",
        "search_url": "https://www.qwant.com/",
 -      "search_url_get_params": "client=brz-moz&q={searchTerms}",
 +      "search_url_get_params": "q={searchTerms}",
@@ -945,7 +912,7 @@ HcmV?d00001
 
 diff --git a/browser/components/search/extensions/startpage/manifest.json b/browser/components/search/extensions/startpage/manifest.json
 new file mode 100644
-index 0000000000..3810292e7d
+index 0000000000..820908bbdd
 --- /dev/null
 +++ b/browser/components/search/extensions/startpage/manifest.json
 @@ -0,0 +1,27 @@
@@ -954,7 +921,7 @@ index 0000000000..3810292e7d
 +  "description": "Startpage.",
 +  "manifest_version": 2,
 +  "version": "1.2",
-+  "applications": {
++  "browser_specific_settings": {
 +    "gecko": {
 +      "id": "startpage@search.ghostery.com"
 +    }
@@ -1003,7 +970,7 @@ HcmV?d00001
 
 diff --git a/browser/components/search/extensions/yahoo/manifest.json b/browser/components/search/extensions/yahoo/manifest.json
 new file mode 100644
-index 0000000000..4348f01068
+index 0000000000..9d0e02808f
 --- /dev/null
 +++ b/browser/components/search/extensions/yahoo/manifest.json
 @@ -0,0 +1,27 @@
@@ -1012,7 +979,7 @@ index 0000000000..4348f01068
 +  "description": "Yahoo Search",
 +  "manifest_version": 2,
 +  "version": "1.0",
-+  "applications": {
++  "browser_specific_settings": {
 +    "gecko": {
 +      "id": "yahoo@search.ghostery.com"
 +    }
@@ -1034,14 +1001,14 @@ index 0000000000..4348f01068
 +    }
 +  }
 +}
-diff --git a/toolkit/components/search/SearchEngineSelector.jsm b/toolkit/components/search/SearchEngineSelector.jsm
-index 5a409a2391..8d582bdf82 100644
---- a/toolkit/components/search/SearchEngineSelector.jsm
-+++ b/toolkit/components/search/SearchEngineSelector.jsm
-@@ -96,6 +96,112 @@ class SearchEngineSelector {
+diff --git a/toolkit/components/search/SearchEngineSelector.sys.mjs b/toolkit/components/search/SearchEngineSelector.sys.mjs
+index b51f549f2c..dde9589a4a 100644
+--- a/toolkit/components/search/SearchEngineSelector.sys.mjs
++++ b/toolkit/components/search/SearchEngineSelector.sys.mjs
+@@ -83,6 +83,112 @@ export class SearchEngineSelector {
      this._changeListener = listener;
    }
- 
+
 +  get _configuration() {
 +    return [{
 +      "appliesTo": [{
@@ -1151,6 +1118,6 @@ index 5a409a2391..8d582bdf82 100644
    /**
     * Handles getting the configuration from remote settings.
     */
--- 
-2.36.0
+--
+2.39.1
 

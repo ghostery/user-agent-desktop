@@ -1,36 +1,70 @@
+From 4a5ea1f908b7c9533ff633d659dd8150402d55da Mon Sep 17 00:00:00 2001
 From: Krzysztof Jan Modras <chrmod@chrmod.net>
 Date: Thu, 17 Sep 2020 15:36:45 +0200
 Subject: Firefox profile import
 
 ---
- .../migration/FirefoxProfileMigrator.jsm      | 337 +++++++++++++++++-
+ .../migration/FirefoxProfileMigrator.sys.mjs  | 345 +++++++++++++++++-
  browser/components/migration/moz.build        |   5 +-
- 2 files changed, 324 insertions(+), 18 deletions(-)
+ 2 files changed, 346 insertions(+), 4 deletions(-)
 
-diff --git a/browser/components/migration/FirefoxProfileMigrator.jsm b/browser/components/migration/FirefoxProfileMigrator.jsm
-index ca5acd1ced..b95e25c6ec 100644
---- a/browser/components/migration/FirefoxProfileMigrator.jsm
-+++ b/browser/components/migration/FirefoxProfileMigrator.jsm
-@@ -17,6 +17,7 @@ const { MigrationUtils, MigratorPrototype } = ChromeUtils.import(
-   "resource:///modules/MigrationUtils.jsm"
- );
- const { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
-+const { NetUtil } = ChromeUtils.import("resource://gre/modules/NetUtil.jsm");
- 
- const lazy = {};
- 
-@@ -42,6 +43,76 @@ ChromeUtils.defineModuleGetter(
-   "resource://gre/modules/ProfileAge.jsm"
- );
- 
-+ChromeUtils.defineModuleGetter(this, "PlacesUtils",
-+                               "resource://gre/modules/PlacesUtils.jsm");
-+ChromeUtils.defineModuleGetter(this, "Sqlite",
-+                               "resource://gre/modules/Sqlite.jsm");
-+ChromeUtils.defineModuleGetter(this, "FormHistory",
-+                               "resource://gre/modules/FormHistory.jsm");
+diff --git a/browser/components/migration/FirefoxProfileMigrator.sys.mjs b/browser/components/migration/FirefoxProfileMigrator.sys.mjs
+index 1044e178f4..0e0bc5aa9f 100644
+--- a/browser/components/migration/FirefoxProfileMigrator.sys.mjs
++++ b/browser/components/migration/FirefoxProfileMigrator.sys.mjs
+@@ -32,7 +32,7 @@ ChromeUtils.defineESModuleGetters(lazy, {
+  *
+  * This migrator is what powers the "Profile Refresh" mechanism.
+  */
+-export class FirefoxProfileMigrator extends MigratorBase {
++class FirefoxProfileMigratorOrig extends MigratorBase {
+   constructor() {
+     super();
+     this.wrappedJSObject = this; // for testing...
+@@ -105,7 +105,7 @@ export class FirefoxProfileMigrator extends MigratorBase {
+
+     // Being a startup-only migrator, we can rely on
+     // MigrationUtils.profileStartup being set.
+-    let currentProfileDir = MigrationUtils.profileStartup.directory;
++    let currentProfileDir = this.getCurrentProfileDir();
+
+     // Surely data cannot be imported from the current profile.
+     if (sourceProfileDir.equals(currentProfileDir)) {
+@@ -154,6 +154,13 @@ export class FirefoxProfileMigrator extends MigratorBase {
+       Services.prefs.savePrefFile(newPrefsFile);
+     }
+
++    if (!this.startupOnlyMigrator && !MigrationUtils.isStartupMigration) {
++      let places = this.getHistoryAndBookmarksResource(sourceProfileDir, "places.sqlite");
++      let cookies = this.getCookiesResource(sourceProfileDir, "cookies.sqlite");
++      let formData = this.getFormDataResource(sourceProfileDir, "formhistory.sqlite");
++      return [places, cookies, formData].filter(r => r);
++    }
 +
-+let fxProductDir = FileUtils.getDir(
+     let types = MigrationUtils.resourceTypes;
+     let places = getFileResource(types.HISTORY, [
+       "places.sqlite",
+@@ -373,3 +380,334 @@ export class FirefoxProfileMigrator extends MigratorBase {
+     return true;
+   }
+ }
++
++var { XPCOMUtils } = ChromeUtils.importESModule(
++  "resource://gre/modules/XPCOMUtils.sys.mjs"
++);
++
++XPCOMUtils.defineLazyModuleGetters(lazy, {
++  NetUtil: "resource://gre/modules/NetUtil.jsm",
++});
++
++ChromeUtils.defineESModuleGetters(lazy, {
++  PlacesUtils: "resource://gre/modules/PlacesUtils.sys.mjs",
++  FormHistory: "resource://gre/modules/FormHistory.sys.mjs",
++  Sqlite: "resource://gre/modules/Sqlite.sys.mjs",
++});
++
++
++let fxProductDir = lazy.FileUtils.getDir(
 +  #if defined(XP_WIN)
 +      "AppData", ["Mozilla", "Firefox"]
 +  #elif defined(XP_MACOSX)
@@ -39,6 +73,14 @@ index ca5acd1ced..b95e25c6ec 100644
 +      "Home", [".mozilla", "firefox"]
 +  #endif
 +      , false);
++
++function isValidUrl(aUrl) {
++  let url = lazy.NetUtil.newURI(aUrl);
++  // Filter out the URLs with unsupported schemes.
++  const invalidSchemes = ["wyciwyg", "place", "about", "chrome"];
++  if (invalidSchemes.indexOf(url.scheme) >= 0) return false;
++  return true;
++}
 +
 +async function insertWholeBookmarkFolder(db, aId, aGuid) {
 +  let query = `SELECT b.id, h.url, COALESCE(b.title, h.title) AS title,
@@ -56,19 +98,19 @@ index ca5acd1ced..b95e25c6ec 100644
 +    let id = row.getResultByName("id");
 +
 +    switch (type) {
-+      case PlacesUtils.bookmarks.TYPE_BOOKMARK: // Bookmark Url - Handle keyword and favicon
++      case lazy.PlacesUtils.bookmarks.TYPE_BOOKMARK: // Bookmark Url - Handle keyword and favicon
 +        let url = row.getResultByName("url");
 +        if (isValidUrl(url)) {
-+          await PlacesUtils.bookmarks.insert({ parentGuid: aGuid,
++          await lazy.PlacesUtils.bookmarks.insert({ parentGuid: aGuid,
 +                                                url,
 +                                                title,
 +                                              });
 +        }
 +        break;
-+      case PlacesUtils.bookmarks.TYPE_FOLDER: // Bookmark Folder - Handle Tag and Livemark (later)
-+        let newFolderGuid = (await PlacesUtils.bookmarks.insert({
++      case lazy.PlacesUtils.bookmarks.TYPE_FOLDER: // Bookmark Folder - Handle Tag and Livemark (later)
++        let newFolderGuid = (await lazy.PlacesUtils.bookmarks.insert({
 +          parentGuid: aGuid,
-+          type: PlacesUtils.bookmarks.TYPE_FOLDER,
++          type: lazy.PlacesUtils.bookmarks.TYPE_FOLDER,
 +          title,
 +        })).guid;
 +        await insertWholeBookmarkFolder(db, id, newFolderGuid); // Recursive insert bookmarks
@@ -85,207 +127,163 @@ index ca5acd1ced..b95e25c6ec 100644
 +  }
 +}
 +
-+function isValidUrl(aUrl) {
-+  let url = NetUtil.newURI(aUrl);
-+  // Filter out the URLs with unsupported schemes.
-+  const invalidSchemes = ["wyciwyg", "place", "about", "chrome"];
-+  if (invalidSchemes.indexOf(url.scheme) >= 0) return false;
-+  return true;
-+}
++export class FirefoxProfileMigrator extends FirefoxProfileMigratorOrig {
++  getHistoryAndBookmarksResource(sourceProfileDir, aFileName) {
++    let placesFile = this._getFileObject(sourceProfileDir, aFileName);
++    if (!placesFile)
++      return null;
 +
- function FirefoxProfileMigrator() {
-   this.wrappedJSObject = this; // for testing...
- }
-@@ -49,22 +120,45 @@ function FirefoxProfileMigrator() {
- FirefoxProfileMigrator.prototype = Object.create(MigratorPrototype);
- 
- FirefoxProfileMigrator.prototype._getAllProfiles = function() {
--  let allProfiles = new Map();
--  let profileService = Cc["@mozilla.org/toolkit/profile-service;1"].getService(
--    Ci.nsIToolkitProfileService
--  );
--  for (let profile of profileService.profiles) {
--    let rootDir = profile.rootDir;
--
--    if (
--      rootDir.exists() &&
--      rootDir.isReadable() &&
--      !rootDir.equals(MigrationUtils.profileStartup.directory)
--    ) {
--      allProfiles.set(profile.name, rootDir);
-+  const profiles = new Map();
-+
-+  const profilesIni = fxProductDir.clone();
-+  profilesIni.append("profiles.ini");
-+  if (!(profilesIni.exists() &&
-+        profilesIni.isFile() &&
-+        profilesIni.isReadable()))
-+    return profiles;
-+  const factory = Cc["@mozilla.org/xpcom/ini-parser-factory;1"].
-+                getService(Ci.nsIINIParserFactory);
-+  const iniParser = factory.createINIParser(profilesIni);
-+
-+  const sections = iniParser.getSections();
-+  const profileSectionNameRE = /^Profile\d+$/;
-+  while (sections.hasMore()) {
-+    const section = sections.getNext();
-+    if (!profileSectionNameRE.test(section))
-+      continue;
-+    try {
-+      // The following code tries to replicate one in
-+      // toolkit/profile/nsToolkitProfileService.cpp, Init() method.
-+      const path = iniParser.getString(section, "Path");
-+      const isRelative = iniParser.getString(section, "IsRelative") == "1";
-+      let profileDir = fxProductDir.clone();
-+      if (isRelative) {
-+        profileDir.setRelativeDescriptor(fxProductDir, path);
-+      }
-+      else {
-+        // TODO: Never saw absolute paths and never tested this.
-+        profileDir.persistentDescriptor = path;
-+      }
-+
-+      profiles.set(iniParser.getString(section, "Name"), profileDir);
-     }
--  }
--  return allProfiles;
-+    catch (e) {
-+      dump("Profiles.ini section: '" + section + "', error: " + e + "\n");
-+     }
-+   }
-+  return profiles;
- };
- 
- function sorter(a, b) {
-@@ -103,7 +197,12 @@ FirefoxProfileMigrator.prototype.getResources = function(aProfile) {
- 
-   // Being a startup-only migrator, we can rely on
-   // MigrationUtils.profileStartup being set.
--  let currentProfileDir = MigrationUtils.profileStartup.directory;
-+  let currentProfileDir = null;
-+  if (!this.startupOnlyMigrator && !MigrationUtils.isStartupMigration) {
-+    currentProfileDir = FileUtils.getDir("ProfD","");
-+  } else {
-+    currentProfileDir = MigrationUtils.profileStartup.directory;
-+  }
- 
-   // Surely data cannot be imported from the current profile.
-   if (sourceProfileDir.equals(currentProfileDir)) {
-@@ -155,6 +254,210 @@ FirefoxProfileMigrator.prototype._getResourcesInternal = function(
-     Services.prefs.savePrefFile(newPrefsFile);
-   }
- 
-+  let getHistoryAndBookmarksResource = function(aFileName) {
-+  let placesFile = this._getFileObject(sourceProfileDir, aFileName);
-+  if (!placesFile)
-+    return null;
-+
-+  return {
-+    type: MigrationUtils.resourceTypes.HISTORY,
-+    migrate: async (aCallback) => {
-+      let db;
-+      try {
-+        db = await Sqlite.openConnection({
-+          path: placesFile.path
-+        });
-+        // IMPORT BOOKMARKS
-+        const topBookmarkFolderGuids = [
-+                                        "menu________",
-+                                        "toolbar_____",
-+                                        "unfiled_____"
-+                                        ];
-+        let parentGuid = PlacesUtils.bookmarks.menuGuid;
-+        // Create Firefox bookmarks folder on Bookmarks Menu
-+        parentGuid = (await PlacesUtils.bookmarks.insert({
-+          parentGuid,
-+          type: PlacesUtils.bookmarks.TYPE_FOLDER,
-+          title: "Firefox",
-+        })).guid;
-+        // Create top bookmarks folders on Firefox bookmarks folder and recursively insert child bookmarks
-+        for (let guid of topBookmarkFolderGuids) {
-+          let query = `SELECT b.id, b.title
-+                      FROM moz_bookmarks b
-+                      WHERE b.type = 2 AND b.guid = '${guid}'
-+                      ORDER BY b.position`;
-+          let rows = await db.execute(query);
-+          if (rows.length > 0) {
-+            let title = rows[0].getResultByName("title");
-+            let id = rows[0].getResultByName("id");
-+            let folderGuid = (await PlacesUtils.bookmarks.insert({
-+              parentGuid,
-+              type: PlacesUtils.bookmarks.TYPE_FOLDER,
-+              title,
-+            })).guid;
-+            await insertWholeBookmarkFolder(db, id, folderGuid);
-+          }
-+        }
-+
-+        // IMPORT HISTORY
-+        let rows = await db.execute(`SELECT h.url, h.title, v.visit_type, h.last_visit_date, h.typed
-+                                    FROM moz_places h JOIN moz_historyvisits v
-+                                    ON h.id = v.place_id
-+                                    WHERE v.visit_type <= 3;`);
-+        let pageInfos = [];
-+        for (let row of rows) {
-+          try {
-+            // CLIQZ-SPECIAL: hack to transform date in required format when importing from FF
-+            let timeStamp = row.getResultByName("last_visit_date");
-+            try {
-+              timeStamp = new Date(Math.floor(timeStamp/1000));
-+            } catch(e) {
-+              console.log('Erro in histry import')
++    return {
++      type: MigrationUtils.resourceTypes.HISTORY,
++      migrate: async (aCallback) => {
++        let db;
++        try {
++          db = await lazy.Sqlite.openConnection({
++            path: placesFile.path
++          });
++          // IMPORT BOOKMARKS
++          const topBookmarkFolderGuids = [
++                                          "menu________",
++                                          "toolbar_____",
++                                          "unfiled_____"
++                                          ];
++          let parentGuid = lazy.PlacesUtils.bookmarks.menuGuid;
++          // Create Firefox bookmarks folder on Bookmarks Menu
++          parentGuid = (await lazy.PlacesUtils.bookmarks.insert({
++            parentGuid,
++            type: lazy.PlacesUtils.bookmarks.TYPE_FOLDER,
++            title: "Firefox",
++          })).guid;
++          // Create top bookmarks folders on Firefox bookmarks folder and recursively insert child bookmarks
++          for (let guid of topBookmarkFolderGuids) {
++            let query = `SELECT b.id, b.title
++                        FROM moz_bookmarks b
++                        WHERE b.type = 2 AND b.guid = '${guid}'
++                        ORDER BY b.position`;
++            let rows = await db.execute(query);
++            if (rows.length > 0) {
++              let title = rows[0].getResultByName("title");
++              let id = rows[0].getResultByName("id");
++              let folderGuid = (await lazy.PlacesUtils.bookmarks.insert({
++                parentGuid,
++                type: lazy.PlacesUtils.bookmarks.TYPE_FOLDER,
++                title,
++              })).guid;
++              await insertWholeBookmarkFolder(db, id, folderGuid);
 +            }
-+
-+            // if having typed_count, we changes transition type to typed.
-+            let transition = PlacesUtils.history.TRANSITIONS.LINK;
-+            if (row.getResultByName("typed") > 0)
-+              transition = PlacesUtils.history.TRANSITIONS.TYPED;
-+            pageInfos.push({
-+              title: row.getResultByName("title"),
-+              isFPMigrator: true,
-+              url: new URL(row.getResultByName("url")),
-+              visits: [{
-+                transition,
-+                date: timeStamp,
-+              }],
-+            });
-+          } catch (e) {
-+            Cu.reportError(e);
 +          }
-+        }
 +
-+        if (pageInfos.length > 0) {
-+          await MigrationUtils.insertVisitsWrapper(pageInfos);
++          // IMPORT HISTORY
++          let rows = await db.execute(`SELECT h.url, h.title, v.visit_type, h.last_visit_date, h.typed
++                                      FROM moz_places h JOIN moz_historyvisits v
++                                      ON h.id = v.place_id
++                                      WHERE v.visit_type <= 3;`);
++          let pageInfos = [];
++          for (let row of rows) {
++            try {
++              // CLIQZ-SPECIAL: hack to transform date in required format when importing from FF
++              let timeStamp = row.getResultByName("last_visit_date");
++              try {
++                timeStamp = new Date(Math.floor(timeStamp/1000));
++              } catch(e) {
++                console.log('Erro in histry import')
++              }
++
++              // if having typed_count, we changes transition type to typed.
++              let transition = lazy.PlacesUtils.history.TRANSITIONS.LINK;
++              if (row.getResultByName("typed") > 0)
++                transition = lazy.PlacesUtils.history.TRANSITIONS.TYPED;
++              pageInfos.push({
++                title: row.getResultByName("title"),
++                isFPMigrator: true,
++                url: new URL(row.getResultByName("url")),
++                visits: [{
++                  transition,
++                  date: timeStamp,
++                }],
++              });
++            } catch (e) {
++              Cu.reportError(e);
++            }
++          }
++
++          if (pageInfos.length > 0) {
++            await MigrationUtils.insertVisitsWrapper(pageInfos);
++          }
++        } catch(e){
++          Cu.reportError(e);
++          aCallback(true);
++        } finally {
++          if(db) {
++            await db.close();
++          }
++          aCallback(true);
++          return;
 +        }
-+      } catch(e){
-+        Cu.reportError(e);
-+        aCallback(true);
-+      } finally {
-+        if(db) {
-+          await db.close();
-+        }
-+        aCallback(true);
-+        return;
 +      }
-+    }
-+  };
-+}.bind(this);
++    };
++  }
 +
-+let getCookiesResource = function(aFileName) {
-+  let cookiesFile = this._getFileObject(sourceProfileDir, aFileName);
-+  if (!cookiesFile)
-+    return null;
++  getFormDataResource(sourceProfileDir, aFileName) {
++    let formDataFile = this._getFileObject(sourceProfileDir, aFileName);
++    if (!formDataFile)
++      return null;
 +
-+  return {
-+    type: MigrationUtils.resourceTypes.COOKIES,
++    return {
++      type: MigrationUtils.resourceTypes.FORMDATA,
 +
-+    migrate: async (aCallback) => {
-+      let db;
++      migrate: async (aCallback) => {
++        let db;
++        try {
++          db = await lazy.Sqlite.openConnection({
++            path: formDataFile.path
++          });
++          let rows = await db.execute(`SELECT fieldname,
++                                              value,
++                                              timesUsed,
++                                              firstUsed,
++                                              lastUsed
++                                      FROM moz_formhistory`);
++          let changes = [];
++          for(let row of rows) {
++            changes.push({
++                          op: "add",
++                          fieldname: row.getResultByName("fieldname"),
++                          value:     row.getResultByName("value"),
++                          timesUsed: row.getResultByName("timesUsed"),
++                          firstUsed: row.getResultByName("firstUsed"),
++                          lastUsed:  row.getResultByName("lastUsed"),
++                        });
++          }
++          lazy.FormHistory.update(changes);
++        } catch(e) {
++          Cu.reportError(e);
++          aCallback(false);
++        } finally {
++          if (db) {
++            await db.close();
++          }
++          aCallback(true);
++        }
++      }
++    };
++  }
 +
-+      try {
-+        db = await Sqlite.openConnection({
-+          path: cookiesFile.path
-+        });
++  getCookiesResource(sourceProfileDir, aFileName) {
++    let cookiesFile = this._getFileObject(sourceProfileDir, aFileName);
++    if (!cookiesFile)
++      return null;
++
++    return {
++      type: MigrationUtils.resourceTypes.COOKIES,
++
++      migrate: async (aCallback) => {
++        let db;
++
++        try {
++          db = await lazy.Sqlite.openConnection({
++            path: cookiesFile.path
++          });
 +          let rows = await db.execute(`SELECT name, value,
 +                                              host, path,
 +                                              expiry, isSecure,
@@ -325,92 +323,82 @@ index ca5acd1ced..b95e25c6ec 100644
 +        }
 +      }
 +    };
-+  }.bind(this);
-+
-+  let getFormDataResource = function(aFileName) {
-+    let formDataFile = this._getFileObject(sourceProfileDir, aFileName);
-+    if (!formDataFile)
-+      return null;
-+
-+    return {
-+      type: MigrationUtils.resourceTypes.FORMDATA,
-+
-+      migrate: async (aCallback) => {
-+        let db;
-+        try {
-+          db = await Sqlite.openConnection({
-+            path: formDataFile.path
-+          });
-+          let rows = await db.execute(`SELECT fieldname,
-+                                              value,
-+                                              timesUsed,
-+                                              firstUsed,
-+                                              lastUsed
-+                                      FROM moz_formhistory`);
-+          let changes = [];
-+          for(let row of rows) {
-+            changes.push({
-+                          op: "add",
-+                          fieldname: row.getResultByName("fieldname"),
-+                          value:     row.getResultByName("value"),
-+                          timesUsed: row.getResultByName("timesUsed"),
-+                          firstUsed: row.getResultByName("firstUsed"),
-+                          lastUsed:  row.getResultByName("lastUsed"),
-+                        });
-+          }
-+          FormHistory.update(changes);
-+        } catch(e) {
-+          Cu.reportError(e);
-+          aCallback(false);
-+        } finally {
-+          if (db) {
-+            await db.close();
-+          }
-+          aCallback(true);
-+        }
-+      }
-+    };
-+  }.bind(this);
-+
-+  if (!this.startupOnlyMigrator && !MigrationUtils.isStartupMigration) {
-+    let places = getHistoryAndBookmarksResource("places.sqlite");
-+    let cookies = getCookiesResource("cookies.sqlite");
-+    let formData = getFormDataResource("formhistory.sqlite");
-+    return [places, cookies, formData].filter(r => r);
 +  }
 +
-   let types = MigrationUtils.resourceTypes;
-   let places = getFileResource(types.HISTORY, [
-     "places.sqlite",
-@@ -378,7 +681,7 @@ FirefoxProfileMigrator.prototype._getResourcesInternal = function(
- };
- 
- Object.defineProperty(FirefoxProfileMigrator.prototype, "startupOnlyMigrator", {
--  get: () => true,
-+  get: () => false,
- });
- 
- FirefoxProfileMigrator.prototype.classDescription = "Firefox Profile Migrator";
++  getCurrentProfileDir() {
++    let currentProfileDir = null;
++    if (!this.startupOnlyMigrator && !MigrationUtils.isStartupMigration) {
++      currentProfileDir = lazy.FileUtils.getDir("ProfD","");
++    } else {
++      currentProfileDir = MigrationUtils.profileStartup.directory;
++    }
++    return currentProfileDir;
++  }
++
++  _getAllProfiles() {
++    const profiles = new Map();
++    const profilesIni = fxProductDir.clone();
++    profilesIni.append("profiles.ini");
++    if (!(profilesIni.exists() &&
++          profilesIni.isFile() &&
++          profilesIni.isReadable()))
++      return profiles;
++    const factory = Cc["@mozilla.org/xpcom/ini-parser-factory;1"].
++                  getService(Ci.nsIINIParserFactory);
++    const iniParser = factory.createINIParser(profilesIni);
++
++    const sections = iniParser.getSections();
++    const profileSectionNameRE = /^Profile\d+$/;
++    while (sections.hasMore()) {
++      const section = sections.getNext();
++      if (!profileSectionNameRE.test(section))
++        continue;
++      try {
++        // The following code tries to replicate one in
++        // toolkit/profile/nsToolkitProfileService.cpp, Init() method.
++        const path = iniParser.getString(section, "Path");
++        const isRelative = iniParser.getString(section, "IsRelative") == "1";
++        let profileDir = fxProductDir.clone();
++        if (isRelative) {
++          profileDir.setRelativeDescriptor(fxProductDir, path);
++        }
++        else {
++          // TODO: Never saw absolute paths and never tested this.
++          profileDir.persistentDescriptor = path;
++        }
++
++        profiles.set(iniParser.getString(section, "Name"), profileDir);
++      } catch (e) {
++        dump("Profiles.ini section: '" + section + "', error: " + e + "\n");
++      }
++    }
++    return profiles;
++  }
++
++  get startupOnlyMigrator() {
++    return false;
++  }
++}
 diff --git a/browser/components/migration/moz.build b/browser/components/migration/moz.build
-index 0dbf8f66c6..9c7a1ab207 100644
+index dcd31d8527..5e45c29cc6 100644
 --- a/browser/components/migration/moz.build
 +++ b/browser/components/migration/moz.build
-@@ -19,11 +19,14 @@ XPIDL_MODULE = "migration"
+@@ -24,12 +24,15 @@ XPIDL_MODULE = "migration"
  EXTRA_JS_MODULES += [
-     "ChromeMigrationUtils.jsm",
-     "ChromeProfileMigrator.jsm",
--    "FirefoxProfileMigrator.jsm",
-     "MigrationUtils.jsm",
-     "ProfileMigrator.jsm",
+     "ChromeMigrationUtils.sys.mjs",
+     "ChromeProfileMigrator.sys.mjs",
+-    "FirefoxProfileMigrator.sys.mjs",
+     "MigrationUtils.sys.mjs",
+     "MigratorBase.sys.mjs",
+     "ProfileMigrator.sys.mjs",
  ]
- 
+
 +EXTRA_PP_JS_MODULES += [
-+    'FirefoxProfileMigrator.jsm',
++    "FirefoxProfileMigrator.sys.mjs",
 +]
 +
- if CONFIG["OS_ARCH"] == "WINNT":
-     if CONFIG["ENABLE_TESTS"]:
-         DIRS += [
--- 
-2.36.0
-
+ FINAL_TARGET_FILES.actors = [
+     "MigrationWizardChild.sys.mjs",
+     "MigrationWizardParent.sys.mjs",
+--
+2.39.1

@@ -6,19 +6,19 @@ Fix theme
 
 X
 ---
- toolkit/modules/LightweightThemeConsumer.jsm  |   2 +-
- .../extensions/default-theme/experiment10.css | 257 ++++++++++++++++++
- .../extensions/default-theme/manifest.json    |  57 +---
+ .../modules/LightweightThemeConsumer.sys.mjs  |   2 +-
+ .../extensions/default-theme/experiment11.css | 272 ++++++++++++++++++
+ .../extensions/default-theme/manifest.json    |  56 +---
  .../extensions/internal/XPIProvider.jsm       |  20 +-
  toolkit/mozapps/extensions/jar.mn             |   1 +
- 5 files changed, 293 insertions(+), 44 deletions(-)
- create mode 100644 toolkit/mozapps/extensions/default-theme/experiment10.css
+ 5 files changed, 308 insertions(+), 43 deletions(-)
+ create mode 100644 toolkit/mozapps/extensions/default-theme/experiment11.css
 
-diff --git a/toolkit/modules/LightweightThemeConsumer.jsm b/toolkit/modules/LightweightThemeConsumer.jsm
-index a12dfc7746..f80f2c9db3 100644
---- a/toolkit/modules/LightweightThemeConsumer.jsm
-+++ b/toolkit/modules/LightweightThemeConsumer.jsm
-@@ -41,7 +41,7 @@ XPCOMUtils.defineLazyPreferenceGetter(
+diff --git a/toolkit/modules/LightweightThemeConsumer.sys.mjs b/toolkit/modules/LightweightThemeConsumer.sys.mjs
+index 8771389dfd..5b6c26f2f4 100644
+--- a/toolkit/modules/LightweightThemeConsumer.sys.mjs
++++ b/toolkit/modules/LightweightThemeConsumer.sys.mjs
+@@ -30,7 +30,7 @@ XPCOMUtils.defineLazyPreferenceGetter(
    false
  );
  
@@ -27,12 +27,12 @@ index a12dfc7746..f80f2c9db3 100644
  
  // On Linux, the default theme picks up the right colors from dark GTK themes.
  const DEFAULT_THEME_RESPECTS_SYSTEM_COLOR_SCHEME =
-diff --git a/toolkit/mozapps/extensions/default-theme/experiment10.css b/toolkit/mozapps/extensions/default-theme/experiment10.css
+diff --git a/toolkit/mozapps/extensions/default-theme/experiment11.css b/toolkit/mozapps/extensions/default-theme/experiment11.css
 new file mode 100644
-index 0000000000..4aac8cba8e
+index 0000000000..074b5d5afc
 --- /dev/null
-+++ b/toolkit/mozapps/extensions/default-theme/experiment10.css
-@@ -0,0 +1,257 @@
++++ b/toolkit/mozapps/extensions/default-theme/experiment11.css
+@@ -0,0 +1,272 @@
 +/* This Source Code Form is subject to the terms of the Mozilla Public
 + * License, v. 2.0. If a copy of the MPL was not distributed with this
 + * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
@@ -45,7 +45,6 @@ index 0000000000..4aac8cba8e
 +  --toolbarbutton-inner-padding: 9px;
 +  --toolbarbutton-border-radius: 17px;
 +  --tab-border-radius: 17px;
-+  --urlbar-icon-padding: 9px !important;
 +}
 +
 +#urlbar-container,
@@ -168,6 +167,11 @@ index 0000000000..4aac8cba8e
 +  padding: 0;
 +}
 +
++:is(panelview .toolbarbutton-1, toolbarbutton.subviewbutton, .widget-overflow-list .toolbarbutton-1, .toolbaritem-combined-buttons:is(:not([cui-areatype="toolbar"]), [overflowedItem=true]) > toolbarbutton):not([disabled]):hover,
++:is(panelview .toolbarbutton-1, toolbarbutton.subviewbutton, .widget-overflow-list .toolbarbutton-1, .toolbaritem-combined-buttons:is(:not([cui-areatype="toolbar"]), [overflowedItem=true] ) > toolbarbutton):not([disabled]):hover:active {
++  background-color: unset;
++}
++
 +#nav-bar {
 +  border-bottom: 0.5px solid rgba(0, 0, 0, 0.15);
 +}
@@ -186,6 +190,12 @@ index 0000000000..4aac8cba8e
 +
 +.tab-line {
 +  height: 0;
++}
++
++.urlbar-page-action, #urlbar-go-button, .search-go-button, #notification-popup-box {
++  width: var(--urlbar-height);
++  height: var(--urlbar-height);
++  padding: 9px;
 +}
 +
 +:where(#reload-button, #stop-button) > .toolbarbutton-icon, :where(#reload-button, #stop-button) > .toolbarbutton-animatable-box {
@@ -280,6 +290,11 @@ index 0000000000..4aac8cba8e
 +  margin-top: 1px !important;
 +}
 +
++:root:not([privatebrowsingmode="temporary"]) :is(toolbarbutton, toolbarpaletteitem) + #tabbrowser-tabs {
++  border-inline-start: unset !important;
++  padding-inline-start: unset !important;
++}
++
 +#nav-bar-customization-target > :is(toolbarbutton, toolbaritem):first-child, #nav-bar-customization-target > toolbarpaletteitem:first-child > :is(toolbarbutton, toolbaritem) {
 +  padding-inline-start: unset;
 +  margin-left: 8px;
@@ -291,7 +306,7 @@ index 0000000000..4aac8cba8e
 +  margin-inline-end: -6px !important;
 +}
 diff --git a/toolkit/mozapps/extensions/default-theme/manifest.json b/toolkit/mozapps/extensions/default-theme/manifest.json
-index 5f62671c5f..87c2c5d049 100644
+index 58a53ec67f..0f7925a347 100644
 --- a/toolkit/mozapps/extensions/default-theme/manifest.json
 +++ b/toolkit/mozapps/extensions/default-theme/manifest.json
 @@ -7,35 +7,32 @@
@@ -343,7 +358,7 @@ index 5f62671c5f..87c2c5d049 100644
        "toolbar_text": "rgb(251, 251, 254)",
        "ntp_background": "rgb(43, 42, 51)",
        "ntp_text": "rgb(251, 251, 254)",
-@@ -56,7 +53,7 @@
+@@ -55,7 +52,7 @@
        "autocomplete_popup_separator": "rgb(82,82,94)",
        "appmenu_update_icon_color": "#54FFBD",
        "appmenu_info_icon_color": "#80EBFF",
@@ -352,7 +367,7 @@ index 5f62671c5f..87c2c5d049 100644
        "tab_icon_overlay_fill": "rgb(251,251,254)"
      },
      "properties": {
-@@ -69,30 +66,6 @@
+@@ -68,29 +65,6 @@
    },
  
    "theme_experiment": {
@@ -364,7 +379,6 @@ index 5f62671c5f..87c2c5d049 100644
 -      "button_primary_hover": "--button-primary-hover-bgcolor",
 -      "button_primary_active": "--button-primary-active-bgcolor",
 -      "button_primary_color": "--button-primary-color",
--      "error_text_color": "--error-text-color",
 -      "input_background": "--input-bgcolor",
 -      "input_color": "--input-color",
 -      "input_border": "--input-border-color",
@@ -381,14 +395,14 @@ index 5f62671c5f..87c2c5d049 100644
 -      "toolbar_field_icon_opacity": "--urlbar-icon-fill-opacity",
 -      "zap_gradient": "--panel-separator-zap-gradient"
 -    }
-+    "stylesheet": "experiment10.css"
++    "stylesheet": "experiment11.css"
    }
  }
 diff --git a/toolkit/mozapps/extensions/internal/XPIProvider.jsm b/toolkit/mozapps/extensions/internal/XPIProvider.jsm
-index 39fa8b4208..8b620a3e16 100644
+index 923c5c2987..1e850c1d25 100644
 --- a/toolkit/mozapps/extensions/internal/XPIProvider.jsm
 +++ b/toolkit/mozapps/extensions/internal/XPIProvider.jsm
-@@ -2518,7 +2518,7 @@ var XPIProvider = {
+@@ -2523,7 +2523,7 @@ var XPIProvider = {
        }
        this.maybeInstallBuiltinAddon(
          "default-theme@mozilla.org",
@@ -397,7 +411,7 @@ index 39fa8b4208..8b620a3e16 100644
          "resource://default-theme/"
        );
  
-@@ -2697,6 +2697,10 @@ var XPIProvider = {
+@@ -2702,6 +2702,10 @@ var XPIProvider = {
        logger.error("startup failed", e);
        AddonManagerPrivate.recordException("XPI", "startup failed", e);
      }
@@ -408,7 +422,7 @@ index 39fa8b4208..8b620a3e16 100644
    },
  
    /**
-@@ -2977,6 +2981,20 @@ var XPIProvider = {
+@@ -2982,6 +2986,20 @@ var XPIProvider = {
      return installed;
    },
  
@@ -430,15 +444,15 @@ index 39fa8b4208..8b620a3e16 100644
      return Array.from(lazy.XPIDatabase.getAddons()).filter(addon =>
        addon.dependencies.includes(aAddon.id)
 diff --git a/toolkit/mozapps/extensions/jar.mn b/toolkit/mozapps/extensions/jar.mn
-index 58f25876f2..d8d8008b39 100644
+index 58f25876f2..7d0a1e45c7 100644
 --- a/toolkit/mozapps/extensions/jar.mn
 +++ b/toolkit/mozapps/extensions/jar.mn
 @@ -25,4 +25,5 @@ toolkit.jar:
  % resource default-theme %content/mozapps/extensions/default-theme/
    content/mozapps/extensions/default-theme                      (default-theme/*.svg)
    content/mozapps/extensions/default-theme/manifest.json        (default-theme/manifest.json)
-+  content/mozapps/extensions/default-theme/experiment10.css      (default-theme/experiment10.css)
++  content/mozapps/extensions/default-theme/experiment11.css      (default-theme/experiment11.css)
  #endif
 -- 
-2.37.2
+2.37.1 (Apple Git-137.1)
 

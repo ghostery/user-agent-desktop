@@ -3,14 +3,14 @@ Date: Fri, 23 Oct 2020 15:01:24 +0200
 Subject: Allow update channel to be configured via prefs
 
 ---
- toolkit/modules/UpdateUtils.jsm | 2 +-
+ toolkit/modules/UpdateUtils.sys.mjs | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/toolkit/modules/UpdateUtils.jsm b/toolkit/modules/UpdateUtils.jsm
+diff --git a/toolkit/modules/UpdateUtils.sys.mjs b/toolkit/modules/UpdateUtils.sys.mjs
 index 5257a5dcec..b736ba0a07 100644
---- a/toolkit/modules/UpdateUtils.jsm
-+++ b/toolkit/modules/UpdateUtils.jsm
-@@ -45,7 +45,7 @@ var UpdateUtils = {
+--- a/toolkit/modules/UpdateUtils.sys.mjs
++++ b/toolkit/modules/UpdateUtils.sys.mjs
+@@ -41,7 +41,7 @@ var UpdateUtils = {
     *        Whether or not to include the partner bits. Default: true.
     */
    getUpdateChannel(aIncludePartners = true) {
@@ -19,6 +19,6 @@ index 5257a5dcec..b736ba0a07 100644
      let channel = defaults.getCharPref(
        "app.update.channel",
        AppConstants.MOZ_UPDATE_CHANNEL
--- 
+--
 2.36.0
 
