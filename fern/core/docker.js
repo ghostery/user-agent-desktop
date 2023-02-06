@@ -15,6 +15,7 @@ const SKIP_TOOLCHAINS = new Set([
   "win64-pdbstr",
   "win64-vs2017",
   "macosx64-sdk-11.0",
+  "macosx64-sdk-11.3",
 ]);
 
 async function loadFetches(root) {
@@ -61,7 +62,7 @@ async function loadToolchains(root) {
         }
 
         if (v.run["toolchain-alias"] !== undefined) {
-          const aliases = v.run["toolchain-alias"];
+          const aliases = v.run["toolchain-alias"]?.["by-project"]?.["default"] || v.run["toolchain-alias"];
           for (const alias of Array.isArray(aliases) ? aliases : [aliases]) {
             toolchains.set(alias, v);
           }
