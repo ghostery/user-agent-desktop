@@ -328,7 +328,7 @@ stage('Sign Mac') {
 
         withEnv([
             "APP_NAME=Ghostery",
-            "PKG_NAME=Ghostery Dawn",
+            "PKG_NAME=Ghostery Private Browser",
         ]) {
             withCredentials([
                 file(credentialsId: '5f834aab-07ff-4c3f-9848-c2ac02b3b532', variable: 'MAC_CERT'),

@@ -15,7 +15,7 @@ pref("app.update.interval", 86400); // 24 hours
 pref("app.update.promptWaitTime", 86400);
 // URL user can browse to manually if for some reason all update installation
 // attempts fail.
-pref("app.update.url.manual", "https://www.ghostery.com/dawn/");
+pref("app.update.url.manual", "https://www.ghostery.com/private-browser/");
 // A default value for the "More information about this update" link
 // supplied in the "An update is available" page of the update wizard.
 pref("app.update.url.details", "https://www.ghostery.com/%LOCALE%/browser/notes");
@@ -51,7 +51,7 @@ pref("services.settings.server", "https://get.ghosterybrowser.com/settings/v1");
 pref("browser.contentblocking.category", "custom");
 pref("privacy.trackingprotection.enabled", false);
 pref("privacy.trackingprotection.pbmode.enabled", false);
-pref("privacy.purge_trackers.enabled", false); // Redirect Tracking Prevention; neutered since Dawn disables FF ETP
+pref("privacy.purge_trackers.enabled", false); // Redirect Tracking Prevention; neutered since Ghostery Private Browser disables FF ETP
 pref("privacy.trackingprotection.cryptomining.enabled", false);
 pref("privacy.trackingprotection.fingerprinting.enabled", false);
 pref("privacy.trackingprotection.socialtracking.enabled", false);

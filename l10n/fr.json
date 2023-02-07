@@ -127,7 +127,7 @@
       "string": "{ $engineName } est votre moteur de recherche par défaut en mode Ghost"
     },
     "about-private-browsing-info-description": {
-      "string": "En mode de navigation privée Ghostery, votre activité ne sera pas connue des autres utilisateurs de l'appareil. Les éléments suivants seront automatiquement supprimés de Ghostery Dawn en fin de session : <em>Historique de navigation</em><em>Historique de recherche</em><em>Cookies</em><em>Historique de téléchargement</em>Cependant, les fichiers que vous avez téléchargés seront conservés par votre appareil et les pages pour lesquelles vous avez créé un signet seront enregistrées."
+      "string": "En mode de navigation privée Ghostery, votre activité ne sera pas connue des autres utilisateurs de l'appareil. Les éléments suivants seront automatiquement supprimés de Ghostery Private Browser en fin de session : <em>Historique de navigation</em><em>Historique de recherche</em><em>Cookies</em><em>Historique de téléchargement</em>Cependant, les fichiers que vous avez téléchargés seront conservés par votre appareil et les pages pour lesquelles vous avez créé un signet seront enregistrées."
     }
   },
   "browser/browser/profile/default-bookmarks.ftl": {
@@ -246,11 +246,6 @@
     },
     "dontLeavePrivateBrowsingButton2": {
       "string": "Rester en mode Ghost"
-    }
-  },
-  "devtools/client/performance.dtd": {
-    "performanceUI.unavailableNoticePB": {
-      "string": "L'enregistrement de profil est actuellement indisponible. Veuillez fermer toutes les fenêtres en mode Ghost et réessayer."
     }
   },
   "browser/browser/tabbrowser.ftl": {

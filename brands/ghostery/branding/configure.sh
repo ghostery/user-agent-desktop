@@ -4,7 +4,7 @@
 
 MOZ_APP_VENDOR=Ghostery
 MOZ_APP_BASENAME=Ghostery
-MOZ_APP_DISPLAYNAME="Ghostery Dawn"
+MOZ_APP_DISPLAYNAME="Ghostery Private Browser"
 MOZ_MACBUNDLE_ID=com.ghostery.browser
 MOZ_DISTRIBUTION_ID=com.ghostery
 if [[ -v MOZ_AUTOMATION ]]; then

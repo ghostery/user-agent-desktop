@@ -120,7 +120,7 @@ module.exports = ({ locale = "en-US" }) => ({
         const contents = await fsExtra.readFile(filePath, "utf-8");
         return fsExtra.writeFile(
           filePath,
-          contents.replace(/Firefox/g, "Ghostery Dawn")
+          contents.replace(/Firefox/g, "Ghostery Private Browser")
         );
       })
     );
