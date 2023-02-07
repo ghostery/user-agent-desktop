@@ -63,6 +63,9 @@
     }
   },
   "browser/browser/browser.ftl": {
+    "private-browsing-indicator-label": {
+      "string": "Ghost Mode"
+    },
     "identity-custom-root": {
       "string": "Connection verified by a certificate issuer that is not recognized by { -brand-short-name }."
     },
@@ -127,7 +130,7 @@
       "string": "{ $engineName } is your default search engine in Ghost Mode"
     },
     "about-private-browsing-info-description": {
-      "string": "In Ghostery’s private browsing mode, your activity will be kept confidential from others who use this device. The following will be automatically erased from Ghostery Dawn at the end of this session: <em>Browsing history</em><em>Search history</em><em>Cookies</em><em>Download history</em>However, files you download will be retained by your device and pages you bookmark will be saved."
+      "string": "In Ghostery’s private browsing mode, your activity will be kept confidential from others who use this device. The following will be automatically erased from Ghostery Private Browser at the end of this session: <em>Browsing history</em><em>Search history</em><em>Cookies</em><em>Download history</em>However, files you download will be retained by your device and pages you bookmark will be saved."
     }
   },
   "browser/browser/profile/default-bookmarks.ftl": {

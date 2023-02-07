@@ -127,7 +127,7 @@
       "string": "{ $engineName } ist Ihre Standard-Suchmaschine im Ghost-Modus."
     },
     "about-private-browsing-info-description": {
-      "string": "Im privaten Ghostery-Surfmodus bleiben Ihre Aktivitäten vor anderen Benutzern dieses Geräts verborgen. Folgende Daten werden am Ende der Sitzung automatisch aus Ghostery Dawn gelöscht: <em>Browserverlauf</em>, <em>Suchverlauf</em>, <em>Cookies</em> und <em>Download-Verlauf</em>. Dateien, die Sie auf Ihr Gerät herunterladen, und Seiten, die Sie mit einem Lesezeichen markieren, werden jedoch gespeichert."
+      "string": "Im privaten Ghostery-Surfmodus bleiben Ihre Aktivitäten vor anderen Benutzern dieses Geräts verborgen. Folgende Daten werden am Ende der Sitzung automatisch aus Ghostery Private Browser gelöscht: <em>Browserverlauf</em>, <em>Suchverlauf</em>, <em>Cookies</em> und <em>Download-Verlauf</em>. Dateien, die Sie auf Ihr Gerät herunterladen, und Seiten, die Sie mit einem Lesezeichen markieren, werden jedoch gespeichert."
     }
   },
   "browser/browser/profile/default-bookmarks.ftl": {
@@ -246,11 +246,6 @@
     },
     "dontLeavePrivateBrowsingButton2": {
       "string": "Im Ghost-Modus bleiben"
-    }
-  },
-  "devtools/client/performance.dtd": {
-    "performanceUI.unavailableNoticePB": {
-      "string": "Derzeit kann kein Profil aufgezeichnet werden. Bitte schließen Sie alle Fenster im Ghost-Modus und versuchen Sie es erneut."
     }
   },
   "browser/browser/tabbrowser.ftl": {

@@ -321,7 +321,7 @@ def mac_signing(name, objDir, artifactGlob) {
                         withEnv([
                             "MAC_CERT_NAME=HPY23A294X",
                             "APP_NAME=Ghostery",
-                            "PKG_NAME=Ghostery Dawn",
+                            "PKG_NAME=Ghostery Private Browser",
                             "ARTIFACT_GLOB=${artifactGlob}"
                         ]){
                             sh "./ci/sign_mac.sh"

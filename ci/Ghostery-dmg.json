@@ -1,5 +1,5 @@
 {
-  "title": "Ghostery Dawn",
+  "title": "Ghostery Private Browser",
   "background": "../brands/ghostery/branding/background.png",
   "icon": "../brands/ghostery/branding/disk.icns",
   "icon-size": 80,
@@ -11,6 +11,6 @@
   },
   "contents": [
     { "x": 429, "y": 210, "type": "link", "path": "/Applications" },
-    { "x": 143, "y": 210, "type": "file", "path": "pkg/Ghostery Dawn.app" }
+    { "x": 143, "y": 210, "type": "file", "path": "pkg/Ghostery Private Browser.app" }
   ]
 }

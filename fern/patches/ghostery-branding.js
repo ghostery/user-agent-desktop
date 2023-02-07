@@ -24,8 +24,9 @@ const brandingPathComponents = ["browser", "branding", "ghostery"];
 const windowsInstallerPathComponents = ["other-licenses", "7zstub", "firefox", "7zSD.Win32.sfx"];
 const devToolsIconsPathComponents = ["devtools", "client", "themes", "images"];
 const privateBrowsingIconPaths = [
-  ["browser", "themes","shared","icons", "indicator-private-browsing.svg"],
-  ["browser", "themes","shared","icons","privateBrowsing.svg"],
+  ["browser", "themes", "shared", "icons", "indicator-private-browsing.svg"],
+  ["toolkit", "themes", "shared", "icons", "indicator-private-browsing.svg"],
+  ["browser", "themes", "shared", "icons", "privateBrowsing.svg"],
   ["browser", "themes", "shared", "privatebrowsing", "favicon.svg"],
   ["browser", "themes", "shared", "privatebrowsing", "private-browsing.svg"]
 ];
@@ -76,12 +77,13 @@ module.exports = () => ({
     await copy(
       ["brands", "ghostery", "branding", "content", "private-ghosty-logo-white.svg"],
       ["browser", "themes", "shared", "icons", "indicator-private-browsing.svg"],
+      ["toolkit", "themes", "shared", "icons", "indicator-private-browsing.svg"],
       ["browser", "themes", "shared", "privatebrowsing", "private-browsing.svg"],
     );
     // context-fill ghosty private tab logo
     return copy(
       ["brands", "ghostery", "branding", "content", "private-ghosty-logo.svg"],
-      ["browser", "themes","shared","icons","privateBrowsing.svg"],
+      ["browser", "themes"," shared", "icons", "privateBrowsing.svg"],
       ["browser", "themes", "shared", "privatebrowsing", "favicon.svg"],
     );
   },
