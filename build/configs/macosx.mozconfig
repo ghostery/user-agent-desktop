@@ -12,7 +12,7 @@ ac_add_options --enable-js-shell
 # //build/mozconfig.common
 
 # cctools for ld, ar, and other related tools ; dsymutil for rust.
-mk_add_options "export PATH=$MOZ_FETCHES_DIR/cctools/bin:$MOZ_FETCHES_DIR/binutils/bin:$MOZ_FETCHES_DIR/llvm-dsymutil/bin:$PATH"
+mk_add_options "export PATH=$MOZ_FETCHES_DIR/cctools/bin:$MOZ_FETCHES_DIR/binutils/bin:$MOZ_FETCHES_DIR/clang/bin:$PATH"
 
 # dsymutil needs a libstdc++ more recent than what's on the system.
 mk_add_options "export LD_LIBRARY_PATH=$MOZ_FETCHES_DIR/clang/lib"
@@ -33,7 +33,7 @@ export CXXFLAGS="$CXXFLAGS -fcrash-diagnostics-dir=${UPLOAD_PATH}"
 export LLVMCONFIG=$MOZ_FETCHES_DIR/clang/bin/llvm-config
 export BINDGEN_CFLAGS="-isysroot $CROSS_SYSROOT"
 export DSYMUTIL=$MOZ_FETCHES_DIR/clang/bin/dsymutil
-export MKFSHFS=$MOZ_FETCHES_DIR/hfsplus-tools/newfs_hfs
+export MKFSHFS=$MOZ_FETCHES_DIR/hfsplus/newfs_hfs
 export DMG_TOOL=$MOZ_FETCHES_DIR/dmg/dmg
 export HFS_TOOL=$MOZ_FETCHES_DIR/dmg/hfsplus
 
