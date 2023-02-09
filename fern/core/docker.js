@@ -14,6 +14,7 @@ const MOZ_FETCHES_DIR = "/builds/worker/fetches/";
 const SKIP_TOOLCHAINS = new Set([
   "win64-pdbstr",
   "win64-vs2017",
+  "macosx64-sdk",
   "macosx64-sdk-11.0",
   "macosx64-sdk-11.3",
 ]);
@@ -127,12 +128,12 @@ async function generateDockerFile({ key, fetches, job, name, toolchains }) {
     );
   }
   if (key.startsWith("macosx64")) {
-    statements.push("COPY MacOSX11.0.sdk.tar.bz2 /builds/worker/fetches/");
+    statements.push("COPY MacOSX11.3.sdk.tar.bz2 /builds/worker/fetches/");
     statements.push(
       [
         "RUN cd /builds/worker/fetches/ &&",
-        "tar -xf MacOSX11.0.sdk.tar.bz2 &&",
-        "rm MacOSX11.0.sdk.tar.bz2",
+        "tar -xf MacOSX11.3.sdk.tar.bz2 &&",
+        "rm MacOSX11.3.sdk.tar.bz2",
       ].join(" \\\n    ")
     );
   }
