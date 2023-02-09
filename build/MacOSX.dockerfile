@@ -17,11 +17,6 @@ RUN wget -nv -O /builds/worker/fetches/sccache.tar.zst https://ghostery-user-age
     tar -xf sccache.tar.zst && \
     rm sccache.tar.zst
 
-RUN wget -nv -O /builds/worker/fetches/MacOSX11.3.sdk.tar.zst https://ghostery-user-agent-cache-public.s3.amazonaws.com/toolchains/109.0/macosx64-sdk-11.3/MacOSX11.3.sdk.tar.zst && \
-    cd /builds/worker/fetches/ && \
-    tar -xf MacOSX11.3.sdk.tar.zst && \
-    rm MacOSX11.3.sdk.tar.zst
-
 RUN wget -nv -O /builds/worker/fetches/sysroot-wasm32-wasi.tar.zst https://ghostery-user-agent-cache-public.s3.amazonaws.com/toolchains/109.0/sysroot-wasm32-wasi-clang-15/sysroot-wasm32-wasi.tar.zst && \
     cd /builds/worker/fetches/ && \
     tar -xf sysroot-wasm32-wasi.tar.zst && \
@@ -77,11 +72,11 @@ RUN wget -nv -O /builds/worker/fetches/sysroot-x86_64-linux-gnu.tar.zst https://
     tar -xf sysroot-x86_64-linux-gnu.tar.zst && \
     rm sysroot-x86_64-linux-gnu.tar.zst
 
-COPY MacOSX11.0.sdk.tar.bz2 /builds/worker/fetches/
+COPY MacOSX11.3.sdk.tar.bz2 /builds/worker/fetches/
 
 RUN cd /builds/worker/fetches/ && \
-    tar -xf MacOSX11.0.sdk.tar.bz2 && \
-    rm MacOSX11.0.sdk.tar.bz2
+    tar -xf MacOSX11.3.sdk.tar.bz2 && \
+    rm MacOSX11.3.sdk.tar.bz2
 
 ENV MOZ_FETCHES_DIR=/builds/worker/fetches/ \
     GECKO_PATH=/builds/worker/workspace \

@@ -23,7 +23,7 @@ stage('Prepare') {
         }
 
         download('makecab.exe')
-        download('MacOSX11.0.sdk.tar.bz2')
+        download('MacOSX11.3.sdk.tar.bz2')
 
         def image = docker.build('ua-build-base', '-f build/Base.dockerfile ./build/ --build-arg user=`whoami` --build-arg UID=`id -u` --build-arg GID=`id -g`')
 
@@ -702,7 +702,7 @@ def buildAndPackage(platform) {
     )
 
     withMach(platform) {
-        sh 'rm -f `pwd`/MacOSX11.0.sdk; ln -s /builds/worker/fetches/MacOSX11.0.sdk `pwd`/MacOSX11.0.sdk'
+        sh 'rm -f `pwd`/MacOSX11.3.sdk; ln -s /builds/worker/fetches/MacOSX11.3.sdk `pwd`/MacOSX11.3.sdk'
 
         sh './mach build'
 

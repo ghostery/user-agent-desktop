@@ -65,7 +65,7 @@ we provide dockerised builds. These can be run using the `fern.js build` command
 
 Windows and Mac builds depend on platform frameworks being included. These should be placed in the
 `build` directory:
- * Mac: `MacOSX11.0.sdk.tar.bz2`. This can be found inside an XCode install.
+ * Mac: `MacOSX11.3.sdk.tar.bz2`. This can be found inside an XCode install.
  * Windows: `vs.tar.zstd` and `Makecab.exe`. See the end of this document to where to find these.
 
 ## Development workflow

@@ -19,11 +19,11 @@ mk_add_options "export LD_LIBRARY_PATH=$MOZ_FETCHES_DIR/clang/lib"
 
 # This SDK was copied from a local XCode install and uploaded to tooltool.
 # Generate the tarball by running this command with the proper SDK version:
-#   sdk_path=$(xcrun --sdk macosx11.0 --show-sdk-path)
+#   sdk_path=$(xcrun --sdk macosx11.3 --show-sdk-path)
 #   tar -C $(dirname ${sdk_path}) -cHjf /tmp/$(basename ${sdk_path}).tar.bz2 $(basename ${sdk_path})
 # Upload the resulting tarball from /tmp to tooltool, and change the entry in
 # `browser/config/tooltool-manifests/macosx64/cross-releng.manifest`.
-CROSS_SYSROOT=$topsrcdir/MacOSX11.0.sdk
+CROSS_SYSROOT=$topsrcdir/MacOSX11.3.sdk
 CROSS_PRIVATE_FRAMEWORKS=$CROSS_SYSROOT/System/Library/PrivateFrameworks
 
 export CC="$MOZ_FETCHES_DIR/clang/bin/clang"
