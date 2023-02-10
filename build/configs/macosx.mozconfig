@@ -70,3 +70,5 @@ fi
 if [ -n "$PGO_PROFILE_GENERATE" ]; then
     ac_add_options --enable-profile-generate=cross
 fi
+
+ac_add_options --enable-linker=lld

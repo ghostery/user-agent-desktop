@@ -74,10 +74,10 @@ RUN cd /builds/worker/fetches/ && \
     tar -xf MacOSX11.3.sdk.tar.bz2 && \
     rm MacOSX11.3.sdk.tar.bz2
 
-ENV MOZ_FETCHES_DIR=/builds/worker/fetches/ \
+ENV MOZ_FETCHES_DIR=/builds/worker/fetches \
     GECKO_PATH=/builds/worker/workspace \
     WORKSPACE=/builds/worker/workspace \
-    TOOLTOOL_DIR=/builds/worker/fetches/ \
+    TOOLTOOL_DIR=/builds/worker/fetches \
     LANG=en_US.UTF-8 \
     LANGUAGE=en_US:en
 
