@@ -745,7 +745,7 @@ def withMach(platform, task) {
         '-v /mnt/vfat/vs/:/builds/worker/fetches/vs'
     ) {
         withEnv([
-            "MACH_USE_SYSTEM_PYTHON=1",
+            "MACH_BUILD_PYTHON_NATIVE_PACKAGE_SOURCE=system",
             "MOZCONFIG=${env.WORKSPACE}/mozconfig",
             "MOZ_BUILD_DATE=${buildId}",
             "MOZ_AUTOMATION=1",
