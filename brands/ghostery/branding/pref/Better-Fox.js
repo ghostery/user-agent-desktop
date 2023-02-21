@@ -4,7 +4,7 @@
 /****************************************************************************
  * Betterfox.js                                                             *
  * "Non ducor duco"                                                         *
- * priority: establish defaults for mainstream users                        *
+ * version: 110                                                             *
  * url: https://github.com/yokoffing/Betterfox                              *
 ****************************************************************************/
 
