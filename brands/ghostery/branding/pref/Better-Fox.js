@@ -1,8 +1,7 @@
 // Better-Fox community driven prefs
-// https://github.com/yokoffing/Betterfox
 //
 /****************************************************************************
- * Betterfox.js                                                             *
+ * Betterfox Lite                                                           *
  * "Non ducor duco"                                                         *
  * version: 110                                                             *
  * url: https://github.com/yokoffing/Betterfox                              *
@@ -11,36 +10,20 @@
 /****************************************************************************
  * SECTION: FASTFOX                                                         *
 ****************************************************************************/
-// Lazy session restore
-pref("browser.sessionstore.restore_pinned_tabs_on_demand", true);
 
-// JPEG XL
-// [NIGHTLY]
-pref("image.jxl.enabled", true);
+/** EXPERIMENTAL ***/
+pref("layout.css.grid-template-masonry-value.enabled", true); // CSS Masonry Layout
+pref("layout.css.animation-composition.enabled", true); // CSS Animation Composition
+pref("dom.enable_web_task_scheduling", true); // Prioritized Task Scheduling API
 
-// about:home startup cache
-// [NIGHTLY]
-pref("browser.startup.homepage.abouthome_cache.enabled", true);
+/** GFX ***/
+pref("gfx.canvas.accelerated", true); // GPU-accelerated Canvas2D is enabled by default on macOS and Linux [FF110]
+// decrease video buffering on videos below 1080p:
+pref("media.cache_readahead_limit", 9000); // stop reading ahead when our buffered data is this many seconds ahead of the current playback
+pref("media.cache_resume_threshold", 6000); // when a network connection is suspended, don't resume it until the amount of buffered data falls below this threshold (in seconds)
 
-// CSS Masonry
-// [NIGHTLY]
-pref("layout.css.grid-template-masonry-value.enabled", true);
-
-// Prioritized Task Scheduling API
-// [NIGHTLY]
-pref("dom.enable_web_task_scheduling", true);
-
-// OffscreenCanvas
-// [NIGHTLY]
-pref("gfx.offscreencanvas.enabled", true);
-
-// CSS Font Loading API in workers
-// [NIGHTLY]
-pref("layout.css.font-loading-api.workers.enabled", true);
-
-// Enable animation-composition
-// [NIGHTLY]
-pref("layout.css.animation-composition.enabled", true);
+/** NETWORK ***/
+pref("network.ssl_tokens_cache_capacity", 32768); // increase TLS token caching (fast reconnects)
 
 /****************************************************************************
  * SECTION: SECUREFOX                                                       *
