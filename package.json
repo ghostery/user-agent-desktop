@@ -27,7 +27,7 @@
     "got": "^12.5.3",
     "js-yaml": "^3.14.0",
     "listr": "^0.14.3",
-    "recursive-readdir": "^2.2.2",
+    "recursive-readdir": "^2.2.3",
     "rimraf": "^3.0.2",
     "sudo-prompt": "^9.2.1"
   }
