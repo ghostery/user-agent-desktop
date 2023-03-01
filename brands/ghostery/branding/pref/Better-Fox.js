@@ -10,7 +10,6 @@
 /****************************************************************************
  * SECTION: FASTFOX                                                         *
 ****************************************************************************/
-
 /** EXPERIMENTAL ***/
 pref("layout.css.grid-template-masonry-value.enabled", true); // CSS Masonry Layout
 pref("layout.css.animation-composition.enabled", true); // CSS Animation Composition
@@ -29,39 +28,14 @@ pref("network.ssl_tokens_cache_capacity", 32768); // increase TLS token caching 
  * SECTION: SECUREFOX                                                       *
 ****************************************************************************/
 /** TRACKING PROTECTION ***/
-// enable Query Stripping
-// Ghostery doesn't do this natively
-pref("privacy.query_stripping.enabled", true);
-// We set the same query stripping list that Brave and LibreWolf uses:
-// [1] https://gitlab.com/librewolf-community/settings/-/blob/master/librewolf.cfg#L80
+pref("network.http.referer.disallowCrossSiteRelaxingDefault.top_navigation", true); // enabled with ETP "Strict"; Referer: ignore ‘unsafe-url’, ‘no-referrer-when-downgrade’ and ‘origin-when-cross-origin’ for cross-site requests
+pref("privacy.query_stripping.enabled", true); // Query Stripping; Ghostery doesn't do this natively at this time
 pref("privacy.query_stripping.strip_list", "__hsfp __hssc __hstc __s _hsenc _openstat dclid fbclid gbraid gclid hsCtaTracking igshid mc_eid ml_subscriber ml_subscriber_hash msclkid oft_c oft_ck oft_d oft_id oft_ids oft_k oft_lk oft_sk oly_anon_id oly_enc_id rb_clickid s_cid twclid vero_conv vero_id wbraid wickedid yclid");
-
-// Referer: ignore ‘unsafe-url’, ‘no-referrer-when-downgrade’ and ‘origin-when-cross-origin’ for cross-site requests
-pref("network.http.referer.disallowCrossSiteRelaxingDefault.top_navigation", true);
-// network paritioning: OCSP cache
-pref("privacy.partition.network_state.ocsp_cache", true);
-// enable APS (Always Partitioning Storage) [FF104+]
-pref("privacy.partition.always_partition_third_party_non_cookie_storage", true);
-pref("privacy.partition.always_partition_third_party_non_cookie_storage.exempt_sessionstorage", false);
-
-// Smartblock
-// Respect adblockers
-// [1] https://support.mozilla.org/en-US/kb/smartblock-enhanced-tracking-protection
-// [2] https://searchfox.org/mozilla-central/source/browser/extensions/webcompat/data/shims.js
-pref("extensions.webcompat.enable_shims", true);
-
-// Disable sending additional analytics to web servers
-pref("beacon.enabled", false);
-
-// Microphone and camera kill switch (#370)
-// [NIGHTLY]
-pref("privacy.webrtc.globalMuteToggles", true);
-
-// Samesite Cookies
-pref("network.cookie.sameSite.laxByDefault", true); // FF 105=false
-pref("network.cookie.sameSite.noneRequiresSecure", true); // FF 105=false
-//pref("network.cookie.sameSite.schemeful", true); // FF DEFAULT FF92+
-
+pref("privacy.partition.network_state.ocsp_cache", true); // enabled with ETP "Strict"; network partitioning OSCP cache
+pref("extensions.webcompat.enable_shims", true); // enabled with ETP "Strict"; Smart Block shimming
+pref("browser.uitour.enabled", false); // disable UITour backend so there is no chance that a remote page can use it
+pref("privacy.globalprivacycontrol.enabled", true); // Global Privacy Control
+pref("privacy.globalprivacycontrol.functionality.enabled", true); // Global Privacy Control
 
 /** OCSP & CERTS / HPKP ***/
 // enable CRLite
@@ -222,6 +196,7 @@ pref("privacy.userContext.ui.enabled", true);
 
 
 /** WEBRTC ***/
+pref("privacy.webrtc.globalMuteToggles", true); // Microphone and camera kill switch (#370)
 // force WebRTC inside the proxy, if one is used
 pref("media.peerconnection.ice.proxy_only_if_behind_proxy", true);
 // when using a system-wide proxy, it uses the proxy interface
