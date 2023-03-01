@@ -1,4 +1,4 @@
-// Better-Fox community driven prefs
+// Betterfox community driven prefs
 //
 /****************************************************************************
  * Betterfox Lite                                                           *
@@ -18,7 +18,7 @@ pref("dom.enable_web_task_scheduling", true); // Prioritized Task Scheduling API
 
 /** GFX ***/
 pref("gfx.canvas.accelerated", true); // GPU-accelerated Canvas2D is enabled by default on macOS and Linux [FF110]
-// decrease video buffering on videos below 1080p:
+// decrease video buffering on videos below 1080p
 pref("media.cache_readahead_limit", 9000); // stop reading ahead when our buffered data is this many seconds ahead of the current playback
 pref("media.cache_resume_threshold", 6000); // when a network connection is suspended, don't resume it until the amount of buffered data falls below this threshold (in seconds)
 
