@@ -1,4 +1,4 @@
-nodejs 14.17.1
-awscli 2.4.13
-rust 1.59.0
+nodejs 14.21.3
+awscli 2.10.0
+rust 1.63.0
 python 3.9.13
