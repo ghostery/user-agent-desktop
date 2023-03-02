@@ -38,43 +38,18 @@ pref("privacy.globalprivacycontrol.enabled", true); // Global Privacy Control
 pref("privacy.globalprivacycontrol.functionality.enabled", true); // Global Privacy Control
 
 /** OCSP & CERTS / HPKP ***/
-// enable CRLite
-// CRLite covers valid certs, and it doesn't fall back to OCSP in mode 2 [FF84+]
-// [1] https://bugzilla.mozilla.org/buglist.cgi?bug_id=1429800,1670985,1753071
-// [2] https://blog.mozilla.org/security/tag/crlite/
-// 2 = consult CRLite and enforce both "Revoked" and "Not Revoked" results
-// 3 = consult CRLite and enforce "Not Revoked" results, but defer to OCSP for "Revoked" [DEFAULT FF100+]
-pref("security.pki.crlite_mode", 2);
+pref("security.OCSP.enabled", 0); // disable OCSP fetching to confirm current validity of certificates
 pref("security.remote_settings.crlite_filters.enabled", true);
+pref("security.pki.crlite_mode", 2); // consult CRLite and enforce both "Revoked" and "Not Revoked" results
+pref("security.cert_pinning.enforcement_level", 2); // enable strict pinning
 
-// disable OCSP fetching to confirm current validity of certificates
-// [SETTING] Privacy & Security>Security>Certificates>Query OCSP responder servers...
-// 0=disabled, 1=enabled (default), 2=enabled for EV certificates only
-user_pref("security.OCSP.enabled", 0); // [DEFAULT: 1]
-
-
-/** TLS ***/
+/** SSL / TLS ***/
 pref("security.ssl.treat_unsafe_negotiation_as_broken", true);
 pref("browser.xul.error_pages.expert_bad_cert", true);
 pref("security.tls.enable_0rtt_data", false);
 
-
-/** CLEARING HISTORY DEFAULTS (MANUALLY) ***/
-// Reset default items to clear with Ctrl-Shift-Del
-// This dialog can also be accessed from the menu History>Clear Recent History
-// Firefox remembers your last choices. This will reset them when you start Firefox.
-pref("privacy.cpd.history", true); // Browsing & Download History
-pref("privacy.cpd.formdata", true); // Form & Search History
-pref("privacy.cpd.offlineApps", true); // Offline Website Data
-pref("privacy.cpd.cache", true); // Cache
-pref("privacy.cpd.cookies", true); // Cookies
-pref("privacy.cpd.sessions", true); // Active Logins
-pref("privacy.cpd.siteSettings", false); // Site Preferences
-
-// default 'Time range to clear' for 'Clear Recent History'.
-// 0=everything, 1=last hour, 2=last two hours, 3=last four hours, 4=today
-pref("privacy.sanitize.timeSpan", 0);
-
+/** SHUTDOWN & SANITIZING ***/
+pref("privacy.history.custom", true);
 
 /** FONTS ***/
 // limit font visibility (font fingerprinting)
