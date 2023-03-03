@@ -92,9 +92,8 @@ pref("signon.formlessCapture.enabled", false); // disable formless login capture
 pref("signon.privateBrowsingCapture.enabled", false); // disable capturing credentials in private browsing
 pref("signon.autofillForms.http", false); // autofilling saved passwords on HTTP pages
 pref("signon.rememberSignons", false); // disable saving passwords
-  // pref("signon.rememberSignons.visibilityToggle", false);
 pref("editor.truncate_user_pastes", false);
-pref("layout.forms.reveal-password-context-menu.enabled", true);
+pref("layout.forms.reveal-password-context-menu.enabled", true); // reveal password option on right-click
 
 /** ADDRESS + CREDIT CARD MANAGER ***/
 pref("extensions.formautofill.addresses.enabled", false);
