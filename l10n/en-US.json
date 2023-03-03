@@ -230,7 +230,7 @@
       "string": "Disabled in Ghost Mode"
     }
   },
-  "browser/browser/appMenu.ftl": {
+  "browser/browser/appmenu.ftl": {
     "appmenuitem-new-private-window": {
       "label": {
         "string": "New Ghost Mode window"

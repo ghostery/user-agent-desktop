@@ -230,10 +230,10 @@
       "string": "Désactivé en mode Ghost"
     }
   },
-  "browser/browser/appMenu.ftl": {
+  "browser/browser/appmenu.ftl": {
     "appmenuitem-new-private-window": {
       "label": {
-        "string": "Nouvelle fenêtre en mode Ghost"
+        "string": "New Ghost Mode window"
       }
     }
   },
