@@ -63,6 +63,14 @@
     }
   },
   "browser/browser/browser.ftl": {
+    "toolbar-button-new-private-window": {
+      "label": {
+        "string": "Nouvelle fenêtre en mode Ghost"
+      }
+    },
+    "private-browsing-indicator-label": {
+      "string": "Mode Fantôme"
+    },
     "identity-custom-root": {
       "string": "Connexion vérifiée par un émetteur de certificats qui n'est pas reconnu par { -brand-short-name }."
     },
@@ -220,6 +228,13 @@
   "toolkit/toolkit/global/handlerDialog.ftl": {
     "choose-dialog-privatebrowsing-disabled": {
       "string": "Désactivé en mode Ghost"
+    }
+  },
+  "browser/browser/appMenu.ftl": {
+    "appmenuitem-new-private-window": {
+      "label": {
+        "string": "Nouvelle fenêtre en mode Ghost"
+      }
     }
   },
   "browser/browser/appMenuNotifications.ftl": {
