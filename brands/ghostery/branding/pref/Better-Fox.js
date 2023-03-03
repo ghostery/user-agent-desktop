@@ -48,150 +48,81 @@ pref("security.ssl.treat_unsafe_negotiation_as_broken", true);
 pref("browser.xul.error_pages.expert_bad_cert", true);
 pref("security.tls.enable_0rtt_data", false);
 
+/** DISK AVOIDANCE ***/
+pref("browser.privatebrowsing.forceMediaMemoryCache", true); // disable media cache from writing to disk in Private Browsing
+pref("browser.sessionstore.privacy_level", 2); // disable storing extra session data
+
 /** SHUTDOWN & SANITIZING ***/
 pref("privacy.history.custom", true);
 
-/** FONTS ***/
-// limit font visibility (font fingerprinting)
-// [1] https://searchfox.org/mozilla-central/search?path=StandardFonts*.inc
-// 1=only base system fonts, 2=also fonts from optional language packs, 3=also user-installed fonts
-pref("layout.css.font-visibility.private", 1); // Private Browsing windows
-//pref("layout.css.font-visibility.standard", 1); // Normal Browsing windows with FF ETP disabled
-
-
-/** DISK AVOIDANCE ***/
-// disable media cache from writing to disk in Private Browsing
-pref("browser.privatebrowsing.forceMediaMemoryCache", true);
-pref("media.memory_cache_max_size", 65536); // 8x default size of 8192 [performance enhancement]
-
-// disable storing extra session data
-// Whether sites save extra session data such as form content, cookies and POST data
-// 0=everywhere, 1=unencrypted sites, 2=nowhere
-pref("browser.sessionstore.privacy_level", 2);
-pref("browser.pagethumbnails.capturing_disabled", true);
-
-
 /** SPECULATIVE CONNECTIONS ***/
-// Network Predictor
-// https://github.com/yokoffing/Better-Fox/blob/079be70df3e513507dc419c3cce1a413902ada13/SecureFox.js#L184-L195
-pref("network.predictor.enabled", false);
-pref("network.predictor.enable-prefetch", false);
-
-// DNS pre-resolve <link rel="dns-prefetch">
-// https://github.com/yokoffing/Better-Fox/blob/e9535084374c4f379bc20fda945b3236b7723c48/SecureFox.js#L201-L206
-pref("network.dns.disablePrefetch", true);
-
-// Preconnect to the autocomplete URL in the address bar
-// https://github.com/yokoffing/Better-Fox/blob/079be70df3e513507dc419c3cce1a413902ada13/SecureFox.js#L209-L213
-pref("browser.urlbar.speculativeConnect.enabled", false);
-pref("browser.places.speculativeConnect.enabled", false);
-
-// Link prefetching <link rel="prefetch">
-// https://github.com/yokoffing/Better-Fox/blob/079be70df3e513507dc419c3cce1a413902ada13/SecureFox.js#L216-L225
-pref("network.prefetch-next", false);
-
-// Prefetch links upon hover 
-// https://github.com/yokoffing/Better-Fox/blob/079be70df3e513507dc419c3cce1a413902ada13/SecureFox.js#L228-L235
-pref("network.http.speculative-parallel-limit", 0);
-
+user_pref("network.http.speculative-parallel-limit", 0);
+user_pref("network.dns.disablePrefetch", true);
+user_pref("browser.urlbar.speculativeConnect.enabled", false);
+user_pref("browser.places.speculativeConnect.enabled", false);
+user_pref("network.prefetch-next", false);
+user_pref("network.predictor.enabled", false);
+user_pref("network.predictor.enable-prefetch", false);
 
 /** SEARCH / URL BAR ***/
-// Enable a seperate search engine for Private Windows
-pref("browser.search.separatePrivateDefault", true);
-pref("browser.search.separatePrivateDefault.ui.enabled", true);
+pref("browser.search.separatePrivateDefault.ui.enabled", true); // Enable a seperate search engine for Private Windows
+pref("browser.urlbar.update2.engineAliasRefresh", true); // enable "Add" button under search engine menu
+pref("browser.search.suggest.enabled", false); // Live search engine suggestions (Google, Bing, etc.)
+pref("security.insecure_connection_text.enabled", true); // show text on HTTP sites
+pref("security.insecure_connection_text.pbmode.enabled", true);  // show text on HTTP sites
+pref("network.IDN_show_punycode", true);  // Enforce Punycode for Internationalized Domain Names to eliminate possible spoofing
 
-// enable "Add" button under search engine menu
-pref("browser.urlbar.update2.engineAliasRefresh", true);
-
-// Live search engine suggestions (Google, Bing, etc.)
-// Search engines keylog every character you type from the URL bar
-pref("browser.search.suggest.enabled", false);
-
-// URL bar domain guessing
-// https://github.com/yokoffing/Better-Fox/blob/079be70df3e513507dc419c3cce1a413902ada13/SecureFox.js#L276-L281
-pref("browser.fixup.alternate.enabled", false);
-
-// Enforce Punycode for Internationalized Domain Names to eliminate possible spoofing
-// https://github.com/yokoffing/Better-Fox/blob/b713c0662f01aa2fe81fb1e2cfb8e41c24e5d293/SecureFox.js#L293-L300
-pref("network.IDN_show_punycode", true);
-
+/** HTTPS-FIRST MODE ***/
+pref("dom.security.https_first", true); // prefer HTTPS connections
 
 /** HTTPS-ONLY MODE ***/
-// HTTPS-only connections (#367)
-// Enable HTTPS-only Mode
-pref("dom.security.https_only_mode", true);
+// pref("dom.security.https_only_mode", true); // force HTTPS-only connections (#367)
 pref("dom.security.https_only_mode_error_page_user_suggestions", true);
 
+/** PROXY / SOCKS / IPv6 ***/
+pref("network.proxy.socks_remote_dns", true);
+pref("network.file.disable_unc_paths", true);
+pref("network.gio.supported-protocols", "");
 
 /** DNS-over-HTTPS (DOH) ***/
-// DoH
-// 0=off, 2=TRR preferred, 3=TRR only, 5=TRR disabled
-pref("network.trr.mode", 0);
-pref("network.dns.skipTRR-when-parental-control-enabled", false);
-
+pref("network.trr.mode", 0); // DNS-over-HTTPS (DOH) disabled by default
 
 /** PASSWORDS AND AUTOFILL ***/
-// disable formless login capture
-// [1] https://bugzilla.mozilla.org/show_bug.cgi?id=1166947
-pref("signon.formlessCapture.enabled", false);
-// autofilling saved passwords on HTTP pages
-pref("signon.autofillForms.http", false);
-// disable capturing credentials in private browsing
-pref("signon.privateBrowsingCapture.enabled", false);
+pref("signon.formlessCapture.enabled", false); // disable formless login capture
+pref("signon.privateBrowsingCapture.enabled", false); // disable capturing credentials in private browsing
+pref("signon.autofillForms.http", false); // autofilling saved passwords on HTTP pages
+pref("signon.rememberSignons", false);
+pref("editor.truncate_user_pastes", false);
+pref("layout.forms.reveal-password-context-menu.enabled", true);
 
+/** ADDRESS + CREDIT CARD MANAGER ***/
+pref("extensions.formautofill.addresses.enabled", false);
+pref("extensions.formautofill.creditCards.enabled", false);
+pref("extensions.formautofill.heuristics.enabled", false);
+pref("browser.formfill.enable", false);
 
 /** MIXED CONTENT + CROSS-SITE ***/
-// HTTP authentication credentials dialogs triggered by sub-resources
-// 1=don't allow cross-origin sub-resources to open HTTP authentication credentials dialogs
-pref("network.auth.subresource-http-auth-allow", 1);
-
-// deny PDFs to load javascript
-pref("pdfjs.enableScripting", false);
-
-// 3rd party extension install prompts
-pref("extensions.postDownloadThirdPartyPrompt", false);
-
-// Applies to cross-origin geolocation, camera, mic and screen-sharing
-// permissions, and fullscreen requests. Disabling delegation means any prompts
-// for these will show/use their correct 3rd party origin.
-// [1] https://groups.google.com/forum/#!topic/mozilla.dev.platform/BdFOMAuCGW8/discussion
-pref("permissions.delegation.enabled", false);
-
+pref("network.auth.subresource-http-auth-allow", 1); // don't allow cross-origin sub-resources to open HTTP authentication credentials dialogs
+pref("pdfjs.enableScripting", false); // deny PDFs to load javascript
+pref("extensions.postDownloadThirdPartyPrompt", false); // 3rd party extension install prompts
+pref("permissions.delegation.enabled", false); // 3rd party origin for device permissions
 
 /** HEADERS / REFERERS ***/
-// Downgrade Cross-Origin Referers
-// Control the amount of information to send.
-// 0=send full URI (default), 1=scheme+host+port+path, 2=scheme+host+port
-pref("network.http.referer.XOriginTrimmingPolicy", 2);
-
+pref("network.http.referer.XOriginTrimmingPolicy", 2); // cross-origin referers = scheme+host+port
 
 /** CONTAINERS ***/
-// enable Containers UI
-pref("privacy.userContext.ui.enabled", true);
-
+pref("privacy.userContext.ui.enabled", true); // enable Containers UI
 
 /** WEBRTC ***/
 pref("privacy.webrtc.globalMuteToggles", true); // Microphone and camera kill switch (#370)
-// force WebRTC inside the proxy, if one is used
-pref("media.peerconnection.ice.proxy_only_if_behind_proxy", true);
-// when using a system-wide proxy, it uses the proxy interface
-pref("media.peerconnection.ice.default_address_only", true);
-
+pref("media.peerconnection.ice.proxy_only_if_behind_proxy", true); // force WebRTC inside the proxy, if one is used
+pref("media.peerconnection.ice.default_address_only", true); // when using a system-wide proxy, it uses the proxy interface
 
 /** GOOGLE SAFE BROWSING (GSB) ***/
-// GSB checks for downloads (remote)
-// To verify the safety of certain executable files, Firefox may submit some information about the
-// file, including the name, origin, size and a cryptographic hash of the contents, to the Google
-// Safe Browsing service which helps Firefox determine whether or not the file should be blocked.
-pref("browser.safebrowsing.downloads.remote.enabled", false);
-
+pref("browser.safebrowsing.downloads.remote.enabled", false); // enabled except for report checks
 
 /** MOZILLA ***/
-// SITE PERMISSIONS
-// 0=always ask (default), 1=allow, 2=block
-pref("permissions.default.desktop-notification", 2);
-
-// GEOLOCATION
+pref("permissions.default.desktop-notification", 2); // block desktop notifications
 // Geolocation URL (see #187, #405)
 //pref("geo.provider.network.url", "https://location.services.mozilla.com/v1/geolocate?key=%MOZILLA_API_KEY%");
 //pref("geo.provider.ms-windows-location", false); // WINDOWS
