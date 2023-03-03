@@ -135,18 +135,13 @@ pref("permissions.default.desktop-notification", 2); // block desktop notificati
  * SECTION: PESKYFOX                                                        *
 ****************************************************************************/
 /** UI ***/
-// Show all matches in Findbar
-pref("findbar.highlightAll", true);
-
+pref("findbar.highlightAll", true); // Show all matches in Findbar
 
 /** FULLSCREEN ***/
-// transition time (instant)
-pref("full-screen-api.transition-duration.enter", "0 0");
-pref("full-screen-api.transition-duration.leave", "0 0");
-// fullscreen notice (disable)
-pref("full-screen-api.warning.delay", 0);
-pref("full-screen-api.warning.timeout", 0);
-
+pref("full-screen-api.transition-duration.enter", "0 0"); // transition time (instant)
+pref("full-screen-api.transition-duration.leave", "0 0");  // transition time (instant)
+pref("full-screen-api.warning.delay", 0); // fullscreen notice (disable)
+pref("full-screen-api.warning.timeout", 0); // fullscreen notice (disable)
 
 /** URL BAR ***/
 // Dropdown options in the URL bar
@@ -157,40 +152,26 @@ pref("browser.urlbar.suggest.openpage", false);
 pref("browser.urlbar.suggest.searches", false);
 pref("browser.urlbar.suggest.topsites", false);
 // enable features in URL bar
+pref("browser.urlbar.suggest.engines", false);
+// pref("browser.urlbar.suggest.topsites", false);
 pref("browser.urlbar.suggest.calculator", true);
 pref("browser.urlbar.unitConversion.enabled", true);
 
-
 /** DOWNLOADS ***/
-// always ask where to download
 // [SETTING] General>Downloads>Always ask you where to save files
-pref("browser.download.useDownloadDir", false);
-// enable user interaction for security by always asking how to handle new mimetypes
+pref("browser.download.useDownloadDir", false); // always ask where to download
 // [SETTING] General>Files and Applications>What should Firefox do with other files
-pref("browser.download.always_ask_before_handling_new_types", true);
-
+pref("browser.download.always_ask_before_handling_new_types", true); // enable user interaction for security by always asking how to handle new mimetypes
 
 ** PDF ***/
 pref("browser.download.open_pdf_attachments_inline", true);
 
-
 /** TAB BEHAVIOR ***/
-// Prevent scripts from moving and resizing open windows
-pref("dom.disable_window_move_resize", true);
-
-// load bookmarks in tabs
-pref("browser.tabs.loadBookmarksInTabs", true);
-
-// Prevent password truncation when submitting form data
-pref("editor.truncate_user_pastes", false);
-
-// Plain Text only when copying text
-pref("clipboard.plainTextOnly", true);
-
-// Limit events that can cause a pop-up
-// Firefox provides an option to provide exceptions for sites, remembered in your Site Settings.
-// (default) "change click dblclick auxclick mouseup pointerup notificationclick reset submit touchend contextmenu"
-pref("dom.popup_allowed_events", "click dblclick mousedown pointerdown");
+pref("dom.disable_window_move_resize", true); // Prevent scripts from moving and resizing open windows
+pref("browser.tabs.loadBookmarksInTabs", true); // load bookmarks in tabs
+pref("editor.truncate_user_pastes", false); // Prevent password truncation when submitting form data
+pref("clipboard.plainTextOnly", true); // Plain Text only when copying text
+pref("layout.css.has-selector.enabled", true);
 
 /****************************************************************************
  * END: BETTERFOX                                                           *
