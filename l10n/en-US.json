@@ -63,6 +63,11 @@
     }
   },
   "browser/browser/browser.ftl": {
+    "toolbar-button-new-private-window": {
+      "label": {
+        "string": "New Ghost Mode window"
+      }
+    },
     "private-browsing-indicator-label": {
       "string": "Ghost Mode"
     },
@@ -153,7 +158,7 @@
   },
   "browser/browser/menubar.ftl": {
     "menu-file-new-private-window": {
-      "string": "New Ghost Mode Window"
+      "string": "New Ghost Mode window"
     }
   },
   "browser/browser/browserContext.ftl": {
@@ -168,7 +173,7 @@
   },
   "browser/chrome/browser/customizableui/customizableWidgets.properties": {
     "privatebrowsing-button.label": {
-      "string": "New Ghost Mode Window"
+      "string": "New Ghost Mode window"
     },
     "privatebrowsing-button.tooltiptext": {
       "string": "Open a new Ghost Mode window (%S)"
@@ -223,6 +228,13 @@
   "toolkit/toolkit/global/handlerDialog.ftl": {
     "choose-dialog-privatebrowsing-disabled": {
       "string": "Disabled in Ghost Mode"
+    }
+  },
+  "browser/browser/appMenu.ftl": {
+    "appmenuitem-new-private-window": {
+      "label": {
+        "string": "New Ghost Mode window"
+      }
     }
   },
   "browser/browser/appMenuNotifications.ftl": {

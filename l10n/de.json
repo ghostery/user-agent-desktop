@@ -63,6 +63,14 @@
     }
   },
   "browser/browser/browser.ftl": {
+    "toolbar-button-new-private-window": {
+      "label": {
+        "string": "Neues Fenster im Ghost-Modus"
+      }
+    },
+    "private-browsing-indicator-label": {
+      "string": "Ghost-Modus"
+    },
     "identity-custom-root": {
       "string": "Die Verbindung wurde durch eine Zertifizierungsstelle bestätigt, welche standardmäßig nicht von { -brand-short-name } anerkannt wird."
     },
@@ -220,6 +228,13 @@
   "toolkit/toolkit/global/handlerDialog.ftl": {
     "choose-dialog-privatebrowsing-disabled": {
       "string": "Im Ghost-Modus deaktiviert"
+    }
+  },
+  "browser/browser/appMenu.ftl": {
+    "appmenuitem-new-private-window": {
+      "label": {
+        "string": "Neues Fenster im Ghost-Modus"
+      }
     }
   },
   "browser/browser/appMenuNotifications.ftl": {
