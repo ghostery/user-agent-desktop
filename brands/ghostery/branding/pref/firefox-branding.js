@@ -198,10 +198,3 @@ pref("browser.tabs.firefox-view", false);
 
 // Disable unified extensions button - required for Ghostery icon in urlbar
 pref("extensions.unifiedExtensions.enabled", false);
-
-// Hide Import bookmarks from new tab page
-pref("browser.toolbars.bookmarks.visibility", "never");
-
-// Disable saving password
-pref("signon.rememberSignons", false);
-pref("signon.rememberSignons.visibilityToggle", false);
