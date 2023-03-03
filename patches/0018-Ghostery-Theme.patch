@@ -29,7 +29,7 @@ index 8771389dfd..5b6c26f2f4 100644
  const DEFAULT_THEME_RESPECTS_SYSTEM_COLOR_SCHEME =
 diff --git a/toolkit/mozapps/extensions/default-theme/experiment11.css b/toolkit/mozapps/extensions/default-theme/experiment11.css
 new file mode 100644
-index 0000000000..074b5d5afc
+index 0000000000..4340d37b11
 --- /dev/null
 +++ b/toolkit/mozapps/extensions/default-theme/experiment11.css
 @@ -0,0 +1,272 @@
@@ -167,9 +167,9 @@ index 0000000000..074b5d5afc
 +  padding: 0;
 +}
 +
-+:is(panelview .toolbarbutton-1, toolbarbutton.subviewbutton, .widget-overflow-list .toolbarbutton-1, .toolbaritem-combined-buttons:is(:not([cui-areatype="toolbar"]), [overflowedItem=true]) > toolbarbutton):not([disabled]):hover,
-+:is(panelview .toolbarbutton-1, toolbarbutton.subviewbutton, .widget-overflow-list .toolbarbutton-1, .toolbaritem-combined-buttons:is(:not([cui-areatype="toolbar"]), [overflowedItem=true] ) > toolbarbutton):not([disabled]):hover:active {
-+  background-color: unset;
++:is(toolbarbutton.subviewbutton.webextension-browser-action):hover,
++:is(toolbarbutton.subviewbutton.webextension-browser-action):hover:active {
++  background-color: unset !important;
 +}
 +
 +#nav-bar {
