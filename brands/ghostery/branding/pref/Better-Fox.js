@@ -49,7 +49,8 @@ pref("browser.xul.error_pages.expert_bad_cert", true);
 pref("security.tls.enable_0rtt_data", false);
 
 /** DISK AVOIDANCE ***/
-pref("browser.privatebrowsing.forceMediaMemoryCache", true); // disable media cache from writing to disk in Private Browsing
+pref("browser.cache.disk.enable", false); // disable disk cache completely
+pref("browser.privatebrowsing.forceMediaMemoryCache", true); // disable media cache from writing to disk in Private Browsing (Ghost Mode)
 pref("browser.sessionstore.privacy_level", 2); // disable storing extra session data
 
 /** SHUTDOWN & SANITIZING ***/
