@@ -91,7 +91,8 @@ pref("network.trr.mode", 0); // DNS-over-HTTPS (DOH) disabled by default
 pref("signon.formlessCapture.enabled", false); // disable formless login capture
 pref("signon.privateBrowsingCapture.enabled", false); // disable capturing credentials in private browsing
 pref("signon.autofillForms.http", false); // autofilling saved passwords on HTTP pages
-pref("signon.rememberSignons", false);
+pref("signon.rememberSignons", false); // disable saving passwords
+  // pref("signon.rememberSignons.visibilityToggle", false);
 pref("editor.truncate_user_pastes", false);
 pref("layout.forms.reveal-password-context-menu.enabled", true);
 
@@ -156,6 +157,9 @@ pref("browser.urlbar.suggest.engines", false);
 // pref("browser.urlbar.suggest.topsites", false);
 pref("browser.urlbar.suggest.calculator", true);
 pref("browser.urlbar.unitConversion.enabled", true);
+
+/** NEW TAB PAGE ***/
+pref("browser.toolbars.bookmarks.visibility", "never"); 
 
 /** DOWNLOADS ***/
 // [SETTING] General>Downloads>Always ask you where to save files
