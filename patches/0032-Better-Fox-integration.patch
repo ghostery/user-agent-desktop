@@ -8,7 +8,7 @@ Subject: Better-Fox integration
  2 files changed, 3 insertions(+)
 
 diff --git a/browser/branding/branding-common.mozbuild b/browser/branding/branding-common.mozbuild
-index 908553b8b9..b1951ed4bc 100644
+index 4e737310b3..81de5aa3b3 100644
 --- a/browser/branding/branding-common.mozbuild
 +++ b/browser/branding/branding-common.mozbuild
 @@ -15,6 +15,8 @@ def FirefoxBranding():
@@ -21,10 +21,10 @@ index 908553b8b9..b1951ed4bc 100644
          FINAL_TARGET_FILES['..'] += [
              'firefox.VisualElementsManifest.xml',
 diff --git a/browser/installer/package-manifest.in b/browser/installer/package-manifest.in
-index 73a41dc25b..61c86ef7e5 100644
+index 143384ddc9..06b6279392 100644
 --- a/browser/installer/package-manifest.in
 +++ b/browser/installer/package-manifest.in
-@@ -268,6 +268,7 @@
+@@ -257,6 +257,7 @@
  ; All the pref files must be part of base to prevent migration bugs
  @RESPATH@/browser/@PREF_DIR@/firefox.js
  @RESPATH@/browser/@PREF_DIR@/firefox-branding.js
@@ -33,5 +33,5 @@ index 73a41dc25b..61c86ef7e5 100644
  @RESPATH@/defaults/autoconfig/prefcalls.js
  @RESPATH@/browser/defaults/permissions
 -- 
-2.36.0
+2.39.2 (Apple Git-143)
 

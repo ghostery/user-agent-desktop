@@ -7,10 +7,10 @@ Subject: Ignore the glinter
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/third_party/python/glean_parser/glean_parser/lint.py b/third_party/python/glean_parser/glean_parser/lint.py
-index 814f5adcf2..f9bab46662 100644
+index 0dc2bddd5d..85ba1a663b 100644
 --- a/third_party/python/glean_parser/glean_parser/lint.py
 +++ b/third_party/python/glean_parser/glean_parser/lint.py
-@@ -482,7 +482,7 @@ def lint_metrics(
+@@ -492,7 +492,7 @@ def lint_metrics(
              file=file,
          )
  
@@ -20,5 +20,5 @@ index 814f5adcf2..f9bab46662 100644
  
  def lint_yaml_files(
 -- 
-2.36.0
+2.39.2 (Apple Git-143)
 

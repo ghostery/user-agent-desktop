@@ -3,55 +3,31 @@ Date: Tue, 17 Nov 2020 10:30:32 +0100
 Subject: Hide "Recommend as you browse" preferences
 
 ---
- browser/components/preferences/main.inc.xhtml |  4 ++--
- browser/components/preferences/main.js        | 14 +++++++-------
- 2 files changed, 9 insertions(+), 9 deletions(-)
+ browser/components/preferences/main.inc.xhtml | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/browser/components/preferences/main.inc.xhtml b/browser/components/preferences/main.inc.xhtml
-index 0deb010bbe..0dcb9b2334 100644
+index 908de34a9b..9e509dabba 100644
 --- a/browser/components/preferences/main.inc.xhtml
 +++ b/browser/components/preferences/main.inc.xhtml
-@@ -738,13 +738,13 @@
-             preference="media.hardwaremediakeys.enabled"/>
-     <label id="mediaControlLearnMore" class="learnMore" data-l10n-id="browsing-media-control-learn-more" is="text-link"/>
+@@ -759,7 +759,7 @@
+           support-page="media-keyboard-control"
+     />
    </hbox>
 -  <hbox align="center" data-subcategory="cfraddons">
 +  <!--<hbox align="center" data-subcategory="cfraddons">
      <checkbox id="cfrRecommendations"
              class="tail-with-learn-more"
              data-l10n-id="browsing-cfr-recommendations"
-             preference="browser.newtabpage.activity-stream.asrouter.userprefs.cfr.addons"/>
-     <label id="cfrLearnMore" class="learnMore" data-l10n-id="browsing-cfr-recommendations-learn-more" is="text-link"/>
+@@ -778,7 +778,7 @@
+           data-l10n-id="browsing-cfr-recommendations-learn-more"
+           support-page="extensionrecommendations"
+     />
 -  </hbox>
 +  </hbox>-->
-   <hbox align="center" data-subcategory="cfrfeatures">
-     <checkbox id="cfrRecommendations-features"
-             class="tail-with-learn-more"
-diff --git a/browser/components/preferences/main.js b/browser/components/preferences/main.js
-index f0864a5cff..31863b182b 100644
---- a/browser/components/preferences/main.js
-+++ b/browser/components/preferences/main.js
-@@ -348,13 +348,13 @@ var gMainPane = {
-     // listener for future menu changes.
-     gMainPane.initDefaultZoomValues();
+ </groupbox>
  
--    let cfrLearnMoreUrl =
--      Services.urlFormatter.formatURLPref("app.support.baseURL") +
--      "extensionrecommendations";
--    for (const id of ["cfrLearnMore", "cfrFeaturesLearnMore"]) {
--      let link = document.getElementById(id);
--      link.setAttribute("href", cfrLearnMoreUrl);
--    }
-+    // let cfrLearnMoreUrl =
-+    //   Services.urlFormatter.formatURLPref("app.support.baseURL") +
-+    //   "extensionrecommendations";
-+    // for (const id of ["cfrLearnMore", "cfrFeaturesLearnMore"]) {
-+    //   let link = document.getElementById(id);
-+    //   link.setAttribute("href", cfrLearnMoreUrl);
-+    // }
- 
-     if (
-       Services.prefs.getBoolPref(
+ <hbox id="networkProxyCategory"
 -- 
-2.36.0
+2.39.2 (Apple Git-143)
 

@@ -8,7 +8,7 @@ fix #256
  1 file changed, 1 insertion(+)
 
 diff --git a/toolkit/mozapps/extensions/content/aboutaddons.css b/toolkit/mozapps/extensions/content/aboutaddons.css
-index b79f9bee37..e9706f077e 100644
+index 231446384d..9db064c1ea 100644
 --- a/toolkit/mozapps/extensions/content/aboutaddons.css
 +++ b/toolkit/mozapps/extensions/content/aboutaddons.css
 @@ -339,6 +339,7 @@ addon-card[expanded] .update-postponed-bar + .addon-card-message {
@@ -20,5 +20,5 @@ index b79f9bee37..e9706f077e 100644
  
  .addon-badge-line {
 -- 
-2.36.0
+2.39.2 (Apple Git-143)
 

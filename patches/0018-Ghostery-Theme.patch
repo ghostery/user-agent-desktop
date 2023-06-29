@@ -15,10 +15,10 @@ X
  create mode 100644 toolkit/mozapps/extensions/default-theme/experiment11.css
 
 diff --git a/toolkit/modules/LightweightThemeConsumer.sys.mjs b/toolkit/modules/LightweightThemeConsumer.sys.mjs
-index 8771389dfd..5b6c26f2f4 100644
+index b48d07c658..ffc5401a4a 100644
 --- a/toolkit/modules/LightweightThemeConsumer.sys.mjs
 +++ b/toolkit/modules/LightweightThemeConsumer.sys.mjs
-@@ -30,7 +30,7 @@ XPCOMUtils.defineLazyPreferenceGetter(
+@@ -25,7 +25,7 @@ XPCOMUtils.defineLazyPreferenceGetter(
    false
  );
  
@@ -306,7 +306,7 @@ index 0000000000..4340d37b11
 +  margin-inline-end: -6px !important;
 +}
 diff --git a/toolkit/mozapps/extensions/default-theme/manifest.json b/toolkit/mozapps/extensions/default-theme/manifest.json
-index 58a53ec67f..0f7925a347 100644
+index 9166c1bb44..1a39f039c5 100644
 --- a/toolkit/mozapps/extensions/default-theme/manifest.json
 +++ b/toolkit/mozapps/extensions/default-theme/manifest.json
 @@ -7,35 +7,32 @@
@@ -399,10 +399,10 @@ index 58a53ec67f..0f7925a347 100644
    }
  }
 diff --git a/toolkit/mozapps/extensions/internal/XPIProvider.jsm b/toolkit/mozapps/extensions/internal/XPIProvider.jsm
-index 923c5c2987..1e850c1d25 100644
+index 2b9c386c29..ba69073aa4 100644
 --- a/toolkit/mozapps/extensions/internal/XPIProvider.jsm
 +++ b/toolkit/mozapps/extensions/internal/XPIProvider.jsm
-@@ -2523,7 +2523,7 @@ var XPIProvider = {
+@@ -2549,7 +2549,7 @@ var XPIProvider = {
        }
        this.maybeInstallBuiltinAddon(
          "default-theme@mozilla.org",
@@ -411,7 +411,7 @@ index 923c5c2987..1e850c1d25 100644
          "resource://default-theme/"
        );
  
-@@ -2702,6 +2702,10 @@ var XPIProvider = {
+@@ -2737,6 +2737,10 @@ var XPIProvider = {
        logger.error("startup failed", e);
        AddonManagerPrivate.recordException("XPI", "startup failed", e);
      }
@@ -422,7 +422,7 @@ index 923c5c2987..1e850c1d25 100644
    },
  
    /**
-@@ -2982,6 +2986,20 @@ var XPIProvider = {
+@@ -3017,6 +3021,20 @@ var XPIProvider = {
      return installed;
    },
  
@@ -444,15 +444,15 @@ index 923c5c2987..1e850c1d25 100644
      return Array.from(lazy.XPIDatabase.getAddons()).filter(addon =>
        addon.dependencies.includes(aAddon.id)
 diff --git a/toolkit/mozapps/extensions/jar.mn b/toolkit/mozapps/extensions/jar.mn
-index 58f25876f2..7d0a1e45c7 100644
+index 935416225d..398c0a2a23 100644
 --- a/toolkit/mozapps/extensions/jar.mn
 +++ b/toolkit/mozapps/extensions/jar.mn
-@@ -25,4 +25,5 @@ toolkit.jar:
+@@ -23,4 +23,5 @@ toolkit.jar:
  % resource default-theme %content/mozapps/extensions/default-theme/
    content/mozapps/extensions/default-theme                      (default-theme/*.svg)
    content/mozapps/extensions/default-theme/manifest.json        (default-theme/manifest.json)
 +  content/mozapps/extensions/default-theme/experiment11.css      (default-theme/experiment11.css)
  #endif
 -- 
-2.37.1 (Apple Git-137.1)
+2.39.2 (Apple Git-143)
 

@@ -9,10 +9,10 @@ Subject: Remove Lockwise branding in about:logins
  3 files changed, 10 insertions(+)
 
 diff --git a/browser/components/aboutlogins/content/aboutLogins.html b/browser/components/aboutlogins/content/aboutLogins.html
-index 76bf16d52d..2bf04e71b8 100644
+index c7138a909a..606d6da67e 100644
 --- a/browser/components/aboutlogins/content/aboutLogins.html
 +++ b/browser/components/aboutlogins/content/aboutLogins.html
-@@ -238,6 +238,7 @@
+@@ -239,6 +239,7 @@
        <img class="illustration" src="chrome://browser/content/aboutlogins/icons/intro-illustration.svg"/>
        <h1 class="heading" data-l10n-id="about-logins-login-intro-heading-logged-out2"></h1>
        <section>
@@ -20,7 +20,7 @@ index 76bf16d52d..2bf04e71b8 100644
          <p class="description" data-l10n-id="login-intro-description"></p>
          <ul>
            <li data-l10n-id="login-intro-instructions-fxa"></li>
-@@ -246,13 +247,16 @@
+@@ -247,13 +248,16 @@
              <a data-l10n-name="passwords-help-link" class="intro-help-link" target="_blank" rel="noreferrer"></a>
            </li>
          </ul>
@@ -57,7 +57,7 @@ index 682ddb32d8..49fc0a7be1 100644
      let importClass = window.AboutLoginsUtils.fileImportEnabled
        ? ".intro-import-text.file-import"
 diff --git a/browser/themes/shared/preferences/privacy.css b/browser/themes/shared/preferences/privacy.css
-index f9bcba3b49..610f531b0b 100644
+index b9e081f12d..7d16dd9eb3 100644
 --- a/browser/themes/shared/preferences/privacy.css
 +++ b/browser/themes/shared/preferences/privacy.css
 @@ -4,6 +4,10 @@
@@ -68,9 +68,9 @@ index f9bcba3b49..610f531b0b 100644
 +  display: none;
 +}
 +
- #trackingGroup {
+ .highlighting-group {
    --section-highlight-background-color: color-mix(in srgb, var(--in-content-accent-color) 20%, transparent);
  }
 -- 
-2.36.0
+2.39.2 (Apple Git-143)
 

@@ -3,16 +3,16 @@ Date: Wed, 23 Sep 2020 17:02:37 +0200
 Subject: Allow setting service url to be overrided by prefs
 
 ---
- services/settings/Utils.jsm | 4 +---
+ services/settings/Utils.sys.mjs | 4 +---
  1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/services/settings/Utils.jsm b/services/settings/Utils.jsm
-index 23d6bf1a20..57f2a7d84d 100644
---- a/services/settings/Utils.jsm
-+++ b/services/settings/Utils.jsm
-@@ -103,9 +103,7 @@ function _isUndefined(value) {
+diff --git a/services/settings/Utils.sys.mjs b/services/settings/Utils.sys.mjs
+index 0144fad99c..bd7609f6a1 100644
+--- a/services/settings/Utils.sys.mjs
++++ b/services/settings/Utils.sys.mjs
+@@ -95,9 +95,7 @@ function _isUndefined(value) {
  
- var Utils = {
+ export var Utils = {
    get SERVER_URL() {
 -    return lazy.allowServerURLOverride
 -      ? lazy.gServerURL
@@ -22,5 +22,5 @@ index 23d6bf1a20..57f2a7d84d 100644
  
    CHANGES_PATH: "/buckets/monitor/collections/changes/changeset",
 -- 
-2.36.0
+2.39.2 (Apple Git-143)
 

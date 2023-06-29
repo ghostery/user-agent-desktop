@@ -7,13 +7,13 @@ Subject: Hide learn more link on network error pages
  1 file changed, 4 insertions(+)
 
 diff --git a/toolkit/themes/shared/aboutNetError.css b/toolkit/themes/shared/aboutNetError.css
-index 73f9d2760a..d2974dbfdb 100644
+index c84a72fce4..df6251a34d 100644
 --- a/toolkit/themes/shared/aboutNetError.css
 +++ b/toolkit/themes/shared/aboutNetError.css
 @@ -4,6 +4,10 @@
-
+ 
  @import url("chrome://global/skin/error-pages.css");
-
+ 
 +#learnMoreLink {
 +  display: none;
 +}
@@ -21,6 +21,6 @@ index 73f9d2760a..d2974dbfdb 100644
  body {
    --warning-color: #ffa436;
  }
---
-2.36.0
+-- 
+2.39.2 (Apple Git-143)
 
