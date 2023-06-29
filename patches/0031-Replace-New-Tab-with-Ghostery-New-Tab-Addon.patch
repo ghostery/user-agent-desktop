@@ -4,16 +4,16 @@ Subject: Replace New Tab with Ghostery New Tab Addon
 
 ---
  browser/components/extensions/parent/ext-url-overrides.js | 2 +-
- browser/components/urlbar/UrlbarInput.sys.mjs                 | 7 +++++++
+ browser/components/urlbar/UrlbarInput.sys.mjs             | 7 +++++++
  2 files changed, 8 insertions(+), 1 deletion(-)
 
 diff --git a/browser/components/extensions/parent/ext-url-overrides.js b/browser/components/extensions/parent/ext-url-overrides.js
-index af2c367e1f..5447fd1a2a 100644
+index 40c8995986..23d9a8fcb3 100644
 --- a/browser/components/extensions/parent/ext-url-overrides.js
 +++ b/browser/components/extensions/parent/ext-url-overrides.js
-@@ -76,7 +76,7 @@ XPCOMUtils.defineLazyGetter(this, "newTabPopup", () => {
+@@ -80,7 +80,7 @@ XPCOMUtils.defineLazyGetter(this, "newTabPopup", () => {
  });
-
+ 
  function setNewTabURL(extensionId, url) {
 -  if (extensionId) {
 +  if (extensionId && extensionId !== 'newtab@ghostery.com') {
@@ -21,13 +21,13 @@ index af2c367e1f..5447fd1a2a 100644
      let policy = ExtensionParent.WebExtensionPolicy.getByID(extensionId);
      Services.prefs.setBoolPref(
 diff --git a/browser/components/urlbar/UrlbarInput.sys.mjs b/browser/components/urlbar/UrlbarInput.sys.mjs
-index 15a255e54f..7bd94501a7 100644
+index 50b55dfa2e..4920bda037 100644
 --- a/browser/components/urlbar/UrlbarInput.sys.mjs
 +++ b/browser/components/urlbar/UrlbarInput.sys.mjs
-@@ -393,6 +393,13 @@ class UrlbarInput {
-         !dueToSessionRestore &&
-         (!this.window.isBlankPageURL(uri.spec) ||
-           uri.schemeIs("moz-extension"));
+@@ -418,6 +418,13 @@ export class UrlbarInput {
+           (!this.window.isBlankPageURL(uri.spec) ||
+             uri.schemeIs("moz-extension"));
+       }
 +      try {
 +        const { WebExtensionPolicy } = Cu.getGlobalForObject(Services);
 +        const policy = WebExtensionPolicy.getByURI(uri);
@@ -38,6 +38,6 @@ index 15a255e54f..7bd94501a7 100644
      } else if (
        this.window.isInitialPage(value) &&
        lazy.BrowserUIUtils.checkEmptyPageOrigin(
---
-2.36.0
+-- 
+2.39.2 (Apple Git-143)
 

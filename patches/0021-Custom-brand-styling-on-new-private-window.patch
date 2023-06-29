@@ -8,7 +8,7 @@ Subject: Custom brand styling on new private window
  2 files changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/browser/components/privatebrowsing/content/aboutPrivateBrowsing.html b/browser/components/privatebrowsing/content/aboutPrivateBrowsing.html
-index d305799935..56103fbdbe 100644
+index fd713f2313..c53d5be79e 100644
 --- a/browser/components/privatebrowsing/content/aboutPrivateBrowsing.html
 +++ b/browser/components/privatebrowsing/content/aboutPrivateBrowsing.html
 @@ -13,6 +13,7 @@
@@ -17,10 +17,10 @@ index d305799935..56103fbdbe 100644
      <link rel="stylesheet" href="chrome://browser/skin/privatebrowsing/aboutPrivateBrowsing.css" media="all"/>
 +    <link rel="stylesheet" href="chrome://branding/content/aboutPrivateBrowsing.css" media="all"/>
      <link rel="localization" href="branding/brand.ftl"/>
-     <link rel="localization" href="browser/branding/brandings.ftl"/>
+     <link rel="localization" href="toolkit/branding/brandings.ftl"/>
      <link rel="localization" href="browser/aboutPrivateBrowsing.ftl"/>
 diff --git a/browser/themes/shared/tabs.css b/browser/themes/shared/tabs.css
-index 65eb052999..1d08cb278a 100644
+index e93e790667..064e8e31e3 100644
 --- a/browser/themes/shared/tabs.css
 +++ b/browser/themes/shared/tabs.css
 @@ -8,7 +8,7 @@
@@ -33,5 +33,5 @@ index 65eb052999..1d08cb278a 100644
    --tab-shadow-max-size: 6px;
    --tab-block-margin: 4px;
 -- 
-2.36.0
+2.39.2 (Apple Git-143)
 

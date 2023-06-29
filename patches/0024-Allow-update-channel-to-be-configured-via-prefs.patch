@@ -7,10 +7,10 @@ Subject: Allow update channel to be configured via prefs
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/toolkit/modules/UpdateUtils.sys.mjs b/toolkit/modules/UpdateUtils.sys.mjs
-index 5257a5dcec..b736ba0a07 100644
+index 5bd258b520..ad825c0b9f 100644
 --- a/toolkit/modules/UpdateUtils.sys.mjs
 +++ b/toolkit/modules/UpdateUtils.sys.mjs
-@@ -41,7 +41,7 @@ var UpdateUtils = {
+@@ -38,7 +38,7 @@ export var UpdateUtils = {
     *        Whether or not to include the partner bits. Default: true.
     */
    getUpdateChannel(aIncludePartners = true) {
@@ -19,6 +19,6 @@ index 5257a5dcec..b736ba0a07 100644
      let channel = defaults.getCharPref(
        "app.update.channel",
        AppConstants.MOZ_UPDATE_CHANNEL
---
-2.36.0
+-- 
+2.39.2 (Apple Git-143)
 

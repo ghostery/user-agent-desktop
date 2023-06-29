@@ -1,15 +1,14 @@
-From 4a5ea1f908b7c9533ff633d659dd8150402d55da Mon Sep 17 00:00:00 2001
 From: Krzysztof Jan Modras <chrmod@chrmod.net>
 Date: Thu, 17 Sep 2020 15:36:45 +0200
 Subject: Firefox profile import
 
 ---
- .../migration/FirefoxProfileMigrator.sys.mjs  | 345 +++++++++++++++++-
+ .../migration/FirefoxProfileMigrator.sys.mjs  | 342 +++++++++++++++++-
  browser/components/migration/moz.build        |   5 +-
- 2 files changed, 346 insertions(+), 4 deletions(-)
+ 2 files changed, 344 insertions(+), 3 deletions(-)
 
 diff --git a/browser/components/migration/FirefoxProfileMigrator.sys.mjs b/browser/components/migration/FirefoxProfileMigrator.sys.mjs
-index 1044e178f4..0e0bc5aa9f 100644
+index 1bf7eb2c61..81b218cbc6 100644
 --- a/browser/components/migration/FirefoxProfileMigrator.sys.mjs
 +++ b/browser/components/migration/FirefoxProfileMigrator.sys.mjs
 @@ -32,7 +32,7 @@ ChromeUtils.defineESModuleGetters(lazy, {
@@ -18,22 +17,22 @@ index 1044e178f4..0e0bc5aa9f 100644
   */
 -export class FirefoxProfileMigrator extends MigratorBase {
 +class FirefoxProfileMigratorOrig extends MigratorBase {
-   constructor() {
-     super();
-     this.wrappedJSObject = this; // for testing...
-@@ -105,7 +105,7 @@ export class FirefoxProfileMigrator extends MigratorBase {
-
+   static get key() {
+     return "firefox";
+   }
+@@ -96,7 +96,7 @@ export class FirefoxProfileMigrator extends MigratorBase {
+ 
      // Being a startup-only migrator, we can rely on
      // MigrationUtils.profileStartup being set.
 -    let currentProfileDir = MigrationUtils.profileStartup.directory;
 +    let currentProfileDir = this.getCurrentProfileDir();
-
+ 
      // Surely data cannot be imported from the current profile.
      if (sourceProfileDir.equals(currentProfileDir)) {
-@@ -154,6 +154,13 @@ export class FirefoxProfileMigrator extends MigratorBase {
+@@ -159,6 +159,13 @@ export class FirefoxProfileMigrator extends MigratorBase {
        Services.prefs.savePrefFile(newPrefsFile);
      }
-
+ 
 +    if (!this.startupOnlyMigrator && !MigrationUtils.isStartupMigration) {
 +      let places = this.getHistoryAndBookmarksResource(sourceProfileDir, "places.sqlite");
 +      let cookies = this.getCookiesResource(sourceProfileDir, "cookies.sqlite");
@@ -44,7 +43,7 @@ index 1044e178f4..0e0bc5aa9f 100644
      let types = MigrationUtils.resourceTypes;
      let places = getFileResource(types.HISTORY, [
        "places.sqlite",
-@@ -373,3 +380,334 @@ export class FirefoxProfileMigrator extends MigratorBase {
+@@ -395,3 +402,334 @@ export class FirefoxProfileMigrator extends MigratorBase {
      return true;
    }
  }
@@ -380,19 +379,20 @@ index 1044e178f4..0e0bc5aa9f 100644
 +  }
 +}
 diff --git a/browser/components/migration/moz.build b/browser/components/migration/moz.build
-index dcd31d8527..5e45c29cc6 100644
+index 020bf15802..50bb99b0f6 100644
 --- a/browser/components/migration/moz.build
 +++ b/browser/components/migration/moz.build
-@@ -24,12 +24,15 @@ XPIDL_MODULE = "migration"
- EXTRA_JS_MODULES += [
+@@ -26,13 +26,16 @@ EXTRA_JS_MODULES += [
      "ChromeMigrationUtils.sys.mjs",
      "ChromeProfileMigrator.sys.mjs",
+     "FileMigrators.sys.mjs",
 -    "FirefoxProfileMigrator.sys.mjs",
+     "InternalTestingProfileMigrator.sys.mjs",
      "MigrationUtils.sys.mjs",
      "MigratorBase.sys.mjs",
      "ProfileMigrator.sys.mjs",
  ]
-
+ 
 +EXTRA_PP_JS_MODULES += [
 +    "FirefoxProfileMigrator.sys.mjs",
 +]
@@ -400,5 +400,6 @@ index dcd31d8527..5e45c29cc6 100644
  FINAL_TARGET_FILES.actors = [
      "MigrationWizardChild.sys.mjs",
      "MigrationWizardParent.sys.mjs",
---
-2.39.1
+-- 
+2.39.2 (Apple Git-143)
+

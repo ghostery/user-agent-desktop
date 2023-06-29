@@ -3,45 +3,30 @@ Date: Tue, 22 Sep 2020 11:50:13 +0200
 Subject: Clean up preferences
 
 ---
- browser/themes/shared/preferences/preferences.css | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ browser/themes/shared/preferences/preferences.css | 5 +++++
+ 1 file changed, 5 insertions(+)
 
 diff --git a/browser/themes/shared/preferences/preferences.css b/browser/themes/shared/preferences/preferences.css
-index 97d49620f1..7d2204d8b3 100644
+index dc3ab1da46..ec52073f7a 100644
 --- a/browser/themes/shared/preferences/preferences.css
 +++ b/browser/themes/shared/preferences/preferences.css
-@@ -8,6 +8,10 @@
-   user-select: text;
+@@ -142,11 +142,16 @@ checkbox {
  }
-
-+#homeContentsGroup {
-+  display: none;
-+}
-+
- #preferences-root {
-   text-rendering: optimizeLegibility;
-   -moz-box-layout: flex;
-@@ -146,10 +150,19 @@ checkbox {
- }
-
+ 
  .learnMore {
 +  display: none;
    margin-inline-start: 0;
    font-weight: normal;
    white-space: nowrap;
  }
-
-+#category-more-from-mozilla {
-+  display: none;
-+}
-+
-+#category-home {
+ 
++#category-more-from-mozilla, #homeContentsGroup, #category-home {
 +  display: none;
 +}
 +
  .accessory-button {
    min-width: 150px;
    margin: 4px 0;
---
-2.36.0
+-- 
+2.39.2 (Apple Git-143)
 

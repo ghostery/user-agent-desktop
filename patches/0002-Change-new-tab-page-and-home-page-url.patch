@@ -9,7 +9,7 @@ Subject: Change new tab page and home page url
  3 files changed, 3 insertions(+), 16 deletions(-)
 
 diff --git a/browser/app/profile/firefox.js b/browser/app/profile/firefox.js
-index 04dd3e263a..59d7d6fc0d 100644
+index 6ef8e69196..a1073fe280 100644
 --- a/browser/app/profile/firefox.js
 +++ b/browser/app/profile/firefox.js
 @@ -286,7 +286,7 @@ pref("browser.shell.setDefaultPDFHandler.onlyReplaceBrowsers", true);
@@ -22,10 +22,10 @@ index 04dd3e263a..59d7d6fc0d 100644
  pref("browser.startup.homepage.abouthome_cache.enabled", true);
  #else
 diff --git a/browser/components/newtab/AboutNewTabService.jsm b/browser/components/newtab/AboutNewTabService.jsm
-index 1dd6be9e01..3432f1ace9 100644
+index 43c0ea1f37..29ee2ea72c 100644
 --- a/browser/components/newtab/AboutNewTabService.jsm
 +++ b/browser/components/newtab/AboutNewTabService.jsm
-@@ -422,20 +422,7 @@ class BaseAboutNewTabService {
+@@ -435,20 +435,7 @@ class BaseAboutNewTabService {
     * the newtab page has no effect on the result of this function.
     */
    get defaultURL() {
@@ -48,10 +48,10 @@ index 1dd6be9e01..3432f1ace9 100644
  
    get welcomeURL() {
 diff --git a/browser/modules/HomePage.jsm b/browser/modules/HomePage.jsm
-index 5a21f7067e..4b034440d0 100644
+index db8af26001..dfca2933e1 100644
 --- a/browser/modules/HomePage.jsm
 +++ b/browser/modules/HomePage.jsm
-@@ -23,7 +23,7 @@ XPCOMUtils.defineLazyModuleGetters(lazy, {
+@@ -25,7 +25,7 @@ XPCOMUtils.defineLazyModuleGetters(lazy, {
  });
  
  const kPrefName = "browser.startup.homepage";
@@ -61,5 +61,5 @@ index 5a21f7067e..4b034440d0 100644
    "browser.startup.homepage_override.extensionControlled";
  const kHomePageIgnoreListId = "homepage-urls";
 -- 
-2.36.0
+2.39.2 (Apple Git-143)
 

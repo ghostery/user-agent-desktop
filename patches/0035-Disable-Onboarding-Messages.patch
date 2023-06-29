@@ -7,10 +7,10 @@ Subject: Disable Onboarding Messages
  1 file changed, 1 insertion(+), 2 deletions(-)
 
 diff --git a/browser/components/newtab/lib/OnboardingMessageProvider.jsm b/browser/components/newtab/lib/OnboardingMessageProvider.jsm
-index 78098ec4e3..8bc38afd79 100644
+index a0fc277ec7..1e2e5c5327 100644
 --- a/browser/components/newtab/lib/OnboardingMessageProvider.jsm
 +++ b/browser/components/newtab/lib/OnboardingMessageProvider.jsm
-@@ -1077,8 +1077,7 @@ const BASE_MESSAGES = () => [
+@@ -1088,8 +1088,7 @@ const BASE_MESSAGES = () => [
  ];
  
  // Eventually, move Feature Callout messages to their own provider
@@ -21,5 +21,5 @@ index 78098ec4e3..8bc38afd79 100644
  const OnboardingMessageProvider = {
    async getExtraAttributes() {
 -- 
-2.37.1 (Apple Git-137.1)
+2.39.2 (Apple Git-143)
 

@@ -20,5 +20,5 @@ index 671e77e97b..1fee26d1bb 100644
          appini_defines["MOZ_APPUPDATE_HOST"] = CONFIG["MOZ_APPUPDATE_HOST"]
  
 -- 
-2.36.0
+2.39.2 (Apple Git-143)
 

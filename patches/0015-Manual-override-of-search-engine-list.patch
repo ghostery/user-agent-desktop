@@ -1,1116 +1,123 @@
-From 65c04d0b5418cd35b599ae3848de499a0748c544 Mon Sep 17 00:00:00 2001
 From: Sam Macbeth <sam@cliqz.com>
 Date: Mon, 19 Oct 2020 12:13:51 +0200
 Subject: Manual override of search engine list
 
 ---
- .../search/extensions/bing/manifest.json      |  38 +------
- .../search/extensions/bing/manifest.json.rej  |  14 +++
- .../search/extensions/ddg/manifest.json       |  32 +-----
- .../search/extensions/ecosia/manifest.json    |   7 +-
- .../search/extensions/ekoru/favicon.ico       | Bin 0 -> 18338 bytes
- .../search/extensions/ekoru/manifest.json     |  27 +++++
- .../search/extensions/gibiru/favicon.ico      | Bin 0 -> 5430 bytes
- .../search/extensions/gibiru/manifest.json    |  27 +++++
- .../google/_locales/en/messages.json          |   6 +-
- .../google/_locales/region-by/messages.json   |   2 +-
- .../google/_locales/region-kz/messages.json   |   2 +-
- .../google/_locales/region-ru/messages.json   |   2 +-
- .../google/_locales/region-tr/messages.json   |   2 +-
- .../search/extensions/google/manifest.json    |   7 +-
- .../search/extensions/onesearch/manifest.json |  24 ++++
- .../onesearch/ui/img/Icon_128x128.png         | Bin 0 -> 3381 bytes
- .../search/extensions/qwant/manifest.json     |   4 +-
- .../search/extensions/startpage/favicon.ico   | Bin 0 -> 1150 bytes
- .../search/extensions/startpage/manifest.json |  27 +++++
- .../search/extensions/yahoo/favicon.ico       | Bin 0 -> 5430 bytes
- .../search/extensions/yahoo/manifest.json     |  27 +++++
- .../search/SearchEngineSelector.sys.mjs       | 106 ++++++++++++++++++
- 22 files changed, 271 insertions(+), 83 deletions(-)
- create mode 100644 browser/components/search/extensions/bing/manifest.json.rej
- create mode 100644 browser/components/search/extensions/ekoru/favicon.ico
- create mode 100644 browser/components/search/extensions/ekoru/manifest.json
- create mode 100644 browser/components/search/extensions/gibiru/favicon.ico
- create mode 100644 browser/components/search/extensions/gibiru/manifest.json
- create mode 100644 browser/components/search/extensions/onesearch/manifest.json
- create mode 100644 browser/components/search/extensions/onesearch/ui/img/Icon_128x128.png
- create mode 100644 browser/components/search/extensions/startpage/favicon.ico
- create mode 100644 browser/components/search/extensions/startpage/manifest.json
- create mode 100644 browser/components/search/extensions/yahoo/favicon.ico
- create mode 100644 browser/components/search/extensions/yahoo/manifest.json
+ .../search/extensions/brave/favicon.png       | Bin 0 -> 676 bytes
+ .../search/extensions/brave/manifest.json     |  27 ++++++++++
+ .../search/SearchEngineSelector.sys.mjs       |  48 ++++++++++++++++++
+ 3 files changed, 75 insertions(+)
+ create mode 100644 browser/components/search/extensions/brave/favicon.png
+ create mode 100644 browser/components/search/extensions/brave/manifest.json
 
-diff --git a/browser/components/search/extensions/bing/manifest.json b/browser/components/search/extensions/bing/manifest.json
-index fb2c6e90b4..182b769f97 100644
---- a/browser/components/search/extensions/bing/manifest.json
-+++ b/browser/components/search/extensions/bing/manifest.json
-@@ -5,7 +5,7 @@
-   "version": "1.4",
-   "browser_specific_settings": {
-     "gecko": {
--      "id": "bing@search.mozilla.org"
-+      "id": "bing@search.ghostery.com"
-     }
-   },
-   "hidden": true,
-@@ -17,42 +17,12 @@
-   ],
-   "chrome_settings_overrides": {
-     "search_provider": {
--      "keyword": "@bing",
-       "name": "Bing",
-+      "keyword": "@bing",
-       "search_url": "https://www.bing.com/search",
--      "search_form": "https://www.bing.com/search?pc=MOZI&q={searchTerms}",
--      "search_url_get_params": "pc=MOZI&q={searchTerms}",
-+      "search_form": "https://www.bing.com/search?q={searchTerms}",
-+      "search_url_get_params": "q={searchTerms}",
-       "params": [
--        {
--          "name": "form",
--          "condition": "purpose",
--          "purpose": "contextmenu",
--          "value": "MOZCON"
--        },
--        {
--          "name": "form",
--          "condition": "purpose",
--          "purpose": "searchbar",
--          "value": "MOZSBR"
--        },
--        {
--          "name": "form",
--          "condition": "purpose",
--          "purpose": "homepage",
--          "value": "MOZSPG"
--        },
--        {
--          "name": "form",
--          "condition": "purpose",
--          "purpose": "keyword",
--          "value": "MOZLBR"
--        },
--        {
--          "name": "form",
--          "condition": "purpose",
--          "purpose": "newtab",
--          "value": "MOZTSB"
--        }
-       ],
-       "suggest_url": "https://www.bing.com/osjson.aspx",
-       "suggest_url_get_params": "query={searchTerms}&form=OSDJAS&language={moz:locale}"
-diff --git a/browser/components/search/extensions/bing/manifest.json.rej b/browser/components/search/extensions/bing/manifest.json.rej
+diff --git a/browser/components/search/extensions/brave/favicon.png b/browser/components/search/extensions/brave/favicon.png
 new file mode 100644
-index 0000000000..e5ca5fd68d
---- /dev/null
-+++ b/browser/components/search/extensions/bing/manifest.json.rej
-@@ -0,0 +1,14 @@
-+diff a/browser/components/search/extensions/bing/manifest.json b/browser/components/search/extensions/bing/manifest.json	(rejected hunks)
-+@@ -2,10 +2,10 @@
-+   "name": "Bing",
-+   "description": "Bing. Search by Microsoft.",
-+   "manifest_version": 2,
-+-  "version": "1.2",
-++  "version": "1.1",
-+   "browser_specific_settings": {
-+     "gecko": {
-+-      "id": "bing@search.mozilla.org"
-++      "id": "bing@search.ghostery.com"
-+     }
-+   },
-+   "hidden": true,
-diff --git a/browser/components/search/extensions/ddg/manifest.json b/browser/components/search/extensions/ddg/manifest.json
-index 9c71a9712c..74e0c6942e 100644
---- a/browser/components/search/extensions/ddg/manifest.json
-+++ b/browser/components/search/extensions/ddg/manifest.json
-@@ -5,7 +5,7 @@
-   "version": "1.2",
-   "browser_specific_settings": {
-     "gecko": {
--      "id": "ddg@search.mozilla.org"
-+      "id": "ddg@search.ghostery.com"
-     }
-   },
-   "hidden": true,
-@@ -23,36 +23,6 @@
-       "search_form": "https://duckduckgo.com/?q={searchTerms}",
-       "search_url_get_params": "q={searchTerms}",
-       "params": [
--        {
--          "name": "t",
--          "condition": "purpose",
--          "purpose": "contextmenu",
--          "value": "ffcm"
--        },
--        {
--          "name": "t",
--          "condition": "purpose",
--          "purpose": "keyword",
--          "value": "ffab"
--        },
--        {
--          "name": "t",
--          "condition": "purpose",
--          "purpose": "searchbar",
--          "value": "ffsb"
--        },
--        {
--          "name": "t",
--          "condition": "purpose",
--          "purpose": "homepage",
--          "value": "ffhp"
--        },
--        {
--          "name": "t",
--          "condition": "purpose",
--          "purpose": "newtab",
--          "value": "ffnt"
--        }
-       ],
-       "suggest_url": "https://ac.duckduckgo.com/ac/",
-       "suggest_url_get_params": "q={searchTerms}&type=list"
-diff --git a/browser/components/search/extensions/ecosia/manifest.json b/browser/components/search/extensions/ecosia/manifest.json
-index f78efd125f..7885986757 100644
---- a/browser/components/search/extensions/ecosia/manifest.json
-+++ b/browser/components/search/extensions/ecosia/manifest.json
-@@ -5,7 +5,7 @@
-   "version": "1.2",
-   "browser_specific_settings": {
-     "gecko": {
--      "id": "ecosia@search.mozilla.org"
-+      "id": "ecosia@search.ghostery.com"
-     }
-   },
-   "hidden": true,
-@@ -18,11 +18,12 @@
-   "chrome_settings_overrides": {
-     "search_provider": {
-       "name": "Ecosia",
-+      "keyword": "@ecosia",
-       "search_url": "https://www.ecosia.org/search",
-       "search_form": "https://www.ecosia.org/",
--      "search_url_get_params": "tt=mzl&q={searchTerms}",
-+      "search_url_get_params": "q={searchTerms}",
-       "suggest_url": "https://ac.ecosia.org/autocomplete",
-       "suggest_url_get_params": "type=list&q={searchTerms}"
-     }
-   }
--}
-\ No newline at end of file
-+}
-diff --git a/browser/components/search/extensions/ekoru/favicon.ico b/browser/components/search/extensions/ekoru/favicon.ico
-new file mode 100644
-index 0000000000000000000000000000000000000000..7896036edecdc712783a80d8746a425fa0279c19
+index 0000000000000000000000000000000000000000..5982381bc03906db3926e13c84f6cf522bc3e722
 GIT binary patch
-literal 18338
-zcmX7v1yCHn+sF5i!ySryad&r$YjG*Ah2pMvSb;*JxVx3&6t}~*Sn;C8rMT<M@BdCF
-zn@J{<%|09b=94H5HF*qF5>x;HFccMJ-@k^i|2#7I_4$6;5$QERu$5Ak0)W~$v`2Hq
-z*Eq=iy}UF~HBPqw8lkdOc&`coesll;2?c<=m)Gz$-IEgl4$J^RI1K;@ofAy^<zDlG
-zEtKVDftUYWUPo!-YYK{sf`K~#pyB=JK|n?p5dgenQ<Rm`_F4MZ;ZVW4=t*%M*j7%t
-z>uM|Ltq{UP7RCLG5ub^eo0W*mu^$)P2p8cC&ej4H`^g3O&--{mEO-@G{g8NM1whEF
-zLJ~{AhKv?Di^>&FITC}R2K!yjI|F1kh5}p${Qiwh88?%gtlx3vOQt~;4PO5a+--bL
-z;+sxdes|a$=z8ah&jxx`HryCGR9^-5$)t2W40o-->BEU4ogzR>fn~(gpO8|JD8?QW
-z;0!uNfVfNTVvhsafFMo{zzZKwg$)5bs00wI02AzX`BQ>~YTSVEbr!0VyTcox9d(@o
-z=8wRRU<|Y()ZqREO+J0weO@@N8Qf%SQl5SmSK2mBw%ztzbpZgKrz)10V>*ZL!PUmf
-zlUuDBow<S|-6Iqj0ECG~17BT$@%h-_L|y6&^TWw7!LwXwc{Lgt!3*O;E=YTX{+`68
-zFaeb+3?VWx-LTdzl0*+f!K{KNWBmHNaQXb--5$-abrS>-kvQ*UUQjs!zX{s*?u;uc
-zZ8QJj{QRPrR}3JU(QQ7O^C6FPB|+m-?#&kewyUO7Z8X7%0ghhTd$)YhfJ}Vul-Wn)
-zHm3zmOpT?_PoVswpD%|7YsuQNNB+FnhQX^;_<H=AdSLTZL<LS11y&w$qb?`3GJ?rz
-zlZ)MJciiDv8v#b~5$Ldt0Aw=wX1W)!h~VGGHw1VjdG3g%MaEaTtqB;F5pk#xzscgJ
-zQT@z&6wU&r;ibW+jZ!q7`HKAL=AsZZ^SuRY*n0LYQO2eFMJQ>4e!U$7TI$N7TP%|4
-zwY{E-*tq*Fk-tuPB;6tI02+u?+8ydH%`>ToLUZRC$36)fr7+H;c}veCIW{DI*!FiM
-z7M3HBKmsTh_Mib$Z@r-;$QY4trqQ>^Y!uKS<p0RP{O~hw4D^EIFP~W+^g)onbw~Fv
-zg@^EFnCA3$$JGr9hH2;X^$i~;`1=*+!0!ZT#-&)PK1s1JBf8Pb9CCfGW*nrtjklKI
-zf(WsD&Xt;g#*kI+Y$3VD#57;DlDdvC;;(W*w16&}%T8zT=c$)mw2U~AYx)yQ;q(+T
-zrUr!{iT3HQ@&xoAUc9$xA>qhos!|Pwk0Fdv@jx;{SqJ9DE?0@Td~XK0OMpotZX~$5
-z?sFid+*nHFE;wJwl_ucnT$sK=Qlvq)A9-X%;~Gx`-L8&do#kBz6TMn>P?Aid7!hE4
-zf_N_x&|#YJMEeK(nhw@T^l^n;)xwW_j;CY5;e79oayx$z@WhE1k=~TDLME03r-7_P
-z3?>1y(;K?4=_E`3PkE0woVN}#o>ngB0jD=R!`^};Qlk`gk^lgWAurYF0ZDQcAkAp*
-z0bU`(*cf55+U&TBN;74B4d+;pCviw6C8<Q?&s}oJ*XJO(P?#&9(1_GXuPI1>4$wjU
-zW2vp6rE5WJznPwK`a+70Q7OzDRrIb~ixzGHn&?moswlU_u#gczesSa>>uDnL;0=LK
-z5^I*UzVMQ_$Em*p!wg~3TPhj_#cGJkagF6Muny`jO#cM(Pbq7FKByheMNz_RFuAL<
-zal#U*j3FM;YGCJF6I1QF2CisnjRLqt5KcdTQ29lWA0C#X$@Ml^;!_+T3(t9n#r<jL
-z1jUO=0MMh-ExBz6T+IK)wF9mjm5D4#IuP<Pf|0+fXBV27QrE3;E?G~O117zGZXBR-
-zNjl{@1+&I<lOZZ@M?Sm9y7Zk3=amKnJbj#Y1Q*ac#gM<(K=>7c`#iF+WCt<cV0LsN
-zS(2y+yn>1(N{~UD#73#9K`n_Pnp<Enp<+B(BV8jUsbeXz3<FreHcou~BB}Ebm>693
-zQaWMPBOz6_{xX#Z91^O5{L71(H5Q9xodwk!__Dwk0tkx~4{9u9ifES`_?xQKC^M%%
-z;!kce0yzE)Q&9U`UzE%zQ^Z^5PXskSkah&0cMoH1W7z)c{S+AMlGbr7kTywPLS&pr
-zRJ|}m&8U=w;rA(Nb#J2<Lu}1~$<}w)0Qs+M15i87uNwg({AEk1<Oba^OUSDeAQ?qa
-ztTlDvg}^5VB6I^(e%BF17%*-LlWTOk;hTVT!1`vC*i{ni$3MkR-#LTHQDyyghv%-l
-z$79s90!E47(d*zH?oWtUZ|i*}2UTljl0SFB$@0N{6N&}#>o$B(hJoM1eR-gDxRrh*
-z2-#y|HA^mtvbuJt(5Mq{r?QWbR1QvH9La^ng6wPIC-KPME*{rZ16^murZN^<AKw<m
-z#KcGu8^D9Fh<KA|M;&>TBVVWp;yxZ3tol-56V5saC<ox_zR<l?OPwpF#KeHaw0+&z
-zo*LGgkgj|mt)1;PQdBv0{Q*OGM}Th7{{k1uCelD#y%wp4pccYO+k^Ptc3-P`4NE<+
-zCor%|RL}%(Ier=UJMBU!5fyqt659_yba+hd>r^lu3oSCd%QjZC3{9r#xQUs(3yTH3
-zJ&KuBL2|Of(8a9-kP3$C*NLYhR7qAq$hR5%L&RX+2a%$Pe#^*$`o6afk}*zc3rLJC
-zFtEvYMQMtyYbp^%BV3~>QfU?lnos#m2rA0C1GZkIj+rsa@>TbeSJdLSBi#4u(`dV8
-z6|5n3%fGn@{37e(K2AcQqX1GSv~WoE=UAMclTyx~-2u!>fE6@GzMr3;%sa{=)^rT^
-z{SM!YSa(nPaF>$8b)bmZi0Zrjy;3Q!tm3ikq+gQ)dX!J%(f6YmF{`6XA>$B7q>mid
-zk{8>+Y4J|RGtFN}7Jt}REWRh1S!Bf3rz&_;q(A#a0-ZB;&=P%A1(9AUwJGl2glrpU
-z=y@c6P`bGlMGSR|roW|sVMIS;f$NiX%v#6yGWHm1r2>)Q30Q5w(me=y_S?y<OT%uy
-z#K@<3v3%*I)(3P~NhU8XFz3*{XB#<DFHp0j^StEKgZxou&&qmEEN^wSR0_<Uff&7W
-z`cM*zgnvMB)gd@S8y~n1H%$MB(Ngzq*N3}g;A(Z|m~J9^brtpyGe1CK?mLG}B1b46
-zxP81pt@zWA()U}oKo8Y}GPZ~J^<`lvp}a3b9g==h$mUTZdm$YcQfp?B3G@`35gY8E
-z!%HL4cRUk`brA7(=}7#TgvCfPd_zJ1D+3Fju9KCr#$qQ;l*qsA`FpfmYm?2uPAs2)
-zD>h>5n}q?%R;KIC-&%2mr0L2Z?Y7X7n-kCV7kq<_o7$&FOARu1*qX3xG2_FRVz>{_
-znrN>U>-t%LLFS#tyP|$t5^mhnbAO$uNGVT$iJ)CO%@F!pxZCL7QW)Njv#5uSuHr1{
-z63nK5^QWX(;Ff31_zsU$7ZItXPbE+GO|cDBk74q*%A*&h0u2|wdHztS;+xjFg~Xaa
-zBOjjcZW+mAa^Sqkp!CPCS*;Kn_tEoT2&*TN<cP2!3^ToB+aABY#3iJcYRUoipbOK8
-z`9G5{eBn*HLAWYjREx)a7?G)t)Z>zfJ)UTOAAVoWnt4auxH)4Ipvoa!cCbQDs4sVL
-zKgL(Ee<$_(;8b<`cYAaQch&D1e>~MTjgM^_XY&xcrAY#-jHe8^$*r<^v_N>1DaqfI
-zpw`|UA$cfRcyVS{qd$)Flg2Rmy9we^(Mo!!?!CevC&YIo^MOK_(sPikw&nfut{#Sy
-zK-A!Uy&zOQ!kbgtwJXYvm49vVKB&bWM<>C6kPrNA&kowvZxoNhJIQcQ`fFP0v(#Bv
-z3tN^&2(g0J2dve7Ehce)A_Nt^5n)Fx+OHocdfjyB(*uvMrthtdpNjoqXfWlqXI!wD
-z?QGtvMqtuIVyFNl_@slfPvUO+^MFoXfu>v9z{2M;+b2AUaUkofZ3}f0MtjC@DoIcP
-zk`XxslX)F*0QAyG)PE+}81Bo_<B>K7xSb)KI?MPV`na80CAnTix}2H0oq|svJA!o?
-zkyusfN=;B}KJb0j7P|;(FIKsmcxr~<`zj%h=K^QGk%i=%y?`8Z9!moIaVgiEytYCQ
-zBC7Z-Ee4~f-cG4Z`G-4^B^KIs`dK298q4SUh?q445s&l)CQ=35upl`D)m}GLQAMcz
-z2Sds>kJdqBh^(&z#bO1A7-(G)*$X@l%D(frpcjb6_fqPvg${JuEi{adsk_8`c3k26
-zzlVoX7boFm@JbkLG1xkTfU%`FpMF!(QGnDbH859!0)!rc{xa$2(gAcywM~3&HA6T-
-z91nV}TLwUsjt9a(oi%El-;(O}cFlPxXK^3lQ$8F@eNWjVOrLaH!F!nm5#I;`KP;+@
-zpD8<Dv7$XEvBe)@iG2#ZT1R6fZ{_J5cSkInVn4D?$WF+cPSh+|z>7P`8$k@T$Ci+T
-z;4&E82*CkNI99dtHtZ1(tr=Z7w#C*5sEnJbn&}owll*A5!LhicZ;Mpo;lUUOTtqpi
-zns=0v6s@4g4cq6v!e>%bz2`H+AVg#$PwOw-I+egkWs&YQ`ZU?J^mGrLNw(w$rh(}C
-zfD64j=Ak*Jnk77ZiZDR>Vd9O>_KGo{;929iQ2GwacV(6OFgXmP2FG~EDUHyu)#$eE
-zA27{hEzBUq__~{H24o9e`eB63CnE_9#8VwfG!!&NWe`Jx8bUUza58b<_dLXyZEoLx
-zCI+Ca?h<HxK&W?KXn;`rX7qZ(dV<Pf*iZWfk0@2Ag{_E65+e}V+p#9Jx_I)>`;0dX
-zuYY)PWxHt1(H|B?@;&A4ue$SqK_JD;j46573EQy8RGtW84Xtyu_1+TW$8p^CR(8SI
-zK<Gn(;UzGj*k`9TM%i<2JI`?Do6~&rv!$GnOnetLG)S}#+FHke9d4wdNDCEzs~ffn
-zvS;5)Pudk)rj*DeEe!9FcMlF$y<Lf+Xd#K6QPG@!qd;uL%|GKKoqmqDAGRgDcqGBA
-z(qb-MN9$Gbuys@$_1&YHeEWIJ4%pxsHD`(O`IF%mraM&6`pdmp+$*g|*<F#xl&R+f
-zs?(-T2!a(BNs=EG3arOFj1W7Od+Q4wgbqr#!2&d^)&OY=N(#k}6V*r|N-AKcfTV|%
-zLQo&RDwVRzm|}r<Q97D7lfRHzwcbc>qV^TL3PiVjFk`ZB9QdUOjy(*q!B>XhAmn1(
-zXAV(+n;TLuXMXzm$d=By)90~_>;njqz!s`xG?@Iq^Ni4^8B&XUu5A;dO?5r|K5Z2%
-zDz{zE$)c0Xsq`z^QKxu1W*xnctS6+eC#D;2!z$8CjH|$KGAqzMKN3n4E4ix~x3@_r
-z4^PAwVN$#KFO>*GvXS_W@j(A9F_$V6F=xK#qU?n0<)QI|{s~iFvSIveG=vx?v>_+S
-zZWb{qM6E!%MMdPALh?CFC<4G@l!q@frjla{V@g2k<sRQ~)v7pK=f}?_U@wEu969Rt
-z3Ne*Y`W>T_$-PVyfiosKhCKesb3JS8%};5OC4W+V88zO2Dhi8V&$qYNG4kFxFTs5@
-zG4G94R{Qg<y|>OH70Vdqh&gy*Nbba$Y~uN^=U<l;r}_aDc%wJr@}tx7cyxbgvE25>
-z1V;i#yGbQ0IaxjWrULbIgwWr)ezKC#o4J*z{z}-v^l)M{AU`#2#9o!1!KY<5pd!vM
-zlwm@f|8eH*%~-jP`xc4Bn_jWB*Cq6A@x)`t`EAK!)I9ITRqonbzR2dMT-MYm@TUy(
-zbTt?6Ai{~|J4656t35d4+ik+<pn#UN-^!oG(M5&v{otAkYQ39&3een+p~IPt4Vzvl
-zc_q#IV2g^4aAL=<g?lCjz*^=9`FvX*aC00_Qo62`SI};kw@Ygeswa0bL%EAYGdx=+
-z538wWy*tg9OD7l#_Mcv4PHs~v^iwG!$R1HO6hSwH22Ctp*fFp+Co5v#ul`W@{Cq~{
-z9|Rz40}%E%{x95#W0+)Qli$)=b36RM4vJLVjMXxW9Y_T%zxJNIqv3)bP7RDUqJPmk
-zioE<^g*ylqz8#RAIWb00ghc2~e8#~|J13kYvyrK!;1R8eKQ<HVSsB-aLcXtp#7Vm0
-zhhFVWXHp*rEw*E$B56RI75rSUny@T=Bzb9r;70b|I$f$bdtx|^h!i|==Ka<$VU@|o
-zHnt+gb+tfJ;%jp$Np0BIbHI%kNW`5{v(Lh3i!IhPDFm@9R?#^Q{S2Rh9-v&ic}H4)
-zaw``vl?&ffyyhG!8BfYJs&k5;H-wFhy8&iAm;xb@^3iA>V+bo<WbL5lX-n-O&Bhj9
-zs6>pHqHL&W3&cg*0>d0WLRs4`+i!IBb}(j_WM+Pu%<YhUb|5L&p(Z3Cb&e$WVYe1O
-z_8$eaTrutLS?F*#DWDOP_kNtIbw;poL=SEpnN6ySs={2U4fL}(BoT-mxR$ku;VZA=
-zaJNTxlB}>#QtNiE;m%+<Ax;Uow1l_7E28vb^JQ81w!bg6Z3k54rl7Mbpu?JLt$7a1
-zjACbxTom_aVjwIe8*6f`#)!jc?%=ekzR&$frp*bPoQ4cln#9n&<gur-dc<|jHz1fL
-z#sKPR8Pa8KLZ|>xZHQ;@$cI^pr+T!ALA$EvgD#o*RIOq2QCK8aDYT6>2RR_`_9qE3
-zO%0^#$h!s3%<-D_2TT}$%>wuY@{&Ek%Wz!7g98gp7ouHKoi`J~p7Pkb%+Cxdh>@IA
-z=HU?SYez&_shqM~?GfEREEDiV(7}W%A{Z6AjR@fLE{K=yfYi6Y^5nkO^X2iW+%<&=
-z8}tUGPHureHEb^bla^asI_p$DpS<}caoJOSJ8lNe2|v`+G1d@cPrqxm+PQj$xZZGa
-zeU}P-XZZKYb}i=Roaco&Co`CB#~vDiVfZtxG+Zi>*)nlnVHM4oo!}i<_qV#0dZ1zA
-z16&U=<aO#sTxW-r{@7#!)Zv8nsBbbWfVKrmoCOoWhXAGwn9$tPzz9(~RnC*cJUH?V
-z_#F9p#+xpF5~YX|@7OcJEp74X-r<r~CMQqT&A#iD%(Mwd$=5R-Xx57x-N0SDX;_Pk
-z3)p{w2|J_v&Isg`hErXc#f87eq_2=IJ+`UiviZW_kmedO2W_q67WQ1&!R+t@U;^S#
-zY*<ED$I2A<sHb<cr6AbSZF?fq+nw1Xm7{Foiq9<V%};PaSIVz)=f9?BH*=0(<TWI^
-zd*p+q=AqWY??i6?oS9-vJj=g`b{=2m_WEAD6|cP`Z@<}k$_sW1_{^B{Hp(DlQ^e#}
-z?eXuQXH0;Rwov}_r=<|342N+rMgs22np2j2C;d)am{i^vHkH1aZ7f>@2>G}ai<t|;
-zKg)MayxB3;zI4?9wN4S1>Y#*AjvywyLlLJ7@ge502>&5{cUErFA5-sI)WIs-iItkf
-zY5Aq=W#3dXwW*nm{VaX9^h}HLiRFHelC<{y=b%s%F=UGr8#5jjiA|(P%ExcP7;Be(
-z0-N9OwDgPUmSzf|Oo8cpf7M1?Pn<|ecV$dL&%5f6SV33?;nmLyzHlbiF5s)ZS@T2z
-zeT>xRJ=6X#e>m3N57jsD^txiztHr;5T3sg}-90_NxcS@ido8@_*BX?;Mt$R_*dPrX
-zm$Lg$NAm@t;*>FEHrh%Kbdt%uZtG4YoMnqp)7&S^r`sRF#0zi|fj1JnBA<5!2ip}D
-z>ce<HyGT#!fy7bP*$`GkfC27E*+Il<6<T33$a_XYDVKlX53uI1rl3>QVLed0(rJi-
-z9*X@+-eRNiWvS@IiCq_cSKyg06oz)lamMp>vaUoJUnlHUOu_sXpF<aVw7K#_KDB89
-z-NE=e)u-4Wg`+|uF3vOn{pDzOt*5jqXRyHF?+4p1w3E&YiuQ{whqJl<Kc{_1idl`N
-z`n<|xf-=30Dx5lP^aHX)BUVVj+ST&Sv3ze=%uzU_|0PFr;qy2ynHi)utDrlEhcO$%
-zHsuy^agFj?(udb~BKL^0xh&;uR&<2^9>DLiHmc;-vF34Z^avRmTCn(1Bv-vo@Th;2
-zyZ$0{S8At5@@RB7ao9Cy+N;%ks1Z(L*K$*7c{4-RjI&;44l{6vRC=cphh<h`YIbUD
-zhJr;4NTvGV7GV5ae#BFz;G!^H=Ut=zxVzchZ{me<@VJT6DAg|w4Ts{z?OZq3IXi+5
-z6KB_mH7d%Y-uHa3wTnk#_=PfV>+Lf4T0^nk0)v8WbQFx{!dvUdLAo;h<&{RS@D7A-
-zENK*;=kYxX3=&SO-0$Zlymb>7aG{QrWqsJoPcs}ZE8_FPB+kyc{U_*@y$rUwyrICE
-zZxCGWQ0^q&{_t|1Vp<93eA@W2+VTe%ah6T9bJV@}PMYgegC2HUj~x33)WIEilSVC}
-zbbcfaJs;Kw^(4Z;Y%YZBwirQsySYz?x6p|v82nm(WanEWV*jg!EsQzePg=O7mo4@B
-z`87ZO&8^K^uO;H18nO6O55sfPteCn(wFBnOB=_CpUYl!O*XPt$j=#Tu?4Eto6OVcM
-zcR`6Lj-mC%8?Ni6#e3c8IEZD{^PXZkyNf&ugCva-^~QJKbG)D`Sy$fgVq*CT>r|ri
-zd~Kb!SAO!BhypQjABjW2&zG0e&btSwJ&H^psBNTcVDG_y;w0=35#;LpW5rPg+VQ~3
-z>bH~T(0+{PyZ6%YK`FQ2FAEhE^aE0EJs-hT>*}4S45Mp}ZL5Emc)ULcjLr9=ayXgx
-zU8GX>RtKI@{_UN3!8{dp6!RxMMam7N44N<s;>Z#4Cp`XZUsK$Yj+(m$7>;06!`bJn
-zc`Q@-?t#su9Gdwpu|@sDGj5-MY@nJh2T*if_He8dcKz!WPk?!em?i2RxnoHxIM%2z
-z7>?P_jo$7?Qa;qbum|1j3#_X>Afy%K$||TSFqu#WDEb6l{Q;u9i@jUU7Pwa}B5X5l
-z3pH(;VyMfu9dd)hzpX#eJ6W2s8vn75La~kuY05bIgLcF$nC}lec!Wb?Yh;luWj+Gh
-zMkMCUwF}v)mG}6}lJ#yc@3n5H)*f+;pIH#!0)L*PLo1kztiKre<6fjH{8bO!i`%>r
-zyLvdAd1O!7?+Y>G%ke?(`fXgDwuQ-#9Q6Db&u(EoyL18$2)dcTJMq5{yq%qReA9U=
-z<0WIV5P(zdWYTA&Ut4dTVvxRSx5pMNQ2dT5#l!f0ubgtuUamx7SI}QAiRhcGc0x3E
-zHc5CfRRI?JNi`!Q*J-d2ylEfdDZ_ME^zM}?3Gc065Z<%Rv%zxz?=15aTwF!|)fB<a
-zq}k5Oagh<q+dNOaFCRlQt|?=-C!q*j*!FglA0vD_drMEB?*yVau$`4*XwC#dmJj9?
-z9#}6M2cfsMiIhC>YW!W{M(}31kDW6eVJ9!G65(;3mznJ&ESQ_k^1>e6t5aO^M7+w<
-z3H_Kn*(F-b*=w_lQD<xy)p%>qSHZ~6*%GmYjixY;mzx*ldqq$-G5&6oCE7tgDNN#a
-zY^`JCB8*vHcU-60@ZM_hjnq+R7xN^sNJ)F635sHrVpMDhIGJg`pzX7Xm|<fxkAF`c
-zWiKMXZ!CeHPv@QBbN1RZ)h!2h@Md`Kz{(@9O-8MhC0mr+K@r@io`}LWo&<k&v^{1`
-zYlJer6cm}a-5^=7?THe{N}II9x7nMYe)0I(Tw_9DwoSQ%yZ7p5#b}YznKpL6(GShT
-zD?s(Uy{x~u%68+CtgJIK8I}+V?;nn<3<YAn18iw^Ur*kkT4Ajn9+w>l9}b)Y2Pu6Q
-z%Dqj`Co$H8pDsD(a<v4YgBO{CUfJY9=NBJLNoocXVS}zR>t<k>N(otg@@_HR_TD6c
-zeVAJ)7=x&$A1q{zZeO!yucjchNU+SwWb#t=yNmkYV`X#xqDFrv@fvn;s6@%5$PNN?
-zJ~Ur?qGl^f?KgRrfI5VVJwnfgqswC77#ZxU)TcsGIe_|X9VKl;Q5%Cx_Qy`Pw|S@a
-zoq!QIuz+b(-Qn2$?pgYA`9)k+WbX3QM8IyZZpTByXZ55HA!e&ZoKkW)sFY)@v*=$O
-z1gvM6QR}`k1Mv1$a7vSc=GN#bDbp7}79#ko`Iec!=<q5Y{wooN9P(@(x1?m-T^h2w
-zX$k0EEvbHI+l=L9WnE+S2toh4sa=_)RP{JKbr`Tbi`;THkG6#dhhq5%kD&20XLq`P
-zU@sKY3<w^xufS{2X$#(@O$`*ZNTwVMi#8)++|M{)XsiCaEPdAQ#Rll>XG+<mRg)EW
-z6WD3*=aL7=MVAkk2T`Pl5oI=1bNIy$Hpz@!JCH4;E0D2Ba&?jo3JI^_=b0i>jlJkc
-zYori~jTW1xC%O)(%FA|oA_TAuIGcV`sC>jA+m(|NQ;L!O?P<o;;Fe^qVnB$(0Z%{k
-z<0Jdo`|zQhODg|?Uw^m2IFs1EizIf}XUTQ*Y5<0TDyy_soKQD^{4ush-1S9zz+YF|
-z$UIh&Yd@@fBsAd<yPIo?QzeQg203KZy@eFThSzq0TgsK<j+II7c3ifY_3;R$gu@DU
-zLEZZ>zbLUml1IV8sWU@bp@KgSWdNzutm@s!Ac=0_n}x#3m_8NeO_R76A7ppZ6FB%q
-zJJt_lYRh^sIL1$!erXIxsaNdY<g&I$PKpv1i?-~{DO;S7aB@S*?Xz~jK;k&-Ef3E{
-zQ2TznEfe!57^b9~*ahCR?u&e01pg+5tA3l(B(<86d9FjU>sObqY#quzAUHmHR#6NI
-z|1Bbf3`r2}ruxnx(_)~`%YUcuus3ibuZnMC+v+qc2Ya>vLZ2MUOU|h>f27T^?0A}^
-z?DdUA69_oIX}HR{a~;C20xGFYpsjE|bY^nyh5VS}hoeH?wnbLE0^!f8M@eA=3v@ax
-zeq>zTf}6!S!4B<MT>A*VrWJtBe#9Kyy!c|wzl=s={nSWg%gtwv;t1z{$jKC<bjS=O
-zA_(0Mg`lxti}<DrX984uKEEOG&g4T>`JZSFBo{Vw#J>p|yhXPksgdHZM4KAAkX&Y|
-z+PLtY#+F5cXu79V@t|@R4NJng>9GwgZE8TawD8551fs{sfqZ>L+(GHCaU*W!-cAS$
-z>X$t;ycxkML9w&-k?K{Cb+6c~UiHxX&PZnp-<ltOh=R%W6%U&{3bvecS3F_nM7z4p
-zQUITRrKqlnXd^Z!!=%zj1v&#9!{|D#YPDev4Ck_Lmtv=hic11aL8(IDzeHQ(1PE)i
-zKZ;`;$i<(dcWY6{m<h{L@196~MHoLde2^Ujo5^wcuILQ#O4W|Wda+nJv&ZLY$C$-{
-zQc&kS*NrEIRL&;M<NmeaE4$;T8wg1>oTbPLVDe)MiF@(A+n-7+tm47zJ~%Hs>D7A|
-z?awtWs`|Gw`q#P2WV&b7zVReEvNuAOvh~#mNoG}X8gNEi3-~8@|6tZMx|P*Q0;_pO
-zzunW;8;!&7PNu|8aYwU=<!<8*rhcgFD*30=<boi+Ja+@Mf`>8^J)owvhM?n6Ng*%h
-zFeBpez+ZN5!R}UwZ`r(sy6Im@yC##P0FFCxNI!bY6AHhwDWV7cE`P)s>00feaOhMA
-zyQX)GVux*jC`IB4`J@F)br(+t-xanniS`(nwsqAZ>9eTtVkR1bd+10B8rg?m_V3gy
-z=XH0Fud~|DbK!;EgFRc}^h1Xt-WbF0EL|3es#mTCK0>Q*3mV4<51GX2?3T|SzuHQi
-zmYodhy+w@r<8>7yFG)+7Ztb%*9R6)yf8$=^*z51ii7F95b~ZksW*2~#!N1>(GNh+Z
-zqZ@69g3-F*;j%sH_Ob+D=mI_PSdJpNh>$oKts|BtAhWc`FER)A6zP#dNgOS~*;4og
-zpWRZwp*N%-AviHPTJMWgFYs>92lB74d7a5oOBYRyiLg|?sdE*@@u1np6M*w~l5)ik
-zmLHpi^&CPi4$s23ahE%0X8MovhH%X>Ir+H{3D)O^D2%DJ*gs6Den#{73w1()(B3v|
-zw^razS!SBujcp}HF?GS&a60GDK=<;NzZ@}n0!=@8KP)HJO@$hHX|0xRaWCpGq6mF$
-z+P-ekunLRD5!`P=UGzrzSo{%@s@^fD`b(|F+=Qi#D%8U}oXg$z42sE#O!3ey8)J>l
-zqlylcTJFf_U@(t#oo<V8E4)d9A|#`Xzx`!i3&WL0+QGE29hoq}lwdT&(B*qz?)Ppw
-zC~4oQ{W{=%AN?cy7pK`*rp%}JL)~5y-aRLC${L1(5*f}22sct5%Si^NlGg>z6foUJ
-zhWf4M-;|jjn?_!cuJtiS$~l!c`2#v|+z+ZInH;^&wX=4x3!Lb5Leo^Cvk*tI$;?oF
-z1^t9Q#>)`l1X5zyOjezZ=gio@rZJAd!uRD;I?KO=ccLYIFwNgS=~6%C=!`gbId3W(
-z*nXf{P_m{hriUA*0xOb#LJHddp-LpV!mx4RB4S0!9$zZ;D#!jXqzcE0iQpX92&&h1
-z9+nUK4gN;AX)dtDP2rA>rVvr9&i<Co9$`k)RNM2@zG^*=4GU!Ui3b%s3XJMEpXS4x
-z+9H^IzB`8tr=$j_Pxl$oP{@vELBZ~yC4SJ$I-;9VOfkW1#MT0}_aEIqVm43(I8QTv
-z_EF7a&ijW8!@FNMS-i<fCW^5UX2e()V0%nAYBS|w{M<D6OZmc*A!q(a5%JZ(Lw>wh
-zY?%-d7HB(Tl}(Et-fS+;l-zDcdywqZ)-h{Jiiu4G=Onk&ivDjMCJE)1hsui=Xh)v(
-zZ93QQx>jm6p&~_svicg@B#D+P+8*}&+rp9;+{!%4?v_8&HK;@H4L{%qmwq}^#Yd3e
-zcguIJG!jq-J6)cr-r<D}MbrXCWtVL7U&mViRxI}@{R!8VMRNs{{OKrF8;p{hhk=}C
-z^-rovw7Im@TRSYgPFr8N?Q#TkNghf|1Q0oWNc>!}21zYPd1vs8ORuQ+B04{;|Iz~c
-z$sAg*B$>9JT6r4aJPz9Az3f<J$w!cOlb-4?Q<FMiC2c<;W?d?t#9aI%-48rQ(39g_
-ztc+<K%Di{bTp8yK@A>@B*@0Eg%(<|gZElnXnThEXr}~$)fG4AP&ine+Ok4f;lV_M;
-z#fxZl`U3tMo~Xllb-X1*ru+S{pQktn5&hZ#m9rDx9DM5XOz1pU7KI#P_6~U)d0VMw
-zlx~s<$h$T%dmzSY&ENXmFy7phtX>Kf;t$pOwHwzK>a{ZZQ3UJy`HU{;@n{Ba9T?v{
-z&&9j8-CWEKcj^MZ*$QGl{OgzR4T!;C^FV!)EP4@y_9cw76-xZ!xJb8rw6t8?^9`ZJ
-zwhcS;82vt4kt0@as+!(|);B~n#fq6Thy;xCUBNNCK^*{1nsI3_pZI2!>$33c)=C4K
-ze~-a*nI}e7`e21rkoc2M5PmXJA;m#=b1_FdAd5*UWY5<QArC*aZ|TofMWll?TeMwt
-zQ)VEG^LS{Sr`R|iep_@rmJwryp&-(%<{rYhLPL3MUT5Q48<9hobNG1j6t#_~q>)-|
-zH-kw3fs4b|1}SW&VK{9v{tY86Hji((B`*bv!mI1vGasid<sds=-AcVD>4hK=Br``P
-z!1~m)Y%z#jUXWtsY1t{=VqT$hU#wUaC^M#&>{xl3&Vw7OjffUR2#U0VczJS~Y+_{n
-zL5Eyq5@@XLO;rtK+<9$7t}TI$;XaJ-)PO(@`4T~2ap^nKUAAHj;pjv5RVxiSUX0zv
-ztL!1ZqlgN#F!yIe`}LeEIA`H)+XiOg<FaN=dxM!QGnVpvyKMI@^l23*gtP%TS5+fx
-z44NQI%U=XhEJQ^Q)<p0n>z!g%gKwIoueae^x<1$(uvM6^JSci1_6%)XSTZwXtekPg
-zwl`9!B<CLK*Rm%V<FwQGAWkam${nxVmmmxtSGF>l-szhf**8(~hv}YLz#xjCPo|I_
-zmA<h9Z(d16iQ&)Ux`s|TBkCqN?QdN`mQ5{hefGm$`04|R56Q!t<=G$Hp{QZhUk+t*
-zpAbznGum<~nWmcoiyMdKSdhkDqel{)-ebX|oG@VowsQSl>0Eg!`nl>)z$GTCKxt06
-zjvsq&ii0hWj+{vOV*p<oPL_WFXCh(~ND>fW{PKgyN!=RQ5(5YkIJnM9Rj5|Y^-G&R
-z*4)&<5eX?lIkGAMDYWvIp*K*&GST$&KxdvHY*)#X5yufzg%Z`Xe*;Cz3l$zZ#?)`x
-z^C<qV+aWc5)b-o6{MUKkEd8~rq%x@F(FBF17ptxg-!~4tf^mKy*o8^vTiu+7P%Zf%
-z!D!jgLN$gA7=w%#%R?(66z~7(u8_R8;P@ezVD3Td#Z=9TijR{S^mZ{5I^8Y*+!if|
-zu)#CUJ(xAbfvOHMrqE^@xorj^ouD?~TDaR7ZR9#if2J>m)Xf;sWt+`P&*Ddnf$49$
-zlQBifvB;nY3V&G)6?=bm)`|dQ4&!|eWD`jE*2%OUR3GG6NB#NF&NJZe3LQZ;;{rxi
-z7ZspPg~VdFsx`kr4|Mm>Efvdiq-$JN0I5t^*#~ly9;Zob*YNdjmvD<6mMJQxE`w`0
-z1zjl?ZVc2q_?l$&ueg%%<v3}Kd^D93GHE!)-5qBM&E2|iBZGe!NKJYMZbG&?((XQ-
-zv0+neR({)(Y4-$L{Lw<lrTuZ!e6ycXxi*^x)Rx+hteuDp5=UH}8W<2_1RUTkb-n#G
-zO%nRIqXf;~74fmUxKFnL6FOA|7>{#bUhvU&@!vqC<Ys^VGIG2Ce^@OTCHM0r;uSPa
-zxkxl$RwH_;^fe6Obvhq8wu`NfA?6T7Iv?uKj5*0uWkY_=+t~X?&oDVa%<CFhzO6)4
-z!_-iDtMuszBw3NCEa-xOg&lM6sZ}S|CkA(eY%GhdlJPQuqVYxqwn9mfho(J*hu$W!
-z@cR=Yta;flhGj&`d06VbdS0r4fq&j|b3!wV&b0H5LOZGe7%sJj%4eHret?^Zj7PGG
-zm+yukhVSo5)Duph4@)#CS%Kc0J#i?)4V_N7DCX|aNDvviCZld__HMdfydCKjt`YUN
-zPYa!jThh8`iYRxPWKr+UkOQ*N3>X68;i^SdFK<#~_h@t&#we5;ATcRm5_g&&!SASm
-zYkXVZEXiWpD3H=+v)d)ocn)&T5Cj;jG?G|u!TGpQD~t=>Zu)l*D#PK#GomffngmcR
-zBBJ9-M`unm%zEs(B8_bYd9IU*UlHnuyQv#{A?^S@fH|V&Q77T^(WlTJi#cHbIdqWH
-zBa*7MF{7p#0~$L?eYZcCZXJQU>j;8)_Lwx(yh1R>H+5GM1z2^^v48vnwARNP+d86U
-zi@ipa@fh8;7HAg^qv&)t;A$(HYyUV{s+stqH)5`>@x1H&yOi^#44SvB+Rg{xIT2fP
-z6l7fiFh$l`3lx^x)zEE4{52$y=2hwf64hyHOR+DDSYqyiGQ$T%FH`8Og`GlN4Y4j?
-zsVF^VFYgcxCh1iMOT;mQg!*O|7fLbRZ5D(n0SDaE1*Dp>Ov<Y&XL8$jpEUa26n{u>
-z|I-XIlVE{)xPv#rXjR)kzHnFL==1mK*IUT<MY(ni@j8~TvGH^g4D|10{(3Gxm^o$X
-zD7x2ONv$48d${FXK8DFvqHPZlK^G>MbJ9F4#tc@v^gI5EyCP8phN)HG!5t6?)Ipo%
-zu6N;7ot2P&xF(i}w(zakd2$YMS-8_z39TG=jaRpgYS$_M(SlnSP?XveoXcYLTQRN8
-zq$VNoLty=px#-Q1mElrE-^;i?nf3LqQcdva7hu(AKl^(+00*8BepNfJqg1=?pC{~>
-zK)tZlXF<UPkJnXb6Sb_R(TpWWVF9U{dOLos%#{z{Y_oHo*#;9QeWILKSMcvMc5TJy
-z4C+ga5U|=^PkBV<AHJ~%7-AiI>4XCF=6Ce9#pJ?>*g)9F5zCoRiK}adxc?Fox9+HZ
-z(0_D?*Yf)LmyA8`q0m!+829E6*^R~ki6;hickQG)35K|D2G8(Fk<3(PHm#xVXg0z=
-zo&l2sQMnkBmJ5?e^fD%OzE@knQ}_|u8|wg0rwA)~e<IG14^!q!)5n%w1IOdvcoR0h
-zR>XzKTB~0wj)U1`@j6(#2DsaNGrCrDyXSp^@QP4PcW+8$+%GQXh1V`cesfp{tN*M_
-z4SW}~ThSA47CFw0agJC6F=6O)HL4?VU{*59a*!%N{x14^Q*_Yt&%wW#hHGN@1%o9`
-z5}CI|-%ym2@CC|e-gjL$gae#1mtE1Fx@E=*y2jdpl<rtdGZu@iET7n+mI1%+MNTN%
-zWLJYuuh2IJ#Q&5>R*KKdi$Ujt;T<t+SmQXQ5vY>Z<O&|iGlHr~7$Jq{ab4n=e1&>$
-zH_oTs-tc`3VX;V@e*;Iw70;bWVhlT%I;3y-CNFq<>kKSXcI*~hQg+g68`60b)8YN-
-z>EpB9PL5kK!sAj+DUeFX3ex6I;ueW%0jB-liY!a+f7YJpmGZ5j!k2XiP72o;$EN$8
-z8Jj^rk{*Jra>1wDTi?)Et%IYQIM%+h-#FUw@w<-)zJv3-Qc-xDxVesBGD_lJ9~1z8
-zjs0V8@7s3@OD*+2wr>q}tjee4`WkVLFEYN^TxN5ZR1onSB3`p0;!J;z&8_cEEBCHl
-zY;Kw8>)((S$9|KAM!a{ND@sY2tg*GQs4I!^fbSkma`R}lb(PsU@DpJu`QHDbYV%We
-z5dk%`zlnLQ389^!S!Qluypa_O<!wYT{LAQW(1s?~p(X7r5tA@!OUo?~9FAT^`G%?z
-z#>ZCkrB;Oe^qB9LLr0YM$p=}^*1|`=D?4-37;^mr)VI{u^3U43aVEK;K2a4nGHS3}
-z)2I8m&Bf|Fu{b|{O43)bj3|EU`^6*<Mf@&o_-)?ScSG82EvOe(^nCpRvSrz#PI*A9
-zMlraz0cCo>%(mRXr5!;E>X3vSsp2R&7-L$BkiS9po(8lWcz=kwRP3wqTB1Id!(|IY
-zdRj7<oms9w>fb!5fl!(%2~maL1|Nj!Dcg-`f0^mvub8onT$Mm#W6j^LWWp02GP}gi
-z)f^Lb85#kVtm2{wbxvqTF<UrjsHftC=mB+L#VdKRUj5u95!H3?|ALCUKC*^`64qxD
-zNRpHoPZ~?~z&Geh1WOEBhHADAFt4Ll%I(O#dv4#=m#zVMpiF9T4Tvv;WNl9@<z1+R
-z-g5If&Xf@2?ZCnKaYBV7#gYUSjVZRTUI~)*>cG*7^@1)0#n;2Z@1=ETBsVR}p%F>R
-zq|{BQf;WfY*Gn2ruvp1XRH8nGd`r}yhTg$j%?kRxLz0FQE2L9o@;~`Pj1oRrd?ev-
-zQH;f{bb|u8;SnK>*3p^#4yzK+B7Yv@U)ekVCqx8ujh(!lz+*-mRHe`e8;v!aZGL5f
-zUL_PCS}?M}o+6+Q^BGTpBP_-uEU37!lB}tcnX*`bgUnC*@DCjvql_z#<4&_uV??Q{
-z*(Fzm8v@CbjI~k)`6M}?j6A*v&&WLJ553-na1Oq1qqthTZ9R9$eOUuRh|@#CUI&79
-z3c&lhNpzBoZrhhU{2umhN|&AIF1!GF$%=4TV+av6M$;N-Ca8(XHwG+KY9c(1*+A@y
-z?2$j|wK5leMlmta``Yls4_SqfLg3!-h~(VC3MrNbrC-sop>7cMpG#>u8ZG#;;gNrN
-z<|%w*_2*;**=;jJ_PWi#mj6Z3a!b2Q@+>|}@lxBMbWHKp*0zGIPjU=LlU@*Zq}h<!
-zaa$Br0xd>RRMi}rA!Z?YxQXp~>VwGZ&#z1b>M}!8dTt#?b&Tlf$VG*yx9+=5&ff}0
-zNG>R4OGuNrzr~<=Ua?;*RPqE0HGXb+6{r!-)1(6G3OV}f?n})e^r+$FTuo<Q{Rhjs
-zWPmo~K(n*`6#<d;v`A5~+U(@s&O$+j*SFa&E~2w)2|{52)IV;gHaRPO15Gcx#Ec=<
-zDJgA9o7r09bU+aM!^?_^K`Di3Noqqssoy&*sTt_JXR4x##Ue(rXJlE@JXZb+#-9B?
-zHdautKdqIMp=@ZC`P4fb^{Yzb5iz>Q(g{6gpa+?uuvdSTE$#flhR24xqOgUUbJ9D_
-zek4vG<Rk4yrDdbde1hNh4gcM_>g0Tlx)2Fa@Sa4Q2$Vg#5V9JclzRN!7h{@a%ExB+
-z9e!FhEZ|y*5pnVTPrn4V{PbEj3pK1d6n3c`!6W~ZckYX>x`hS2UMYA(D&+7Gq;G|w
-z7(6DPr1$1k+CTIWMQ{7H_Yc#9-#-*Gol#Z?+w4;+cogyT2p5tdax&BcwULr(5o5YB
-zW=o$4I2k=Ddo_>czk)Sf=DWW+>(hGv@Y0`kg(tpT7!>^nKj~0LyBVx$R?zaH)&c<=
-z7PG#b94tk0DCSf7BIJiXVAxr>-1KVrnZIL_C`EjK(PHzcE~_yAU4wX$pH~VVb$Irw
-zh-JM~HtK!(<-c=>pc04H-tm8y`YNb2aMc+aQs?oC$h~$YB~{DopUE&AJBI}U?tQAO
-zRh{<MNsMM8lwhrw>V{zwLqMpCY+huX`P|;*L^|`Q-8m7QXgrw~7!PF~F7KnSH9^yP
-z!=qmehu>3>y=744&dq#FpVJzb_qf3IImI@{&=gSh#mnW(!KPdV>GEVdg_`)^VT9Xd
-zN=`^9!_%~9Xuyi3mc+O~`wgSBB<3n2s%x-p8X##Of3t^raO8+YU*=Ax0c(VNo&bj6
-zC;GSiq#03{u*upjLjw?Ri`RA7_q+ncHbwp)K;uklo)-37OfsDx%@cTo?tp1$nQdH#
-ze6x^9i{6Z$H#a3yVgtPDW}F&9NcGmdL-V2|Qm#K|fB9tM9ajqAjhu-8hiD~yDC@V=
-zXOb#)jLSphyirn<k><a?GJ#22VDGiVTkAwgHU;Q%0pJ)Rq|ZDjUK!T>*!&<_7M@n7
-zSqCV&Xcd6P{5sw6U9_8@n&q{S&{ght^yD<@Z5<F&spXM`kY~3CPMs+ry`=HpDIn-c
-z7vJ*MIjd+=^TW-B%q3*)>UaCC;T)Nb9e2W!*}fnpzoJJfn!iE@D}Ll1t+#G}*W}&7
-zWoqq-;ZIsXUVgvV{)ffwiW<blpprMdXmCi|w0ft5O@mMgsst(#(r}1aTd0LEgzxKC
-zWjW{nH+c5wTZ9j%&*c5B9~IKZ;OTi$?&Nv{c2P28bCI!g7_krYAlVPMXhI{xpd!+X
-z;l$2zAw$+DHR;l|AcD@--S!SYPrd`#5zrnqUnph2f;pLEM15ihpN-qVlgN?xd0N;k
-zL%z}74a^Godbc2g+RxR%H!)Pb!39T!QbG&tz>0OAuDk|DTa%xQYx_BMc2o`gPm~zz
-zQvX9sci$0zF$N<UzLR>B6kZYI2+mWHVtadnrh95tIi}N10Bu1U@w$VHeSeTdj)_CA
-zvL9+;w|x}tq!LLS%x0JUO+b4o`WuFYx}kEB<>YAR<rJbHwh#$KARe3d)<Y(O^eCKF
-z>-!Pok<jo+HX+2=J~T0Aibe?j8?#bA?A{fg(dT~ST=2{TG>~!XgtDZtgt`>nGCJ}>
-z<_esc;J7BWIF(jE*el;+`nu~ry%E2YNFEfJ{XV1Y1$<1k2$L2SYi*?cC7GmsA8bXP
-zL@#f#--qCUPqwBfuHN%y<%`{dJ|cFV>f^W_d9<~4Hu&p1`_#B2RPe_JDrVhxnHwwQ
-z7S;eAJbn!$3x4!G)g31MB>3-u&C{~tcRW7*)?}GP5|H+s#>`7IAe#2dBA$wwUND?`
-zi{Gt*sD#mdgg#wvZ10|3*39_xtDmX3k0r&!R=Gvrxz6)$R~xW8Y@03~IttO<;K`NG
-zaTX~<s&Si<c)~bCVjX)c@n&qdsF|=rxYK9&(QveL;g`5J7jW<X2c&NhKH~)WKWXAb
-zaUA44U!I2E9v{E-;qr*`1?L7;y%=;L?)paX3n+wcuWg^w8Ji!WF@{Y)*Y_h3p(zkS
-zt3TTH#ZKH40w(=4$c}MRHb6*(inWwbvF`4dCdS%s8~ukRI<nt+SoE)b#^}@8$SJB?
-zhE|~6EoZ0gS@7n&4>Z)~$r4e)T`%famA_83WH3>PB4;dB3{1=~PrjVvc_<{2F1|rT
-z3ptFfUgz(8Wo79g$q>FugaRZ^WFcE?YlTm3lkWdS5CD!QQ|Z;n;~ug9Ul9F}s^=E>
-zIK!%)CXski55l~uk^UU>6}}UadR9;QV*lx<PNSqxP5J_lU`caoP5Og1z=3;91K|LC
-zK(Jj<04B^96f`$}%L<(UJ+^o4qSdVVPF0^V4-inDKcyTeiSp3>BDDSMjWh9tXi+P8
-z^Ei?AQ*7kvm2renJuVA8v%Lxq_a+wwp$!%C5uK_;oCw24+EL*2cL+8801$*yc>Wo*
-z?9n%23Y^lZV60D9lY_Axk8^0SZGNEy?U}y7-#$y+uB7pm(tSED8@zB$4E2UeTjJu~
-zD)-5EZS*SSpl9cUBxD~S>m@e(ocX415ROG3?^p)mTBE2-yr2iI&%zW7)=^ROAzx?8
-z<)u8H2!eLj9(C4D!OvsfCIudEh}2gLDdq;{UV(n(^@-;ltaa0X^FOD(CwJ!U1nPOc
-z;8+sT!QE5B+@~-4C3Gab1?dCp9~=A2VEHwb1C9OU+muqH1pV)5>tsH>bd5TheheHc
-zl9h2bbv`!t>5mMMaJw_2n{}Xccf@To^-Ti91a9l+6FCH~K0NrAVy^k$Jk;oXcJA{(
-z+g-}-UJJNmfbgABcKu^G?c6!6?L&`EsD`^F4lZa9r^cO=5KY)rwRy2X7{}Ati#z|y
-z)#p^(O_8t|tB#^5+cW8WRy#WwuW<PU9)1x4cVp2%@Io?&itmK0H~E4(Sp+;~S1un*
-zcyJR_?4#r`^1@DrgMr{fwqQ~em;mO9obrz^*ComCDGWWWuA09w5Wy5ojGsVw_tCAm
-ze62n7mGPH0<ZH`#>5`HL@QqId0F47<X0ZHKFy~?_NIT43E5trTan;U5tW!<=QyOJk
-z8B*Kx&+c$i1?`f%QMfO-Em$A)H#gEU(%h?(8)rYOvR3hDkpwi(HO)&#G)Gl$FFE+t
-z3<ktDk!?#^V}W7cr|UzWG$6vYu1(Z1`$RdFU-KyR-hp-zUCXqB4X?5yejc4)`!!P3
-zzSPgX2K-CLxcpbFdi~NI;~BrmJ%`IROGV`2@N5BEE=L=g9^6wuS}WJNsqe(8zdk~Z
-z4w3|at5pA%FvcC{=2Is?h)l4Mm`^jmXIt$%_G6H5mz|S|`Ntn*<=DU?Y}y|QoFpm=
-z18UXBt8&kbud?qafbVFHY<_X>aQ6y_j}O{K92CqLydsHf+%_dTZN?im?=}#Ze(`#z
-zkVujoUhsgM+ytS`k=YgV_AK$Bfiq;GgMy4YpFX|QV=uwSG>ZISZ+0U3la7ICz)vWA
-z(q|_C6gx1Cs^RxB)V{W7h2!?26q4nxOt7M1&x@6ERW{fX-~B~^kr6Ycn-{U^k&f*=
-zdGlsSf4d|QMP7((u@`mybaM_@-^EjdFL@OI30;kw;Z?HyVJb80a7cJvxA{Jil5SWh
-zVa0z%iUr#e^x{EAZf!X~%LON{@p^`eZ?7i&gdIaByqv`Y>?Z%s9o(qSmev=3XAiGz
-z8UbSE`aalX@IgmLB#DmRA)}yf<AqU%2%%UX@$0K4O9}Fh5CvDC!(8qWVCgLPLV50h
-z_m=G~v)QHWCMs2#yG6@h;|K!Spi&JhkC0bkgeocd6Ne<3RdTYTMnc6k-fxVmLbAvs
-zCNTE8hh&*9Ac>|rRN`612}eLHc%h%i4>*f!Zc<DD`Givj@KKEk!aykFAucsoArwX-
-z>#Px>)PQyg^?p8+50v;?XS-;L4%xcQ!+{^uL~LUg54J|QejH;|YzQ-VD}l{vN(vB3
-z8_Jupn4x{gbH^&m|GzrUEU2k$3&ST9AP@p*M461DjE0;rge0vpLx4*+lSot~F=PS~
-z0t6^U1Vko_Azm4^l_U&`AkEMSO+?@dT@W;aS81j$5ySzJu|(8X`q)q2+tm-d_QU$t
-z|L^^>t9Gqg>)HpOr})w%bYCHoY@PviJ~qLTGURK;FHbbVPM6t*q68PNA$k@WAX-)d
-z`{<$eBk2ulM>Cb7J!&)Ci+7W3xRP__o;o2`Wy`4<qKv}$8>`D`skD3`T<Wu(XQd@N
-zs8yX%LCinfeXb;M_E7rX%2qCtqi=xA@4H+$OVF0W<|Oe?(;nq0vVw8X62l@2S6`HV
-z{>8;jKQ0wDyaTb(5TV|s_3)3d*XOs@=$;#v#O!}xWLV#tIh+@`F4c}}+UOCjGsmk&
-zr&W$VS54=dpi-r-uB}8e(7esfTG7)COR8O2d9>p6@-Ulse{@{Z5RwlBn>F1Gh(IyE
-zd>I8|nzNUzhmvZGS~p=sch_OSq&gV%ijNQIgX!SIth&LqpZQhM_HAWrDHO-*ow?I1
-zCX<@|ru$pZh6m{_K8!<=8RJ~y)EjIc{`iNhdEp6T_m^rgvg*sv=h^-D7mw0Um;A@L
-z4}KdnJTjBvIEc!B)%ojuGgZd2n(9@$=XlnA)K5MoO4g7aHu9*c_SL&_Vkvc-xQfZQ
-zbr;zlt}VF|LaRmXeTpD=x~f}$ips6~bo%<<VOB+gVr|0zD#O^OEP5jF?eTVDr`2zo
-zec4w!hYI7REk7_Cc<m;;uU^-FS#zdhHYJwlu**o5d}6Ij?K|4yiEfftsg}uZ51pgy
-zIhwAc=T#~RuK@2A9fYl;JZ$uTj}!&Bak_2?ND<y~6UG>`JJ7$wB|(F8Ag-)?#ZrAA
-z<|*oAZ!gSC+;;O~ID&sbA?Y%YS}w4Gdrj@J3zRRx4X%a1PixtQ=)Fs&N)Bpu6bEY3
-zM~pR*gBQczh}amSOF>4$13(`4ds1v2-g9UqcyOWvDg$d|>5aAR_>FaYyz(F|y3nE>
-z>GW#{ZT88&_6Er)?@s4V`7OA&8JPw>zet;pXyp&rvG~W8lj(kW|H5pc#Q<~4@VtsN
-zV0h~*K2P^p`D(0&P@~aR7-LY59W_@|EYLWq#rH0Kz6C@U+<5WsBUYXXA8|E<pU-3t
-zM&;3nD5m~BsrC{VJd$HFD1bY8Obmw^I3b;IBxAI6T3}j%#T;ALL-c7IDI?Mu1@zy!
-zoG2|i#XfKJm<5{VcbCaVckTb;jBsz=`1I^!46Si%hj|bk#>)}~Bc$-EHA{8NlrWfY
-z?Gto*o7T^7zQo|hg!txnGwuIwx1bSD=#(jSOS@E+RhvuMk}0&WQHvz-SP%LX?#$jJ
-z&XMC)T9F$+j^)AbgzV0juI*q58+B8FTU8xCYF0YVlWn=Q#M1kiirZWGe%1baoILER
-zq$_XsaMA|INk#p->NY9<nemrVhUkpIju(qtp7<?v6%eJ`j-{p9er%hbj+Q2GB0MQ?
-zA@@0VU6k9mai+I;S54QnWsZ4@brxu*(GT^M8?LRoA{@%)%97%pDDTQd<ss4|c<6yk
-z1C7&q24r(yi@p1Yx0jJ6*ulCgWBCHYWMcEye`Wm|+Z5f4L*G4+U6{F)doA&zQ+9o`
-z1>?el7Q{m1h{gq@pFZidHb+dV-HTgy4j2!%@}R@KL^t(H1CR*W1GE_@HR{LD7Wy%Z
-z3X~j{W?J8y$P<H%8DEFgt(l(#b=*x)6OE(a&9v<ry~66Pz*?!~8(RxyD~5*7vI9S9
-zTaJb9S=5*#yqr%i%97<+r_`&NgyYmN7-0{d6)IIm{K8rR>P~HAf57}&Sh{z8#f$2*
-z1C_0hC8l%B&o|Yp<LBwPBz+k)O=X|hGfW)G6tk(Ucs8^Fb|8_02Z?w)yAYy1)!v?J
-zN3sDyDhQh8`Re>nf*>}M&pGwa2|<rnTc8B5uMP>Z9C0!;o(=d2m|V6$lgnpC<4Cqn
-zwq!g72U$AcK}S5%4i`uy;do-Ph)N(NCnwwTztYfxXxrF$?o{?$ND$cZRWXE@C^$)_
-zdc?941#F?1N)3R}1b}#bQ$c_jgKwC>JgHP3o6qHm0U`zStT!A&w*MVD!jBa5AR@6l
-z6B;oC?EHrC=L^{4QzAC-*O>?+A=kMj^!xvF@(+P1favHzCXyULkkm*uI1VA0Z*+qB
-zr`Z7L=2k2}v;c)%z6l);@&P#f7&dfyf><CTaF|JaR;)0AKq7-6G138KaX2T*paX@)
-gB2hRL66i!>vneOpl-KnteMk%N@%-MS(T#ELPiL`6X8-^I
+literal 676
+zcmV;V0$crwP)<h;3K|Lk000e1NJLTq001BW001Be0{{R3M5Kzw0001-P)t-sM{rCR
+z1^_n=34a_Bc^nenFe$Jo64x^zx+x9aFcRA{816bK;4TZ|D*^C2D)Kue@GuMcJtXum
+z3GOWb`$8q~Edcc`0Q)Zp@ihwgGbi~uAM!sJ_&F{AKPLY|EAdPy{z@?aRX*`uJ^5-<
+z`gdadh<5mvh54hG`>>_-!@d8^#`Mz9|J2U;;^F)2?Dg>U_x1Px_4NGu{Qv*|dYm4s
+z0000LbW%=J00RvfBs54^Wp<FHuEE07)$Q;5{3N1ePyhe{qDe$SRCwBTli6Z|Fc3wH
+zpx{!KC2GYW2w{&P{Qtjol8``^-WMM3$;_Qh_?k#l`kIw~bOs&uS^scVIxOByZD|_&
+z+eG`Nxzr~9_ICUE&{iA$Ai&q_8HAI>W8W)sU3VvmHTXDszUsW}y0$5@;z{oav>t#J
+z072bz0l-yV09Xyc!VYlOzi3SbP!$zzGK3sCix~uQ-<KrBQQo!r9bMw0X&wlfDx+xd
+z$|KUX#Lp;ig3wM=Kq(UBtU@YM6bw);BFcfJ?%L`uQu+v4Lk0t;;6#aE5b~0P&*pRu
+zImLnBL*J9|*|pS<g^!MM3T*=bjv-}=qwthaHUem)?%HHP)Uzg$#~L*JBF%Br9snti
+znGqf_1>e=jZSEzI<8vy3@5#P50EBf<Nl1tv7cirYAlHQhAmT8CF`udbxFESIwJr<_
+zhGkLk)vCr2Y><)x1=JrS$Tx$9vaZce;Eu0F-nKmugq#H67=NF&<qgDH0IsFIJ^YnD
+z1)P=i$KTG_jlj;B`}-D_Eda;j6MhPcFhCujFQShBQ$*L_j{gEMJW2p&F91yd0000<
+KMNUMnLSTZWtvWsc
 
 literal 0
 HcmV?d00001
 
-diff --git a/browser/components/search/extensions/ekoru/manifest.json b/browser/components/search/extensions/ekoru/manifest.json
+diff --git a/browser/components/search/extensions/brave/manifest.json b/browser/components/search/extensions/brave/manifest.json
 new file mode 100644
-index 0000000000..a338bddd77
+index 0000000000..798ab6c279
 --- /dev/null
-+++ b/browser/components/search/extensions/ekoru/manifest.json
++++ b/browser/components/search/extensions/brave/manifest.json
 @@ -0,0 +1,27 @@
 +{
-+  "name": "Ekoru Search",
-+  "description": "Every search helps clean and reforest our oceans",
++  "name": "Brave",
++  "description": "Brave Search: private, independent, open",
 +  "manifest_version": 2,
 +  "version": "1.0",
 +  "browser_specific_settings": {
 +    "gecko": {
-+      "id": "ekoru@search.ghostery.com"
++      "id": "brave@search.ghostery.com"
 +    }
 +  },
 +  "hidden": true,
 +  "icons": {
-+    "16": "favicon.ico"
++    "32": "favicon.png"
 +  },
 +  "web_accessible_resources": [
-+    "favicon.ico"
++    "favicon.png"
 +  ],
 +  "chrome_settings_overrides": {
 +    "search_provider": {
-+      "name": "Ekoru",
-+      "keyword": "@ekoru",
-+			"favicon_url": "https://ekoru.org/favicon.ico",
-+      "search_url": "https://www.ekoru.org/?q={searchTerms}&v=027",
-+      "suggest_url": "https://auto.ekoru.org/?q={searchTerms}&format=raw&locale=__MSG_@@ui_locale__"
-+    }
-+  }
-+}
-diff --git a/browser/components/search/extensions/gibiru/favicon.ico b/browser/components/search/extensions/gibiru/favicon.ico
-new file mode 100644
-index 0000000000000000000000000000000000000000..c03d841928d325613a45c6330ae7983ab8ca0fda
-GIT binary patch
-literal 5430
-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
-VxVRh<1e1LFMesihaUNmZ{{U!lSr`BS
-
-literal 0
-HcmV?d00001
-
-diff --git a/browser/components/search/extensions/gibiru/manifest.json b/browser/components/search/extensions/gibiru/manifest.json
-new file mode 100644
-index 0000000000..86afb3eda6
---- /dev/null
-+++ b/browser/components/search/extensions/gibiru/manifest.json
-@@ -0,0 +1,27 @@
-+{
-+  "name": "Gibiru",
-+  "description": "This add-on sets gibiru.com as your default search engine.",
-+  "manifest_version": 2,
-+  "version": "1.0",
-+  "browser_specific_settings": {
-+    "gecko": {
-+      "id": "gibiru@search.ghostery.com"
-+    }
-+  },
-+  "hidden": true,
-+  "icons": {
-+    "16": "favicon.ico"
-+  },
-+  "web_accessible_resources": [
-+    "favicon.ico"
-+  ],
-+  "chrome_settings_overrides": {
-+    "search_provider": {
-+      "name": "Gibiru",
-+      "keyword": "@gibiru",
-+      "search_url": "https://www.gibiru.com/results.html?q={searchTerms}",
-+      "favicon_url": "https://www.gibiru.com/assets/img/favicon.ico",
-+      "encoding": "UTF-8"
-+    }
-+  }
-+}
-diff --git a/browser/components/search/extensions/google/_locales/en/messages.json b/browser/components/search/extensions/google/_locales/en/messages.json
-index aeca0ef128..f4c669c147 100644
---- a/browser/components/search/extensions/google/_locales/en/messages.json
-+++ b/browser/components/search/extensions/google/_locales/en/messages.json
-@@ -9,13 +9,13 @@
-     "message": "https://www.google.com/search"
-   },
-   "searchForm": {
--    "message": "https://www.google.com/search?client=firefox-b-d&q={searchTerms}"
-+    "message": "https://www.google.com/search?q={searchTerms}"
-   },
-   "suggestUrl": {
--    "message": "https://www.google.com/complete/search?client=firefox&q={searchTerms}"
-+    "message": "https://www.google.com/complete/search?q={searchTerms}"
-   },
-   "searchUrlGetParams": {
--    "message": "client=firefox-b-d&q={searchTerms}"
-+    "message": "q={searchTerms}"
-   },
-   "channelPref": {
-     "message": "google_channel_row"
-diff --git a/browser/components/search/extensions/google/_locales/region-by/messages.json b/browser/components/search/extensions/google/_locales/region-by/messages.json
-index 60e5ed5eda..ffcf375a30 100644
---- a/browser/components/search/extensions/google/_locales/region-by/messages.json
-+++ b/browser/components/search/extensions/google/_locales/region-by/messages.json
-@@ -12,7 +12,7 @@
-     "message": "https://www.google.by/search?q={searchTerms}"
-   },
-   "suggestUrl": {
--    "message": "https://www.google.by/complete/search?client=firefox&q={searchTerms}"
-+    "message": "https://www.google.by/complete/search?q={searchTerms}"
-   },
-   "searchUrlGetParams": {
-     "message": "q={searchTerms}"
-diff --git a/browser/components/search/extensions/google/_locales/region-kz/messages.json b/browser/components/search/extensions/google/_locales/region-kz/messages.json
-index 8e64096bc1..d94530101d 100644
---- a/browser/components/search/extensions/google/_locales/region-kz/messages.json
-+++ b/browser/components/search/extensions/google/_locales/region-kz/messages.json
-@@ -12,7 +12,7 @@
-     "message": "https://www.google.kz/search?q={searchTerms}"
-   },
-   "suggestUrl": {
--    "message": "https://www.google.kz/complete/search?client=firefox&q={searchTerms}"
-+    "message": "https://www.google.kz/complete/search?q={searchTerms}"
-   },
-   "searchUrlGetParams": {
-     "message": "q={searchTerms}"
-diff --git a/browser/components/search/extensions/google/_locales/region-ru/messages.json b/browser/components/search/extensions/google/_locales/region-ru/messages.json
-index 8a78bb4e7f..ba103cb631 100644
---- a/browser/components/search/extensions/google/_locales/region-ru/messages.json
-+++ b/browser/components/search/extensions/google/_locales/region-ru/messages.json
-@@ -12,7 +12,7 @@
-     "message": "https://www.google.ru/search?q={searchTerms}"
-   },
-   "suggestUrl": {
--    "message": "https://www.google.ru/complete/search?client=firefox&q={searchTerms}"
-+    "message": "https://www.google.ru/complete/search?q={searchTerms}"
-   },
-   "searchUrlGetParams": {
-     "message": "q={searchTerms}"
-diff --git a/browser/components/search/extensions/google/_locales/region-tr/messages.json b/browser/components/search/extensions/google/_locales/region-tr/messages.json
-index 8e373a4833..0087bc2135 100644
---- a/browser/components/search/extensions/google/_locales/region-tr/messages.json
-+++ b/browser/components/search/extensions/google/_locales/region-tr/messages.json
-@@ -12,7 +12,7 @@
-     "message": "https://www.google.com.tr/search?q={searchTerms}"
-   },
-   "suggestUrl": {
--    "message": "https://www.google.com.tr/complete/search?client=firefox&q={searchTerms}"
-+    "message": "https://www.google.com.tr/complete/search?q={searchTerms}"
-   },
-   "searchUrlGetParams": {
-     "message": "q={searchTerms}"
-diff --git a/browser/components/search/extensions/google/manifest.json b/browser/components/search/extensions/google/manifest.json
-index 1e71873d0d..64f1fe3fde 100644
---- a/browser/components/search/extensions/google/manifest.json
-+++ b/browser/components/search/extensions/google/manifest.json
-@@ -5,7 +5,7 @@
-   "version": "1.3",
-   "browser_specific_settings": {
-     "gecko": {
--      "id": "google@search.mozilla.org"
-+      "id": "google@search.ghostery.com"
-     }
-   },
-   "hidden": true,
-@@ -24,11 +24,6 @@
-       "search_form": "__MSG_searchForm__",
-       "suggest_url": "__MSG_suggestUrl__",
-       "params": [
--        {
--          "name": "channel",
--          "condition": "pref",
--          "pref": "__MSG_channelPref__"
--        }
-       ],
-       "search_url_get_params": "__MSG_searchUrlGetParams__"
-     }
-diff --git a/browser/components/search/extensions/onesearch/manifest.json b/browser/components/search/extensions/onesearch/manifest.json
-new file mode 100644
-index 0000000000..14a455f1ba
---- /dev/null
-+++ b/browser/components/search/extensions/onesearch/manifest.json
-@@ -0,0 +1,24 @@
-+{
-+  "name": "OneSearch",
-+  "description": "A powerful privacy-focused web search experience that gives you more control. Download the extension today!",
-+  "manifest_version": 2,
-+  "version": "1.0",
-+  "browser_specific_settings": {
-+    "gecko": {
-+      "id": "onesearch@search.ghostery.com"
-+    }
-+  },
-+  "hidden": true,
-+  "icons":{
-+    "128": "ui/img/Icon_128x128.png"
-+  },
-+  "chrome_settings_overrides": {
-+    "search_provider": {
-+      "name": "OneSearch",
-+      "keyword": "@onesearch",
-+      "search_url": "https://onesearch.com/yhs/search?p={searchTerms}&yext=0",
-+      "suggest_url": "https://www.onesearch.com/sugg/gossip/gossip-us-ura/?l=1&bm=3&output=fxjson&nresults=10&appid=www.onesearch.com&bck=false&spaceId=1351195845&command={searchTerms}",
-+      "favicon_url": "https://www.onesearch.com/favicon.ico"
-+    }
-+  }
-+}
-diff --git a/browser/components/search/extensions/onesearch/ui/img/Icon_128x128.png b/browser/components/search/extensions/onesearch/ui/img/Icon_128x128.png
-new file mode 100644
-index 0000000000000000000000000000000000000000..1edec528ad779d0dc045b30daca41088e343ee99
-GIT binary patch
-literal 3381
-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
-
-literal 0
-HcmV?d00001
-
-diff --git a/browser/components/search/extensions/qwant/manifest.json b/browser/components/search/extensions/qwant/manifest.json
-index 3fb83f307b..c983aa9559 100644
---- a/browser/components/search/extensions/qwant/manifest.json
-+++ b/browser/components/search/extensions/qwant/manifest.json
-@@ -4,7 +4,7 @@
-   "version": "1.4",
-   "browser_specific_settings": {
-     "gecko": {
--      "id": "qwant@search.mozilla.org"
-+      "id": "qwant@search.ghostery.com"
-     }
-   },
-   "hidden": true,
-@@ -19,7 +19,7 @@
-       "keyword": "@qwant",
-       "name": "Qwant",
-       "search_url": "https://www.qwant.com/",
--      "search_url_get_params": "client=brz-moz&q={searchTerms}",
-+      "search_url_get_params": "q={searchTerms}",
-       "suggest_url": "https://api.qwant.com/api/suggest/",
-       "suggest_url_get_params": "client=opensearch&q={searchTerms}",
-       "search_form": "https://www.qwant.com/"
-diff --git a/browser/components/search/extensions/startpage/favicon.ico b/browser/components/search/extensions/startpage/favicon.ico
-new file mode 100644
-index 0000000000000000000000000000000000000000..19991e7478b0c727b34e192486287cefdff658a4
-GIT binary patch
-literal 1150
-zcmd^<ze|Ea7{{;Z4{&PghXk47(BK#?ngk9(LeLT|MIusUnh-{rxzvzDLl6Wl4USQ3
-zL|YJ1LxdHD6lqfaS}H0&-Mw$`&=UC47RTql+;jJRp1Wr_A?oC?ScIId!rvf7qY%O_
-zks%q;<5Gl>d%=1gZ7nBHr`0FPNT?CzG3zyInW<}d|3qE3X51Z$7JBWi8nyHxJTioT
-zz{{|whrw<q{Z0qoE*pK0HZ7OR>y|ZC9anqPPh{-n?Uib^!ec(i?e!(+rzad89<aZ+
-z!)|(;^yUUzYpbj;CrQO)tjtD8h9^i&1(^$s!r3ugUBF!y3OOh~LACr%Mb}CR%8DYC
-zp7|`~`FObJJ$nO@afk*WHVN|~h({n1g{5CuoPmX~etvok6d`#RGZ_B=s~N3-=H9Qo
-OK8cwen%DRT%<2~=8E$+4
-
-literal 0
-HcmV?d00001
-
-diff --git a/browser/components/search/extensions/startpage/manifest.json b/browser/components/search/extensions/startpage/manifest.json
-new file mode 100644
-index 0000000000..820908bbdd
---- /dev/null
-+++ b/browser/components/search/extensions/startpage/manifest.json
-@@ -0,0 +1,27 @@
-+{
-+  "name": "Startpage",
-+  "description": "Startpage.",
-+  "manifest_version": 2,
-+  "version": "1.2",
-+  "browser_specific_settings": {
-+    "gecko": {
-+      "id": "startpage@search.ghostery.com"
-+    }
-+  },
-+  "hidden": true,
-+  "icons": {
-+    "16": "favicon.ico"
-+  },
-+  "web_accessible_resources": [
-+    "favicon.ico"
-+  ],
-+  "chrome_settings_overrides": {
-+    "search_provider": {
-+      "name": "Startpage",
-+      "keyword": "@startpage",
-+      "search_url": "https://www.startpage.com/do/dsearch",
-+      "search_form": "https://www.startpage.com/do/dsearch?query={searchTerms}",
-+      "search_url_get_params": "query={searchTerms}&segment=startpage.ghostery"
-+    }
-+  }
-+}
-diff --git a/browser/components/search/extensions/yahoo/favicon.ico b/browser/components/search/extensions/yahoo/favicon.ico
-new file mode 100644
-index 0000000000000000000000000000000000000000..34a916ccde63c64fb92f109f0d238fe692fc0c3d
-GIT binary patch
-literal 5430
-zcmeI0O-NKx6vvMmY6Oi0eF(t}(f5a0St3MJL_~|oqD9oADEe4LC2eXEPPvGJiYN+%
-z3L>bWoh?EF6<f3lf{HdVN(*rj2$79s-hO9%ce>u*jH9y(-h;!r_kaHXbM8C$&gH2{
-znUqUSjo=e<YKF*C5lJM*=g+`zf-MJQ2xA<_iGW8>{tj#qa|ScMSq1nv?5myU^G(&c
-z9A{n5Ix!9F#jI!)GvCGivDL#p=f}Xhv8O(6=M7?3v&NtH9sF9vTQtU6wpfkzaAy<y
-ztZ{gI@CO6#O3R`4V#TocVAU4KSAf0L7@TVsr%sb%<U3$7<{uTqo?8sfodA0SmOH5d
-z=I+TQT|4-QdUP*BIPErX<O_Ge7-1*=THi^L3@1GEU1X?5q_1A2cL7G43WsMkde0=V
-zt(e|N*+(y)=!rTIb>P3~K*;^+-najZ-IwAHj&rvk;~sttp1ZeQ&SYb>4_L!+k?XkN
-z=0nqEb*y8*8=LAF{W9#j%@_Cqe51yA*SX}J@Q%cq1KvCQ;i=XP;|KX{-_v0n2P>}^
-zv&5N~Je*?vY`u+Q7NI+jHJ7@8>C|U`9tOHWd~CXFAdi0c*xsw}D<&5_dk*wl=T<SA
-z5KcAPyI%b<ejocnxD%i{F|*Lw-_S44YVMnD0<pjZ{e7>tp6L-a*08sLG#i4~VfDPn
-z>&f_TocxEZHt^{tF>@Gi!}Pm*l$@tsjXx&G@j#p1zhe5PIq20|bUz$z2CTv656<?7
-zAbt<L(#Bj*ycYZI<k8>mOqb)2*|&M{(~d^JpHKKa;xX)1!0W}=`W&5uzYRFH2d!be
-z0IP(nxw2gK)Yf}E-=loH$Aj$0E}uyJqMMKLF!xi!=P@rM_Qd0U(sLZb74{%Wy`%8k
-zJxv$$HrBnHIyLZCd2xNW4nHT@4UeaPGp+G?c1|o^ggsI|yf2v6Rn2YA(sul2)_4Se
-z1?$8#?pi1DoxJ0wQtxwe>>yX2U3;)5dpEc>^Nw9@G>$qDbs*|MDIG8co-tXNR5K~8
-wf7F<M6USnv2TPeMlWM(cB-u7r8M{0htLn+b+q#G1{C^_JKOACa0Gssr1NfV+nE(I)
-
-literal 0
-HcmV?d00001
-
-diff --git a/browser/components/search/extensions/yahoo/manifest.json b/browser/components/search/extensions/yahoo/manifest.json
-new file mode 100644
-index 0000000000..9d0e02808f
---- /dev/null
-+++ b/browser/components/search/extensions/yahoo/manifest.json
-@@ -0,0 +1,27 @@
-+{
-+  "name": "Yahoo!",
-+  "description": "Yahoo Search",
-+  "manifest_version": 2,
-+  "version": "1.0",
-+  "browser_specific_settings": {
-+    "gecko": {
-+      "id": "yahoo@search.ghostery.com"
-+    }
-+  },
-+  "hidden": true,
-+  "icons": {
-+    "16": "favicon.ico"
-+  },
-+  "web_accessible_resources": [
-+    "favicon.ico"
-+  ],
-+  "chrome_settings_overrides": {
-+    "search_provider": {
-+      "name": "Yahoo",
-+      "keyword": "@yahoo",
-+      "search_url": "https://search.yahoo.com/search",
-+      "search_form": "https://search.yahoo.co.com/",
-+      "search_url_get_params": "p={searchTerms}&ei=UTF-8"
++      "name": "Brave",
++      "keyword": "@brave",
++      "favicon_url": "https://cdn.search.brave.com/serp/v1/static/brand/eebf5f2ce06b0b0ee6bbd72d7e18621d4618b9663471d42463c692d019068072-brave-lion-favicon.png",
++      "search_url": "https://search.brave.com/search?q={searchTerms}",
++      "suggest_url": "https://search.brave.com/api/suggest?q={searchTerms}"
 +    }
 +  }
 +}
 diff --git a/toolkit/components/search/SearchEngineSelector.sys.mjs b/toolkit/components/search/SearchEngineSelector.sys.mjs
-index b51f549f2c..dde9589a4a 100644
+index 68b87f8eab..8722b32c5c 100644
 --- a/toolkit/components/search/SearchEngineSelector.sys.mjs
 +++ b/toolkit/components/search/SearchEngineSelector.sys.mjs
-@@ -83,6 +83,112 @@ export class SearchEngineSelector {
+@@ -80,6 +80,54 @@ export class SearchEngineSelector {
      this._changeListener = listener;
    }
-
+ 
 +  get _configuration() {
-+    return [{
-+      "appliesTo": [{
-+        "default": "yes-if-no-other",
-+        "included": {
-+          "everywhere": true
-+        },
-+      }],
-+      "webExtension": {
-+        "id": "search@ghostery.com"
-+      }
-+    }, {
-+      "appliesTo": [{
-+        "included": {
-+          "everywhere": true
-+        },
-+      }],
-+      "webExtension": {
-+        "id": "ddg@search.ghostery.com"
-+      }
-+    }, {
-+      "appliesTo": [{
-+        "included": {
-+          "everywhere": true
-+        },
-+      }],
-+      "webExtension": {
-+        "id": "ecosia@search.ghostery.com"
-+      }
-+    }, {
-+      "appliesTo": [{
-+        "included": {
-+          "everywhere": true
-+        },
-+      }],
-+      "webExtension": {
-+        "id": "ekoru@search.ghostery.com"
-+      }
-+    }, {
-+      "appliesTo": [{
-+        "included": {
-+          "everywhere": true
++    return [
++      {
++        "appliesTo": [{
++          "default": "yes-if-no-other",
++          "included": {
++            "everywhere": true
++          },
++        }],
++        "webExtension": {
++          "id": "search@ghostery.com"
 +        }
-+      }],
-+      "webExtension": {
-+        "id": "gibiru@search.ghostery.com"
-+      }
-+    }, {
-+      "appliesTo": [{
-+        "included": {
-+          "everywhere": true
-+        }
-+      }],
-+      "webExtension": {
-+        "id": "google@search.ghostery.com"
-+      }
-+    }, {
-+      "appliesTo": [{
-+        "included": {
-+          "everywhere": true
-+        }
-+      }],
-+      "webExtension": {
-+        "id": "onesearch@search.ghostery.com"
-+      }
-+    }, {
-+      "appliesTo": [{
-+        "included": {
-+          "everywhere": true
-+        }
-+      }],
-+      "webExtension": {
-+        "id": "qwant@search.ghostery.com"
-+      }
-+    }, {
-+      "appliesTo": [{
++      },
++      {
++        "appliesTo": [{
 +          "included": {
 +            "everywhere": true
 +          }
-+      }],
-+      "webExtension": {
-+        "id": "bing@search.ghostery.com"
-+      }
-+    }, {
-+      "appliesTo": [{
-+        "included": {
-+          "everywhere": true
++        }],
++        "webExtension": {
++          "id": "bing@search.mozilla.org"
 +        }
-+      }],
-+      "webExtension": {
-+        "id": "yahoo@search.ghostery.com"
-+      }
-+    }, {
-+      "appliesTo": [{
-+        "included": {
-+          "everywhere": true
++      },
++      {
++        "appliesTo": [{
++          "included": {
++            "everywhere": true
++          }
++        }],
++        "webExtension": {
++          "id": "brave@search.ghostery.com"
 +        }
-+      }],
-+      "webExtension": {
-+        "id": "startpage@search.ghostery.com"
-+      }
-+    }]
++      },
++      {
++        "appliesTo": [{
++          "included": {
++            "everywhere": true
++          }
++        }],
++        "webExtension": {
++          "id": "google@search.mozilla.org"
++        }
++      },
++    ];
 +  }
 +
 +  set _configuration(v) {}
@@ -1118,6 +125,6 @@ index b51f549f2c..dde9589a4a 100644
    /**
     * Handles getting the configuration from remote settings.
     */
---
-2.39.1
+-- 
+2.39.2 (Apple Git-143)
 

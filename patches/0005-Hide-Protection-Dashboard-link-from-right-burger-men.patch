@@ -8,10 +8,10 @@ Subject: Hide Protection Dashboard link from right burger menu
  2 files changed, 4 insertions(+)
 
 diff --git a/browser/base/content/appmenu-viewcache.inc.xhtml b/browser/base/content/appmenu-viewcache.inc.xhtml
-index 29269b96ee..b700c48ef0 100644
+index 8c6e8f375b..e3c94d676d 100644
 --- a/browser/base/content/appmenu-viewcache.inc.xhtml
 +++ b/browser/base/content/appmenu-viewcache.inc.xhtml
-@@ -25,6 +25,7 @@
+@@ -23,6 +23,7 @@
                       oncommand="PanelUI._onBannerItemSelected(event)"
                       wrap="true"
                       hidden="true"/>
@@ -19,7 +19,7 @@ index 29269b96ee..b700c48ef0 100644
        <toolbaritem id="appMenu-fxa-status2"
                     closemenu="none"
                     class="subviewbutton toolbaritem-combined-buttons">
-@@ -41,6 +42,7 @@
+@@ -39,6 +40,7 @@
          </toolbarbutton>
        </toolbaritem>
        <toolbarseparator id="appMenu-fxa-separator" class="proton-zap"/>
@@ -28,10 +28,10 @@ index 29269b96ee..b700c48ef0 100644
                       class="subviewbutton"
                       data-l10n-id="appmenuitem-new-tab"
 diff --git a/browser/base/content/navigator-toolbox.inc.xhtml b/browser/base/content/navigator-toolbox.inc.xhtml
-index 8ff95dfdf8..d64d4a6399 100644
+index b43a3759c2..e068b22358 100644
 --- a/browser/base/content/navigator-toolbox.inc.xhtml
 +++ b/browser/base/content/navigator-toolbox.inc.xhtml
-@@ -174,6 +174,7 @@
+@@ -189,6 +189,7 @@
                   class="chromeclass-toolbar-additional"/>
              <!-- Use onclick instead of normal popup= syntax since the popup
                   code fires onmousedown, and hence eats our favicon drag events. -->
@@ -39,7 +39,7 @@ index 8ff95dfdf8..d64d4a6399 100644
              <box id="tracking-protection-icon-container" align="center"
                   role="button"
                   onclick="gProtectionsHandler.handleProtectionsButtonEvent(event);"
-@@ -188,6 +189,7 @@
+@@ -203,6 +204,7 @@
                  <description id="tracking-protection-icon-tooltip-label" class="tooltip-label"/>
                </tooltip>
              </box>
@@ -48,5 +48,5 @@ index 8ff95dfdf8..d64d4a6399 100644
                   pageproxystate="invalid"
                   ondragstart="gIdentityHandler.onDragStart(event);">
 -- 
-2.36.0
+2.39.2 (Apple Git-143)
 

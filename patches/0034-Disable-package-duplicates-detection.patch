@@ -7,7 +7,7 @@ Subject: Disable package duplicates detection
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/toolkit/mozapps/installer/packager.mk b/toolkit/mozapps/installer/packager.mk
-index d54b71fd1e..f39e185407 100644
+index 2d7b84747b..14b1c027b9 100644
 --- a/toolkit/mozapps/installer/packager.mk
 +++ b/toolkit/mozapps/installer/packager.mk
 @@ -15,8 +15,8 @@ endif
@@ -22,5 +22,5 @@ index d54b71fd1e..f39e185407 100644
  
  export USE_ELF_HACK
 -- 
-2.36.0
+2.39.2 (Apple Git-143)
 

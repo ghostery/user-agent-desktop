@@ -32,6 +32,4 @@
 0032-Better-Fox-integration.patch
 0033-Default-top-sites.patch
 0034-Disable-package-duplicates-detection.patch
-0035-Force-lld-detection-for-cross-compile-builds.patch
-0036-Build-mach-package-use-MOZ_FETCHES-in-automation.patch
-0037-Disable-Onboarding-Messages.patch
+0035-Disable-Onboarding-Messages.patch

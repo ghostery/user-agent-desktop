@@ -9,12 +9,12 @@ Subject: Remove tracking protection panel from url bar
  3 files changed, 15 insertions(+), 15 deletions(-)
 
 diff --git a/browser/base/content/browser-siteIdentity.js b/browser/base/content/browser-siteIdentity.js
-index 81458c6a6e..77d38e33a3 100644
+index e42daf2556..9a31829cbe 100644
 --- a/browser/base/content/browser-siteIdentity.js
 +++ b/browser/base/content/browser-siteIdentity.js
-@@ -899,10 +899,10 @@ var gIdentityHandler = {
+@@ -900,10 +900,10 @@ var gIdentityHandler = {
      }
-
+ 
      // Hide the shield icon if it is a chrome page.
 -    gProtectionsHandler._trackingProtectionIconContainer.classList.toggle(
 -      "chromeUI",
@@ -25,52 +25,52 @@ index 81458c6a6e..77d38e33a3 100644
 +    //   this._isSecureInternalUI
 +    // );
    },
-
+ 
    /**
 diff --git a/browser/base/content/browser.js b/browser/base/content/browser.js
-index f59f732f92..68546780a3 100644
+index 05c51b9075..ff6d9737ed 100644
 --- a/browser/base/content/browser.js
 +++ b/browser/base/content/browser.js
-@@ -1936,7 +1936,7 @@ var gBrowserInit = {
-
+@@ -1861,7 +1861,7 @@ var gBrowserInit = {
      BookmarkingUI.init();
      BrowserSearch.delayedStartupInit();
+     SearchUIUtils.init();
 -    gProtectionsHandler.init();
 +    // gProtectionsHandler.init();
-     HomePage.delayedStartup().catch(Cu.reportError);
-
+     HomePage.delayedStartup().catch(console.error);
+ 
      let safeMode = document.getElementById("helpSafeMode");
-@@ -2540,7 +2540,7 @@ var gBrowserInit = {
+@@ -2488,7 +2488,7 @@ var gBrowserInit = {
        Services.prefs.removeObserver(ctrlTab.prefName, ctrlTab);
        ctrlTab.uninit();
        gBrowserThumbnails.uninit();
 -      gProtectionsHandler.uninit();
 +      // gProtectionsHandler.uninit();
        FullZoom.destroy();
-
+ 
        Services.obs.removeObserver(gIdentityHandler, "perm-changed");
-@@ -5241,7 +5241,7 @@ var XULBrowserWindow = {
+@@ -5105,7 +5105,7 @@ var XULBrowserWindow = {
      const nsIWebProgressListener = Ci.nsIWebProgressListener;
-
+ 
      let browser = gBrowser.selectedBrowser;
 -    gProtectionsHandler.onStateChange(aWebProgress, aStateFlags);
 +    // gProtectionsHandler.onStateChange(aWebProgress, aStateFlags);
-
+ 
      if (
        aStateFlags & nsIWebProgressListener.STATE_START &&
-@@ -5439,7 +5439,7 @@ var XULBrowserWindow = {
-
+@@ -5306,7 +5306,7 @@ var XULBrowserWindow = {
+ 
      gPermissionPanel.onLocationChange();
-
+ 
 -    gProtectionsHandler.onLocationChange();
 +    // gProtectionsHandler.onLocationChange();
-
+ 
      BrowserPageActions.onLocationChange();
-
-@@ -5629,12 +5629,12 @@ var XULBrowserWindow = {
+ 
+@@ -5505,12 +5505,12 @@ var XULBrowserWindow = {
        );
      }
-
+ 
 -    gProtectionsHandler.onContentBlockingEvent(
 -      aEvent,
 -      aWebProgress,
@@ -83,22 +83,22 @@ index f59f732f92..68546780a3 100644
 +    //   aIsSimulated,
 +    //   this._event // previous content blocking event
 +    // );
-
+ 
      // We need the state of the previous content blocking event, so update
      // event after onContentBlockingEvent is called.
 diff --git a/browser/base/content/browser.xhtml b/browser/base/content/browser.xhtml
-index 85acb258e2..75659e1b1c 100644
+index 6da55d4b81..611b7bc6ee 100644
 --- a/browser/base/content/browser.xhtml
 +++ b/browser/base/content/browser.xhtml
-@@ -69,7 +69,7 @@
-   <link rel="localization" href="browser/browserContext.ftl"/>
-   <link rel="localization" href="browser/browserSets.ftl"/>
-   <link rel="localization" href="browser/menubar.ftl"/>
+@@ -73,7 +73,7 @@
+   <link rel="localization" href="browser/originControls.ftl"/>
+   <link rel="localization" href="browser/panelUI.ftl"/>
+   <link rel="localization" href="browser/places.ftl"/>
 -  <link rel="localization" href="browser/protectionsPanel.ftl"/>
 +  <!-- <link rel="localization" href="browser/protectionsPanel.ftl"/> -->
-   <link rel="localization" href="preview/protectionsPanel.ftl"/>
-   <link rel="localization" href="browser/appmenu.ftl"/>
-   <link rel="localization" href="browser/panelUI.ftl"/>
---
-2.36.0
+   <link rel="localization" href="browser/screenshots.ftl"/>
+   <link rel="localization" href="browser/search.ftl"/>
+   <link rel="localization" href="browser/sidebarMenu.ftl"/>
+-- 
+2.39.2 (Apple Git-143)
 
