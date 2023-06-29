@@ -37,7 +37,7 @@ def build(opts, Closure postpackage={}, Closure archiving={}) {
                 }
 
                 dir('mozilla-release') {
-                    sh 'rm -f `pwd`/MacOSX11.3.sdk; ln -s /builds/worker/fetches/MacOSX11.3.sdk `pwd`/MacOSX11.3.sdk'
+                    sh 'rm -f `pwd`/MacOSX13.0.sdk; ln -s /builds/worker/fetches/MacOSX13.0.sdk `pwd`/MacOSX13.0.sdk'
 
                     if (opts.PGO) {
                         stage("${opts.name}: fetch profiles") {
