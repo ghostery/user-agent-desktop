@@ -284,7 +284,7 @@ async function generate(artifactBaseDir) {
               "--exclude",
               "'*'",
               "--include",
-              artifact,
+              filename,
               localDir,
               `s3://${s3bucket}/toolchains/${ffVersion}/${name}`,
             ]);
