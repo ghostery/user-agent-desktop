@@ -261,31 +261,44 @@ async function generate(artifactBaseDir) {
 
   const releaseLabel = `FIREFOX_${ffVersion.replace(/\./g, '_')}_RELEASE`;
   const release = releases.find(r => r.label === releaseLabel);
+  const jobTypes = [...new Set(buildInfos.map(job => job.index["job-name"]))];
 
-  const releaseTaskId = await fetch(
-    `https://firefox-ci-tc.services.mozilla.com/api/index/v1/task/gecko.v2.mozilla-release.revision.${release.hash}.firefox.linux64-debug`
-  ).then(async (res) => {
-    if (!res.ok) {
-      throw new Error(
-        `Failed to find Taskcluster Task for release ${releaseLabel}: ${res.status}: ${res.statusText}`,
-      );
-    }
+  const JOB_TYPES = {
+    'linux64-opt': 'linux64-asan-opt',
+    'win64-opt': 'win64-asan-opt',
+    'macosx64-opt': 'macosx64-fuzzing-asan-opt',
+    'win64-aarch64-opt': 'win64-aarch64-opt',
+    'macosx64-aarch64-opt': 'macosx64-aarch64-fuzzing-asan-opt'
+  };
 
-    const response = await res.json();
-    return response.taskId;
-  });
+  const releaseFetches = {};
+  for (const jobType of jobTypes) {
+    const releaseTaskId = await fetch(
+      `https://firefox-ci-tc.services.mozilla.com/api/index/v1/task/gecko.v2.mozilla-release.revision.${release.hash}.firefox.${JOB_TYPES[jobType]}`
+    ).then(async (res) => {
+      if (!res.ok) {
+        throw new Error(
+          `Failed to find Taskcluster Task for release ${releaseLabel} ${jobType}: ${res.status}: ${res.statusText}`,
+        );
+      }
 
-  const releaseFetches = await fetch(
-    `https://firefox-ci-tc.services.mozilla.com/api/queue/v1/task/${releaseTaskId}`
-  ).then(async (res) => {
-    if (!res.ok) {
-      throw new Error(
-        `Failed to fetch Taskcluster Task "${releaseTaskId}": ${res.status}: ${res.statusText}`,
-      );
-    }
-    const response = await res.json();
-    return JSON.parse(response.payload.env["MOZ_FETCHES"]);
-  });
+      const response = await res.json();
+      return response.taskId;
+    });
+
+   const fetches = await fetch(
+      `https://firefox-ci-tc.services.mozilla.com/api/queue/v1/task/${releaseTaskId}`
+    ).then(async (res) => {
+      if (!res.ok) {
+        throw new Error(
+          `Failed to fetch Taskcluster Task "${releaseTaskId}": ${res.status}: ${res.statusText}`,
+        );
+      }
+      const response = await res.json();
+      return JSON.parse(response.payload.env["MOZ_FETCHES"]);
+    });
+    releaseFetches[jobType] = fetches;
+  }
 
   buildInfos.forEach((job, i) => {
     for (const key of job.fetches.toolchain) {
@@ -305,7 +318,7 @@ async function generate(artifactBaseDir) {
           skip: async () => fse.pathExists(artifactPath),
           task: async () => {
             await fse.mkdirp(localDir);
-            const mozFetch = releaseFetches.find(f => f.artifact === artifact);
+            const mozFetch = releaseFetches[job.index["job-name"]].find(f => f.artifact === artifact);
             if (!mozFetch) {
               throw new Error(`Cannot find task for artifact ${artifact}`);
             }
