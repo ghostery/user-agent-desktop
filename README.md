@@ -1,4 +1,4 @@
-# Ghostery Desktop Browser
+# Ghostery Private Browser
 
 The Ghostery Desktop Browser is a minimal fork of Firefox optimised for privacy. The main extra
 features are:
