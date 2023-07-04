@@ -7,7 +7,7 @@ const Listr = require("listr");
 const execa = require("execa");
 
 const { getRoot, load: loadWorkspace } = require("./workspace.js");
-const { exit } = require("process");
+const fetch = require("node-fetch-commonjs");
 
 const MOZ_FETCHES_DIR = "/builds/worker/fetches/";
 
@@ -242,6 +242,51 @@ async function generate(artifactBaseDir) {
   const workspace = await loadWorkspace();
   const s3bucket = workspace["s3bucket"];
   const ffVersion = workspace["firefox"];
+
+  const releases = await fetch('https://hg.mozilla.org/releases/mozilla-release/raw-file/tip/.hgtags').then(async (res) => {
+    if (!res.ok) {
+      throw new Error(
+        `Failed to Firefox release list: ${res.status}: ${res.statusText}`,
+      );
+    }
+    const list = await res.text();
+    return list.split('\n').map(r => {
+      const [hash, label] = r.split(' ');
+      return {
+        hash,
+        label,
+      };
+    }).reverse();
+  });
+
+  const releaseLabel = `FIREFOX_${ffVersion.replace(/\./g, '_')}_RELEASE`;
+  const release = releases.find(r => r.label === releaseLabel);
+
+  const releaseTaskId = await fetch(
+    `https://firefox-ci-tc.services.mozilla.com/api/index/v1/task/gecko.v2.mozilla-release.revision.${release.hash}.firefox.linux64-debug`
+  ).then(async (res) => {
+    if (!res.ok) {
+      throw new Error(
+        `Failed to find Taskcluster Task for release ${releaseLabel}: ${res.status}: ${res.statusText}`,
+      );
+    }
+
+    const response = await res.json();
+    return response.taskId;
+  });
+
+  const releaseFetches = await fetch(
+    `https://firefox-ci-tc.services.mozilla.com/api/queue/v1/task/${releaseTaskId}`
+  ).then(async (res) => {
+    if (!res.ok) {
+      throw new Error(
+        `Failed to fetch Taskcluster Task "${releaseTaskId}": ${res.status}: ${res.statusText}`,
+      );
+    }
+    const response = await res.json();
+    return JSON.parse(response.payload.env["MOZ_FETCHES"]);
+  });
+
   buildInfos.forEach((job, i) => {
     for (const key of job.fetches.toolchain) {
       if (
@@ -260,10 +305,14 @@ async function generate(artifactBaseDir) {
           skip: async () => fse.pathExists(artifactPath),
           task: async () => {
             await fse.mkdirp(localDir);
+            const mozFetch = releaseFetches.find(f => f.artifact === artifact);
+            if (!mozFetch) {
+              throw new Error(`Cannot find task for artifact ${artifact}`);
+            }
             await execa("wget", [
               "-O",
               artifactPath,
-              `https://firefox-ci-tc.services.mozilla.com/api/index/v1/task/gecko.cache.level-3.toolchains.v3.${name}.latest/artifacts/${artifact}`,
+              `https://firefox-ci-tc.services.mozilla.com/api/queue/v1/task/${mozFetch.task}/artifacts/${artifact}`,
             ]);
           },
         });
