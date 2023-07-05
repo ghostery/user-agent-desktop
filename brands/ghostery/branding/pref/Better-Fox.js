@@ -166,7 +166,6 @@ pref("browser.download.always_ask_before_handling_new_types", true); // enable u
 pref("browser.download.open_pdf_attachments_inline", true);
 
 /** TAB BEHAVIOR ***/
-pref("dom.disable_window_move_resize", true); // Prevent scripts from moving and resizing open windows
 pref("browser.tabs.loadBookmarksInTabs", true); // load bookmarks in tabs
 pref("editor.truncate_user_pastes", false); // Prevent password truncation when submitting form data
 pref("clipboard.plainTextOnly", true); // Plain Text only when copying text
