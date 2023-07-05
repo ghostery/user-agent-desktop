@@ -125,12 +125,12 @@ stage('Sign Windows') {
         unstash 'pkg-windows-arm'
 
         def packages = [
-            ["mozilla-release\\obj-aarch64-windows-mingw32\\dist\\Ghostery-${version}.en-US.win64-aarch64.zip", 'pkg\\arm-en'],
-            ["mozilla-release\\obj-aarch64-windows-mingw32\\dist\\Ghostery-${version}.de.win64-aarch64.zip", 'pkg\\arm-de'],
-            ["mozilla-release\\obj-aarch64-windows-mingw32\\dist\\Ghostery-${version}.fr.win64-aarch64.zip", 'pkg\\arm-fr'],
-            ["mozilla-release\\obj-x86_64-pc-mingw32\\dist\\Ghostery-${version}.en-US.win64.zip", 'pkg\\x86-en'],
-            ["mozilla-release\\obj-x86_64-pc-mingw32\\dist\\Ghostery-${version}.de.win64.zip", 'pkg\\x86-de'],
-            ["mozilla-release\\obj-x86_64-pc-mingw32\\dist\\Ghostery-${version}.fr.win64.zip", 'pkg\\x86-fr'],
+            ["mozilla-release\\obj-aarch64-pc-windows-msvc\\dist\\Ghostery-${version}.en-US.win64-aarch64.zip", 'pkg\\arm-en'],
+            ["mozilla-release\\obj-aarch64-pc-windows-msvc\\dist\\Ghostery-${version}.de.win64-aarch64.zip", 'pkg\\arm-de'],
+            ["mozilla-release\\obj-aarch64-pc-windows-msvc\\dist\\Ghostery-${version}.fr.win64-aarch64.zip", 'pkg\\arm-fr'],
+            ["mozilla-release\\obj-x86_64-pc-windows-msvc\\dist\\Ghostery-${version}.en-US.win64.zip", 'pkg\\x86-en'],
+            ["mozilla-release\\obj-x86_64-pc-windows-msvc\\dist\\Ghostery-${version}.de.win64.zip", 'pkg\\x86-de'],
+            ["mozilla-release\\obj-x86_64-pc-windows-msvc\\dist\\Ghostery-${version}.fr.win64.zip", 'pkg\\x86-fr'],
         ]
 
         for (pkg in packages) {
