@@ -678,14 +678,14 @@ def SETTINGS = [
         'dockerFile': 'Windows.dockerfile',
         'targetPlatform': 'win64',
         'packageFormat': 'ZIP',
-        'objDir': 'obj-x86_64-pc-mingw32',
+        'objDir': 'obj-x86_64-pc-windows-msvc',
     ],
     'windows-arm': [
         'name': 'WindowsARM',
         'dockerFile': 'WindowsARM.dockerfile',
         'targetPlatform': 'win64-aarch64',
         'packageFormat': 'ZIP',
-        'objDir': 'obj-aarch64-windows-mingw32',
+        'objDir': 'obj-aarch64-pc-windows-msvc',
     ],
 ]
 
