@@ -9,7 +9,7 @@ def build(opts, Closure postpackage={}, Closure archiving={}) {
 
         stage('prepare') {
             download('makecab.exe')
-            download('MacOSX11.3.sdk.tar.bz2')
+            download('MacOSX13.0.sdk.tar.bz2')
         }
 
         def image = stage('docker build base') {
