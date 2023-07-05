@@ -17,6 +17,7 @@ const SKIP_TOOLCHAINS = new Set([
   "macosx64-sdk",
   "macosx64-sdk-11.0",
   "macosx64-sdk-11.3",
+  "macosx64-sdk-13.0",
 ]);
 
 async function loadFetches(root) {
