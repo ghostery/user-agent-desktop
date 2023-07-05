@@ -168,7 +168,6 @@ pref("browser.download.open_pdf_attachments_inline", true);
 /** TAB BEHAVIOR ***/
 pref("browser.tabs.loadBookmarksInTabs", true); // load bookmarks in tabs
 pref("editor.truncate_user_pastes", false); // Prevent password truncation when submitting form data
-pref("clipboard.plainTextOnly", true); // Plain Text only when copying text
 pref("layout.css.has-selector.enabled", true);
 
 /****************************************************************************
