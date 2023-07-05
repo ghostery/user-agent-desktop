@@ -1,9 +1,9 @@
 // Betterfox community driven prefs
 //
 /****************************************************************************
- * Betterfox Lite                                                           *
+ * Betterfox for Ghostery                                                   *
  * "Non ducor duco"                                                         *
- * version: 110                                                             *
+ * version: 115                                                             *
  * url: https://github.com/yokoffing/Betterfox                              *
 ****************************************************************************/
 
@@ -69,15 +69,10 @@ user_pref("network.predictor.enable-prefetch", false);
 pref("browser.search.separatePrivateDefault.ui.enabled", true); // Enable a seperate search engine for Private Windows
 pref("browser.urlbar.update2.engineAliasRefresh", true); // enable "Add" button under search engine menu
 pref("browser.search.suggest.enabled", false); // Live search engine suggestions (Google, Bing, etc.)
-pref("security.insecure_connection_text.enabled", true); // show text on HTTP sites
-pref("security.insecure_connection_text.pbmode.enabled", true);  // show text on HTTP sites
 pref("network.IDN_show_punycode", true);  // Enforce Punycode for Internationalized Domain Names to eliminate possible spoofing
 
-/** HTTPS-FIRST MODE ***/
-pref("dom.security.https_first", true); // prefer HTTPS connections
-
 /** HTTPS-ONLY MODE ***/
-// pref("dom.security.https_only_mode", true); // force HTTPS-only connections (#367)
+pref("dom.security.https_only_mode", true); // force HTTPS-only connections (#367)
 pref("dom.security.https_only_mode_error_page_user_suggestions", true);
 
 /** PROXY / SOCKS / IPv6 ***/
