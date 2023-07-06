@@ -189,12 +189,15 @@ pref("browser.newtabpage.activity-stream.section.highlights.includeVisited", fal
 // If this is less than 5, then pasting code into the web console is disabled
 pref("devtools.selfxss.count", 0);
 
-// Disable "Firefox Suggest"
+// disable "Firefox Suggest"
 pref("browser.urlbar.groupLabels.enabled", false);
 pref("browser.urlbar.quicksuggest.enabled", false);
 
-// Disable "Firefox View" [FF106+]
+// disable "Firefox View" [FF106+]
 pref("browser.tabs.firefox-view", false);
 
-// Disable unified extensions button - required for Ghostery icon in urlbar
+// disable unified extensions button - required for Ghostery icon in urlbar
 pref("extensions.unifiedExtensions.enabled", false);
+
+// disable Quarantined Domains [FF115+]
+pref("extensions.quarantinedDomains.enabled", false);
