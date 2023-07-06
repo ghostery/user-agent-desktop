@@ -15,7 +15,7 @@
   "app": "2023.6",
   "s3bucket": "ghostery-user-agent-cache-public",
   "locales": {
-    "de": "5a5b615baada3b1e05fb96acfddd5280b33ee294",
-    "fr": "fdc6a4ad46ccd83ccb44cf50fc554a8cda3aa3d3"
+    "de": "d79045d879cadb4abd0a7ebabf7b28ebce6ede28",
+    "fr": "25e05bf2e556f9af7cf6461aa33afe47bccec284"
   }
 }
