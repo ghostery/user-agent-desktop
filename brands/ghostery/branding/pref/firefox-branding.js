@@ -196,8 +196,5 @@ pref("browser.urlbar.quicksuggest.enabled", false);
 // disable "Firefox View" [FF106+]
 pref("browser.tabs.firefox-view", false);
 
-// disable unified extensions button - required for Ghostery icon in urlbar
-pref("extensions.unifiedExtensions.enabled", false);
-
 // disable Quarantined Domains [FF115+]
 pref("extensions.quarantinedDomains.enabled", false);
