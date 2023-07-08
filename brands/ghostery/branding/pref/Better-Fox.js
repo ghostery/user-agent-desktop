@@ -166,7 +166,7 @@ pref("browser.download.useDownloadDir", false); // always ask where to download
 // [SETTING] General>Files and Applications>What should Firefox do with other files
 pref("browser.download.always_ask_before_handling_new_types", true); // enable user interaction for security by always asking how to handle new mimetypes
 
-** PDF ***/
+/** PDF ***/
 pref("browser.download.open_pdf_attachments_inline", true);
 
 /** TAB BEHAVIOR ***/
