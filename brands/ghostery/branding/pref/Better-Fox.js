@@ -12,7 +12,6 @@
 ****************************************************************************/
 /** EXPERIMENTAL ***/
 pref("layout.css.grid-template-masonry-value.enabled", true); // CSS Masonry Layout
-pref("layout.css.animation-composition.enabled", true); // CSS Animation Composition
 pref("dom.enable_web_task_scheduling", true); // Prioritized Task Scheduling API
 
 /** GFX ***/
