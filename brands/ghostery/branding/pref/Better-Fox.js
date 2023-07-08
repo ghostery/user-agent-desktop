@@ -24,6 +24,8 @@ pref("media.cache_resume_threshold", 6000); // when a network connection is susp
 pref("network.buffer.cache.size", 262144); // 256 kb; default=32768 (32 kb); reduce CPU usage by requiring fewer application-to-driver data transfers
 pref("network.buffer.cache.count", 128); // default=24; reduce CPU usage by requiring fewer application-to-driver data transfers
 pref("network.dnsCacheEntries", 20000); // increase DNS cache
+pref("network.dnsCacheExpiration", 3600); // keep entries for 1 hour; pref will be ignored by DNS resolver if using DoH/TRR
+pref("network.dnsCacheExpirationGracePeriod", 300); // cache DNS entries for 5 minutes after they expire; pref will be ignored by DNS resolver if using DoH/TRR
 pref("network.ssl_tokens_cache_capacity", 32768); // increase TLS token caching (fast reconnects)
 
 /****************************************************************************
