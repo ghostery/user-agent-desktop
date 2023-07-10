@@ -7,12 +7,12 @@ Fix theme
 X
 ---
  .../modules/LightweightThemeConsumer.sys.mjs  |   2 +-
- .../extensions/default-theme/experiment11.css | 272 ++++++++++++++++++
+ .../extensions/default-theme/experiment12.css | 272 ++++++++++++++++++
  .../extensions/default-theme/manifest.json    |  56 +---
  .../extensions/internal/XPIProvider.jsm       |  20 +-
  toolkit/mozapps/extensions/jar.mn             |   1 +
  5 files changed, 308 insertions(+), 43 deletions(-)
- create mode 100644 toolkit/mozapps/extensions/default-theme/experiment11.css
+ create mode 100644 toolkit/mozapps/extensions/default-theme/experiment12.css
 
 diff --git a/toolkit/modules/LightweightThemeConsumer.sys.mjs b/toolkit/modules/LightweightThemeConsumer.sys.mjs
 index b48d07c658..ffc5401a4a 100644
@@ -27,11 +27,11 @@ index b48d07c658..ffc5401a4a 100644
  
  // On Linux, the default theme picks up the right colors from dark GTK themes.
  const DEFAULT_THEME_RESPECTS_SYSTEM_COLOR_SCHEME =
-diff --git a/toolkit/mozapps/extensions/default-theme/experiment11.css b/toolkit/mozapps/extensions/default-theme/experiment11.css
+diff --git a/toolkit/mozapps/extensions/default-theme/experiment12.css b/toolkit/mozapps/extensions/default-theme/experiment12.css
 new file mode 100644
-index 0000000000..4340d37b11
+index 0000000000..e9661428f0
 --- /dev/null
-+++ b/toolkit/mozapps/extensions/default-theme/experiment11.css
++++ b/toolkit/mozapps/extensions/default-theme/experiment12.css
 @@ -0,0 +1,272 @@
 +/* This Source Code Form is subject to the terms of the Mozilla Public
 + * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -150,8 +150,8 @@ index 0000000000..4340d37b11
 +  border-bottom: none;
 +}
 +
-+:root:not([inFullscreen], [tabsintitlebar]) #nav-bar:not([tabs-hidden="true"]), #nav-bar:not([tabs-hidden="true"]):-moz-lwtheme {
-+  box-shadow: none;
++#nav-bar.browser-toolbar {
++  box-shadow: none !important;
 +}
 +
 +#TabsToolbar .toolbarbutton-1, #tabbrowser-arrowscrollbox::part(scrollbutton-up), #tabbrowser-arrowscrollbox::part(scrollbutton-down) {
@@ -306,7 +306,7 @@ index 0000000000..4340d37b11
 +  margin-inline-end: -6px !important;
 +}
 diff --git a/toolkit/mozapps/extensions/default-theme/manifest.json b/toolkit/mozapps/extensions/default-theme/manifest.json
-index 9166c1bb44..1a39f039c5 100644
+index 9166c1bb44..5be116ebd7 100644
 --- a/toolkit/mozapps/extensions/default-theme/manifest.json
 +++ b/toolkit/mozapps/extensions/default-theme/manifest.json
 @@ -7,35 +7,32 @@
@@ -320,7 +320,7 @@ index 9166c1bb44..1a39f039c5 100644
 +  "name": "Ghostery Private Theme",
 +  "description": "",
 +  "author": "Ghostery",
-+  "version": "1.11",
++  "version": "1.12",
  
    "icons": {"32": "icon.svg"},
  
@@ -395,11 +395,11 @@ index 9166c1bb44..1a39f039c5 100644
 -      "toolbar_field_icon_opacity": "--urlbar-icon-fill-opacity",
 -      "zap_gradient": "--panel-separator-zap-gradient"
 -    }
-+    "stylesheet": "experiment11.css"
++    "stylesheet": "experiment12.css"
    }
  }
 diff --git a/toolkit/mozapps/extensions/internal/XPIProvider.jsm b/toolkit/mozapps/extensions/internal/XPIProvider.jsm
-index 2b9c386c29..ba69073aa4 100644
+index 2b9c386c29..27bab89399 100644
 --- a/toolkit/mozapps/extensions/internal/XPIProvider.jsm
 +++ b/toolkit/mozapps/extensions/internal/XPIProvider.jsm
 @@ -2549,7 +2549,7 @@ var XPIProvider = {
@@ -407,7 +407,7 @@ index 2b9c386c29..ba69073aa4 100644
        this.maybeInstallBuiltinAddon(
          "default-theme@mozilla.org",
 -        "1.3",
-+        "1.11",
++        "1.12",
          "resource://default-theme/"
        );
  
@@ -444,14 +444,14 @@ index 2b9c386c29..ba69073aa4 100644
      return Array.from(lazy.XPIDatabase.getAddons()).filter(addon =>
        addon.dependencies.includes(aAddon.id)
 diff --git a/toolkit/mozapps/extensions/jar.mn b/toolkit/mozapps/extensions/jar.mn
-index 935416225d..398c0a2a23 100644
+index 935416225d..e995da1173 100644
 --- a/toolkit/mozapps/extensions/jar.mn
 +++ b/toolkit/mozapps/extensions/jar.mn
 @@ -23,4 +23,5 @@ toolkit.jar:
  % resource default-theme %content/mozapps/extensions/default-theme/
    content/mozapps/extensions/default-theme                      (default-theme/*.svg)
    content/mozapps/extensions/default-theme/manifest.json        (default-theme/manifest.json)
-+  content/mozapps/extensions/default-theme/experiment11.css      (default-theme/experiment11.css)
++  content/mozapps/extensions/default-theme/experiment12.css     (default-theme/experiment12.css)
  #endif
 -- 
 2.39.2 (Apple Git-143)
