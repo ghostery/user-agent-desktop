@@ -125,8 +125,8 @@ pref("browser.crashReports.unsubmittedCheck.autoSubmit2", false);
 // [1] https://bugzilla.mozilla.org/1460537
 // user_pref("network.connectivity-service.enabled", false);
 
-// Software that continually reports what default browser you are using
-pref("default-browser-agent.enabled", false);
+// Required for Make Default since Firefox 114
+pref("default-browser-agent.enabled", true);
 
 // Report extensions for abuse
 pref("extensions.abuseReport.enabled", false);
