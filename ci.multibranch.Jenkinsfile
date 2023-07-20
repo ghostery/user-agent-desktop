@@ -77,7 +77,7 @@ stage('Build Linux') {
 
         def settings = SETTINGS['linux-x86']
 
-        sh """#!/bin/bash -l -x
+        sh """
             mkdir -p pkg/linux
             cp mozilla-release/${settings.objDir}/dist/Ghostery-${version}.en-US.linux-x86_64.tar.gz pkg/linux/Ghostery-${version}.en-US.linux.tar.gz
             cp mozilla-release/${settings.objDir}/dist/Ghostery-${version}.de.linux-x86_64.tar.gz pkg/linux/Ghostery-${version}.de.linux.tar.gz
@@ -172,7 +172,7 @@ stage('Repackage Windows installers') {
         unstash 'signed-pkg-windows'
 
         // Fix ZIP paths
-        sh '''#!/bin/bash -l -x
+        sh '''
             for zip in pkg/*/*.zip
             do
                 ./ci/zip-fix.sh "$zip"
@@ -187,7 +187,7 @@ stage('Repackage Windows installers') {
 
         withMach('windows-x86') { settings ->
             for (installer in installersX86) {
-                sh """#!/bin/bash -l -x
+                sh """
                     ./mach repackage installer \
                         -o ${env.WORKSPACE}/${installer[1]} \
                         --package-name 'Ghostery' \
@@ -208,7 +208,7 @@ stage('Repackage Windows installers') {
 
         withMach('windows-arm') { settings ->
             for (installer in installersARM) {
-                sh """#!/bin/bash -l -x
+                sh """
                     ./mach repackage installer \
                         -o ${env.WORKSPACE}/${installer[1]} \
                         --package-name 'Ghostery' \
@@ -229,7 +229,7 @@ stage('Repackage Windows installers') {
 
         withMach('windows-x86') { settings ->
             for (installer in stubInstallersX86) {
-                sh """#!/bin/bash -l -x
+                sh """
                    ./mach repackage installer \
                         -o ${env.WORKSPACE}/${installer[1]} \
                         --tag browser/installer/windows/stub.tag \
@@ -248,7 +248,7 @@ stage('Repackage Windows installers') {
 
         withMach('windows-arm') { settings ->
             for (installer in stubInstallersARM) {
-                sh """#!/bin/bash -l -x
+                sh """
                    ./mach repackage installer \
                         -o ${env.WORKSPACE}/${installer[1]} \
                         --tag browser/installer/windows/stub.tag \
@@ -297,7 +297,7 @@ stage('Unify Mac DMG') {
 
         withMach('macos-arm') {
             for (dmg in dmgs) {
-                sh """#!/bin/bash -l -x
+                sh """
                     cd ${env.WORKSPACE}
                     ./ci/unify_mac_dmg.sh ${dmg[0]} ${dmg[1]} ${dmg[2]}
                 """
@@ -438,7 +438,7 @@ stage('Repackage MAR') {
 
         withMach('linux-x86') {
             for (pkg in packages) {
-                sh """#!/bin/bash -l -x
+                sh """
                     ./mach repackage mar \
                         --arch ${pkg[0]} \
                         --mar-channel-id $MAR_CHANNEL_ID \
@@ -468,7 +468,7 @@ stage('Repackage MAR') {
 
                     for (pkg in packages) {
                         def marPath = "${pwd}/${pkg[2]}"
-                        sh """#!/bin/bash -l -x
+                        sh """#!/bin/bash
                             set -x
                             set -e
                             ${pwd}/signmar -d \$CERT_DB_PATH \
@@ -537,7 +537,7 @@ stage('Publish to github') {
                         usernameVariable: 'GITHUB_USERNAME'
                     )
                 ]) {
-                    def id = sh(returnStdout: true, script: """#!/bin/bash -l -x
+                    def id = sh(returnStdout: true, script: """
                         curl \
                             --fail \
                             -H "Accept: application/vnd.github.v3+json" \
@@ -548,7 +548,7 @@ stage('Publish to github') {
 
                     for(String artifactPath in artifacts) {
                         def artifactName = artifactPath.split('/').last()
-                        sh("""#!/bin/bash -l -x
+                        sh("""
                             curl \
                                 --fail \
                                 -X POST \
@@ -591,7 +591,7 @@ stage('publish to balrog') {
                 )]) {
                     // create release on balrog
                     retry(3) {
-                        sh """#!/bin/bash -l -x
+                        sh """
                             python3 ci/submitter.py release --tag "${params.ReleaseName}" \
                                 --moz-root artifacts/mozilla-release \
                                 --version ${version} \
@@ -604,7 +604,7 @@ stage('publish to balrog') {
                     // publish builds
                     for(String artifactPath in artifacts) {
                         retry(3) {
-                            sh """#!/bin/bash -l -x
+                            sh """
                                 python3 ci/submitter.py build --tag "${params.ReleaseName}" \
                                     --bid "${buildId}" \
                                     --mar "${artifactPath}" \
@@ -620,7 +620,7 @@ stage('publish to balrog') {
                     // copy this release to nightly
                     if (params.Nightly) {
                         retry(3) {
-                            sh """#!/bin/bash -l -x
+                            sh """
                                 python3 ci/submitter.py nightly --tag "${params.ReleaseName}" \
                                     --moz-root artifacts/mozilla-release \
                                     --version ${version} \
