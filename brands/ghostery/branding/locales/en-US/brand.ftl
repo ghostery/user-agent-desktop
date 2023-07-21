@@ -4,6 +4,7 @@
 
 -brand-shorter-name = Ghostery
 -brand-short-name = Ghostery
+-brand-shortcut-name = Ghostery
 -brand-full-name = Ghostery Private Browser
 -brand-product-name = Ghostery
 -vendor-short-name = Ghostery GmbH
