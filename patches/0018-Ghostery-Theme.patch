@@ -29,7 +29,7 @@ index b48d07c658..ffc5401a4a 100644
  const DEFAULT_THEME_RESPECTS_SYSTEM_COLOR_SCHEME =
 diff --git a/toolkit/mozapps/extensions/default-theme/experiment12.css b/toolkit/mozapps/extensions/default-theme/experiment12.css
 new file mode 100644
-index 0000000000..e9661428f0
+index 0000000000..a6bd1fdf76
 --- /dev/null
 +++ b/toolkit/mozapps/extensions/default-theme/experiment12.css
 @@ -0,0 +1,272 @@
@@ -54,7 +54,7 @@ index 0000000000..e9661428f0
 +}
 +
 +#urlbar-background {
-+  border: 2px solid transparent;
++  border: 2px solid var(--toolbar-field-background-color);
 +  border-radius: 17px;
 +  padding: 0;
 +  background-clip: padding-box;
@@ -74,7 +74,7 @@ index 0000000000..e9661428f0
 +
 +#urlbar:not([focused="true"]):hover > #urlbar-background,
 +#searchbar:not(:focus-within):hover {
-+  background-color: #53565B;
++  background-color: var(--toolbar-field-background-color);
 +}
 +
 +#urlbar[focused="true"]:not([suppress-focus-border]) > #urlbar-background {
