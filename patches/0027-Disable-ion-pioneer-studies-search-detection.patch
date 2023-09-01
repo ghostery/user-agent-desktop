@@ -5,8 +5,7 @@ Subject: Disable ion / pioneer studies / search detection
 fix #358
 ---
  browser/components/BrowserGlue.sys.mjs              | 6 +++---
- toolkit/mozapps/extensions/internal/XPIProvider.jsm | 2 +-
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ 1 files changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/browser/components/BrowserGlue.sys.mjs b/browser/components/BrowserGlue.sys.mjs
 index d8c789da83..8e54a3d4ed 100644
@@ -25,19 +24,6 @@ index d8c789da83..8e54a3d4ed 100644
 
      this._monitorGPCPref();
 
-diff --git a/toolkit/mozapps/extensions/internal/XPIProvider.jsm b/toolkit/mozapps/extensions/internal/XPIProvider.jsm
-index ba69073aa4..cfaab4fff1 100644
---- a/toolkit/mozapps/extensions/internal/XPIProvider.jsm
-+++ b/toolkit/mozapps/extensions/internal/XPIProvider.jsm
-@@ -3022,7 +3022,7 @@ var XPIProvider = {
-   },
-
-   async maybeUninstallBuiltinAddon(aID) {
--    if (enabledScopes & BuiltInLocation.scope) {
-+    if (lazy.enabledScopes & BuiltInLocation.scope) {
-       let existing = BuiltInLocation.get(aID);
-       if (existing) {
-         (async () => {
 --
 2.39.2 (Apple Git-143)
 

@@ -10,32 +10,31 @@ diff --git a/build/moz.configure/bootstrap.configure b/build/moz.configure/boots
 index 5abb27f469..e34e9472cf 100644
 --- a/build/moz.configure/bootstrap.configure
 +++ b/build/moz.configure/bootstrap.configure
-@@ -143,6 +143,7 @@ def bootstrap_path(path, **kwargs):
- 
+@@ -146,6 +146,7 @@ def bootstrap_path(path, **kwargs):
+
      @depends(
          enable_bootstrap,
 +        "MOZ_AUTOMATION",
          toolchains_base_dir,
          moz_fetches_dir,
          bootstrap_toolchain_tasks,
-@@ -159,7 +160,7 @@ def bootstrap_path(path, **kwargs):
-     @imports(_from="__builtin__", _import="open")
+@@ -164,6 +165,7 @@ def bootstrap_path(path, **kwargs):
      @imports(_from="__builtin__", _import="Exception")
      def bootstrap_path(
--        bootstrap, toolchains_base_dir, moz_fetches_dir, tasks, build_env, path
-+        bootstrap, automation, toolchains_base_dir, moz_fetches_dir, tasks, build_env, path
-     ):
-         if not path:
-             return
-@@ -282,7 +283,7 @@ def bootstrap_path(path, **kwargs):
+         bootstrap,
++        automation,
+         toolchains_base_dir,
+         moz_fetches_dir,
+         tasks,
+@@ -294,7 +296,7 @@ def bootstrap_path(path, **kwargs):
              return True
- 
+
          path = os.path.join(toolchains_base_dir, path_prefix, *path_parts)
 -        if bootstrap and bootstrap(path_parts[0]):
 +        if bootstrap and bootstrap(path_parts[0]) and not automation:
              try:
                  if not try_bootstrap(os.path.exists(path)):
                      # If there aren't toolchain artifacts to use for this build,
--- 
+--
 2.39.2 (Apple Git-143)
 

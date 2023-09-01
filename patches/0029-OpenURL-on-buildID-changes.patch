@@ -10,10 +10,11 @@ diff --git a/browser/components/BrowserContentHandler.sys.mjs b/browser/componen
 index a3cef0ddbd..0dfe0e533b 100644
 --- a/browser/components/BrowserContentHandler.sys.mjs
 +++ b/browser/components/BrowserContentHandler.sys.mjs
-@@ -697,13 +697,13 @@ nsBrowserContentHandler.prototype = {
+@@ -697,14 +697,13 @@ nsBrowserContentHandler.prototype = {
              // we may open the startPage in addition to restoring the session.
-             willRestoreSession = lazy.SessionStartup.isAutomaticRestoreEnabled();
- 
+             willRestoreSession =
+               lazy.SessionStartup.isAutomaticRestoreEnabled();
+-
 +          case OVERRIDE_NEW_BUILD_ID:
              overridePage = Services.urlFormatter.formatURLPref(
                "startup.homepage_override_url"
@@ -26,8 +27,8 @@ index a3cef0ddbd..0dfe0e533b 100644
              ) {
                overridePage = getPostUpdateOverridePage(update, overridePage);
                // Send the update ping to signal that the update was successful.
-@@ -712,12 +712,6 @@ nsBrowserContentHandler.prototype = {
- 
+@@ -713,12 +712,6 @@ nsBrowserContentHandler.prototype = {
+
              overridePage = overridePage.replace("%OLD_VERSION%", old_mstone);
              break;
 -          case OVERRIDE_NEW_BUILD_ID:
@@ -39,6 +40,6 @@ index a3cef0ddbd..0dfe0e533b 100644
          }
        }
      } catch (ex) {}
--- 
+--
 2.39.2 (Apple Git-143)
 
