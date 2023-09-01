@@ -3,14 +3,14 @@ Date: Wed, 30 Sep 2020 12:22:19 +0200
 Subject: Move Ghostery icon to UrlBar
 
 ---
- .../components/customizableui/CustomizableUI.jsm    | 13 ++++++++++++-
+ .../components/customizableui/CustomizableUI.sys.mjs    | 13 ++++++++++++-
  browser/themes/shared/addons/unified-extensions.css |  4 ++++
  2 files changed, 16 insertions(+), 1 deletion(-)
 
-diff --git a/browser/components/customizableui/CustomizableUI.jsm b/browser/components/customizableui/CustomizableUI.jsm
+diff --git a/browser/components/customizableui/CustomizableUI.sys.mjs b/browser/components/customizableui/CustomizableUI.sys.mjs
 index 7dfad17147..06c00310b1 100644
---- a/browser/components/customizableui/CustomizableUI.jsm
-+++ b/browser/components/customizableui/CustomizableUI.jsm
+--- a/browser/components/customizableui/CustomizableUI.sys.mjs
++++ b/browser/components/customizableui/CustomizableUI.sys.mjs
 @@ -1169,7 +1169,12 @@ var CustomizableUIInternal = {
          if (widget) {
            widget.currentArea = aArea;
@@ -28,7 +28,7 @@ index 7dfad17147..06c00310b1 100644
 @@ -1601,6 +1606,12 @@ var CustomizableUIInternal = {
        this.ensureButtonContextMenu(widgetNode, aAreaNode);
      }
- 
+
 +    if (widgetNode.getAttribute("data-extensionid") === "firefox@ghostery.com") {
 +      const container = window.document.getElementById("urlbar-input-container");
 +      container.insertAdjacentElement('afterbegin', widgetNode);
@@ -50,6 +50,6 @@ index 21156a9017..992ab5fe39 100644
  /* This Source Code Form is subject to the terms of the Mozilla Public
   * License, v. 2.0. If a copy of the MPL was not distributed with this
   * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
--- 
+--
 2.39.2 (Apple Git-143)
 
