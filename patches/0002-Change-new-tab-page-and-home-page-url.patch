@@ -18,9 +18,9 @@ index 6ef8e69196..a1073fe280 100644
  pref("browser.startup.page",                1);
 -pref("browser.startup.homepage",            "about:home");
 +pref("browser.startup.homepage",            "https://ghostery.com/");
- #ifdef NIGHTLY_BUILD
  pref("browser.startup.homepage.abouthome_cache.enabled", true);
- #else
+ pref("browser.startup.homepage.abouthome_cache.loglevel", "Warn");
+
 diff --git a/browser/components/newtab/AboutNewTabService.jsm b/browser/components/newtab/AboutNewTabService.jsm
 index 43c0ea1f37..29ee2ea72c 100644
 --- a/browser/components/newtab/AboutNewTabService.jsm
@@ -45,21 +45,21 @@ index 43c0ea1f37..29ee2ea72c 100644
 -    ].join("");
 +    return "https://ghostery.com/";
    }
- 
+
    get welcomeURL() {
-diff --git a/browser/modules/HomePage.jsm b/browser/modules/HomePage.jsm
+diff --git a/browser/modules/HomePage.sys.mjs b/browser/modules/HomePage.sys.mjs
 index db8af26001..dfca2933e1 100644
---- a/browser/modules/HomePage.jsm
-+++ b/browser/modules/HomePage.jsm
-@@ -25,7 +25,7 @@ XPCOMUtils.defineLazyModuleGetters(lazy, {
+--- a/browser/modules/HomePage.sys.mjs
++++ b/browser/modules/HomePage.sys.mjs
+@@ -14,7 +14,7 @@ XPCOMUtils.defineLazyModuleGetters(lazy, {
  });
- 
+
  const kPrefName = "browser.startup.homepage";
 -const kDefaultHomePage = "about:home";
 +const kDefaultHomePage = "https://ghostery.com/";
  const kExtensionControllerPref =
    "browser.startup.homepage_override.extensionControlled";
  const kHomePageIgnoreListId = "homepage-urls";
--- 
+--
 2.39.2 (Apple Git-143)
 
