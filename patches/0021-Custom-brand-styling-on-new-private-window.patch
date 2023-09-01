@@ -11,27 +11,27 @@ diff --git a/browser/components/privatebrowsing/content/aboutPrivateBrowsing.htm
 index fd713f2313..c53d5be79e 100644
 --- a/browser/components/privatebrowsing/content/aboutPrivateBrowsing.html
 +++ b/browser/components/privatebrowsing/content/aboutPrivateBrowsing.html
-@@ -13,6 +13,7 @@
-     <link rel="icon" href="chrome://browser/skin/privatebrowsing/favicon.svg"/>
-     <link rel="stylesheet" href="chrome://browser/content/aboutPrivateBrowsing.css" media="all"/>
-     <link rel="stylesheet" href="chrome://browser/skin/privatebrowsing/aboutPrivateBrowsing.css" media="all"/>
+@@ -24,6 +24,7 @@
+       href="chrome://browser/skin/privatebrowsing/aboutPrivateBrowsing.css"
+       media="all"
+     />
 +    <link rel="stylesheet" href="chrome://branding/content/aboutPrivateBrowsing.css" media="all"/>
-     <link rel="localization" href="branding/brand.ftl"/>
-     <link rel="localization" href="toolkit/branding/brandings.ftl"/>
-     <link rel="localization" href="browser/aboutPrivateBrowsing.ftl"/>
+     <link rel="localization" href="branding/brand.ftl" />
+     <link rel="localization" href="toolkit/branding/brandings.ftl" />
+     <link rel="localization" href="browser/aboutPrivateBrowsing.ftl" />
 diff --git a/browser/themes/shared/tabs.css b/browser/themes/shared/tabs.css
 index e93e790667..064e8e31e3 100644
 --- a/browser/themes/shared/tabs.css
 +++ b/browser/themes/shared/tabs.css
-@@ -8,7 +8,7 @@
-   --tab-min-height: 36px;
-   --inline-tab-padding: 8px;
-   /* Value for --in-content-page-background in in-content/common.inc.css */
--  --tabpanel-background-color: #f9f9fa;
-+  --tabpanel-background-color: #36393f;
-   --tab-border-radius: 4px;
-   --tab-shadow-max-size: 6px;
+@@ -12,7 +12,7 @@
    --tab-block-margin: 4px;
--- 
+   /* --tabpanel-background-color matches $in-content-page-background in newtab
+      (browser/components/newtab/content-src/styles/_variables.scss) */
+-  --tabpanel-background-color: #F9F9FB;
++  --tabpanel-background-color: #36393f;
+   --tab-attention-icon-color: rgb(42,195,162);
+ }
+
+--
 2.39.2 (Apple Git-143)
 
