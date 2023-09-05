@@ -12,6 +12,7 @@ const fetch = require("node-fetch-commonjs");
 const MOZ_FETCHES_DIR = "/builds/worker/fetches/";
 
 const SKIP_TOOLCHAINS = new Set([
+  "vs",
   "win64-pdbstr",
   "win64-vs2017",
   "macosx64-sdk",
@@ -104,7 +105,7 @@ function generateFetch(fetches, key) {
 async function generateDockerFile({ key, fetches, job, name, toolchains }) {
   const statements = ["FROM ua-build-base"];
   const env = Object.entries(job.worker.env || {})
-    .map(([k, v]) => `${k}=${v}`)
+    .map(([k, v]) => `${k}="${v}"`)
     .join(" \\\n    ");
   statements.push(`ENV ${env}`);
 
@@ -162,7 +163,7 @@ async function generate(artifactBaseDir) {
   const buildConfigs = [
     {
       name: "Linux",
-      key: "linux64/opt",
+      key: "linux64-asan/opt",
       buildPath: path.join(
         root,
         "mozilla-release",
@@ -174,7 +175,7 @@ async function generate(artifactBaseDir) {
     },
     {
       name: "Windows",
-      key: "win64/opt",
+      key: "win64-asan/opt",
       buildPath: path.join(
         root,
         "mozilla-release",
@@ -185,20 +186,8 @@ async function generate(artifactBaseDir) {
       ),
     },
     {
-      name: "MacOSX",
-      key: "macosx64/opt",
-      buildPath: path.join(
-        root,
-        "mozilla-release",
-        "taskcluster",
-        "ci",
-        "build",
-        "macosx.yml"
-      ),
-    },
-    {
       name: "WindowsARM",
-      key: "win64-aarch64/opt",
+      key: "win64-aarch64-shippable/opt",
       arch: "arm64",
       buildPath: path.join(
         root,
@@ -210,8 +199,20 @@ async function generate(artifactBaseDir) {
       ),
     },
     {
+      name: "MacOSX",
+      key: "macosx64-asan-fuzzing/opt",
+      buildPath: path.join(
+        root,
+        "mozilla-release",
+        "taskcluster",
+        "ci",
+        "build",
+        "macosx.yml"
+      ),
+    },
+    {
       name: "MacOSARM",
-      key: "macosx64-aarch64-shippable/opt",
+      key: "macosx64-aarch64-asan-fuzzing/opt",
       arch: "arm64",
       buildPath: path.join(
         root,
@@ -264,18 +265,10 @@ async function generate(artifactBaseDir) {
   const release = releases.find(r => r.label === releaseLabel);
   const jobTypes = [...new Set(buildInfos.map(job => job.index["job-name"]))];
 
-  const JOB_TYPES = {
-    'linux64-opt': 'linux64-asan-opt',
-    'win64-opt': 'win64-asan-opt',
-    'macosx64-opt': 'macosx64-fuzzing-asan-opt',
-    'win64-aarch64-opt': 'win64-aarch64-opt',
-    'macosx64-aarch64-opt': 'macosx64-aarch64-fuzzing-asan-opt'
-  };
-
   const releaseFetches = {};
   for (const jobType of jobTypes) {
     const releaseTaskId = await fetch(
-      `https://firefox-ci-tc.services.mozilla.com/api/index/v1/task/gecko.v2.mozilla-release.revision.${release.hash}.firefox.${JOB_TYPES[jobType]}`
+      `https://firefox-ci-tc.services.mozilla.com/api/index/v1/task/gecko.v2.mozilla-release.revision.${release.hash}.firefox.${jobType}`
     ).then(async (res) => {
       if (!res.ok) {
         throw new Error(
