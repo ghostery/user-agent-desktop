@@ -187,7 +187,7 @@ async function generate(artifactBaseDir) {
     },
     {
       name: "WindowsARM",
-      key: "win64-aarch64-shippable/opt",
+      key: "win64-aarch64/opt",
       arch: "arm64",
       buildPath: path.join(
         root,
