@@ -1,6 +1,6 @@
 FROM ua-build-base
 
-ENV PERFHERDER_EXTRA_OPTIONS="aarch64" \
+ENV PERFHERDER_EXTRA_OPTIONS="aarch64-no-eme" \
     MOZ_AUTOMATION_PACKAGE_TESTS="1"
 
 RUN /builds/worker/bin/fetch-content static-url \
@@ -41,11 +41,6 @@ RUN wget -nv -O /builds/worker/fetches/cbindgen.tar.zst https://ghostery-user-ag
     cd /builds/worker/fetches/ && \
     tar -xf cbindgen.tar.zst && \
     rm cbindgen.tar.zst
-
-RUN wget -nv -O /builds/worker/fetches/sccache.tar.zst https://ghostery-user-agent-cache-public.s3.amazonaws.com/toolchains/117.0/linux64-sccache/sccache.tar.zst && \
-    cd /builds/worker/fetches/ && \
-    tar -xf sccache.tar.zst && \
-    rm sccache.tar.zst
 
 RUN wget -nv -O /builds/worker/fetches/dump_syms.tar.zst https://ghostery-user-agent-cache-public.s3.amazonaws.com/toolchains/117.0/linux64-dump_syms/dump_syms.tar.zst && \
     cd /builds/worker/fetches/ && \

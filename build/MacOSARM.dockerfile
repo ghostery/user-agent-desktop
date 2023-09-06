@@ -1,22 +1,17 @@
 FROM ua-build-base
 
 ENV MOZ_AUTOMATION_PACKAGE_TESTS="1" \
-    PERFHERDER_EXTRA_OPTIONS="aarch64-asan-fuzzing"
+    PERFHERDER_EXTRA_OPTIONS="aarch64"
+
+RUN wget -nv -O /builds/worker/fetches/cctools.tar.zst https://ghostery-user-agent-cache-public.s3.amazonaws.com/toolchains/117.0/linux64-cctools-port/cctools.tar.zst && \
+    cd /builds/worker/fetches/ && \
+    tar -xf cctools.tar.zst && \
+    rm cctools.tar.zst
 
 RUN wget -nv -O /builds/worker/fetches/clang.tar.zst https://ghostery-user-agent-cache-public.s3.amazonaws.com/toolchains/117.0/linux64-clang-16/clang.tar.zst && \
     cd /builds/worker/fetches/ && \
     tar -xf clang.tar.zst && \
     rm clang.tar.zst
-
-RUN wget -nv -O /builds/worker/fetches/sccache.tar.zst https://ghostery-user-agent-cache-public.s3.amazonaws.com/toolchains/117.0/linux64-sccache/sccache.tar.zst && \
-    cd /builds/worker/fetches/ && \
-    tar -xf sccache.tar.zst && \
-    rm sccache.tar.zst
-
-RUN wget -nv -O /builds/worker/fetches/llvm-symbolizer.tar.zst https://ghostery-user-agent-cache-public.s3.amazonaws.com/toolchains/117.0/macosx64-aarch64-llvm-symbolizer-16/llvm-symbolizer.tar.zst && \
-    cd /builds/worker/fetches/ && \
-    tar -xf llvm-symbolizer.tar.zst && \
-    rm llvm-symbolizer.tar.zst
 
 RUN wget -nv -O /builds/worker/fetches/sysroot-wasm32-wasi.tar.zst https://ghostery-user-agent-cache-public.s3.amazonaws.com/toolchains/117.0/sysroot-wasm32-wasi-clang-16/sysroot-wasm32-wasi.tar.zst && \
     cd /builds/worker/fetches/ && \

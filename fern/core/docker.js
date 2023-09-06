@@ -163,7 +163,7 @@ async function generate(artifactBaseDir) {
   const buildConfigs = [
     {
       name: "Linux",
-      key: "linux64-asan/opt",
+      key: "linux64-shippable/opt",
       buildPath: path.join(
         root,
         "mozilla-release",
@@ -175,7 +175,7 @@ async function generate(artifactBaseDir) {
     },
     {
       name: "Windows",
-      key: "win64-asan/opt",
+      key: "win64-shippable/opt",
       buildPath: path.join(
         root,
         "mozilla-release",
@@ -187,7 +187,7 @@ async function generate(artifactBaseDir) {
     },
     {
       name: "WindowsARM",
-      key: "win64-aarch64/opt",
+      key: "win64-aarch64-shippable-no-eme/opt",
       arch: "arm64",
       buildPath: path.join(
         root,
@@ -200,7 +200,7 @@ async function generate(artifactBaseDir) {
     },
     {
       name: "MacOSX",
-      key: "macosx64-asan-fuzzing/opt",
+      key: "macosx64-x64-shippable/opt",
       buildPath: path.join(
         root,
         "mozilla-release",
@@ -212,7 +212,7 @@ async function generate(artifactBaseDir) {
     },
     {
       name: "MacOSARM",
-      key: "macosx64-aarch64-asan-fuzzing/opt",
+      key: "macosx64-aarch64-shippable/opt",
       arch: "arm64",
       buildPath: path.join(
         root,
@@ -267,12 +267,13 @@ async function generate(artifactBaseDir) {
 
   const releaseFetches = {};
   for (const jobType of jobTypes) {
+    const url = `https://firefox-ci-tc.services.mozilla.com/api/index/v1/task/gecko.v2.mozilla-release.shippable.revision.${release.hash}.firefox.${jobType}`;
     const releaseTaskId = await fetch(
-      `https://firefox-ci-tc.services.mozilla.com/api/index/v1/task/gecko.v2.mozilla-release.revision.${release.hash}.firefox.${jobType}`
+      url
     ).then(async (res) => {
       if (!res.ok) {
         throw new Error(
-          `Failed to find Taskcluster Task for release ${releaseLabel} ${jobType}: ${res.status}: ${res.statusText}`,
+          `Failed to find Taskcluster Task for release ${releaseLabel} ${jobType}: ${url} - ${res.status}: ${res.statusText}`,
         );
       }
 

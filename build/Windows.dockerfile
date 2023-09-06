@@ -1,7 +1,6 @@
 FROM ua-build-base
 
-ENV PERFHERDER_EXTRA_OPTIONS="opt asan" \
-    MOZ_AUTOMATION_PACKAGE_TESTS="1"
+ENV MOZ_AUTOMATION_PACKAGE_TESTS="1"
 
 RUN /builds/worker/bin/fetch-content static-url \
     --sha256 5c076f87ba64d82f11513f4af0ceb07246a3540aa3c72ca3ffc2d53971fa56e3 \
@@ -42,11 +41,6 @@ RUN wget -nv -O /builds/worker/fetches/cbindgen.tar.zst https://ghostery-user-ag
     tar -xf cbindgen.tar.zst && \
     rm cbindgen.tar.zst
 
-RUN wget -nv -O /builds/worker/fetches/sccache.tar.zst https://ghostery-user-agent-cache-public.s3.amazonaws.com/toolchains/117.0/linux64-sccache/sccache.tar.zst && \
-    cd /builds/worker/fetches/ && \
-    tar -xf sccache.tar.zst && \
-    rm sccache.tar.zst
-
 RUN wget -nv -O /builds/worker/fetches/dump_syms.tar.zst https://ghostery-user-agent-cache-public.s3.amazonaws.com/toolchains/117.0/linux64-dump_syms/dump_syms.tar.zst && \
     cd /builds/worker/fetches/ && \
     tar -xf dump_syms.tar.zst && \
@@ -76,11 +70,6 @@ RUN wget -nv -O /builds/worker/fetches/sysroot-wasm32-wasi.tar.zst https://ghost
     cd /builds/worker/fetches/ && \
     tar -xf sysroot-wasm32-wasi.tar.zst && \
     rm sysroot-wasm32-wasi.tar.zst
-
-RUN wget -nv -O /builds/worker/fetches/llvm-symbolizer.tar.zst https://ghostery-user-agent-cache-public.s3.amazonaws.com/toolchains/117.0/win64-llvm-symbolizer-16/llvm-symbolizer.tar.zst && \
-    cd /builds/worker/fetches/ && \
-    tar -xf llvm-symbolizer.tar.zst && \
-    rm llvm-symbolizer.tar.zst
 
 ADD --chown=worker:worker makecab.exe /builds/worker/fetches/
 

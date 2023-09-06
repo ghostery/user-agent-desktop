@@ -1,14 +1,19 @@
 FROM ua-build-base
 
-ENV PERFHERDER_EXTRA_OPTIONS="opt asan" \
-    MOZ_AUTOMATION_PACKAGE_TESTS="1"
+ENV MOZ_AUTOMATION_PACKAGE_TESTS="1" \
+    MOZ_ENABLE_FULL_SYMBOLS="1"
+
+RUN wget -nv -O /builds/worker/fetches/binutils.tar.zst https://ghostery-user-agent-cache-public.s3.amazonaws.com/toolchains/117.0/linux64-binutils/binutils.tar.zst && \
+    cd /builds/worker/fetches/ && \
+    tar -xf binutils.tar.zst && \
+    rm binutils.tar.zst
 
 RUN wget -nv -O /builds/worker/fetches/clang.tar.zst https://ghostery-user-agent-cache-public.s3.amazonaws.com/toolchains/117.0/linux64-clang-16/clang.tar.zst && \
     cd /builds/worker/fetches/ && \
     tar -xf clang.tar.zst && \
     rm clang.tar.zst
 
-RUN wget -nv -O /builds/worker/fetches/rustc.tar.zst https://ghostery-user-agent-cache-public.s3.amazonaws.com/toolchains/117.0/linux64-rust-dev/rustc.tar.zst && \
+RUN wget -nv -O /builds/worker/fetches/rustc.tar.zst https://ghostery-user-agent-cache-public.s3.amazonaws.com/toolchains/117.0/linux64-rust-1.71/rustc.tar.zst && \
     cd /builds/worker/fetches/ && \
     tar -xf rustc.tar.zst && \
     rm rustc.tar.zst
@@ -27,16 +32,6 @@ RUN wget -nv -O /builds/worker/fetches/dump_syms.tar.zst https://ghostery-user-a
     cd /builds/worker/fetches/ && \
     tar -xf dump_syms.tar.zst && \
     rm dump_syms.tar.zst
-
-RUN wget -nv -O /builds/worker/fetches/llvm-symbolizer.tar.zst https://ghostery-user-agent-cache-public.s3.amazonaws.com/toolchains/117.0/linux64-llvm-symbolizer-16/llvm-symbolizer.tar.zst && \
-    cd /builds/worker/fetches/ && \
-    tar -xf llvm-symbolizer.tar.zst && \
-    rm llvm-symbolizer.tar.zst
-
-RUN wget -nv -O /builds/worker/fetches/sccache.tar.zst https://ghostery-user-agent-cache-public.s3.amazonaws.com/toolchains/117.0/linux64-sccache/sccache.tar.zst && \
-    cd /builds/worker/fetches/ && \
-    tar -xf sccache.tar.zst && \
-    rm sccache.tar.zst
 
 RUN wget -nv -O /builds/worker/fetches/nasm.tar.zst https://ghostery-user-agent-cache-public.s3.amazonaws.com/toolchains/117.0/linux64-nasm/nasm.tar.zst && \
     cd /builds/worker/fetches/ && \
