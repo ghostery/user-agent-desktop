@@ -151,7 +151,9 @@ pref("extensions.pocket.enabled", false); // Pocket Account
 pref("extensions.pocket.api"," ");
 pref("extensions.pocket.oAuthConsumerKey", " ");
 pref("extensions.pocket.site", " ");
-pref("identity.fxaccounts.enabled", false); // Firefox Accounts & Sync
+// Firefox Accounts & Sync
+pref("identity.fxaccounts.enabled", false);
+pref("identity.fxaccounts.autoconfig.uri", "https://get.ghosterybrowser.com/health");
 pref("extensions.fxmonitor.enabled", false); // Firefox Monitor
 pref("signon.management.page.breach-alerts.enabled", false); // Firefox Lockwise
 pref("signon.management.page.breachAlertUrl", "");
