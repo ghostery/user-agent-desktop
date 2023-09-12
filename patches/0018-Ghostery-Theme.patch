@@ -411,38 +411,6 @@ index 2b9c386c29..27bab89399 100644
          "resource://default-theme/"
        );
 
-@@ -2737,6 +2737,10 @@ var XPIProvider = {
-       logger.error("startup failed", e);
-       AddonManagerPrivate.recordException("XPI", "startup failed", e);
-     }
-+
-+    this.maybeUninstallBuiltinAddon("firefox-compact-light@mozilla.org");
-+    this.maybeUninstallBuiltinAddon("firefox-compact-dark@mozilla.org");
-+    this.maybeUninstallBuiltinAddon("firefox-alpenglow@mozilla.org");
-   },
-
-   /**
-@@ -3017,6 +3021,20 @@ var XPIProvider = {
-     return installed;
-   },
-
-+  async maybeUninstallBuiltinAddon(aID) {
-+    if (enabledScopes & BuiltInLocation.scope) {
-+      let existing = BuiltInLocation.get(aID);
-+      if (existing) {
-+        (async () => {
-+          const addon = await lazy.XPIDatabase.getVisibleAddonForID(aID);
-+          XPIStates.removeAddon(XPIInternal.BuiltInLocation, addon);
-+          XPIStates.save();
-+          lazy.XPIDatabase.removeAddonMetadata(addon);
-+        })();
-+      }
-+    }
-+  },
-+
-   getDependentAddons(aAddon) {
-     return Array.from(lazy.XPIDatabase.getAddons()).filter(addon =>
-       addon.dependencies.includes(aAddon.id)
 diff --git a/toolkit/mozapps/extensions/jar.mn b/toolkit/mozapps/extensions/jar.mn
 index 935416225d..e995da1173 100644
 --- a/toolkit/mozapps/extensions/jar.mn
@@ -453,6 +421,19 @@ index 935416225d..e995da1173 100644
    content/mozapps/extensions/default-theme/manifest.json        (default-theme/manifest.json)
 +  content/mozapps/extensions/default-theme/experiment13.css     (default-theme/experiment13.css)
  #endif
+diff --git a/browser/themes/BuiltInThemeConfig.sys.mjs b/browser/themes/BuiltInThemeConfig.sys.mjs
+index 7cfea4b705..428b24635a 100644
+--- a/browser/themes/BuiltInThemeConfig.sys.mjs
++++ b/browser/themes/BuiltInThemeConfig.sys.mjs
+@@ -18,7 +18,7 @@
+  * @param {string} [collection]
+  *  The collection id that the theme is a part of. Optional.
+  */
+-export const BuiltInThemeConfig = new Map([
++export const BuiltInThemeConfig = new Map() || new Map([
+   [
+     "firefox-compact-light@mozilla.org",
+     {
 --
 2.39.2 (Apple Git-143)
 
