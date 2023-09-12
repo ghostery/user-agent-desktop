@@ -427,7 +427,7 @@ index 2b9c386c29..27bab89399 100644
    },
 
 +  async maybeUninstallBuiltinAddon(aID) {
-+    if (enabledScopes & BuiltInLocation.scope) {
++    if (lazy.enabledScopes & BuiltInLocation.scope) {
 +      let existing = BuiltInLocation.get(aID);
 +      if (existing) {
 +        (async () => {
