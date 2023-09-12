@@ -34,3 +34,4 @@
 0034-Disable-package-duplicates-detection.patch
 0035-Disable-Onboarding-Messages.patch
 0036-Build-mach-package-use-MOZ_FETCHES-in-automation.patch
+0037-Disable-help-on-switching-to-a-new-device.patch

@@ -7,7 +7,7 @@ Subject: Clean up preferences
  1 file changed, 5 insertions(+)
 
 diff --git a/browser/themes/shared/preferences/preferences.css b/browser/themes/shared/preferences/preferences.css
-index dc3ab1da46..ec52073f7a 100644
+index c0ecc35c68..0c17185fee 100644
 --- a/browser/themes/shared/preferences/preferences.css
 +++ b/browser/themes/shared/preferences/preferences.css
 @@ -142,11 +142,16 @@ checkbox {
@@ -20,7 +20,7 @@ index dc3ab1da46..ec52073f7a 100644
    white-space: nowrap;
  }
  
-+#category-more-from-mozilla, #homeContentsGroup, #category-home {
++#category-more-from-mozilla, #homeContentsGroup, #category-home, #homepageGroup {
 +  display: none;
 +}
 +
