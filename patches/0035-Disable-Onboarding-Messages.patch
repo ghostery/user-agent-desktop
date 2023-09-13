@@ -12,14 +12,14 @@ index a0fc277ec7..1e2e5c5327 100644
 +++ b/browser/components/newtab/lib/OnboardingMessageProvider.jsm
 @@ -1088,8 +1088,7 @@ const BASE_MESSAGES = () => [
  ];
- 
+
  // Eventually, move Feature Callout messages to their own provider
 -const ONBOARDING_MESSAGES = () =>
 -  BASE_MESSAGES().concat(FeatureCalloutMessages.getMessages());
-+const ONBOARDING_MESSAGES = [];
- 
++const ONBOARDING_MESSAGES = () => ([]);
+
  const OnboardingMessageProvider = {
    async getExtraAttributes() {
--- 
+--
 2.39.2 (Apple Git-143)
 
