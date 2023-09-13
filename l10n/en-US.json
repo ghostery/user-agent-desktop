@@ -114,6 +114,9 @@
     }
   },
   "browser/browser/aboutPrivateBrowsing.ftl": {
+    "about-private-browsing-info-description-private-window": {
+      "string": "Ghost Mode: { -brand-short-name } clears your search and browsing history when you close all private windows. This doesn’t make you anonymous."
+    },
     "about-private-browsing-handoff-no-engine": {
       "title": {
         "string": "Search privately with Ghostery"
