@@ -36,7 +36,7 @@ index c7138a909a..606d6da67e 100644
 +        -->
        </section>
      </template>
- 
+
 diff --git a/browser/components/aboutlogins/content/components/login-intro.mjs b/browser/components/aboutlogins/content/components/login-intro.mjs
 index 682ddb32d8..49fc0a7be1 100644
 --- a/browser/components/aboutlogins/content/components/login-intro.mjs
@@ -53,7 +53,7 @@ index 682ddb32d8..49fc0a7be1 100644
        .querySelector(".intro-help-link")
        .setAttribute("href", supportURL);
 +    */
- 
+
      let importClass = window.AboutLoginsUtils.fileImportEnabled
        ? ".intro-import-text.file-import"
 diff --git a/browser/themes/shared/preferences/privacy.css b/browser/themes/shared/preferences/privacy.css
@@ -61,9 +61,9 @@ index b9e081f12d..7d16dd9eb3 100644
 --- a/browser/themes/shared/preferences/privacy.css
 +++ b/browser/themes/shared/preferences/privacy.css
 @@ -4,6 +4,10 @@
- 
+
  /* Permissions */
- 
+
 +#breachAlertsBox {
 +  display: none;
 +}
@@ -71,6 +71,18 @@ index b9e081f12d..7d16dd9eb3 100644
  .highlighting-group {
    --section-highlight-background-color: color-mix(in srgb, var(--in-content-accent-color) 20%, transparent);
  }
--- 
+diff --git a/browser/components/aboutlogins/content/components/login-intro.css b/browser/components/aboutlogins/content/components/login-intro.css
+index 3c5ecdc577..45f61e2da9 100644
+--- a/browser/components/aboutlogins/content/components/login-intro.css
++++ b/browser/components/aboutlogins/content/components/login-intro.css
+@@ -11,6 +11,7 @@
+
+ .heading {
+   font-size: 1.5em;
++  display: none;
+ }
+
+ section {
+--
 2.39.2 (Apple Git-143)
 
