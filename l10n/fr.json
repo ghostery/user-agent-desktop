@@ -114,6 +114,9 @@
     }
   },
   "browser/browser/aboutPrivateBrowsing.ftl": {
+    "about-private-browsing-info-description-private-window": {
+      "string": "Mode Fantôme: { -brand-short-name } efface l’historique de vos recherches et de votre navigation à la fermeture des fenêtres privées. Cela ne vous rend pas anonyme."
+    },
     "about-private-browsing-handoff-no-engine": {
       "title": {
         "string": "Rechercher en mode privé avec Ghostery"

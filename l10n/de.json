@@ -114,6 +114,9 @@
     }
   },
   "browser/browser/aboutPrivateBrowsing.ftl": {
+    "about-private-browsing-info-description-private-window": {
+      "string": "Ghost-Modus: { -brand-short-name } leert die eingegebenen Suchbegriffe und besuchten Webseiten, wenn alle privaten Fenster geschlossen wurden. Das macht Sie nicht anonym."
+    },
     "about-private-browsing-handoff-no-engine": {
       "title": {
         "string": "Private Suche mit Ghostery"
