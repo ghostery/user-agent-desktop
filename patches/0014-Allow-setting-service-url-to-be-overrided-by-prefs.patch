@@ -11,7 +11,7 @@ index 0144fad99c..bd7609f6a1 100644
 --- a/services/settings/Utils.sys.mjs
 +++ b/services/settings/Utils.sys.mjs
 @@ -95,9 +95,7 @@ function _isUndefined(value) {
- 
+
  export var Utils = {
    get SERVER_URL() {
 -    return lazy.allowServerURLOverride
@@ -19,8 +19,21 @@ index 0144fad99c..bd7609f6a1 100644
 -      : AppConstants.REMOTE_SETTINGS_SERVER_URL;
 +    return lazy.gServerURL;
    },
- 
+
    CHANGES_PATH: "/buckets/monitor/collections/changes/changeset",
--- 
+diff --git a/toolkit/modules/AppConstants.sys.mjs b/toolkit/modules/AppConstants.sys.mjs
+index b430666f68..97a7e7a27d 100644
+--- a/toolkit/modules/AppConstants.sys.mjs
++++ b/toolkit/modules/AppConstants.sys.mjs
+@@ -418,7 +418,7 @@ export var AppConstants = Object.freeze({
+ #ifdef MOZ_THUNDERBIRD
+     false,
+ #else
+-    true,
++    false,
+ #endif
+
+   REMOTE_SETTINGS_DEFAULT_BUCKET:
+--
 2.39.2 (Apple Git-143)
 
