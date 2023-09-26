@@ -10,7 +10,7 @@
     "pictureinpicture",
     "report-site-issue"
   ],
-  "firefox": "117.0",
+  "firefox": "117.0.1",
   "app": "2023.9",
   "s3bucket": "ghostery-user-agent-cache-public",
   "locales": {
