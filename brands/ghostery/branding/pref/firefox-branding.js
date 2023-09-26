@@ -155,6 +155,7 @@ pref("extensions.pocket.site", " ");
 pref("identity.fxaccounts.enabled", false);
 pref("identity.fxaccounts.autoconfig.uri", "https://get.ghosterybrowser.com/health");
 pref("extensions.fxmonitor.enabled", false); // Firefox Monitor
+pref("signon.firefoxRelay.feature", ""); // Firefox Relay
 pref("signon.management.page.breach-alerts.enabled", false); // Firefox Lockwise
 pref("signon.management.page.breachAlertUrl", "");
 pref("browser.contentblocking.report.lockwise.enabled", false);
