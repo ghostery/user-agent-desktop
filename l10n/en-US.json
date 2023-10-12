@@ -99,7 +99,7 @@
       }
     },
     "urlbar-result-action-search-in-private-w-engine": {
-      "string": "Search with { $engine } in a Ghost Mode"
+      "string": "Search with { $engine } in Ghost Mode"
     },
     "urlbar-result-action-search-in-private": {
       "string": "Search in a Ghost Mode"
