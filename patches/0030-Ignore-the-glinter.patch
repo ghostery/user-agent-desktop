@@ -7,18 +7,18 @@ Subject: Ignore the glinter
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/third_party/python/glean_parser/glean_parser/lint.py b/third_party/python/glean_parser/glean_parser/lint.py
-index 0dc2bddd5d..85ba1a663b 100644
+index e28129dcad..7f754d2a06 100644
 --- a/third_party/python/glean_parser/glean_parser/lint.py
 +++ b/third_party/python/glean_parser/glean_parser/lint.py
-@@ -492,7 +492,7 @@ def lint_metrics(
-             file=file,
-         )
- 
--    return nits
+@@ -490,6 +490,7 @@ def lint_metrics(
+     parser_config: Optional[Dict[str, Any]] = None,
+     file=sys.stderr,
+ ) -> List[GlinterNit]:
 +    return []
- 
- 
- def lint_yaml_files(
--- 
+     """
+     Performs glinter checks on a set of metrics objects.
+
+
+--
 2.39.2 (Apple Git-143)
 
