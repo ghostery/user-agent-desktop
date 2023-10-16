@@ -20,17 +20,18 @@ index fd713f2313..c53d5be79e 100644
      <link rel="localization" href="toolkit/branding/brandings.ftl" />
      <link rel="localization" href="browser/aboutPrivateBrowsing.ftl" />
 diff --git a/browser/themes/shared/tabs.css b/browser/themes/shared/tabs.css
-index e93e790667..064e8e31e3 100644
+index 329cbd97da..7faf99f774 100644
 --- a/browser/themes/shared/tabs.css
 +++ b/browser/themes/shared/tabs.css
-@@ -12,7 +12,7 @@
-   --tab-block-margin: 4px;
+@@ -21,7 +21,7 @@
+
    /* --tabpanel-background-color matches $in-content-page-background in newtab
       (browser/components/newtab/content-src/styles/_variables.scss) */
 -  --tabpanel-background-color: #F9F9FB;
 +  --tabpanel-background-color: #36393f;
-   --tab-attention-icon-color: rgb(42,195,162);
- }
+   @media (-moz-content-prefers-color-scheme: dark) {
+     --tabpanel-background-color: #2B2A33;
+   }
 
 --
 2.39.2 (Apple Git-143)
