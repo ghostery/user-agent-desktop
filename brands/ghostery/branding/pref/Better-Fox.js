@@ -10,14 +10,8 @@
 /****************************************************************************
  * SECTION: FASTFOX                                                         *
 ****************************************************************************/
-pref("nglayout.initialpaint.delay", 0);
-pref("nglayout.initialpaint.delay_in_oopif", 0);
+/** GENERAL ***/
 pref("content.notify.interval", 100000);
-
-/** EXPERIMENTAL ***/
-pref("layout.css.grid-template-masonry-value.enabled", true); // CSS Masonry Layout
-pref("dom.enable_web_task_scheduling", true); // Prioritized Task Scheduling API
-pref("layout.css.has-selector.enabled", true); // CSS has selector
 
 /** GFX ***/
 //pref("gfx.canvas.accelerated", true); // GPU-accelerated Canvas2D is enabled by default on macOS and Linux [FF110]
@@ -42,18 +36,19 @@ pref("network.buffer.cache.count", 128); // default=24; reduce CPU usage by requ
 pref("network.http.max-connections", 1800);
 pref("network.http.max-persistent-connections-per-server", 10);
 pref("network.http.max-urgent-start-excessive-connections-per-host", 5);
-pref("network.dnsCacheEntries", 1000); // increase DNS cache
 pref("network.dnsCacheExpiration", 86400); // keep entries for 1 hour; pref will be ignored by DNS resolver if using DoH/TRR
 pref("network.ssl_tokens_cache_capacity", 10240); // increase TLS token caching (fast reconnects)
 
-/** SPECULATIVE CONNECTIONS ***/
-pref("network.http.speculative-parallel-limit", 0);
+/** IMPLICIT OUTBOUND ***/
 pref("network.dns.disablePrefetch", true);
-pref("browser.urlbar.speculativeConnect.enabled", false);
-pref("browser.places.speculativeConnect.enabled", false);
 pref("network.prefetch-next", false);
 pref("network.predictor.enabled", false);
 pref("network.predictor.enable-prefetch", false);
+
+/** EXPERIMENTAL ***/
+pref("layout.css.grid-template-masonry-value.enabled", true); // CSS Masonry Layout
+pref("dom.enable_web_task_scheduling", true); // Prioritized Task Scheduling API
+pref("layout.css.has-selector.enabled", true); // CSS has selector
 
 /****************************************************************************
  * SECTION: SECUREFOX                                                       *
@@ -73,7 +68,6 @@ pref("privacy.globalprivacycontrol.functionality.enabled", true); // Global Priv
 pref("security.OCSP.enabled", 0); // disable OCSP fetching to confirm current validity of certificates
 pref("security.remote_settings.crlite_filters.enabled", true);
 pref("security.pki.crlite_mode", 2); // consult CRLite and enforce both "Revoked" and "Not Revoked" results
-pref("security.cert_pinning.enforcement_level", 2); // enable strict pinning
 
 /** SSL / TLS ***/
 pref("security.ssl.treat_unsafe_negotiation_as_broken", true);
@@ -91,22 +85,22 @@ pref("browser.search.separatePrivateDefault.ui.enabled", true); // Enable a sepe
 pref("browser.urlbar.update2.engineAliasRefresh", true); // enable "Add" button under search engine menu
 pref("browser.search.suggest.enabled", false); // Live search engine suggestions (Google, Bing, etc.)
 pref("browser.formfill.enable", false); // disable Search and Form history
+pref("security.insecure_connection_text.enabled", true);
+pref("security.insecure_connection_text.pbmode.enabled", true);
 pref("network.IDN_show_punycode", true);  // Enforce Punycode for Internationalized Domain Names to eliminate possible spoofing
 
 /** HTTPS-ONLY MODE ***/
 pref("dom.security.https_only_mode", true); // force HTTPS-only connections (#367)
 pref("dom.security.https_only_mode_error_page_user_suggestions", true);
 
-/** PROXY / SOCKS / IPv6 ***/
-pref("network.proxy.socks_remote_dns", true);
-pref("network.file.disable_unc_paths", true);
-pref("network.gio.supported-protocols", "");
-
 /** DNS-over-HTTPS (DOH) ***/
 pref("network.trr.mode", 0); // DNS-over-HTTPS (DOH) disabled by default
 
-/** PASSWORDS AND AUTOFILL ***/
+/** PASSWORDS ***/
 pref("signon.rememberSignons", false); // disable saving passwords
+pref("signon.formlessCapture.enabled", false);
+pref("signon.privateBrowsingCapture.enabled", false);
+pref("network.auth.subresource-http-auth-allow", 1); // don't allow cross-origin sub-resources to open HTTP authentication credentials dialogs
 pref("editor.truncate_user_pastes", false);
 
 /** ADDRESS + CREDIT CARD MANAGER ***/
@@ -114,10 +108,10 @@ pref("extensions.formautofill.addresses.enabled", false);
 pref("extensions.formautofill.creditCards.enabled", false);
 
 /** MIXED CONTENT + CROSS-SITE ***/
-pref("network.auth.subresource-http-auth-allow", 1); // don't allow cross-origin sub-resources to open HTTP authentication credentials dialogs
+pref("security.mixed_content.block_display_content", true);
+pref("security.mixed_content.upgrade_display_content", true);
 pref("pdfjs.enableScripting", false); // deny PDFs to load javascript
 pref("extensions.postDownloadThirdPartyPrompt", false); // 3rd party extension install prompts
-pref("permissions.delegation.enabled", false); // 3rd party origin for device permissions
 
 /** HEADERS / REFERERS ***/
 pref("network.http.referer.XOriginTrimmingPolicy", 2); // cross-origin referers = scheme+host+port
@@ -149,9 +143,14 @@ pref("permissions.default.desktop-notification", 2); // block desktop notificati
 /** UI ***/
 pref("browser.translations.enable", true); // local translation services; data doesn't leave device
 
+/** COOKIE BANNER HANDLING ***/
+pref("cookiebanners.service.mode", 1);
+pref("cookiebanners.service.mode.privateBrowsing", 1);
+// pref("cookiebanners.service.enableGlobalRules", false); // DEFAULT
+
 /** FULLSCREEN ***/
-pref("full-screen-api.transition-duration.enter", "0 0"); // transition time (instant)
-pref("full-screen-api.transition-duration.leave", "0 0");  // transition time (instant)
+pref("full-screen-api.transition-duration.enter", "50 50"); // transition time (instant)
+pref("full-screen-api.transition-duration.leave", "50 50");  // transition time (instant)
 pref("full-screen-api.warning.delay", 0); // fullscreen notice (disable)
 pref("full-screen-api.warning.timeout", 0); // fullscreen notice (disable)
 
@@ -168,6 +167,7 @@ pref("browser.urlbar.suggest.engines", false);
 // pref("browser.urlbar.suggest.topsites", false);
 pref("browser.urlbar.suggest.calculator", true);
 pref("browser.urlbar.unitConversion.enabled", true);
+pref("browser.urlbar.trending.featureGate", false); // disable trending searches
 
 /** NEW TAB PAGE ***/
 pref("browser.toolbars.bookmarks.visibility", "never"); 
