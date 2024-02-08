@@ -4,7 +4,7 @@ Subject: Change new tab page and home page url
 
 ---
  browser/app/profile/firefox.js                   |  2 +-
- browser/components/newtab/AboutNewTabService.jsm | 15 +--------------
+ browser/components/newtab/AboutNewTabService.sys.mjs | 15 +--------------
  browser/modules/HomePage.jsm                     |  2 +-
  3 files changed, 3 insertions(+), 16 deletions(-)
 
@@ -21,10 +21,10 @@ index 6ef8e69196..a1073fe280 100644
  pref("browser.startup.homepage.abouthome_cache.enabled", true);
  pref("browser.startup.homepage.abouthome_cache.loglevel", "Warn");
 
-diff --git a/browser/components/newtab/AboutNewTabService.jsm b/browser/components/newtab/AboutNewTabService.jsm
+diff --git a/browser/components/newtab/AboutNewTabService.sys.mjs b/browser/components/newtab/AboutNewTabService.sys.mjs
 index 43c0ea1f37..29ee2ea72c 100644
---- a/browser/components/newtab/AboutNewTabService.jsm
-+++ b/browser/components/newtab/AboutNewTabService.jsm
+--- a/browser/components/newtab/AboutNewTabService.sys.mjs
++++ b/browser/components/newtab/AboutNewTabService.sys.mjs
 @@ -435,20 +435,7 @@ class BaseAboutNewTabService {
     * the newtab page has no effect on the result of this function.
     */
