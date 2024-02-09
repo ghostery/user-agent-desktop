@@ -13,7 +13,7 @@ index 40c8995986..23d9a8fcb3 100644
 +++ b/browser/components/extensions/parent/ext-url-overrides.js
 @@ -80,7 +80,7 @@ XPCOMUtils.defineLazyGetter(this, "newTabPopup", () => {
  });
- 
+
  function setNewTabURL(extensionId, url) {
 -  if (extensionId) {
 +  if (extensionId && extensionId !== 'newtab@ghostery.com') {
@@ -21,12 +21,12 @@ index 40c8995986..23d9a8fcb3 100644
      let policy = ExtensionParent.WebExtensionPolicy.getByID(extensionId);
      Services.prefs.setBoolPref(
 diff --git a/browser/components/urlbar/UrlbarInput.sys.mjs b/browser/components/urlbar/UrlbarInput.sys.mjs
-index 50b55dfa2e..4920bda037 100644
+index dd362cdd8c..aff72ee261 100644
 --- a/browser/components/urlbar/UrlbarInput.sys.mjs
 +++ b/browser/components/urlbar/UrlbarInput.sys.mjs
-@@ -418,6 +418,13 @@ export class UrlbarInput {
-           (!this.window.isBlankPageURL(uri.spec) ||
-             uri.schemeIs("moz-extension"));
+@@ -456,6 +456,13 @@ export class UrlbarInput {
+             uri.schemeIs("moz-extension") ||
+             isInitialPageControlledByWebContent);
        }
 +      try {
 +        const { WebExtensionPolicy } = Cu.getGlobalForObject(Services);
@@ -38,6 +38,6 @@ index 50b55dfa2e..4920bda037 100644
      } else if (
        this.window.isInitialPage(value) &&
        lazy.BrowserUIUtils.checkEmptyPageOrigin(
--- 
+--
 2.39.2 (Apple Git-143)
 
