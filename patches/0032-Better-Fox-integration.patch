@@ -8,18 +8,18 @@ Subject: Better-Fox integration
  2 files changed, 3 insertions(+)
 
 diff --git a/browser/branding/branding-common.mozbuild b/browser/branding/branding-common.mozbuild
-index 4e737310b3..81de5aa3b3 100644
+index a38663a3dc..6db738af22 100644
 --- a/browser/branding/branding-common.mozbuild
 +++ b/browser/branding/branding-common.mozbuild
-@@ -15,6 +15,8 @@ def FirefoxBranding():
-             'pref/firefox-branding.js',
+@@ -16,6 +16,8 @@ def FirefoxBranding():
+             "pref/firefox-branding.js",
          ]
- 
+
 +    JS_PREFERENCE_FILES += ['pref/Better-Fox.js']
 +
-     if CONFIG['MOZ_WIDGET_TOOLKIT'] == 'windows':
-         FINAL_TARGET_FILES['..'] += [
-             'firefox.VisualElementsManifest.xml',
+     if CONFIG["MOZ_WIDGET_TOOLKIT"] == "windows":
+         FINAL_TARGET_FILES[".."] += [
+             "firefox.VisualElementsManifest.xml",
 diff --git a/browser/installer/package-manifest.in b/browser/installer/package-manifest.in
 index 143384ddc9..06b6279392 100644
 --- a/browser/installer/package-manifest.in
@@ -32,6 +32,6 @@ index 143384ddc9..06b6279392 100644
  @RESPATH@/greprefs.js
  @RESPATH@/defaults/autoconfig/prefcalls.js
  @RESPATH@/browser/defaults/permissions
--- 
+--
 2.39.2 (Apple Git-143)
 
