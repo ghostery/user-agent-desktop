@@ -7,10 +7,10 @@ Subject: OpenURL on buildID changes
  1 file changed, 2 insertions(+), 8 deletions(-)
 
 diff --git a/browser/components/BrowserContentHandler.sys.mjs b/browser/components/BrowserContentHandler.sys.mjs
-index a3cef0ddbd..0dfe0e533b 100644
+index 18f3dd6ec9..5c7def8b6b 100644
 --- a/browser/components/BrowserContentHandler.sys.mjs
 +++ b/browser/components/BrowserContentHandler.sys.mjs
-@@ -697,14 +697,13 @@ nsBrowserContentHandler.prototype = {
+@@ -737,14 +737,13 @@ nsBrowserContentHandler.prototype = {
              // we may open the startPage in addition to restoring the session.
              willRestoreSession =
                lazy.SessionStartup.isAutomaticRestoreEnabled();
@@ -27,7 +27,7 @@ index a3cef0ddbd..0dfe0e533b 100644
              ) {
                overridePage = getPostUpdateOverridePage(update, overridePage);
                // Send the update ping to signal that the update was successful.
-@@ -713,12 +712,6 @@ nsBrowserContentHandler.prototype = {
+@@ -754,13 +753,6 @@ nsBrowserContentHandler.prototype = {
 
              overridePage = overridePage.replace("%OLD_VERSION%", old_mstone);
              break;
@@ -35,6 +35,7 @@ index a3cef0ddbd..0dfe0e533b 100644
 -            if (lazy.UpdateManager.readyUpdate) {
 -              // Send the update ping to signal that the update was successful.
 -              lazy.UpdatePing.handleUpdateSuccess(old_mstone, old_buildId);
+-              lazy.LaterRun.enable(lazy.LaterRun.ENABLE_REASON_UPDATE_APPLIED);
 -            }
 -            break;
          }
