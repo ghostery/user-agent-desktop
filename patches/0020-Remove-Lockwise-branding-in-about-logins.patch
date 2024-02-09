@@ -9,34 +9,27 @@ Subject: Remove Lockwise branding in about:logins
  3 files changed, 10 insertions(+)
 
 diff --git a/browser/components/aboutlogins/content/aboutLogins.html b/browser/components/aboutlogins/content/aboutLogins.html
-index c7138a909a..606d6da67e 100644
+index 53bd00615b..602d57a16e 100644
 --- a/browser/components/aboutlogins/content/aboutLogins.html
 +++ b/browser/components/aboutlogins/content/aboutLogins.html
-@@ -239,6 +239,7 @@
+@@ -239,7 +239,7 @@
+
        <img class="illustration" src="chrome://browser/content/aboutlogins/icons/intro-illustration.svg"/>
-       <h1 class="heading" data-l10n-id="about-logins-login-intro-heading-logged-out2"></h1>
-       <section>
-+        <!--
-         <p class="description" data-l10n-id="login-intro-description"></p>
-         <ul>
-           <li data-l10n-id="login-intro-instructions-fxa"></li>
-@@ -247,13 +248,16 @@
-             <a data-l10n-name="passwords-help-link" class="intro-help-link" target="_blank" rel="noreferrer"></a>
-           </li>
-         </ul>
-+        -->
-         <p class="description intro-import-text no-file-import" hidden data-l10n-id="about-logins-intro-browser-only-import">
-           <a data-l10n-name="import-link" href="#"></a>
+       <h1 class="heading" data-l10n-id="about-logins-login-intro-heading-message"></h1>
+-      <section>
++      <!-- <section>
+         <p class="description" data-l10n-id="login-intro-description2">
+           <a data-l10n-name="breach-alert-link" href="https://support.mozilla.org/kb/firefox-password-manager-alerts-breached-websites" target="_blank" rel="noreferrer"></a>
          </p>
-+        <!--
-         <p class="description intro-import-text file-import" hidden data-l10n-id="about-logins-intro-import2">
+@@ -257,7 +257,7 @@
            <a data-l10n-name="import-browser-link" href="#"></a>
            <a data-l10n-name="import-file-link" href="#"></a>
          </p>
-+        -->
-       </section>
+-      </section>
++      </section> -->
      </template>
 
+     <template id="login-item-template">
 diff --git a/browser/components/aboutlogins/content/components/login-intro.mjs b/browser/components/aboutlogins/content/components/login-intro.mjs
 index 682ddb32d8..49fc0a7be1 100644
 --- a/browser/components/aboutlogins/content/components/login-intro.mjs
@@ -71,18 +64,6 @@ index b9e081f12d..7d16dd9eb3 100644
  .highlighting-group {
    --section-highlight-background-color: color-mix(in srgb, var(--in-content-accent-color) 20%, transparent);
  }
-diff --git a/browser/components/aboutlogins/content/components/login-intro.css b/browser/components/aboutlogins/content/components/login-intro.css
-index 3c5ecdc577..45f61e2da9 100644
---- a/browser/components/aboutlogins/content/components/login-intro.css
-+++ b/browser/components/aboutlogins/content/components/login-intro.css
-@@ -11,6 +11,7 @@
-
- .heading {
-   font-size: 1.5em;
-+  display: none;
- }
-
- section {
 --
 2.39.2 (Apple Git-143)
 
