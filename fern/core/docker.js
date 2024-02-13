@@ -187,7 +187,7 @@ async function generate(artifactBaseDir) {
     },
     {
       name: "WindowsARM",
-      key: "win64-aarch64-shippable-no-eme/opt",
+      key: "win64-aarch64-shippable/opt",
       arch: "arm64",
       buildPath: path.join(
         root,
@@ -235,7 +235,11 @@ async function generate(artifactBaseDir) {
           jobs[key].fetches.toolchain.push(toolchain);
         }
       }
-      return jobs[key];
+      const job = jobs[key];
+      if (!job) {
+        throw new Error(`Cannot find job with a key: ${key}`);
+      }
+      return job;
     })
   );
   // Generate the Listr tasks for fetching toolchains from taskcluster and getting their S3 address.
