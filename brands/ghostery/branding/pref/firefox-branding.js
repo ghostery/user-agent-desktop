@@ -198,6 +198,8 @@ pref("browser.urlbar.quicksuggest.enabled", false);
 
 // disable "Firefox View" [FF106+]
 pref("browser.tabs.firefox-view", false);
+pref("browser.tabs.firefox-view-newIcon", false);
+pref("browser.tabs.firefox-view-next", false);
 
 // disable Quarantined Domains [FF115+]
 pref("extensions.quarantinedDomains.enabled", false);
