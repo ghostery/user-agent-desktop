@@ -18,14 +18,14 @@ trap finish EXIT
 
 zip -r "$BUNDLE_PKG" "$PKG_DIR/$APP_NAME/$PKG_NAME.app"
 # submit app for notarization
-if xcrun altool --notarize-app --primary-bundle-id "$BUNDLE_ID" --username "$MAC_NOTARY_USER" --password "$MAC_NOTARY_PASS" --asc-provider EvidonInc -f "$BUNDLE_PKG" > "$NOTARIZE_APP_LOG" 2>&1; then
+if xcrun notarytool submit --team-id HPY23A294X --apple-id "$MAC_NOTARY_USER" --password "$MAC_NOTARY_PASS" "$BUNDLE_PKG" > "$NOTARIZE_APP_LOG" 2>&1; then
 	cat "$NOTARIZE_APP_LOG"
-	RequestUUID=$(awk -F ' = ' '/RequestUUID/ {print $2}' "$NOTARIZE_APP_LOG")
+	RequestUUID=$(grep id: $NOTARIZE_APP_LOG | head -1 | sed -e 's/.*id: //')
 
 	# check status periodically
 	while sleep 60 && date; do
 		# check notarization status
-		if xcrun altool --notarization-info "$RequestUUID" --username "$MAC_NOTARY_USER" --password "$MAC_NOTARY_PASS" > "$NOTARIZE_INFO_LOG" 2>&1; then
+		if xcrun notarytool info --team-id HPY23A294X --apple-id "$MAC_NOTARY_USER" --password "$MAC_NOTARY_PASS" "$RequestUUID" > "$NOTARIZE_INFO_LOG" 2>&1; then
 			cat "$NOTARIZE_INFO_LOG"
 
 			# once notarization is complete, run stapler and exit
