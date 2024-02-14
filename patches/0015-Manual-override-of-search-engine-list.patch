@@ -66,14 +66,14 @@ index 0000000000..798ab6c279
 +    }
 +  }
 +}
-diff --git a/toolkit/components/search/SearchEngineSelector.sys.mjs b/toolkit/components/search/SearchEngineSelector.sys.mjs
-index 68b87f8eab..8722b32c5c 100644
---- a/toolkit/components/search/SearchEngineSelector.sys.mjs
-+++ b/toolkit/components/search/SearchEngineSelector.sys.mjs
-@@ -80,6 +80,54 @@ export class SearchEngineSelector {
+diff --git a/toolkit/components/search/SearchEngineSelectorOld.sys.mjs b/toolkit/components/search/SearchEngineSelectorOld.sys.mjs
+index 5853963b3b..7123f1c1b5 100644
+--- a/toolkit/components/search/SearchEngineSelectorOld.sys.mjs
++++ b/toolkit/components/search/SearchEngineSelectorOld.sys.mjs
+@@ -83,6 +83,54 @@ export class SearchEngineSelectorOld {
      this._changeListener = listener;
    }
- 
+
 +  get _configuration() {
 +    return [
 +      {
@@ -125,6 +125,6 @@ index 68b87f8eab..8722b32c5c 100644
    /**
     * Handles getting the configuration from remote settings.
     */
--- 
+--
 2.39.2 (Apple Git-143)
 
