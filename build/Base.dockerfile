@@ -1,4 +1,4 @@
-FROM debian:11
+FROM debian:12
 ENV DEBIAN_FRONTEND=noninteractive
 ENV XZ_OPT=-T0
 
@@ -12,7 +12,7 @@ ARG UID
 ARG GID
 ARG user
 
-### Add worker user and setup its workspace.
+## Add worker user and setup its workspace.
 RUN mkdir /builds && \
     (getent group $GID || groupadd -g $GID worker) && \
     groupmod -n worker `getent group $GID | cut -d: -f1` && \
@@ -37,84 +37,84 @@ RUN apt-get update && \
       apt-transport-https \
       ca-certificates \
       # from debian-base
+      git \
       less \
       make \
+      mercurial \
       patch \
       python3 \
-      python3-distutils-extra \
       python3-minimal \
+      python3-zstandard \
+      python3-psutil \
+      python3-venv \
       vim-tiny \
       xz-utils \
+      zstd \
       # from debian-packages
       apt-utils \
       aptitude \
       build-essential \
       devscripts \
+      equivs \
       fakeroot \
+      git \
       # from debian-build
-      autoconf2.13 \
-      automake \
+      bash \
+      binutils \
       bzip2 \
+      cpio \
       curl \
       file \
+      findutils \
       gawk \
-      gcc-multilib \
       gnupg \
+      gzip \
       jq \
+      lib32atomic1 \
+      'lib32gcc(1|-s1)$' \
+      lib32stdc++6 \
+      lib32z1 \
+      libasound2 \
+      libc6-i386 \
+      libgtk-3-0 \
       libucl1 \
+      libxml2 \
+      m4 \
+      make \
       p7zip-full \
+      perl \
       procps \
+      python3-dev \
       rsync \
       screen \
       tar \
       unzip \
       uuid \
-      valgrind \
       wget \
       x11-utils \
-      xvfb \
-      yasm \
       zip \
-      linux-libc-dev \
-      linux-libc-dev:$ARCH \
-      pkg-config \
-      dpkg-dev \
-      libdbus-glib-1-dev:$ARCH \
-      libdrm-dev:$ARCH \
-      libfontconfig1-dev:$ARCH \
-      libfreetype6-dev:$ARCH \
-      libgconf2-dev:$ARCH \
-      libgtk-3-dev:$ARCH \
-      libgtk2.0-dev:$ARCH \
-      libpango1.0-dev:$ARCH \
-      libpulse-dev:$ARCH \
-      libx11-xcb-dev:$ARCH \
-      libxt-dev:$ARCH \
-      libglib2.0-dev \
       # extras
-      wine64 wine upx-ucl nodejs npm \
-      python3-pip zstd \
-      libasound2-dev libcurl4-openssl-dev \
+      wine64 \
+      wine \
+      nodejs \
+      npm \
+      python3-pip \
+      pipx \
+      libasound2-dev \
+      libcurl4-openssl-dev \
       libnss3-tools \
       python3-cairo \
       locales \
       liblzma-dev
 
-RUN apt -y install software-properties-common dirmngr apt-transport-https lsb-release ca-certificates && \
-    add-apt-repository -y "deb http://ppa.launchpad.net/git-core/ppa/ubuntu eoan main" && \
-    apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A1715D88E1DF1F24 && \
-    apt-get update && \
-    apt-get install -y git
-
-# custom
-RUN pip3 install zstandard==0.16.0 pip-tools==5.5.0 mar balrogclient
-ADD fetch-content /builds/worker/bin/fetch-content
 # mbsdiff and mar (built from martools on linux)
 ADD mbsdiff /builds/worker/bin/mbsdiff
 ADD mar /builds/worker/bin/mar
 RUN chown -R worker:worker /builds/worker/bin && chmod 755 /builds/worker/bin/*
 ENV PATH="/builds/worker/bin:${PATH}"
+
 # fetches
+ADD fetch-content /builds/worker/bin/fetch-content
 RUN mkdir -p /builds/worker/fetches/ && \
     chown -R worker:worker /builds/worker/fetches
 
