@@ -589,25 +589,18 @@ stage('publish to balrog') {
                     passwordVariable: 'AUTH0_M2M_CLIENT_SECRET',
                     usernameVariable: 'AUTH0_M2M_CLIENT_ID'
                 )]) {
-                    // create release on balrog
-                    retry(3) {
+                    try {
                         sh """
-                            python3 ci/submitter.py release --tag "${params.ReleaseName}" \
-                                --moz-root artifacts/mozilla-release \
-                                --version ${version} \
-                                --display-version "${displayVersion}" \
-                                --client-id "$AUTH0_M2M_CLIENT_ID" \
-                                --client-secret "$AUTH0_M2M_CLIENT_SECRET"
+                            python -m venv venv
+                            source venv/bin/activate
+                            pip install balrogclient
                         """
-                    }
 
-                    // publish builds
-                    for(String artifactPath in artifacts) {
+                        // create release on balrog
                         retry(3) {
                             sh """
-                                python3 ci/submitter.py build --tag "${params.ReleaseName}" \
-                                    --bid "${buildId}" \
-                                    --mar "${artifactPath}" \
+                                source venv/bin/activate
+                                python3 ci/submitter.py release --tag "${params.ReleaseName}" \
                                     --moz-root artifacts/mozilla-release \
                                     --version ${version} \
                                     --display-version "${displayVersion}" \
@@ -615,20 +608,40 @@ stage('publish to balrog') {
                                     --client-secret "$AUTH0_M2M_CLIENT_SECRET"
                             """
                         }
-                    }
 
-                    // copy this release to nightly
-                    if (params.Nightly) {
-                        retry(3) {
-                            sh """
-                                python3 ci/submitter.py nightly --tag "${params.ReleaseName}" \
-                                    --moz-root artifacts/mozilla-release \
-                                    --version ${version} \
-                                    --display-version "${displayVersion}" \
-                                    --client-id "$AUTH0_M2M_CLIENT_ID" \
-                                    --client-secret "$AUTH0_M2M_CLIENT_SECRET"
-                            """
+                        // publish builds
+                        for(String artifactPath in artifacts) {
+                            retry(3) {
+                                sh """
+                                    source venv/bin/activate
+                                    python3 ci/submitter.py build --tag "${params.ReleaseName}" \
+                                        --bid "${buildId}" \
+                                        --mar "${artifactPath}" \
+                                        --moz-root artifacts/mozilla-release \
+                                        --version ${version} \
+                                        --display-version "${displayVersion}" \
+                                        --client-id "$AUTH0_M2M_CLIENT_ID" \
+                                        --client-secret "$AUTH0_M2M_CLIENT_SECRET"
+                                """
+                            }
                         }
+
+                        // copy this release to nightly
+                        if (params.Nightly) {
+                            retry(3) {
+                                sh """
+                                    source venv/bin/activate
+                                    python3 ci/submitter.py nightly --tag "${params.ReleaseName}" \
+                                        --moz-root artifacts/mozilla-release \
+                                        --version ${version} \
+                                        --display-version "${displayVersion}" \
+                                        --client-id "$AUTH0_M2M_CLIENT_ID" \
+                                        --client-secret "$AUTH0_M2M_CLIENT_SECRET"
+                                """
+                            }
+                        }
+                    } finally {
+                        sh "rm -rf venv"
                     }
                 }
             }
