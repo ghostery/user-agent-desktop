@@ -25,6 +25,8 @@ stage('Prepare') {
         download('makecab.exe')
         download('MacOSX14.0.sdk.tar.xz')
 
+        docker.build('ua-sign-windows', '-f ./build/sign-windows/Dockerfile ./build/sign-windows/ --build-arg UID=`id -u` --build-arg GID=`id -g`')
+
         def image = docker.build('ua-build-base', '-f build/Base.dockerfile ./build/ --build-arg user=`whoami` --build-arg UID=`id -u` --build-arg GID=`id -g`')
 
         image.inside() {
@@ -113,57 +115,69 @@ stage('Build Windows ARM') {
 }
 
 stage('Sign Windows') {
-    node('browser-builder-windows') {
-        checkout scm
+    node('browser-builder') {
+        docker.image('ua-sign-windows').inside() {
+            unstash 'pkg-windows-x86'
+            unstash 'pkg-windows-arm'
 
-        if (params.Clean) {
-            bat 'del /s /q mozilla-release'
-            bat 'del /s /q pkg'
-        }
+            def packages = [
+                ["mozilla-release/obj-aarch64-pc-windows-msvc/dist/Ghostery-${version}.en-US.win64-aarch64.zip", 'pkg/arm-en'],
+                ["mozilla-release/obj-aarch64-pc-windows-msvc/dist/Ghostery-${version}.de.win64-aarch64.zip", 'pkg/arm-de'],
+                ["mozilla-release/obj-aarch64-pc-windows-msvc/dist/Ghostery-${version}.fr.win64-aarch64.zip", 'pkg/arm-fr'],
+                ["mozilla-release/obj-x86_64-pc-windows-msvc/dist/Ghostery-${version}.en-US.win64.zip", 'pkg/x86-en'],
+                ["mozilla-release/obj-x86_64-pc-windows-msvc/dist/Ghostery-${version}.de.win64.zip", 'pkg/x86-de'],
+                ["mozilla-release/obj-x86_64-pc-windows-msvc/dist/Ghostery-${version}.fr.win64.zip", 'pkg/x86-fr'],
+            ]
 
-        unstash 'pkg-windows-x86'
-        unstash 'pkg-windows-arm'
-
-        def packages = [
-            ["mozilla-release\\obj-aarch64-pc-windows-msvc\\dist\\Ghostery-${version}.en-US.win64-aarch64.zip", 'pkg\\arm-en'],
-            ["mozilla-release\\obj-aarch64-pc-windows-msvc\\dist\\Ghostery-${version}.de.win64-aarch64.zip", 'pkg\\arm-de'],
-            ["mozilla-release\\obj-aarch64-pc-windows-msvc\\dist\\Ghostery-${version}.fr.win64-aarch64.zip", 'pkg\\arm-fr'],
-            ["mozilla-release\\obj-x86_64-pc-windows-msvc\\dist\\Ghostery-${version}.en-US.win64.zip", 'pkg\\x86-en'],
-            ["mozilla-release\\obj-x86_64-pc-windows-msvc\\dist\\Ghostery-${version}.de.win64.zip", 'pkg\\x86-de'],
-            ["mozilla-release\\obj-x86_64-pc-windows-msvc\\dist\\Ghostery-${version}.fr.win64.zip", 'pkg\\x86-fr'],
-        ]
-
-        for (pkg in packages) {
-            powershell "Expand-Archive -Force ${pkg[0]} ${pkg[1]}"
-
+            def storepass
             withCredentials([
-                file(credentialsId: "7da7d2de-5a10-45e6-9ffd-4e49f83753a8", variable: 'WIN_CERT'),
-                string(credentialsId: "33b3705c-1c2e-4462-9354-56a76bbb164c", variable: 'WIN_CERT_PASS'),
+                string(credentialsId: 'UAD_AZURE_USER_ID', variable: 'UAD_AZURE_USER_ID'),
+                string(credentialsId: 'UAD_AZURE_PASSWORD', variable: 'UAD_AZURE_PASSWORD'),
+                string(credentialsId: 'UAD_AZURE_TENANT', variable: 'UAD_AZURE_TENANT'),
             ]) {
-                bat "ci\\win_signer.bat ${pkg[1]}\\Ghostery"
+                try {
+                    sh """
+                        az login \
+                            --service-principal \
+                            --username "${env.UAD_AZURE_USER_ID}" \
+                            --password "${env.UAD_AZURE_PASSWORD}" \
+                            --tenant "${env.UAD_AZURE_TENANT}"
+                        az account get-access-token --resource "https://vault.azure.net" | jq -r .accessToken > token
+                    """
+
+                    storepass = sh(returnStdout: true, script: 'cat token').trim()
+                } finally {
+                    sh 'rm -rf token'
+                }
             }
 
-            def archiveName = pkg[0].split('\\\\').last()
+            for (pkg in packages) {
+                sh "rm -rf ${pkg[1]}/Ghostery"
+                try {
+                    sh "unzip ${pkg[0]} -d ${pkg[1]}"
 
-            powershell "Compress-Archive -Force -DestinationPath ${pkg[1]}\\${archiveName} -Path ${pkg[1]}\\Ghostery*"
+                    signWindowsBinaries(storepass, "${pkg[1]}/Ghostery")
+
+                    String archiveName = pkg[0].split('/').last()
+
+                    sh "cd ${pkg[1]} && zip -r ${archiveName} Ghostery"
+                } finally {
+                    sh "rm -rf ${pkg[1]}/Ghostery"
+                }
+            }
+
+            signWindowsBinaries(storepass, "pkg/installers/win64/en-US")
+            signWindowsBinaries(storepass, "pkg/installers/win64/de")
+            signWindowsBinaries(storepass, "pkg/installers/win64/fr")
+            signWindowsBinaries(storepass, "pkg/installers/win64-aarch64/en-US")
+            signWindowsBinaries(storepass, "pkg/installers/win64-aarch64/de")
+            signWindowsBinaries(storepass, "pkg/installers/win64-aarch64/fr")
+
+            stash name: 'signed-pkg-windows', includes: [
+                'pkg/*/*.zip',
+                'pkg/installers/*/*/*.exe'
+            ].join(',')
         }
-
-        withCredentials([
-            file(credentialsId: "7da7d2de-5a10-45e6-9ffd-4e49f83753a8", variable: 'WIN_CERT'),
-            string(credentialsId: "33b3705c-1c2e-4462-9354-56a76bbb164c", variable: 'WIN_CERT_PASS'),
-        ]) {
-            bat "ci\\win_signer.bat pkg\\installers\\win64\\en-US"
-            bat "ci\\win_signer.bat pkg\\installers\\win64\\de"
-            bat "ci\\win_signer.bat pkg\\installers\\win64\\fr"
-            bat "ci\\win_signer.bat pkg\\installers\\win64-aarch64\\en-US"
-            bat "ci\\win_signer.bat pkg\\installers\\win64-aarch64\\de"
-            bat "ci\\win_signer.bat pkg\\installers\\win64-aarch64\\fr"
-        }
-
-        stash name: 'signed-pkg-windows', includes: [
-            'pkg/*/*.zip',
-            'pkg/installers/*/*/*.exe'
-        ].join(',')
     }
 }
 
@@ -264,23 +278,34 @@ stage('Repackage Windows installers') {
 }
 
 stage('Sign Windows installers') {
-    node('browser-builder-windows') {
-        unstash 'installers-windows'
-
-        withCredentials([
-            file(credentialsId: "7da7d2de-5a10-45e6-9ffd-4e49f83753a8", variable: 'WIN_CERT'),
-            string(credentialsId: "33b3705c-1c2e-4462-9354-56a76bbb164c", variable: 'WIN_CERT_PASS'),
-        ]) {
-            bat "ci\\win_signer.bat pkg"
-        }
-
-        stash name: 'signed-installers-windows', includes: 'pkg/*.exe'
-    }
-
     node('browser-builder') {
-        unstash name: 'signed-installers-windows'
+        docker.image('ua-sign-windows').inside() {
+            unstash 'installers-windows'
 
-        archiveArtifacts artifacts: 'pkg/*.exe'
+            def storepass
+            withCredentials([
+                string(credentialsId: "UAD_AZURE_USER_ID", variable: 'UAD_AZURE_USER_ID'),
+                string(credentialsId: "UAD_AZURE_PASSWORD", variable: 'UAD_AZURE_PASSWORD'),
+                string(credentialsId: "UAD_AZURE_TENANT", variable: 'UAD_AZURE_TENANT'),
+            ]) {
+                try {
+                    sh """
+                        az login \
+                            --service-principal \
+                            --username "${env.UAD_AZURE_USER_ID}" \
+                            --password "${env.UAD_AZURE_PASSWORD}" \
+                            --tenant "${env.UAD_AZURE_TENANT}"
+                        az account get-access-token --resource "https://vault.azure.net" | jq -r .accessToken > token
+                    """
+
+                    storepass = sh(returnStdout: true, script: 'cat token').trim()
+                } finally {
+                    sh 'rm -rf token'
+                }
+            }
+            signWindowsBinaries(storepass, "pkg")
+            archiveArtifacts artifacts: 'pkg/*.exe'
+        }
     }
 }
 
@@ -431,7 +456,7 @@ stage('Repackage MAR') {
             ['x86', "pkg/x86-fr/Ghostery-${version}.fr.win64.zip", "pkg/mars/Ghostery-${version}.fr.win64.complete.mar"],
             ['aarch64', "pkg/arm-en/Ghostery-${version}.en-US.win64-aarch64.zip", "pkg/mars/Ghostery-${version}.en-US.win64-aarch64.complete.mar"],
             ['aarch64', "pkg/arm-de/Ghostery-${version}.de.win64-aarch64.zip", "pkg/mars/Ghostery-${version}.de.win64-aarch64.complete.mar"],
-            ['aarch64', , "pkg/arm-fr/Ghostery-${version}.fr.win64-aarch64.zip", "pkg/mars/Ghostery-${version}.fr.win64-aarch64.complete.mar"],
+            ['aarch64', "pkg/arm-fr/Ghostery-${version}.fr.win64-aarch64.zip", "pkg/mars/Ghostery-${version}.fr.win64-aarch64.complete.mar"],
         ]
 
         sh 'mkdir -p pkg/mars'
@@ -783,5 +808,28 @@ def download(filename) {
         ]) {
             sh "aws s3 --region us-east-1 cp s3://user-agent-desktop-jenkins-cache/${filename} ./build/${filename}"
         }
+    }
+}
+
+void signWindowsBinaries(String storepass, String folderPath) {
+    dir(folderPath) {
+        sh """
+            set -e
+            for f in \$(find . -name '*.exe' -o -name '*.dll'); do
+                echo "Signing: \$f"
+                set +x
+                jsign \
+                    --storetype AZUREKEYVAULT \
+                    --storepass "${storepass}" \
+                    --tsmode RFC3161 \
+                    --alg SHA-256 \
+                    --tsaurl http://timestamp.digicert.com \
+                    --keystore ChrmodCodeSigningTest \
+                    --alias ChrmodCodeSigningTest \
+                    "\$f"
+                set -x
+                # osslsigncode verify "\$f"
+            done
+        """
     }
 }
