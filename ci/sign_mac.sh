@@ -6,8 +6,8 @@ set -x
 INPUT="$1"
 OUTPUT="$2"
 BUNDLE=$OUTPUT/$APP_NAME/$PKG_NAME.app
-BROWSER_ENTITLEMENTS_FILE=mozilla-release/security/mac/hardenedruntime/browser.production.entitlements.xml
-PLUGINCONTAINER_ENTITLEMENTS_FILE=mozilla-release/security/mac/hardenedruntime/plugin-container.production.entitlements.xml
+BROWSER_ENTITLEMENTS_FILE=mozilla-release/security/mac/hardenedruntime/v2/production/firefox.browser.xml
+PLUGINCONTAINER_ENTITLEMENTS_FILE=mozilla-release/security/mac/hardenedruntime/v2/production/plugin-container.xml
 
 
 echo "Processing $OUTPUT..."

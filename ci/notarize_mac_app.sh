@@ -2,7 +2,6 @@
 
 PKG_DIR="$1"
 
-BUNDLE_ID="com.cliqz.desktopbrowser"
 BUNDLE_PKG="$PKG_NAME.zip"
 
 # create temporary files
