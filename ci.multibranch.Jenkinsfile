@@ -115,45 +115,24 @@ stage('Build Windows ARM') {
 }
 
 stage('Sign Windows') {
+
+    def packages = [
+        ["mozilla-release/obj-aarch64-pc-windows-msvc/dist/Ghostery-${version}.en-US.win64-aarch64.zip", 'pkg/arm-en'],
+        ["mozilla-release/obj-aarch64-pc-windows-msvc/dist/Ghostery-${version}.de.win64-aarch64.zip", 'pkg/arm-de'],
+        ["mozilla-release/obj-aarch64-pc-windows-msvc/dist/Ghostery-${version}.fr.win64-aarch64.zip", 'pkg/arm-fr'],
+        ["mozilla-release/obj-x86_64-pc-windows-msvc/dist/Ghostery-${version}.en-US.win64.zip", 'pkg/x86-en'],
+        ["mozilla-release/obj-x86_64-pc-windows-msvc/dist/Ghostery-${version}.de.win64.zip", 'pkg/x86-de'],
+        ["mozilla-release/obj-x86_64-pc-windows-msvc/dist/Ghostery-${version}.fr.win64.zip", 'pkg/x86-fr'],
+    ]
+
     node('browser-builder') {
         docker.image('ua-sign-windows').inside() {
-            def packages = [
-                ["mozilla-release/obj-aarch64-pc-windows-msvc/dist/Ghostery-${version}.en-US.win64-aarch64.zip", 'pkg/arm-en'],
-                ["mozilla-release/obj-aarch64-pc-windows-msvc/dist/Ghostery-${version}.de.win64-aarch64.zip", 'pkg/arm-de'],
-                ["mozilla-release/obj-aarch64-pc-windows-msvc/dist/Ghostery-${version}.fr.win64-aarch64.zip", 'pkg/arm-fr'],
-                ["mozilla-release/obj-x86_64-pc-windows-msvc/dist/Ghostery-${version}.en-US.win64.zip", 'pkg/x86-en'],
-                ["mozilla-release/obj-x86_64-pc-windows-msvc/dist/Ghostery-${version}.de.win64.zip", 'pkg/x86-de'],
-                ["mozilla-release/obj-x86_64-pc-windows-msvc/dist/Ghostery-${version}.fr.win64.zip", 'pkg/x86-fr'],
-            ]
-
-            def storepass
-            withCredentials([
-                string(credentialsId: 'UAD_AZURE_USER_ID', variable: 'UAD_AZURE_USER_ID'),
-                string(credentialsId: 'UAD_AZURE_PASSWORD', variable: 'UAD_AZURE_PASSWORD'),
-                string(credentialsId: 'UAD_AZURE_TENANT', variable: 'UAD_AZURE_TENANT'),
-            ]) {
-                try {
-                    sh """
-                        az login \
-                            --service-principal \
-                            --username "${env.UAD_AZURE_USER_ID}" \
-                            --password "${env.UAD_AZURE_PASSWORD}" \
-                            --tenant "${env.UAD_AZURE_TENANT}"
-                        az account get-access-token --resource "https://vault.azure.net" | jq -r .accessToken > token
-                    """
-
-                    storepass = sh(returnStdout: true, script: 'cat token').trim()
-                } finally {
-                    sh 'rm -rf token'
-                }
-            }
-
             for (pkg in packages) {
                 sh "rm -rf ${pkg[1]}/Ghostery"
                 try {
                     sh "unzip ${pkg[0]} -d ${pkg[1]}"
 
-                    signWindowsBinaries(storepass, "${pkg[1]}/Ghostery")
+                    signWindowsBinaries("${pkg[1]}/Ghostery")
 
                     String archiveName = pkg[0].split('/').last()
 
@@ -163,12 +142,7 @@ stage('Sign Windows') {
                 }
             }
 
-            signWindowsBinaries(storepass, "pkg/installers/win64/en-US")
-            signWindowsBinaries(storepass, "pkg/installers/win64/de")
-            signWindowsBinaries(storepass, "pkg/installers/win64/fr")
-            signWindowsBinaries(storepass, "pkg/installers/win64-aarch64/en-US")
-            signWindowsBinaries(storepass, "pkg/installers/win64-aarch64/de")
-            signWindowsBinaries(storepass, "pkg/installers/win64-aarch64/fr")
+            signWindowsBinaries('pkg')
         }
     }
 }
@@ -262,36 +236,12 @@ stage('Repackage Windows installers') {
                 """
             }
         }
-    }
-}
 
-stage('Sign Windows installers') {
-    node('browser-builder') {
         docker.image('ua-sign-windows').inside() {
-            def storepass
-            withCredentials([
-                string(credentialsId: "UAD_AZURE_USER_ID", variable: 'UAD_AZURE_USER_ID'),
-                string(credentialsId: "UAD_AZURE_PASSWORD", variable: 'UAD_AZURE_PASSWORD'),
-                string(credentialsId: "UAD_AZURE_TENANT", variable: 'UAD_AZURE_TENANT'),
-            ]) {
-                try {
-                    sh """
-                        az login \
-                            --service-principal \
-                            --username "${env.UAD_AZURE_USER_ID}" \
-                            --password "${env.UAD_AZURE_PASSWORD}" \
-                            --tenant "${env.UAD_AZURE_TENANT}"
-                        az account get-access-token --resource "https://vault.azure.net" | jq -r .accessToken > token
-                    """
-
-                    storepass = sh(returnStdout: true, script: 'cat token').trim()
-                } finally {
-                    sh 'rm -rf token'
-                }
-            }
-            signWindowsBinaries(storepass, "pkg")
-            archiveArtifacts artifacts: 'pkg/*.exe'
+            signWindowsBinaries('pkg')
         }
+
+        archiveArtifacts artifacts: 'pkg/*.exe'
     }
 }
 
@@ -790,25 +740,34 @@ def download(filename) {
     }
 }
 
-void signWindowsBinaries(String storepass, String folderPath) {
+void signWindowsBinaries(String folderPath) {
     dir(folderPath) {
-        sh """
-            set -e
-            for f in \$(find . -name '*.exe' -o -name '*.dll'); do
-                echo "Signing: \$f"
-                set +x
-                jsign \
-                    --storetype AZUREKEYVAULT \
-                    --storepass "${storepass}" \
-                    --tsmode RFC3161 \
-                    --alg SHA-256 \
-                    --tsaurl http://timestamp.digicert.com \
-                    --keystore ChrmodCodeSigningTest \
-                    --alias ChrmodCodeSigningTest \
-                    "\$f"
-                set -x
-                # osslsigncode verify "\$f"
-            done
-        """
+        withCredentials([
+            string(credentialsId: "UAD_AZURE_USER_ID", variable: 'UAD_AZURE_USER_ID'),
+            string(credentialsId: "UAD_AZURE_PASSWORD", variable: 'UAD_AZURE_PASSWORD'),
+            string(credentialsId: "UAD_AZURE_TENANT", variable: 'UAD_AZURE_TENANT'),
+        ]) {
+            sh """
+                set -e
+                az login \
+                    --service-principal \
+                    --username "${env.UAD_AZURE_USER_ID}" \
+                    --password "${env.UAD_AZURE_PASSWORD}" \
+                    --tenant "${env.UAD_AZURE_TENANT}"
+
+                for f in \$(find . -name '*.exe' -o -name '*.dll'); do
+                    jsign \
+                        --storetype AZUREKEYVAULT \
+                        --storepass \$(az account get-access-token --resource "https://vault.azure.net" | jq -r .accessToken) \
+                        --tsmode RFC3161 \
+                        --alg SHA-256 \
+                        --tsaurl http://timestamp.digicert.com \
+                        --keystore ChrmodCodeSigningTest \
+                        --alias ChrmodCodeSigningTest \
+                        "\$f"
+                    # osslsigncode verify "\$f"
+                done
+            """
+        }
     }
 }
