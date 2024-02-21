@@ -149,13 +149,6 @@ stage('Sign Windows') {
 
 stage('Repackage Windows installers') {
     node('browser-builder') {
-        // Fix ZIP paths
-        sh '''
-            for zip in pkg/*/*.zip
-            do
-                ./ci/zip-fix.sh "$zip"
-            done
-        '''
 
         def installersX86 = [
             ["pkg/x86-en/Ghostery-${version}.en-US.win64.zip", "pkg/Ghostery-${version}.en-US.win64.installer.exe", 'en-US'],
