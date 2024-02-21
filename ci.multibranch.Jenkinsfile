@@ -68,6 +68,8 @@ stage('Prepare') {
                 'mozilla-release/security/mac/hardenedruntime/browser.production.entitlements.xml',
                 'mozilla-release/security/mac/hardenedruntime/plugin-container.production.entitlements.xml',
                 'mozilla-release/build/package/mac_osx/unpack-diskimage',
+                'ci/sign_mac.sh',
+                'ci/notarize_mac_app.sh',
             ].join(',')
         }
     }
@@ -264,11 +266,10 @@ stage('Unify Mac DMG') {
 
 stage('Sign Mac') {
     node('gideon') {
-        checkout scm
-
         if (params.Clean) {
             sh 'rm -rf mozilla-release'
             sh 'rm -rf pkg'
+            sh 'rm -rf ci'
         }
 
         unstash 'mac-unified-dmg'
