@@ -65,8 +65,8 @@ stage('Prepare') {
             displayVersion = readFile('mozilla-release/browser/config/version_display.txt').trim()
 
             stash name: 'mac-entitlements', includes: [
-                'mozilla-release/security/mac/hardenedruntime/browser.production.entitlements.xml',
-                'mozilla-release/security/mac/hardenedruntime/plugin-container.production.entitlements.xml',
+                'mozilla-release/security/mac/hardenedruntime/v2/production/firefox.browser.xml',
+                'mozilla-release/security/mac/hardenedruntime/v2/production/plugin-container.xml',
                 'mozilla-release/build/package/mac_osx/unpack-diskimage',
                 'ci/sign_mac.sh',
                 'ci/notarize_mac_app.sh',
