@@ -117,9 +117,6 @@ stage('Build Windows ARM') {
 stage('Sign Windows') {
     node('browser-builder') {
         docker.image('ua-sign-windows').inside() {
-            unstash 'pkg-windows-x86'
-            unstash 'pkg-windows-arm'
-
             def packages = [
                 ["mozilla-release/obj-aarch64-pc-windows-msvc/dist/Ghostery-${version}.en-US.win64-aarch64.zip", 'pkg/arm-en'],
                 ["mozilla-release/obj-aarch64-pc-windows-msvc/dist/Ghostery-${version}.de.win64-aarch64.zip", 'pkg/arm-de'],
@@ -172,19 +169,12 @@ stage('Sign Windows') {
             signWindowsBinaries(storepass, "pkg/installers/win64-aarch64/en-US")
             signWindowsBinaries(storepass, "pkg/installers/win64-aarch64/de")
             signWindowsBinaries(storepass, "pkg/installers/win64-aarch64/fr")
-
-            stash name: 'signed-pkg-windows', includes: [
-                'pkg/*/*.zip',
-                'pkg/installers/*/*/*.exe'
-            ].join(',')
         }
     }
 }
 
 stage('Repackage Windows installers') {
     node('browser-builder') {
-        unstash 'signed-pkg-windows'
-
         // Fix ZIP paths
         sh '''
             for zip in pkg/*/*.zip
@@ -272,16 +262,12 @@ stage('Repackage Windows installers') {
                 """
             }
         }
-
-        stash name: 'installers-windows', includes: 'pkg/*.exe'
     }
 }
 
 stage('Sign Windows installers') {
     node('browser-builder') {
         docker.image('ua-sign-windows').inside() {
-            unstash 'installers-windows'
-
             def storepass
             withCredentials([
                 string(credentialsId: "UAD_AZURE_USER_ID", variable: 'UAD_AZURE_USER_ID'),
@@ -734,7 +720,7 @@ def LOCALES = ['de', 'fr']
 
 def buildAndPackage(platform) {
     def settings = SETTINGS[platform]
-    def image = docker.build(
+    docker.build(
         "ua-build-${settings.name.toLowerCase()}",
         "-f build/${settings.dockerFile} ./build"
     )
@@ -766,13 +752,6 @@ def buildAndPackage(platform) {
             sh "cat ${settings.objDir}/dist/bin/updater.ini"
         }
     }
-
-    stash name: "pkg-${platform}", includes: [
-        "pkg/installers/*/*/*.exe", // setup.exe and setup-stub.exe
-        "mozilla-release/${settings.objDir}/dist/Ghostery-*.zip",
-        "mozilla-release/${settings.objDir}/dist/Ghostery-*.tar.gz",
-        "mozilla-release/${settings.objDir}/dist/Ghostery-*.dmg",
-    ].join(',')
 }
 
 def withMach(platform, task) {
