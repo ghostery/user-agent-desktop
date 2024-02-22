@@ -1,0 +1,28 @@
+From: Krzysztof Modras <chrmod@chrmod.net>
+Date: Thu, 22 Feb 2024 11:04:33 +0100
+Subject: Build: remove MacOS entitlements
+
+---
+ .../mac/hardenedruntime/v2/production/firefox.browser.xml  | 7 -------
+ 1 file changed, 7 deletions(-)
+
+diff --git a/security/mac/hardenedruntime/v2/production/firefox.browser.xml b/security/mac/hardenedruntime/v2/production/firefox.browser.xml
+index 3a14e8ad37..6e8d478cdd 100644
+--- a/security/mac/hardenedruntime/v2/production/firefox.browser.xml
++++ b/security/mac/hardenedruntime/v2/production/firefox.browser.xml
+@@ -26,12 +26,5 @@
+ 
+     <!-- For SmartCardServices(7) -->
+     <key>com.apple.security.smartcard</key><true/>
+-
+-    <!-- Required for com.apple.developer.web-browser.public-key-credential -->
+-    <key>com.apple.application-identifier</key>
+-    <string>43AQ936H96.org.mozilla.firefox</string>
+-
+-    <!-- For platform passkey (webauthn) support -->
+-    <key>com.apple.developer.web-browser.public-key-credential</key><true/>
+   </dict>
+ </plist>
+-- 
+2.39.3 (Apple Git-145)
+

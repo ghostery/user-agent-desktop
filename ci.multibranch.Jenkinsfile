@@ -1,3 +1,4 @@
+/* groovylint-disable DuplicateStringLiteral, LineLength, NestedBlockDepth */
 import groovy.transform.Field
 
 properties([
@@ -69,7 +70,6 @@ stage('Prepare') {
                 'mozilla-release/security/mac/hardenedruntime/v2/production/plugin-container.xml',
                 'mozilla-release/build/package/mac_osx/unpack-diskimage',
                 'ci/sign_mac.sh',
-                'ci/notarize_mac_app.sh',
             ].join(',')
         }
     }
@@ -328,7 +328,18 @@ stage('Sign Mac') {
                 ),
             ]) {
                 for (pkg in packages) {
-                    sh "./ci/notarize_mac_app.sh ${pkg[1]}"
+                    String bundlePath = "${env.PKG_NAME}.zip"
+                    String appPath = "${pkg[1]}/${env.APP_NAME}/${env.PKG_NAME}.app"
+
+                    try {
+                        sh "zip -r '${bundlePath}' '${appPath}'"
+
+                        sh "xcrun notarytool submit --team-id HPY23A294X --apple-id '${env.MAC_NOTARY_USER}' --password '${env.MAC_NOTARY_PASS}' '${bundlePath}' --wait"
+
+                        sh "xcrun stapler staple '${appPath}'"
+                    } finally {
+                        sh "rm -rf ${bundlePath}"
+                    }
                 }
             }
 
