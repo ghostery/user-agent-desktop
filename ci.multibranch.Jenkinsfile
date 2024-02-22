@@ -372,14 +372,6 @@ stage('Repackage Mac') {
 
 stage('Repackage MAR') {
     node('browser-builder') {
-        // prepare signmar environment
-        withCredentials([
-            [$class: 'AmazonWebServicesCredentialsBinding', accessKeyVariable: 'AWS_ACCESS_KEY_ID', credentialsId: 'user-agent-desktop-jenkins-cache', secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'],
-        ]) {
-            sh 'aws s3 --region us-east-1 --recursive --quiet cp s3://user-agent-desktop-jenkins-cache/mar/ .'
-            sh 'chmod a+x signmar'
-        }
-
         def pwd = sh(returnStdout: true, script: 'pwd').trim()
 
         def packages = [
@@ -434,7 +426,7 @@ stage('Repackage MAR') {
                         sh """#!/bin/bash
                             set -x
                             set -e
-                            ${pwd}/signmar -d \$CERT_DB_PATH \
+                            ./obj-x86_64-pc-linux-gnu/dist/bin/signmar -d \$CERT_DB_PATH \
                                 -n 'Release Cliqz MAR signing key' \
                                 -s "${marPath}" "${marPath}.signed"
                             rm "${marPath}"
