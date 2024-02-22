@@ -545,15 +545,15 @@ stage('publish to balrog') {
                     usernameVariable: 'AUTH0_M2M_CLIENT_ID'
                 )]) {
                     try {
-                        sh """
-                            python -m venv venv
+                        sh '''#!/usr/bin/env bash
+                            python3 -m venv venv
                             source venv/bin/activate
-                            pip install balrogclient
-                        """
+                            pip3 install balrogclient
+                        '''
 
                         // create release on balrog
                         retry(3) {
-                            sh """
+                            sh """#!/usr/bin/env bash
                                 source venv/bin/activate
                                 python3 ci/submitter.py release --tag "${params.ReleaseName}" \
                                     --moz-root artifacts/mozilla-release \
@@ -567,7 +567,7 @@ stage('publish to balrog') {
                         // publish builds
                         for(String artifactPath in artifacts) {
                             retry(3) {
-                                sh """
+                                sh """#!/usr/bin/env bash
                                     source venv/bin/activate
                                     python3 ci/submitter.py build --tag "${params.ReleaseName}" \
                                         --bid "${buildId}" \
@@ -584,7 +584,7 @@ stage('publish to balrog') {
                         // copy this release to nightly
                         if (params.Nightly) {
                             retry(3) {
-                                sh """
+                                sh """#!/usr/bin/env bash
                                     source venv/bin/activate
                                     python3 ci/submitter.py nightly --tag "${params.ReleaseName}" \
                                         --moz-root artifacts/mozilla-release \
