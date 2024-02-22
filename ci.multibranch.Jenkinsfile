@@ -284,6 +284,7 @@ stage('Sign Mac') {
         withEnv([
             "APP_NAME=Ghostery",
             "PKG_NAME=Ghostery Private Browser",
+            "APPLE_TEAM_ID=HPY23A294X",
         ]) {
             withCredentials([
                 file(credentialsId: '5f834aab-07ff-4c3f-9848-c2ac02b3b532', variable: 'MAC_CERT'),
@@ -292,27 +293,23 @@ stage('Sign Mac') {
                 try {
                     // create temporary keychain and make it a default one
                     sh '''#!/bin/bash -l -x
-                        security create-keychain -p cliqz cliqz
-                        security list-keychains -s cliqz
-                        security default-keychain -s cliqz
-                        security unlock-keychain -p cliqz cliqz
+                        security create-keychain -p ci ci
+                        security list-keychains -s ci
+                        security default-keychain -s ci
+                        security unlock-keychain -p ci ci
                     '''
 
                     sh '''#!/bin/bash -l +x
-                        security import $MAC_CERT -P $MAC_CERT_PASS -k cliqz -A
-                        security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k cliqz cliqz
+                        security import $MAC_CERT -P $MAC_CERT_PASS -k ci -A
+                        security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k ci ci
                     '''
 
-                    withEnv([
-                        "MAC_CERT_NAME=HPY23A294X",
-                    ]){
-                        for (pkg in packages) {
-                            sh "./ci/sign_mac.sh ${pkg[0]} ${pkg[1]}"
-                        }
+                    for (pkg in packages) {
+                        sh "./ci/sign_mac.sh ${pkg[0]} ${pkg[1]}"
                     }
                 } finally {
                     sh '''#!/bin/bash -l -x
-                        security delete-keychain cliqz
+                        security delete-keychain ci
                         security list-keychains -s login.keychain
                         security default-keychain -s login.keychain
                         true
@@ -334,7 +331,7 @@ stage('Sign Mac') {
                     try {
                         sh "zip -r '${bundlePath}' '${appPath}'"
 
-                        sh "xcrun notarytool submit --team-id HPY23A294X --apple-id '${env.MAC_NOTARY_USER}' --password '${env.MAC_NOTARY_PASS}' '${bundlePath}' --wait"
+                        sh "xcrun notarytool submit --team-id ${env.APPLE_TEAM_ID} --apple-id '${env.MAC_NOTARY_USER}' --password '${env.MAC_NOTARY_PASS}' '${bundlePath}' --wait"
 
                         sh "xcrun stapler staple '${appPath}'"
                     } finally {
