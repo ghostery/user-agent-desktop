@@ -366,7 +366,7 @@ stage('Repackage Mac') {
             }
         }
 
-        archiveArtifacts artifacts: 'pkg/*.dmg'
+        archiveArtifacts artifacts: 'pkg/*mac.dmg'
     }
 }
 
