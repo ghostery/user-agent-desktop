@@ -2,6 +2,7 @@
 import groovy.transform.Field
 
 properties([
+    buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '', daysToKeepStr: '10', numToKeepStr: '5')),
     parameters([
         booleanParam(name: 'Clean', defaultValue: false, description: 'clean workspace files'),
         string(name: 'ReleaseName', defaultValue: '', description: ''),
@@ -31,7 +32,6 @@ stage('Prepare') {
         def image = docker.build('ua-build-base', '-f build/Base.dockerfile ./build/ --build-arg user=`whoami` --build-arg UID=`id -u` --build-arg GID=`id -g`')
 
         image.inside() {
-
             sh 'npm ci'
 
             sh 'rm -rf mozilla-release'
@@ -50,9 +50,9 @@ stage('Prepare') {
                     variable: 'SB_GAPI_DATA',
                 ],
             ]) {
-                writeFile file: "gls-gapi.data", text: GLS_GAPI_DATA
-                writeFile file: "sb-gapi.data", text: SB_GAPI_DATA
-                writeFile file: "local.mozconfig", text: """
+                writeFile file: 'gls-gapi.data', text: GLS_GAPI_DATA
+                writeFile file: 'sb-gapi.data', text: SB_GAPI_DATA
+                writeFile file: 'local.mozconfig', text: """
                     ac_add_options --with-google-location-service-api-keyfile=${pwd()}/gls-gapi.data
                     ac_add_options --with-google-safebrowsing-api-keyfile=${pwd()}/sb-gapi.data
                 """
@@ -117,7 +117,6 @@ stage('Build Windows ARM') {
 }
 
 stage('Sign Windows') {
-
     def packages = [
         ["mozilla-release/obj-aarch64-pc-windows-msvc/dist/Ghostery-${version}.en-US.win64-aarch64.zip", 'pkg/arm-en'],
         ["mozilla-release/obj-aarch64-pc-windows-msvc/dist/Ghostery-${version}.de.win64-aarch64.zip", 'pkg/arm-de'],
@@ -151,7 +150,6 @@ stage('Sign Windows') {
 
 stage('Repackage Windows installers') {
     node('browser-builder') {
-
         def installersX86 = [
             ["pkg/x86-en/Ghostery-${version}.en-US.win64.zip", "pkg/Ghostery-${version}.en-US.win64.installer.exe", 'en-US'],
             ["pkg/x86-de/Ghostery-${version}.de.win64.zip", "pkg/Ghostery-${version}.de.win64.installer.exe", 'de'],
@@ -241,7 +239,7 @@ stage('Repackage Windows installers') {
 }
 
 stage('Unify Mac DMG') {
-     node('browser-builder') {
+    node('browser-builder') {
         def armObjDir = SETTINGS['macos-arm'].objDir
         def x86ObjDir = SETTINGS['macos-x86'].objDir
 
@@ -276,15 +274,15 @@ stage('Sign Mac') {
         unstash 'mac-entitlements'
 
         def packages = [
-            ["pkg/Ghostery-${version}.en-US.dmg", "pkg/mac-en"],
-            ["pkg/Ghostery-${version}.de.dmg", "pkg/mac-de"],
-            ["pkg/Ghostery-${version}.fr.dmg", "pkg/mac-fr"],
+            ["pkg/Ghostery-${version}.en-US.dmg", 'pkg/mac-en'],
+            ["pkg/Ghostery-${version}.de.dmg", 'pkg/mac-de'],
+            ["pkg/Ghostery-${version}.fr.dmg", 'pkg/mac-fr'],
         ]
 
         withEnv([
-            "APP_NAME=Ghostery",
-            "PKG_NAME=Ghostery Private Browser",
-            "APPLE_TEAM_ID=HPY23A294X",
+            'APP_NAME=Ghostery',
+            'PKG_NAME=Ghostery Private Browser',
+            'APPLE_TEAM_ID=HPY23A294X',
         ]) {
             withCredentials([
                 file(credentialsId: '5f834aab-07ff-4c3f-9848-c2ac02b3b532', variable: 'MAC_CERT'),
@@ -501,7 +499,7 @@ stage('Publish to github') {
                         | jq .id
                     """).trim()
 
-                    for(String artifactPath in artifacts) {
+                    for (String artifactPath in artifacts) {
                         def artifactName = artifactPath.split('/').last()
                         sh("""
                             curl \
@@ -565,7 +563,7 @@ stage('publish to balrog') {
                         }
 
                         // publish builds
-                        for(String artifactPath in artifacts) {
+                        for (String artifactPath in artifacts) {
                             retry(3) {
                                 sh """#!/usr/bin/env bash
                                     source venv/bin/activate
@@ -596,7 +594,7 @@ stage('publish to balrog') {
                             }
                         }
                     } finally {
-                        sh "rm -rf venv"
+                        sh 'rm -rf venv'
                     }
                 }
             }
@@ -708,11 +706,11 @@ def withMach(platform, task) {
         withEnv([
             "MOZCONFIG=${env.WORKSPACE}/mozconfig",
             "MOZ_BUILD_DATE=${buildId}",
-            "MOZ_AUTOMATION=1",
+            'MOZ_AUTOMATION=1',
             "MOZ_SOURCE_CHANGESET=${triggeringCommitHash}",
             "MH_BRANCH=${env.BRANCH_NAME}",
-            "ACCEPTED_MAR_CHANNEL_IDS=firefox-ghostery-release",
-            "MAR_CHANNEL_ID=firefox-ghostery-release",
+            'ACCEPTED_MAR_CHANNEL_IDS=firefox-ghostery-release',
+            'MAR_CHANNEL_ID=firefox-ghostery-release',
             "MOZ_PKG_FORMAT=${settings.packageFormat}",
         ]) {
             sh "./fern.js config --print --force -l --platform ${settings.targetPlatform} --brand ghostery"
@@ -737,9 +735,9 @@ def download(filename) {
 void signWindowsBinaries(String folderPath) {
     dir(folderPath) {
         withCredentials([
-            string(credentialsId: "UAD_AZURE_USER_ID", variable: 'UAD_AZURE_USER_ID'),
-            string(credentialsId: "UAD_AZURE_PASSWORD", variable: 'UAD_AZURE_PASSWORD'),
-            string(credentialsId: "UAD_AZURE_TENANT", variable: 'UAD_AZURE_TENANT'),
+            string(credentialsId: 'UAD_AZURE_USER_ID', variable: 'UAD_AZURE_USER_ID'),
+            string(credentialsId: 'UAD_AZURE_PASSWORD', variable: 'UAD_AZURE_PASSWORD'),
+            string(credentialsId: 'UAD_AZURE_TENANT', variable: 'UAD_AZURE_TENANT'),
         ]) {
             sh """
                 set -e
