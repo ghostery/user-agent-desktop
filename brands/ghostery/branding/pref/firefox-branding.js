@@ -41,7 +41,6 @@ pref("app.feedback.baseURL", "https://www.ghostery.com/support/");
 // Override settings server to Ghostery
 pref("services.settings.server", "https://get.ghosterybrowser.com/settings/v1");
 
-
 /****************************************************************************
  * SECTION: DISABLE MOZILLA FIREFOX-SPECIFIC PREFS                          *
 ****************************************************************************/
@@ -200,6 +199,8 @@ pref("browser.urlbar.quicksuggest.enabled", false);
 pref("browser.tabs.firefox-view", false);
 pref("browser.tabs.firefox-view-newIcon", false);
 pref("browser.tabs.firefox-view-next", false);
+pref("browser.firefox-view.search.enabled", false); // [FF122+]
+pref("browser.firefox-view.virtual-list.enabled", false); // [FF122+]
 
 // disable Quarantined Domains [FF115+]
 pref("extensions.quarantinedDomains.enabled", false);
