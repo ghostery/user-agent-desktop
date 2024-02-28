@@ -6,14 +6,28 @@ Fix theme
 
 X
 ---
+ browser/themes/BuiltInThemeConfig.sys.mjs     |   2 +-
  .../modules/LightweightThemeConsumer.sys.mjs  |   2 +-
- .../extensions/default-theme/experiment13.css | 272 ++++++++++++++++++
- .../extensions/default-theme/manifest.json    |  56 +---
- .../extensions/internal/XPIProvider.jsm       |  20 +-
+ .../extensions/default-theme/experiment13.css | 294 ++++++++++++++++++
+ .../extensions/default-theme/manifest.json    |  57 +---
+ .../extensions/internal/XPIProvider.jsm       |   2 +-
  toolkit/mozapps/extensions/jar.mn             |   1 +
- 5 files changed, 308 insertions(+), 43 deletions(-)
+ 6 files changed, 314 insertions(+), 44 deletions(-)
  create mode 100644 toolkit/mozapps/extensions/default-theme/experiment13.css
 
+diff --git a/browser/themes/BuiltInThemeConfig.sys.mjs b/browser/themes/BuiltInThemeConfig.sys.mjs
+index 7cfea4b705..428b24635a 100644
+--- a/browser/themes/BuiltInThemeConfig.sys.mjs
++++ b/browser/themes/BuiltInThemeConfig.sys.mjs
+@@ -18,7 +18,7 @@
+  * @param {string} [collection]
+  *  The collection id that the theme is a part of. Optional.
+  */
+-export const BuiltInThemeConfig = new Map([
++export const BuiltInThemeConfig = new Map() || new Map([
+   [
+     "firefox-compact-light@mozilla.org",
+     {
 diff --git a/toolkit/modules/LightweightThemeConsumer.sys.mjs b/toolkit/modules/LightweightThemeConsumer.sys.mjs
 index cf388eb3d3..fd0e793aa4 100644
 --- a/toolkit/modules/LightweightThemeConsumer.sys.mjs
@@ -21,18 +35,18 @@ index cf388eb3d3..fd0e793aa4 100644
 @@ -23,7 +23,7 @@ XPCOMUtils.defineLazyPreferenceGetter(
    false
  );
-
+ 
 -const DEFAULT_THEME_ID = "default-theme@mozilla.org";
 +const DEFAULT_THEME_ID = "__DOES_NOT_APPLY__"; // in Ghostery Browser default theme is a lightweight theme
-
+ 
  const toolkitVariableMap = [
    [
 diff --git a/toolkit/mozapps/extensions/default-theme/experiment13.css b/toolkit/mozapps/extensions/default-theme/experiment13.css
 new file mode 100644
-index 0000000000..a6bd1fdf76
+index 0000000000..f86e5ce147
 --- /dev/null
 +++ b/toolkit/mozapps/extensions/default-theme/experiment13.css
-@@ -0,0 +1,272 @@
+@@ -0,0 +1,294 @@
 +/* This Source Code Form is subject to the terms of the Mozilla Public
 + * License, v. 2.0. If a copy of the MPL was not distributed with this
 + * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
@@ -42,9 +56,12 @@ index 0000000000..a6bd1fdf76
 +  --urlbar-height: 34px !important;
 +  --urlbar-toolbar-height: 34px !important;
 +  --urlbar-container-height: 34px !important;
-+  --toolbarbutton-inner-padding: 9px;
-+  --toolbarbutton-border-radius: 17px;
-+  --tab-border-radius: 17px;
++  --toolbarbutton-inner-padding: 9px !important;
++  --toolbarbutton-border-radius: 17px !important;
++  --toolbarbutton-outer-padding: 0px !important;
++  --tab-border-radius: 17px !important;
++  --toolbar-field-border-color: rgb(69, 72, 68) !important;
++  --toolbar-field-focus-border-color: rgb(69, 72, 68) !important;
 +}
 +
 +#urlbar-container,
@@ -53,101 +70,101 @@ index 0000000000..a6bd1fdf76
 +  padding-block: 0px !important;
 +}
 +
-+#urlbar-background {
-+  border: 2px solid var(--toolbar-field-background-color);
-+  border-radius: 17px;
-+  padding: 0;
-+  background-clip: padding-box;
-+  box-sizing: border-box;
++#urlbar-background, #searchbar {
++  border: 2px solid var(--toolbar-field-background-color) !important;
++  border-radius: 17px !important;
++  padding: 0 !important;
++  background-clip: padding-box !important;
++  box-sizing: border-box !important;
 +}
 +
 +#urlbar-background:before {
-+  content: ' ';
-+  position: absolute;
-+  top: 0; right: 0; bottom: 0; left: 0;
-+  z-index: -1;
-+  margin: -2px;
-+  border-radius: inherit;
-+  z-index: -1;
-+  box-shadow: none;
++  content: ' ' !important;
++  position: absolute !important;
++  top: 0; right: 0; bottom: 0; left: 0 !important;
++  z-index: -1 !important;
++  margin: -2px !important;
++  border-radius: inherit !important;
++  z-index: -1 !important;
++  box-shadow: none !important;
 +}
 +
 +#urlbar:not([focused="true"]):hover > #urlbar-background,
 +#searchbar:not(:focus-within):hover {
-+  background-color: var(--toolbar-field-background-color);
++  background-color: var(--toolbar-field-background-color) !important;
 +}
 +
 +#urlbar[focused="true"]:not([suppress-focus-border]) > #urlbar-background {
-+  border-color: #42414d;
++  border-color: #42414d !important;
 +}
 +
 +#urlbar:not([focused="true"]):-moz-lwtheme:hover > #urlbar-background, #navigator-toolbox #searchbar:not(:focus-within):-moz-lwtheme:hover {
-+  border-color: #53565B;
++  border-color: #53565B !important;
 +}
 +
 +#urlbar[focused="true"]:not([suppress-focus-border]) > #urlbar-background, #searchbar:focus-within {
-+  outline-color: #53565B
++  outline-color: #53565B !important;
 +}
 +
 +#urlbar[focused="true"] > #urlbar-background {
-+  border-radius: 17px;
-+  border-color: transparent;
++  border-radius: 17px !important;
++  border-color: transparent !important;
 +}
 +
 +#urlbar[focused="true"] > #urlbar-background:before {
-+  background: #53565B;
++  background: #53565B !important;
 +}
 +
 +/*
 +  this should not be necessary but animation flashes the :before element background
 +*/
 +#urlbar[breakout][breakout-extend][breakout-extend-animate] > #urlbar-background {
-+  animation-duration: 0ms;
++  animation-duration: 0ms !important;
 +}
 +
 +.urlbarView-row:not([type="tip"]):not([type="dynamic"])[selected] > .urlbarView-row-inner {
-+  background: #202225;
++  background: #202225 !important;
 +}
 +
 +.urlbarView-url {
-+  background: linear-gradient(to right, #74F2B8, #00AEF0);
-+  background-clip: text;
-+  -webkit-background-clip: text;
-+  -webkit-text-fill-color: transparent;
++  background: linear-gradient(to right, #74F2B8, #00AEF0) !important;
++  background-clip: text !important;
++  -webkit-background-clip: text !important;
++  -webkit-text-fill-color: transparent !important;
 +}
 +
 +#urlbar, #searchbar {
-+  min-height: 34px;
++  min-height: 34px !important;
 +}
 +
 +:root[uidensity="compact"] #urlbar, :root[uidensity="compact"] #searchbar {
-+  min-height: 28px;
++  min-height: 28px !important;
 +}
 +
 +#urlbar-container, #search-container {
-+  padding-block: 0;
++  padding-block: 0 !important;
 +}
 +
 +:root:not([uidensity="compact"]) #back-button {
-+  padding-block: 0;
++  padding-block: 0 !important;
 +}
 +
 +#urlbar[breakout] {
-+  top: 0px;
++  top: 0px !important;
 +}
 +
 +#urlbar[breakout][breakout-extend] > #urlbar-input-container {
-+  padding-block: 0;
-+  padding-inline: 0;
++  padding-block: 0 !important;
++  padding-inline: 0 !important;
 +}
 +
 +#urlbar[breakout][breakout-extend] {
-+  width: 100%;
-+  left: unset;
++  width: 100% !important;
++  left: unset !important;
 +}
 +
 +#navigator-toolbox {
-+  border-bottom: none;
++  border-bottom: none !important;
 +}
 +
 +#nav-bar.browser-toolbar {
@@ -156,15 +173,21 @@ index 0000000000..a6bd1fdf76
 +
 +#TabsToolbar .toolbarbutton-1, #tabbrowser-arrowscrollbox::part(scrollbutton-up), #tabbrowser-arrowscrollbox::part(scrollbutton-down) {
 +  margin: 1px 0 0 0 !important;
++  border-radius: 17px !important;
 +}
 +
 +#tabbrowser-arrowscrollbox::part(scrollbutton-up), #tabbrowser-arrowscrollbox::part(scrollbutton-down) {
-+  border: 0;
-+  width: 34px
++  border: 0 !important;
++  width: 34px !important;
 +}
 +
 +toolbar .toolbarbutton-1 {
-+  padding: 0;
++  padding: 0 !important;
++}
++
++#PanelUI-menu-button {
++  margin-inline-start: var(--toolbar-start-start-padding) !important;
++  margin-inline-end: var(--toolbar-start-end-padding) !important;
 +}
 +
 +:is(toolbarbutton.subviewbutton.webextension-browser-action):hover,
@@ -173,29 +196,29 @@ index 0000000000..a6bd1fdf76
 +}
 +
 +#nav-bar {
-+  border-bottom: 0.5px solid rgba(0, 0, 0, 0.15);
++  border-bottom: 0.5px solid rgba(0, 0, 0, 0.15) !important;
 +}
 +
 +#urlbar-input {
-+  margin-top: -1px;
++  margin-top: -1px !important;
 +}
 +
 +.close-icon {
-+  opacity: 0.5;
++  opacity: 0.5 !important;
 +}
 +
 +.close-icon:hover {
-+  opacity: 1;
++  opacity: 1 !important;
 +}
 +
 +.tab-line {
-+  height: 0;
++  height: 0 !important;
 +}
 +
 +.urlbar-page-action, #urlbar-go-button, .search-go-button, #notification-popup-box {
-+  width: var(--urlbar-height);
-+  height: var(--urlbar-height);
-+  padding: 9px;
++  width: var(--urlbar-height) !important;
++  height: var(--urlbar-height) !important;
++  padding: 9px !important;
 +}
 +
 +:where(#reload-button, #stop-button) > .toolbarbutton-icon, :where(#reload-button, #stop-button) > .toolbarbutton-animatable-box {
@@ -207,13 +230,13 @@ index 0000000000..a6bd1fdf76
 +}
 +
 +#urlbar-input-container {
-+  border: 0px solid transparent;
-+  padding: 0px;
++  border: 0px solid transparent !important;
++  padding: 0px !important;
 +}
 +
 +#urlbar-input-container, #searchbar {
-+  border-radius: none;
-+  height: 34px;
++  border-radius: 0 !important;
++  height: 34px !important;
 +}
 +
 +#urlbar[breakout][breakout-extend] > #urlbar-input-container {
@@ -221,69 +244,82 @@ index 0000000000..a6bd1fdf76
 +}
 +
 +.identity-box-button {
-+  padding: 9px;
++  padding: 9px !important;
 +}
 +
 +.tab-background {
-+  border-radius: 0;
-+  margin-block: 0;
++  border-radius: 0 !important;
++  margin-block: 0 !important;
 +}
 +
 +.urlbarView {
-+  margin-inline: 2px;
-+  border-inline: unset;
-+  width: calc(100% - 4px);
-+  padding-bottom: 17px;
-+  margin-top: 17px;
++  margin-inline: 2px !important;
++  border-inline: unset !important;
++  width: calc(100% - 4px) !important;
++  padding-bottom: 17px !important;
++  margin-top: 17px !important;
 +}
 +
-+#urlbar[open] > .urlbarView > .urlbarView-body-outer > .urlbarView-body-inner {
-+  border-top: unset
++
++.urlbarView-body-inner {
++  #urlbar[open] > .urlbarView > .urlbarView-body-outer > & {
++    border-top: unset !important;
++  }
 +}
 +
 +.urlbarView-results {
-+  padding-block: 2px;
++  padding-block: 2px !important;
 +}
 +
 +.urlbarView-row-inner {
-+  padding-inline: 40px;
++  padding-inline: 40px !important;
 +}
 +
 +.urlbarView-results[wrap] > .urlbarView-row[has-url] > .urlbarView-row-inner > .urlbarView-url:-moz-locale-dir(ltr) {
-+  padding-left: 30px;
++  padding-left: 30px !important;
 +}
 +
 +.urlbarView-title {
-+  margin-left: 4px;
++  margin-left: 4px !important;
 +}
 +
 +.urlbarView-row-inner {
-+  border-radius: 0;
++  border-radius: 0 !important;
 +}
 +
 +#urlbar .search-one-offs:not([hidden]) {
-+  display: none;
++  display: none !important;
 +}
 +
 +.tabbrowser-tab:hover > .tab-stack > .tab-background:not([selected="true"], [multiselected]) {
-+  background-color: #2A2A33;
++  background-color: #2A2A33 !important;
 +}
 +
 +.tab-label {
-+  margin: 0;
++  margin: 0 !important;
 +}
 +
 +.tab-close-button {
-+  margin-top: 1px;
++  margin-top: 1px !important;
 +}
 +
-+toolbar .toolbarbutton-1 > .toolbarbutton-icon {
-+  border-radius: 0;
++toolbar .toolbarbutton-1 {
++  border-radius: 17px !important;
++
++  & > .toolbarbutton-icon, & > .toolbarbutton-text, & > .toolbarbutton-badge-stack {
++    border-radius: 0px !important;
++  }
++}
++
++#TabsToolbar .toolbarbutton-1 {
++  & > .toolbarbutton-icon, & > .toolbarbutton-badge-stack {
++    border-radius: 17px !important;
++  }
 +}
 +
 +toolbar#nav-bar .toolbarbutton-1 {
-+  border-radius: 17px;
-+  overflow: clip;
++  border-radius: 17px !important;
++  overflow: clip !important;
 +}
 +
 +#tabbrowser-tabs[positionpinnedtabs] > #tabbrowser-arrowscrollbox > .tabbrowser-tab[pinned] {
@@ -296,12 +332,12 @@ index 0000000000..a6bd1fdf76
 +}
 +
 +#nav-bar-customization-target > :is(toolbarbutton, toolbaritem):first-child, #nav-bar-customization-target > toolbarpaletteitem:first-child > :is(toolbarbutton, toolbaritem) {
-+  padding-inline-start: unset;
-+  margin-left: 8px;
++  padding-inline-start: unset !important;
++  margin-left: 8px !important;
 +}
 +
-+.toolbarbutton-badge {
-+  border-radius: 4px;
++.toolbarbutton-badge-stack .toolbarbutton-badge {
++  border-radius: 4px !important;
 +  margin: -5px 0 0 !important;
 +  margin-inline-end: -6px !important;
 +}
@@ -312,7 +348,7 @@ index f89a4236ff..6c71ff4490 100644
 @@ -7,34 +7,32 @@
      }
    },
-
+ 
 -  "name": "System theme — auto",
 -  "description": "Follow the operating system setting for buttons, menus, and windows.",
 -  "author": "Mozilla",
@@ -321,9 +357,9 @@ index f89a4236ff..6c71ff4490 100644
 +  "description": "",
 +  "author": "Ghostery",
 +  "version": "1.13",
-
+ 
    "icons": { "32": "icon.svg" },
-
+ 
 -  "theme": {},
 -
 -  "dark_theme": {
@@ -369,7 +405,7 @@ index f89a4236ff..6c71ff4490 100644
      "properties": {
 @@ -67,29 +65,6 @@
    },
-
+ 
    "theme_experiment": {
 -    "colors": {
 -      "button": "--button-bgcolor",
@@ -398,12 +434,11 @@ index f89a4236ff..6c71ff4490 100644
 +    "stylesheet": "experiment13.css"
    }
  }
-
 diff --git a/toolkit/mozapps/extensions/internal/XPIProvider.jsm b/toolkit/mozapps/extensions/internal/XPIProvider.jsm
-index 2b9c386c29..27bab89399 100644
+index 94e5e26636..c7772b0e67 100644
 --- a/toolkit/mozapps/extensions/internal/XPIProvider.jsm
 +++ b/toolkit/mozapps/extensions/internal/XPIProvider.jsm
-@@ -2549,7 +2549,7 @@ var XPIProvider = {
+@@ -2553,7 +2553,7 @@ var XPIProvider = {
        }
        this.maybeInstallBuiltinAddon(
          "default-theme@mozilla.org",
@@ -411,30 +446,17 @@ index 2b9c386c29..27bab89399 100644
 +        "1.13",
          "resource://default-theme/"
        );
-
+ 
 diff --git a/toolkit/mozapps/extensions/jar.mn b/toolkit/mozapps/extensions/jar.mn
-index 935416225d..e995da1173 100644
+index a881ed3843..d98404543a 100644
 --- a/toolkit/mozapps/extensions/jar.mn
 +++ b/toolkit/mozapps/extensions/jar.mn
-@@ -23,4 +23,5 @@ toolkit.jar:
+@@ -22,4 +22,5 @@ toolkit.jar:
  % resource default-theme %content/mozapps/extensions/default-theme/
    content/mozapps/extensions/default-theme                      (default-theme/*.svg)
    content/mozapps/extensions/default-theme/manifest.json        (default-theme/manifest.json)
 +  content/mozapps/extensions/default-theme/experiment13.css     (default-theme/experiment13.css)
  #endif
-diff --git a/browser/themes/BuiltInThemeConfig.sys.mjs b/browser/themes/BuiltInThemeConfig.sys.mjs
-index 7cfea4b705..428b24635a 100644
---- a/browser/themes/BuiltInThemeConfig.sys.mjs
-+++ b/browser/themes/BuiltInThemeConfig.sys.mjs
-@@ -18,7 +18,7 @@
-  * @param {string} [collection]
-  *  The collection id that the theme is a part of. Optional.
-  */
--export const BuiltInThemeConfig = new Map([
-+export const BuiltInThemeConfig = new Map() || new Map([
-   [
-     "firefox-compact-light@mozilla.org",
-     {
---
-2.39.2 (Apple Git-143)
+-- 
+2.39.3 (Apple Git-145)
 
