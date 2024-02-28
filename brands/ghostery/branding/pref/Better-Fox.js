@@ -19,7 +19,6 @@ pref("gfx.canvas.accelerated.cache-size", 512);
 pref("gfx.content.skia-font-cache-size", 20);
 
 /** DISK CACHE ***/
-pref("browser.cache.disk.enable", true); // DEFAULT
 pref("browser.cache.jsbc_compression_level", 3);
 
 /** MEDIA CACHE ***/
@@ -58,7 +57,6 @@ pref("network.http.referer.disallowCrossSiteRelaxingDefault.top_navigation", tru
 pref("privacy.query_stripping.enabled", true); // Query Stripping; Ghostery doesn't do this natively at this time
 pref("privacy.query_stripping.enabled.pbmode", true);
 pref("privacy.partition.network_state.ocsp_cache", true); // enabled with ETP "Strict"; network partitioning OSCP cache
-//pref("privacy.partition.bloburl_per_partition_key", true); // default
 pref("extensions.webcompat.enable_shims", true); // enabled with ETP "Strict"; Smart Block shimming
 pref("network.cookie.sameSite.noneRequiresSecure", true);
 pref("browser.download.start_downloads_in_tmp_dir", true);
