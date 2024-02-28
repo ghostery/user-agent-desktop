@@ -3,7 +3,7 @@
 /****************************************************************************
  * Betterfox for Ghostery                                                   *
  * "Non ducor duco"                                                         *
- * version: 118                                                             *
+ * version: 122                                                             *
  * url: https://github.com/yokoffing/Betterfox                              *
 ****************************************************************************/
 
@@ -14,13 +14,13 @@
 pref("content.notify.interval", 100000);
 
 /** GFX ***/
-//pref("gfx.canvas.accelerated", true); // GPU-accelerated Canvas2D is enabled by default on macOS and Linux [FF110]
 pref("gfx.canvas.accelerated.cache-items", 4096);
 pref("gfx.canvas.accelerated.cache-size", 512);
 pref("gfx.content.skia-font-cache-size", 20);
 
-/** BROWSER CACHE ***/
-pref("browser.cache.disk.enable", false);
+/** DISK CACHE ***/
+pref("browser.cache.disk.enable", true); // DEFAULT
+pref("browser.cache.jsbc_compression_level", 3);
 
 /** MEDIA CACHE ***/
 pref("media.memory_cache_max_size", 65536);
@@ -58,11 +58,13 @@ pref("network.http.referer.disallowCrossSiteRelaxingDefault.top_navigation", tru
 pref("privacy.query_stripping.enabled", true); // Query Stripping; Ghostery doesn't do this natively at this time
 pref("privacy.query_stripping.enabled.pbmode", true);
 pref("privacy.partition.network_state.ocsp_cache", true); // enabled with ETP "Strict"; network partitioning OSCP cache
-pref("privacy.partition.bloburl_per_partition_key", true);
+//pref("privacy.partition.bloburl_per_partition_key", true); // default
 pref("extensions.webcompat.enable_shims", true); // enabled with ETP "Strict"; Smart Block shimming
+pref("network.cookie.sameSite.noneRequiresSecure", true);
+pref("browser.download.start_downloads_in_tmp_dir", true);
+pref("browser.helperApps.deleteTempFileOnExit", true);
 pref("browser.uitour.enabled", false); // disable UITour backend so there is no chance that a remote page can use it
 pref("privacy.globalprivacycontrol.enabled", true); // Global Privacy Control
-pref("privacy.globalprivacycontrol.functionality.enabled", true); // Global Privacy Control
 
 /** OCSP & CERTS / HPKP ***/
 pref("security.OCSP.enabled", 0); // disable OCSP fetching to confirm current validity of certificates
@@ -110,6 +112,7 @@ pref("extensions.formautofill.creditCards.enabled", false);
 /** MIXED CONTENT + CROSS-SITE ***/
 pref("security.mixed_content.block_display_content", true);
 pref("security.mixed_content.upgrade_display_content", true);
+pref("security.mixed_content.upgrade_display_content.image", true);
 pref("pdfjs.enableScripting", false); // deny PDFs to load javascript
 pref("extensions.postDownloadThirdPartyPrompt", false); // 3rd party extension install prompts
 
@@ -146,7 +149,6 @@ pref("browser.translations.enable", true); // local translation services; data d
 /** COOKIE BANNER HANDLING ***/
 pref("cookiebanners.service.mode", 1);
 pref("cookiebanners.service.mode.privateBrowsing", 1);
-// pref("cookiebanners.service.enableGlobalRules", false); // DEFAULT
 
 /** FULLSCREEN ***/
 pref("full-screen-api.transition-duration.enter", "50 50"); // transition time (instant)
@@ -174,7 +176,7 @@ pref("browser.toolbars.bookmarks.visibility", "never");
 
 /** DOWNLOADS ***/
 // [SETTING] General>Downloads>Always ask you where to save files
-pref("browser.download.useDownloadDir", false); // always ask where to download
+//pref("browser.download.useDownloadDir", false); // always ask where to download
 // [SETTING] General>Files and Applications>What should Firefox do with other files
 pref("browser.download.always_ask_before_handling_new_types", true); // enable user interaction for security by always asking how to handle new mimetypes
 
