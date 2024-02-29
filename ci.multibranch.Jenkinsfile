@@ -752,12 +752,15 @@ void signWindowsBinaries(String folderPath) {
                         --storetype AZUREKEYVAULT \
                         --storepass \$(az account get-access-token --resource "https://vault.azure.net" | jq -r .accessToken) \
                         --tsmode RFC3161 \
-                        --alg SHA-256 \
+                        --alg SHA-384 \
                         --tsaurl http://timestamp.digicert.com \
-                        --keystore ChrmodCodeSigningTest \
-                        --alias ChrmodCodeSigningTest \
+                        --keystore Ghostery-DigiCert \
+                        --alias GhosteryGmbh \
                         "\$f"
-                    # osslsigncode verify "\$f"
+                    osslsigncode verify \
+                        -CAfile /usr/share/ca-certificates/mozilla/DigiCert_Trusted_Root_G4.crt \
+                        -TSA-CAfile /usr/share/ca-certificates/mozilla/DigiCert_Trusted_Root_G4.crt \
+                        "\$f"
                 done
             """
         }
