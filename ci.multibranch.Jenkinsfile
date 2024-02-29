@@ -757,9 +757,9 @@ void signWindowsBinaries(String folderPath) {
                         --keystore Ghostery-DigiCert \
                         --alias GhosteryGmbh \
                         "\$f"
+
                     osslsigncode verify \
-                        -CAfile /usr/share/ca-certificates/mozilla/DigiCert_Trusted_Root_G4.crt \
-                        -TSA-CAfile /usr/share/ca-certificates/mozilla/DigiCert_Trusted_Root_G4.crt \
+                        -CAfile /worker/ca.pem \
                         "\$f"
                 done
             """

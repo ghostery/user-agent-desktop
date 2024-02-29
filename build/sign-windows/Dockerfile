@@ -50,4 +50,9 @@ RUN apt-get update && \
         jq \
         osslsigncode
 
+# Step 4 - download CRT for verification
+
 USER worker
+
+RUN curl https://cacerts.digicert.com/DigiCertTrustedG4CodeSigningRSA4096SHA3842021CA1.crt.pem -o /worker/ca.pem \
+  curl https://cacerts.digicert.com/DigiCertTrustedRootG4.crt.pem >> /worker/ca.pem
