@@ -62,11 +62,11 @@ RUN wget -nv -O /builds/worker/fetches/sysroot-x86_64-linux-gnu.tar.zst https://
     tar -xf sysroot-x86_64-linux-gnu.tar.zst && \
     rm sysroot-x86_64-linux-gnu.tar.zst
 
-COPY MacOSX14.0.sdk.tar.xz /builds/worker/fetches/
+COPY MacOSX14.2.sdk.tar.xz /builds/worker/fetches/
 
 RUN cd /builds/worker/fetches/ && \
-    tar -xf MacOSX14.0.sdk.tar.xz && \
-    rm MacOSX14.0.sdk.tar.xz
+    tar -xf MacOSX14.2.sdk.tar.xz && \
+    rm MacOSX14.2.sdk.tar.xz
 
 ENV MOZ_FETCHES_DIR=/builds/worker/fetches/ \
     GECKO_PATH=/builds/worker/workspace \
