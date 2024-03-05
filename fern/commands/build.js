@@ -14,7 +14,7 @@ async function buildDocker({ docker, cwd, dockerfile, name, out }) {
   const stream = await docker.buildImage(
     {
       context: cwd,
-      src: [dockerfile, "configs", "fetch-content", "MacOSX14.0.sdk.tar.xz"],
+      src: [dockerfile, "configs", "fetch-content", "MacOSX14.2.sdk.tar.xz"],
     },
     {
       t: name,
@@ -233,20 +233,20 @@ module.exports = (program) => {
               }),
           },
           {
-            title: "Check MacOSX14.0.sdk.tar.xz exists",
+            title: "Check MacOSX14.2.sdk.tar.xz exists",
             task: async () => {
-              const sdk = "MacOSX14.0.sdk.tar.xz";
+              const sdk = "MacOSX14.2.sdk.tar.xz";
               if ((await fileExists(path.join(buildFolder, sdk))) === false) {
                 throw new Error(`${sdk} must be available at build/${sdk}`);
               }
             },
           },
           {
-            title: "Extract MacOSX14.0.sdk.tar.xz",
-            skip: () => folderExists(path.join(buildFolder, "MacOSX14.0.sdk")),
+            title: "Extract MacOSX14.2.sdk.tar.xz",
+            skip: () => folderExists(path.join(buildFolder, "MacOSX14.2.sdk")),
             task: async () => {
               await withCwd(buildFolder, () =>
-                execa("tar", ["-xjvf", "MacOSX14.0.sdk.tar.xz"])
+                execa("tar", ["-xjvf", "MacOSX14.2.sdk.tar.xz"])
               );
             },
           },
@@ -263,8 +263,8 @@ module.exports = (program) => {
                 Binds: [
                   `${path.join(
                     buildFolder,
-                    "MacOSX14.0.sdk"
-                  )}:/builds/worker/workspace/MacOSX14.0.sdk`,
+                    "MacOSX14.2.sdk"
+                  )}:/builds/worker/workspace/MacOSX14.2.sdk`,
                 ],
               }),
           }
