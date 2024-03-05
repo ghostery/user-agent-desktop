@@ -14,7 +14,7 @@
   "app": "2024.03",
   "s3bucket": "ghostery-user-agent-cache-public",
   "locales": {
-    "de": "30ab70115f605023f1fac297f6fbfaf7d271ebd0",
-    "fr": "80f9cf1006b3e05de50c8dd6d886ae50081f4bc1"
+    "de": "cc95c50ca136ab46cb995c9ec24bb37a55f2c77",
+    "fr": "14b66687851a441176c3b19673cf3bafb1d3f587"
   }
 }
