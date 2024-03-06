@@ -44,7 +44,6 @@ codesign --force -o runtime --verbose --sign "$APPLE_TEAM_ID" \
 # Sign main exectuable
 codesign --force -o runtime --verbose --sign "$APPLE_TEAM_ID" --deep \
   --entitlements ${BROWSER_ENTITLEMENTS_FILE} \
-  "${BUNDLE}"/Contents/MacOS/$APP_NAME-bin \
   "${BUNDLE}"/Contents/MacOS/$APP_NAME
 
 # Sign gmp-clearkey files

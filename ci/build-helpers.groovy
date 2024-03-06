@@ -9,7 +9,7 @@ def build(opts, Closure postpackage={}, Closure archiving={}) {
 
         stage('prepare') {
             download('makecab.exe')
-            download('MacOSX14.0.sdk.tar.xz')
+            download('MacOSX14.2.sdk.tar.xz')
         }
 
         def image = stage('docker build base') {
@@ -37,7 +37,7 @@ def build(opts, Closure postpackage={}, Closure archiving={}) {
                 }
 
                 dir('mozilla-release') {
-                    sh 'rm -f `pwd`/MacOSX14.0.sdk; ln -s /builds/worker/fetches/MacOSX14.0.sdk `pwd`/MacOSX14.0.sdk'
+                    sh 'rm -f `pwd`/MacOSX14.2.sdk; ln -s /builds/worker/fetches/MacOSX14.2.sdk `pwd`/MacOSX14.2.sdk'
 
                     if (opts.PGO) {
                         stage("${opts.name}: fetch profiles") {

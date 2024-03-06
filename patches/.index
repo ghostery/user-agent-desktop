@@ -36,3 +36,4 @@
 0036-Build-mach-package-use-MOZ_FETCHES-in-automation.patch
 0037-Disable-help-on-switching-to-a-new-device.patch
 0038-Build-remove-MacOS-entitlements.patch
+0039-Remove-Firefox-View.patch

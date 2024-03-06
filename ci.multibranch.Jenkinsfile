@@ -25,7 +25,7 @@ stage('Prepare') {
         }
 
         download('makecab.exe')
-        download('MacOSX14.0.sdk.tar.xz')
+        download('MacOSX14.2.sdk.tar.xz')
 
         docker.build('ua-sign-windows', '-f ./build/sign-windows/Dockerfile ./build/sign-windows/ --build-arg UID=`id -u` --build-arg GID=`id -g`')
 
@@ -668,7 +668,7 @@ def buildAndPackage(platform) {
     )
 
     withMach(platform) {
-        sh 'rm -f `pwd`/MacOSX14.0.sdk; ln -s /builds/worker/fetches/MacOSX14.0.sdk `pwd`/MacOSX14.0.sdk'
+        sh 'rm -f `pwd`/MacOSX14.2.sdk; ln -s /builds/worker/fetches/MacOSX14.2.sdk `pwd`/MacOSX14.2.sdk'
 
         sh './mach build'
 
