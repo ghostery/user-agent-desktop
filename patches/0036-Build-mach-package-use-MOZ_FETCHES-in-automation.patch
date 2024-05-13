@@ -7,34 +7,35 @@ Subject: Build: mach package use MOZ_FETCHES in automation
  1 file changed, 3 insertions(+), 2 deletions(-)
 
 diff --git a/build/moz.configure/bootstrap.configure b/build/moz.configure/bootstrap.configure
-index 5abb27f469..e34e9472cf 100644
+index d8deddbb9e..a556c7f2a2 100644
 --- a/build/moz.configure/bootstrap.configure
 +++ b/build/moz.configure/bootstrap.configure
-@@ -146,6 +146,7 @@ def bootstrap_path(path, **kwargs):
+@@ -120,6 +120,7 @@ def bootstrap_path(path, **kwargs):
 
      @depends(
-         enable_bootstrap,
+         "--enable-bootstrap",
 +        "MOZ_AUTOMATION",
+         want_bootstrap,
          toolchains_base_dir,
          moz_fetches_dir,
-         bootstrap_toolchain_tasks,
-@@ -164,6 +165,7 @@ def bootstrap_path(path, **kwargs):
+@@ -139,6 +140,7 @@ def bootstrap_path(path, **kwargs):
      @imports(_from="__builtin__", _import="Exception")
      def bootstrap_path(
-         bootstrap,
+         enable_bootstrap,
 +        automation,
+         want_bootstrap,
          toolchains_base_dir,
          moz_fetches_dir,
-         tasks,
-@@ -294,7 +296,7 @@ def bootstrap_path(path, **kwargs):
-             return True
-
-         path = os.path.join(toolchains_base_dir, path_prefix, *path_parts)
--        if bootstrap and bootstrap(path_parts[0]):
-+        if bootstrap and bootstrap(path_parts[0]) and not automation:
+@@ -275,7 +277,7 @@ def bootstrap_path(path, **kwargs):
              try:
-                 if not try_bootstrap(os.path.exists(path)):
+                 # With --enable-bootstrap=no-update, we don't `try_bootstrap`, except
+                 # when the toolchain can't be found.
+-                if (
++                if not automation and (
+                     "no-update" not in enable_bootstrap or not exists
+                 ) and not try_bootstrap(exists):
                      # If there aren't toolchain artifacts to use for this build,
+
 --
 2.39.2 (Apple Git-143)
 
