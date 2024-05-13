@@ -123,7 +123,7 @@ index 5853963b3b..7123f1c1b5 100644
 +  set _configuration(v) {}
 +
    /**
-    * Handles getting the configuration from remote settings.
+    * Resets the remote settings listeners.
     */
 --
 2.39.2 (Apple Git-143)

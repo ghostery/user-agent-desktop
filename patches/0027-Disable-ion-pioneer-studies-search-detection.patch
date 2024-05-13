@@ -8,11 +8,11 @@ fix #358
  1 files changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/browser/components/BrowserGlue.sys.mjs b/browser/components/BrowserGlue.sys.mjs
-index d8c789da83..8e54a3d4ed 100644
+index f4ea0c87a3..111350a91b 100644
 --- a/browser/components/BrowserGlue.sys.mjs
 +++ b/browser/components/BrowserGlue.sys.mjs
-@@ -2359,9 +2359,9 @@ BrowserGlue.prototype = {
-     this._monitorScreenshotsPref();
+@@ -2453,9 +2453,9 @@ BrowserGlue.prototype = {
+
      this._monitorWebcompatReporterPref();
      this._monitorHTTPSOnlyPref();
 -    this._monitorIonPref();
@@ -23,6 +23,7 @@ index d8c789da83..8e54a3d4ed 100644
 +    // this._setupSearchDetection();
 
      this._monitorGPCPref();
+
 
 --
 2.39.2 (Apple Git-143)

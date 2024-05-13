@@ -35,10 +35,10 @@ index cf388eb3d3..fd0e793aa4 100644
 @@ -23,7 +23,7 @@ XPCOMUtils.defineLazyPreferenceGetter(
    false
  );
- 
+
 -const DEFAULT_THEME_ID = "default-theme@mozilla.org";
 +const DEFAULT_THEME_ID = "__DOES_NOT_APPLY__"; // in Ghostery Browser default theme is a lightweight theme
- 
+
  const toolkitVariableMap = [
    [
 diff --git a/toolkit/mozapps/extensions/default-theme/experiment13.css b/toolkit/mozapps/extensions/default-theme/experiment13.css
@@ -348,7 +348,7 @@ index f89a4236ff..6c71ff4490 100644
 @@ -7,34 +7,32 @@
      }
    },
- 
+
 -  "name": "System theme — auto",
 -  "description": "Follow the operating system setting for buttons, menus, and windows.",
 -  "author": "Mozilla",
@@ -357,9 +357,9 @@ index f89a4236ff..6c71ff4490 100644
 +  "description": "",
 +  "author": "Ghostery",
 +  "version": "1.13",
- 
+
    "icons": { "32": "icon.svg" },
- 
+
 -  "theme": {},
 -
 -  "dark_theme": {
@@ -405,7 +405,7 @@ index f89a4236ff..6c71ff4490 100644
      "properties": {
 @@ -67,29 +65,6 @@
    },
- 
+
    "theme_experiment": {
 -    "colors": {
 -      "button": "--button-bgcolor",
@@ -434,10 +434,10 @@ index f89a4236ff..6c71ff4490 100644
 +    "stylesheet": "experiment13.css"
    }
  }
-diff --git a/toolkit/mozapps/extensions/internal/XPIProvider.jsm b/toolkit/mozapps/extensions/internal/XPIProvider.jsm
+diff --git a/toolkit/mozapps/extensions/internal/XPIProvider.sys.mjs b/toolkit/mozapps/extensions/internal/XPIProvider.sys.mjs
 index 94e5e26636..c7772b0e67 100644
---- a/toolkit/mozapps/extensions/internal/XPIProvider.jsm
-+++ b/toolkit/mozapps/extensions/internal/XPIProvider.jsm
+--- a/toolkit/mozapps/extensions/internal/XPIProvider.sys.mjs
++++ b/toolkit/mozapps/extensions/internal/XPIProvider.sys.mjs
 @@ -2553,7 +2553,7 @@ var XPIProvider = {
        }
        this.maybeInstallBuiltinAddon(
@@ -446,7 +446,7 @@ index 94e5e26636..c7772b0e67 100644
 +        "1.13",
          "resource://default-theme/"
        );
- 
+
 diff --git a/toolkit/mozapps/extensions/jar.mn b/toolkit/mozapps/extensions/jar.mn
 index a881ed3843..d98404543a 100644
 --- a/toolkit/mozapps/extensions/jar.mn
@@ -457,6 +457,6 @@ index a881ed3843..d98404543a 100644
    content/mozapps/extensions/default-theme/manifest.json        (default-theme/manifest.json)
 +  content/mozapps/extensions/default-theme/experiment13.css     (default-theme/experiment13.css)
  #endif
--- 
+--
 2.39.3 (Apple Git-145)
 
