@@ -1,6 +1,6 @@
 {
   "addons": {
-    "ghostery": "https://github.com/ghostery/ghostery-extension/releases/download/v10.3.0/ghostery-firefox.zip",
+    "ghostery": "https://github.com/ghostery/ghostery-extension/releases/download/v10.3.1/ghostery-firefox.zip",
     "ghostery-search": "https://github.com/ghostery/ghostery-search-extension/releases/download/v2.0.0/ghostery_private_search-2.0.0.zip",
     "ghostery-newtab": "https://github.com/ghostery/ghostery-newtab-extension/releases/download/v1.0.1/ghostery_new_tab-1.0.1.zip"
   },
