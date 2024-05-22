@@ -22,7 +22,7 @@
 !define Channel "release"
 
 # The installer's certificate name and issuer expected by the stub installer
-!define CertNameDownload   "Ghostery, Inc."
+!define CertNameDownload   "Ghostery GmbH"
 !define CertIssuerDownload "DigiCert Trusted G4 Code Signing RSA4096 SHA384 2021 CA1"
 
 # Dialog units are used so the UI displays correctly with the system's DPI

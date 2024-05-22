@@ -8,7 +8,7 @@ Subject: Hide Protection Dashboard link from right burger menu
  2 files changed, 4 insertions(+)
 
 diff --git a/browser/base/content/appmenu-viewcache.inc.xhtml b/browser/base/content/appmenu-viewcache.inc.xhtml
-index 8c6e8f375b..e3c94d676d 100644
+index 04bba182fb..2b4c734104 100644
 --- a/browser/base/content/appmenu-viewcache.inc.xhtml
 +++ b/browser/base/content/appmenu-viewcache.inc.xhtml
 @@ -23,6 +23,7 @@
@@ -19,14 +19,15 @@ index 8c6e8f375b..e3c94d676d 100644
        <toolbaritem id="appMenu-fxa-status2"
                     closemenu="none"
                     class="subviewbutton toolbaritem-combined-buttons">
-@@ -39,6 +40,7 @@
+@@ -38,6 +39,7 @@
+           </vbox>
          </toolbarbutton>
        </toolbaritem>
-       <toolbarseparator id="appMenu-fxa-separator" class="proton-zap"/>
 +      -->
-       <toolbarbutton id="appMenu-new-tab-button2"
-                      class="subviewbutton"
-                      data-l10n-id="appmenuitem-new-tab"
+       <toolbarbutton id="appMenu-profiles-button"
+                      class="subviewbutton subviewbutton-nav"
+                      data-l10n-id="appmenuitem-profiles"
+
 diff --git a/browser/base/content/navigator-toolbox.inc.xhtml b/browser/base/content/navigator-toolbox.inc.xhtml
 index b43a3759c2..e068b22358 100644
 --- a/browser/base/content/navigator-toolbox.inc.xhtml
@@ -47,6 +48,6 @@ index b43a3759c2..e068b22358 100644
              <box id="identity-box"
                   pageproxystate="invalid"
                   ondragstart="gIdentityHandler.onDragStart(event);">
--- 
+--
 2.39.2 (Apple Git-143)
 
