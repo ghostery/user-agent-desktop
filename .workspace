@@ -10,11 +10,11 @@
     "pictureinpicture",
     "report-site-issue"
   ],
-  "firefox": "125.0.3",
-  "app": "2024.05",
+  "firefox": "126.0",
+  "app": "2024.05.1",
   "s3bucket": "ghostery-user-agent-cache-public",
   "locales": {
-    "de": "3554b47092ee0879c578a4d22053c2ea33570d03",
-    "fr": "a67337b0c59cb9c0703a3c932cf1bc47a66c4ad8"
+    "de": "467cfd37c3bdf242b76a72d901ac0a80306d3e0b",
+    "fr": "496c2eb73b82d5bb7fc3a10ccd159f3df0d76e7c"
   }
 }
