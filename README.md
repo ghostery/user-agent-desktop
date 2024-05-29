@@ -140,12 +140,12 @@ Alternatively, the `build-*` scripts in this repo will prepare docker images wit
 ### VS Redist
 
 This can be built on windows after setting up a build environment as per [these instructions](https://firefox-source-docs.mozilla.org/setup/windows_build.html#building-firefox-on-windows).
-You will need to install the Windows 10 SDK at version `14.29.30133`. Then run the following to create `vs2019_14.29.30133.tar.bz2`:
+You will need to install the Windows 11 SDK at version `10.0.22621`. Then run the following to create `vs.tar.zstd`:
 
 ```bash
 OUTPUT_DIR=PATH_TO_TEMP_FOLDER
-./mach python --virtualenv build taskcluster/scripts/misc/get_vs.py ./build/vs/vs2019.yaml $OUTPUT_DIR
-tar --zstd -cvjSf vs2019_14.29.30133.bz2 -C $OUTPUT_DIR .
+./mach python --virtualenv build taskcluster/scripts/misc/get_vs.py ./build/vs/vs2022.yaml $OUTPUT_DIR
+tar --zstd -cvSf vs.tar.zstd -C $OUTPUT_DIR .
 ```
 
 ### Makecab.exe
