@@ -130,12 +130,12 @@ async function generateDockerFile({ key, fetches, job, name, toolchains }) {
     );
   }
   if (key.startsWith("macosx64")) {
-    statements.push("COPY MacOSX14.2.sdk.tar.xz /builds/worker/fetches/");
+    statements.push("COPY MacOSX14.4.sdk.tar.xz /builds/worker/fetches/");
     statements.push(
       [
         "RUN cd /builds/worker/fetches/ &&",
-        "tar -xf MacOSX14.2.sdk.tar.xz &&",
-        "rm MacOSX14.2.sdk.tar.xz",
+        "tar -xf MacOSX14.4.sdk.tar.xz &&",
+        "rm MacOSX14.4.sdk.tar.xz",
       ].join(" \\\n    ")
     );
   }

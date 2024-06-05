@@ -26,16 +26,20 @@ module.exports = (program) => {
       "Choose if local.mozconfig should be used"
     )
     .option(
+      "--dry",
+      "Dont save to disc",
+    )
+    .option(
       "--print",
       "Print mozconfig to screen"
     )
     .action(
-      async ({ force, platform, brand, local, print }) => {
+      async ({ force, platform, brand, local, print, dry }) => {
         const tasks = new Listr([
           {
             title: "Generate mozconfig",
             task: () => {
-              if (fs.existsSync(MOZCONFIG_PATH)) {
+              if (!dry && fs.existsSync(MOZCONFIG_PATH)) {
                 if (!force) {
                   throw new Error("mozconfig already exist")
                 }
@@ -68,7 +72,9 @@ module.exports = (program) => {
                 console.log("\nfern: Generated MOZCONFIG END")
               }
 
-              fs.writeFileSync(MOZCONFIG_PATH, mozConfig);
+              if (!dry) {
+                fs.writeFileSync(MOZCONFIG_PATH, mozConfig);
+              }
             },
           },
         ]);

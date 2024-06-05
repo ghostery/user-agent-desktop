@@ -1,0 +1,73 @@
+From: Krzysztof Modras <chrmod@chrmod.net>
+Date: Thu, 23 May 2024 16:29:55 +0200
+Subject: Disable experiments reporting
+
+---
+ .../nimbus/lib/ExperimentManager.sys.mjs      | 51 -------------------
+ 1 file changed, 51 deletions(-)
+
+diff --git a/toolkit/components/nimbus/lib/ExperimentManager.sys.mjs b/toolkit/components/nimbus/lib/ExperimentManager.sys.mjs
+index 8bd847b067..2f3b3a92de 100644
+--- a/toolkit/components/nimbus/lib/ExperimentManager.sys.mjs
++++ b/toolkit/components/nimbus/lib/ExperimentManager.sys.mjs
+@@ -120,57 +120,6 @@ export class _ExperimentManager {
+         return new Date();
+       },
+     };
+-    Object.defineProperty(context, "activeExperiments", {
+-      enumerable: true,
+-      get: async () => {
+-        await this.store.ready();
+-        return this.store.getAllActiveExperiments().map(exp => exp.slug);
+-      },
+-    });
+-    Object.defineProperty(context, "activeRollouts", {
+-      enumerable: true,
+-      get: async () => {
+-        await this.store.ready();
+-        return this.store.getAllActiveRollouts().map(rollout => rollout.slug);
+-      },
+-    });
+-    Object.defineProperty(context, "previousExperiments", {
+-      enumerable: true,
+-      get: async () => {
+-        await this.store.ready();
+-        return this.store
+-          .getAll()
+-          .filter(enrollment => !enrollment.active && !enrollment.isRollout)
+-          .map(exp => exp.slug);
+-      },
+-    });
+-    Object.defineProperty(context, "previousRollouts", {
+-      enumerable: true,
+-      get: async () => {
+-        await this.store.ready();
+-        return this.store
+-          .getAll()
+-          .filter(enrollment => !enrollment.active && enrollment.isRollout)
+-          .map(rollout => rollout.slug);
+-      },
+-    });
+-    Object.defineProperty(context, "enrollments", {
+-      enumerable: true,
+-      get: async () => {
+-        await this.store.ready();
+-        return this.store.getAll().map(enrollment => enrollment.slug);
+-      },
+-    });
+-    Object.defineProperty(context, "enrollmentsMap", {
+-      enumerable: true,
+-      get: async () => {
+-        await this.store.ready();
+-        return this.store.getAll().reduce((acc, enrollment) => {
+-          acc[enrollment.slug] = enrollment.branch.slug;
+-          return acc;
+-        }, {});
+-      },
+-    });
+     return context;
+   }
+ 
+-- 
+2.39.3 (Apple Git-145)
+
