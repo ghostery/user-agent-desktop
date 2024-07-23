@@ -28,13 +28,13 @@ async function loadFetches(root) {
         root,
         "mozilla-release",
         "taskcluster",
-        "ci",
+        "kinds",
         "fetch",
         "toolchains.yml"
       ),
       "utf-8"
     )
-  );
+  )
 }
 
 async function loadToolchains(root) {
@@ -42,7 +42,7 @@ async function loadToolchains(root) {
     root,
     "mozilla-release",
     "taskcluster",
-    "ci",
+    "kinds",
     "toolchain"
   );
 
@@ -72,7 +72,7 @@ async function loadToolchains(root) {
           v.name = k;
         }
 
-        if (k === "job-defaults") {
+        if (k === "task-defaults") {
           defaultArtifact = v.run["toolchain-artifact"] || "";
         }
 
@@ -168,7 +168,7 @@ async function generate(artifactBaseDir) {
         root,
         "mozilla-release",
         "taskcluster",
-        "ci",
+        "kinds",
         "build",
         "linux.yml"
       ),
@@ -180,7 +180,7 @@ async function generate(artifactBaseDir) {
         root,
         "mozilla-release",
         "taskcluster",
-        "ci",
+        "kinds",
         "build",
         "windows.yml"
       ),
@@ -193,7 +193,7 @@ async function generate(artifactBaseDir) {
         root,
         "mozilla-release",
         "taskcluster",
-        "ci",
+        "kinds",
         "build",
         "windows.yml"
       ),
@@ -205,7 +205,7 @@ async function generate(artifactBaseDir) {
         root,
         "mozilla-release",
         "taskcluster",
-        "ci",
+        "kinds",
         "build",
         "macosx.yml"
       ),
@@ -218,7 +218,7 @@ async function generate(artifactBaseDir) {
         root,
         "mozilla-release",
         "taskcluster",
-        "ci",
+        "kinds",
         "build",
         "macosx.yml"
       ),
@@ -319,7 +319,8 @@ async function generate(artifactBaseDir) {
             await fse.mkdirp(localDir);
             const mozFetch = releaseFetches[job.index["job-name"]].find(f => f.artifact === artifact);
             if (!mozFetch) {
-              throw new Error(`Cannot find task for artifact ${artifact}`);
+              console.log
+              throw new Error(`Cannot find task for artifact - key: '${key}', name: '${name}', artifact: '${artifact}'`);
             }
             await execa("wget", [
               "-O",
