@@ -1,6 +1,6 @@
 {
   "addons": {
-    "ghostery": "https://github.com/ghostery/ghostery-extension/releases/download/v10.3.3/ghostery-firefox.zip",
+    "ghostery": "https://github.com/ghostery/ghostery-extension/releases/download/v10.3.15/ghostery-firefox-10.3.15.zip",
     "ghostery-search": "https://github.com/ghostery/ghostery-search-extension/releases/download/v2.0.0/ghostery_private_search-2.0.0.zip",
     "ghostery-newtab": "https://github.com/ghostery/ghostery-newtab-extension/releases/download/v1.0.2/ghostery_new_tab-1.0.2.zip"
   },
@@ -10,11 +10,11 @@
     "pictureinpicture",
     "report-site-issue"
   ],
-  "firefox": "126.0",
-  "app": "2024.05.1",
+  "firefox": "128.0",
+  "app": "2024.07",
   "s3bucket": "ghostery-user-agent-cache-public",
   "locales": {
-    "de": "467cfd37c3bdf242b76a72d901ac0a80306d3e0b",
-    "fr": "496c2eb73b82d5bb7fc3a10ccd159f3df0d76e7c"
+    "de": "d668fc038c3ba5b6bc0c43433817520a924a22cc",
+    "fr": "d668fc038c3ba5b6bc0c43433817520a924a22cc"
   }
 }
