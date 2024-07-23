@@ -230,8 +230,8 @@ async function generate(artifactBaseDir) {
       const jobs = yaml.safeLoad(
         await fs.promises.readFile(buildPath, "utf-8")
       );
-      if (jobs["job-defaults"] && jobs["job-defaults"].fetches && jobs["job-defaults"].fetches.toolchain) {
-        for (const toolchain of jobs["job-defaults"].fetches.toolchain) {
+      if (jobs["task-defaults"] && jobs["task-defaults"].fetches && jobs["task-defaults"].fetches.toolchain) {
+        for (const toolchain of jobs["task-defaults"].fetches.toolchain) {
           jobs[key].fetches.toolchain.push(toolchain);
         }
       }
