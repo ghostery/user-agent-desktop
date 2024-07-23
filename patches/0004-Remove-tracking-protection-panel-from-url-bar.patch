@@ -9,10 +9,10 @@ Subject: Remove tracking protection panel from url bar
  3 files changed, 15 insertions(+), 15 deletions(-)
 
 diff --git a/browser/base/content/browser-siteIdentity.js b/browser/base/content/browser-siteIdentity.js
-index e42daf2556..9a31829cbe 100644
+index eaed3950fe..80ba057f63 100644
 --- a/browser/base/content/browser-siteIdentity.js
 +++ b/browser/base/content/browser-siteIdentity.js
-@@ -900,10 +900,10 @@ var gIdentityHandler = {
+@@ -943,10 +943,10 @@ var gIdentityHandler = {
      }
 
      // Hide the shield icon if it is a chrome page.
@@ -27,11 +27,11 @@ index e42daf2556..9a31829cbe 100644
    },
 
    /**
-diff --git a/browser/base/content/browser.js b/browser/base/content/browser.js
-index 05c51b9075..ff6d9737ed 100644
---- a/browser/base/content/browser.js
-+++ b/browser/base/content/browser.js
-@@ -1861,7 +1861,7 @@ var gBrowserInit = {
+diff --git a/browser/base/content/browser-init.js b/browser/base/content/browser-init.js
+index a79a973461..e817de1f5b 100644
+--- a/browser/base/content/browser-init.js
++++ b/browser/base/content/browser-init.js
+@@ -383,7 +383,7 @@ var gBrowserInit = {
      BookmarkingUI.init();
      BrowserSearch.delayedStartupInit();
      SearchUIUtils.init();
@@ -40,7 +40,7 @@ index 05c51b9075..ff6d9737ed 100644
      HomePage.delayedStartup().catch(console.error);
 
      let safeMode = document.getElementById("helpSafeMode");
-@@ -2488,7 +2488,7 @@ var gBrowserInit = {
+@@ -1046,7 +1046,7 @@ var gBrowserInit = {
        Services.prefs.removeObserver(ctrlTab.prefName, ctrlTab);
        ctrlTab.uninit();
        gBrowserThumbnails.uninit();
@@ -49,7 +49,11 @@ index 05c51b9075..ff6d9737ed 100644
        FullZoom.destroy();
 
        Services.obs.removeObserver(gIdentityHandler, "perm-changed");
-@@ -5105,7 +5105,7 @@ var XULBrowserWindow = {
+diff --git a/browser/base/content/browser.js b/browser/base/content/browser.js
+index b18f371a47..2d8988b56a 100644
+--- a/browser/base/content/browser.js
++++ b/browser/base/content/browser.js
+@@ -3419,7 +3419,7 @@ var XULBrowserWindow = {
      const nsIWebProgressListener = Ci.nsIWebProgressListener;
 
      let browser = gBrowser.selectedBrowser;
@@ -58,7 +62,7 @@ index 05c51b9075..ff6d9737ed 100644
 
      if (
        aStateFlags & nsIWebProgressListener.STATE_START &&
-@@ -5306,7 +5306,7 @@ var XULBrowserWindow = {
+@@ -3624,7 +3624,7 @@ var XULBrowserWindow = {
 
      gPermissionPanel.onLocationChange();
 
@@ -67,7 +71,7 @@ index 05c51b9075..ff6d9737ed 100644
 
      BrowserPageActions.onLocationChange();
 
-@@ -5505,12 +5505,12 @@ var XULBrowserWindow = {
+@@ -3882,12 +3882,12 @@ var XULBrowserWindow = {
        );
      }
 

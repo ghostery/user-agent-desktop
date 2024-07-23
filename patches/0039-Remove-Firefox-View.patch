@@ -4,7 +4,7 @@ Subject: Remove Firefox View
 
 ---
  browser/base/content/browser-menubar.inc | 3 ---
- browser/themes/shared/tabs.css           | 2 +-
+ browser/themes/shared/tabbrowser/tabs.css           | 2 +-
  2 files changed, 1 insertion(+), 4 deletions(-)
 
 diff --git a/browser/base/content/browser-menubar.inc b/browser/base/content/browser-menubar.inc
@@ -21,19 +21,19 @@ index 9719302d75..0cb874aa7a 100644
                <menuseparator id="devToolsSeparator"/>
                <menu id="browserToolsMenu" data-l10n-id="menu-tools-browser-tools">
                  <menupopup id="menuWebDeveloperPopup">
-diff --git a/browser/themes/shared/tabs.css b/browser/themes/shared/tabs.css
+diff --git a/browser/themes/shared/tabbrowser/tabs.css b/browser/themes/shared/tabbrowser/tabs.css
 index 17064f3b1d..862ae30f23 100644
---- a/browser/themes/shared/tabs.css
-+++ b/browser/themes/shared/tabs.css
+--- a/browser/themes/shared/tabbrowser/tabs.css
++++ b/browser/themes/shared/tabbrowser/tabs.css
 @@ -638,7 +638,7 @@
    margin-inline-start: 2px;
  }
- 
+
 -:root[privatebrowsingmode] :is(#firefox-view-button, #menu_openFirefoxView) {
 +:root :is(#firefox-view-button, #menu_openFirefoxView) {
    display: none;
  }
- 
--- 
+
+--
 2.39.3 (Apple Git-145)
 

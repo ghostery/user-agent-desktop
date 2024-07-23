@@ -35,10 +35,10 @@ index c2ad888c22..9158afa112 100644
 @@ -23,7 +23,7 @@ XPCOMUtils.defineLazyPreferenceGetter(
    false
  );
- 
+
 -const DEFAULT_THEME_ID = "default-theme@mozilla.org";
 +const DEFAULT_THEME_ID = "__DOES_NOT_APPLY__"; // in Ghostery Browser default theme is a lightweight theme
- 
+
  const toolkitVariableMap = [
    [
 diff --git a/toolkit/mozapps/extensions/default-theme/experiment13.css b/toolkit/mozapps/extensions/default-theme/experiment13.css
@@ -349,7 +349,7 @@ index f89a4236ff..6c71ff4490 100644
 @@ -7,34 +7,32 @@
      }
    },
- 
+
 -  "name": "System theme — auto",
 -  "description": "Follow the operating system setting for buttons, menus, and windows.",
 -  "author": "Mozilla",
@@ -358,9 +358,9 @@ index f89a4236ff..6c71ff4490 100644
 +  "description": "",
 +  "author": "Ghostery",
 +  "version": "1.13",
- 
+
    "icons": { "32": "icon.svg" },
- 
+
 -  "theme": {},
 -
 -  "dark_theme": {
@@ -395,18 +395,18 @@ index f89a4236ff..6c71ff4490 100644
        "toolbar_text": "rgb(251, 251, 254)",
        "ntp_background": "rgb(43, 42, 51)",
        "ntp_text": "rgb(251, 251, 254)",
-@@ -54,7 +52,7 @@
+@@ -51,7 +49,7 @@
+       "input_background": "#42414D",
+       "input_color": "rgb(251,251,254)",
        "urlbar_popup_separator": "rgb(82,82,94)",
-       "appmenu_update_icon_color": "#54FFBD",
-       "appmenu_info_icon_color": "#80EBFF",
 -      "tab_icon_overlay_stroke": "rgb(66,65,77)",
 +      "tab_icon_overlay_stroke": "#36393f",
        "tab_icon_overlay_fill": "rgb(251,251,254)"
      },
      "properties": {
-@@ -67,29 +65,6 @@
+@@ -64,26 +62,6 @@
    },
- 
+
    "theme_experiment": {
 -    "colors": {
 -      "button": "--button-bgcolor",
@@ -418,10 +418,7 @@ index f89a4236ff..6c71ff4490 100644
 -      "button_primary_color": "--button-primary-color",
 -      "input_background": "--input-bgcolor",
 -      "input_color": "--input-color",
--      "input_border": "--input-border-color",
 -      "urlbar_popup_separator": "--urlbarView-separator-color",
--      "appmenu_update_icon_color": "--panel-banner-item-update-supported-bgcolor",
--      "appmenu_info_icon_color": "--panel-banner-item-info-icon-bgcolor",
 -      "tab_icon_overlay_stroke": "--tab-icon-overlay-stroke",
 -      "tab_icon_overlay_fill": "--tab-icon-overlay-fill"
 -    },
@@ -447,7 +444,7 @@ index 3c090b5f0f..41c98da471 100644
 +        "1.13",
          "resource://default-theme/"
        );
- 
+
 diff --git a/toolkit/mozapps/extensions/jar.mn b/toolkit/mozapps/extensions/jar.mn
 index a881ed3843..d98404543a 100644
 --- a/toolkit/mozapps/extensions/jar.mn
@@ -458,6 +455,6 @@ index a881ed3843..d98404543a 100644
    content/mozapps/extensions/default-theme/manifest.json        (default-theme/manifest.json)
 +  content/mozapps/extensions/default-theme/experiment13.css     (default-theme/experiment13.css)
  #endif
--- 
+--
 2.39.3 (Apple Git-145)
 

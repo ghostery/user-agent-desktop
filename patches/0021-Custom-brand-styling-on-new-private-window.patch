@@ -4,7 +4,7 @@ Subject: Custom brand styling on new private window
 
 ---
  .../privatebrowsing/content/aboutPrivateBrowsing.html           | 1 +
- browser/themes/shared/tabs.css                                  | 2 +-
+ browser/themes/shared/tabbrowser/content-area.css                                  | 2 +-
  2 files changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/browser/components/privatebrowsing/content/aboutPrivateBrowsing.html b/browser/components/privatebrowsing/content/aboutPrivateBrowsing.html
@@ -19,12 +19,12 @@ index fd713f2313..c53d5be79e 100644
      <link rel="localization" href="branding/brand.ftl" />
      <link rel="localization" href="toolkit/branding/brandings.ftl" />
      <link rel="localization" href="browser/aboutPrivateBrowsing.ftl" />
-diff --git a/browser/themes/shared/tabs.css b/browser/themes/shared/tabs.css
-index 329cbd97da..7faf99f774 100644
---- a/browser/themes/shared/tabs.css
-+++ b/browser/themes/shared/tabs.css
-@@ -21,7 +21,7 @@
-
+diff --git a/browser/themes/shared/tabbrowser/content-area.css b/browser/themes/shared/tabbrowser/content-area.css
+index be690ac92d..cbe52e3b55 100644
+--- a/browser/themes/shared/tabbrowser/content-area.css
++++ b/browser/themes/shared/tabbrowser/content-area.css
+@@ -7,7 +7,7 @@
+ :root {
    /* --tabpanel-background-color matches $in-content-page-background in newtab
       (browser/components/newtab/content-src/styles/_variables.scss) */
 -  --tabpanel-background-color: #F9F9FB;

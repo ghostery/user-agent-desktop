@@ -7,10 +7,10 @@ Subject: OpenURL on buildID changes
  1 file changed, 2 insertions(+), 8 deletions(-)
 
 diff --git a/browser/components/BrowserContentHandler.sys.mjs b/browser/components/BrowserContentHandler.sys.mjs
-index ca7cf4d2c4..f3539822ad 100644
+index cab178ce3f..30b1e370aa 100644
 --- a/browser/components/BrowserContentHandler.sys.mjs
 +++ b/browser/components/BrowserContentHandler.sys.mjs
-@@ -807,6 +807,7 @@ nsBrowserContentHandler.prototype = {
+@@ -733,6 +733,7 @@ nsBrowserContentHandler.prototype = {
              // Turn on 'later run' pages for new profiles.
              lazy.LaterRun.enable(lazy.LaterRun.ENABLE_REASON_NEW_PROFILE);
              break;
@@ -18,7 +18,7 @@ index ca7cf4d2c4..f3539822ad 100644
            case OVERRIDE_NEW_MSTONE: {
              // Check whether we will restore a session. If we will, we assume
              // that this is an "update" session. This does not take crashes
-@@ -859,8 +860,7 @@ nsBrowserContentHandler.prototype = {
+@@ -796,8 +797,7 @@ nsBrowserContentHandler.prototype = {
              }
 
              if (
@@ -28,12 +28,12 @@ index ca7cf4d2c4..f3539822ad 100644
              ) {
                overridePage = getPostUpdateOverridePage(
                  update,
-@@ -892,13 +892,6 @@ nsBrowserContentHandler.prototype = {
+@@ -829,13 +829,6 @@ nsBrowserContentHandler.prototype = {
              overridePage = overridePage.replace("%OLD_VERSION%", old_mstone);
              break;
            }
 -          case OVERRIDE_NEW_BUILD_ID:
--            if (lazy.UpdateManager.readyUpdate) {
+-            if (lazy.UpdateManager.updateInstalledAtStartup) {
 -              // Send the update ping to signal that the update was successful.
 -              lazy.UpdatePing.handleUpdateSuccess(old_mstone, old_buildId);
 -              lazy.LaterRun.enable(lazy.LaterRun.ENABLE_REASON_UPDATE_APPLIED);
