@@ -71,6 +71,11 @@ RUN wget -nv -O /builds/worker/fetches/sysroot-wasm32-wasi.tar.zst https://ghost
     tar -xf sysroot-wasm32-wasi.tar.zst && \
     rm sysroot-wasm32-wasi.tar.zst
 
+RUN wget -nv -O /builds/worker/fetches/windows-rs.tar.zst https://ghostery-user-agent-cache-public.s3.amazonaws.com/toolchains/128.0/windows-rs/windows-rs.tar.zst && \
+    cd /builds/worker/fetches/ && \
+    tar -xf windows-rs.tar.zst && \
+    rm windows-rs.tar.zst
+
 ADD --chown=worker:worker makecab.exe /builds/worker/fetches/
 
 ENV MOZ_FETCHES_DIR=/builds/worker/fetches/ \
