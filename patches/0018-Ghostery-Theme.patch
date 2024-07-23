@@ -2,17 +2,14 @@ From: Krzysztof Jan Modras <chrmod@chrmod.net>
 Date: Tue, 9 Mar 2021 15:08:27 +0100
 Subject: Ghostery Theme
 
-Fix theme
-
-X
 ---
  browser/themes/BuiltInThemeConfig.sys.mjs     |   2 +-
  .../modules/LightweightThemeConsumer.sys.mjs  |   2 +-
- .../extensions/default-theme/experiment13.css | 295 ++++++++++++++++++
- .../extensions/default-theme/manifest.json    |  57 +---
+ .../extensions/default-theme/experiment13.css | 296 ++++++++++++++++++
+ .../extensions/default-theme/manifest.json    |  54 +---
  .../extensions/internal/XPIProvider.sys.mjs   |   2 +-
  toolkit/mozapps/extensions/jar.mn             |   1 +
- 6 files changed, 315 insertions(+), 44 deletions(-)
+ 6 files changed, 316 insertions(+), 41 deletions(-)
  create mode 100644 toolkit/mozapps/extensions/default-theme/experiment13.css
 
 diff --git a/browser/themes/BuiltInThemeConfig.sys.mjs b/browser/themes/BuiltInThemeConfig.sys.mjs
@@ -29,24 +26,24 @@ index 7cfea4b705..428b24635a 100644
      "firefox-compact-light@mozilla.org",
      {
 diff --git a/toolkit/modules/LightweightThemeConsumer.sys.mjs b/toolkit/modules/LightweightThemeConsumer.sys.mjs
-index c2ad888c22..9158afa112 100644
+index ea66b05b6f..89f1e89a5a 100644
 --- a/toolkit/modules/LightweightThemeConsumer.sys.mjs
 +++ b/toolkit/modules/LightweightThemeConsumer.sys.mjs
-@@ -23,7 +23,7 @@ XPCOMUtils.defineLazyPreferenceGetter(
+@@ -22,7 +22,7 @@ XPCOMUtils.defineLazyPreferenceGetter(
    false
  );
-
+ 
 -const DEFAULT_THEME_ID = "default-theme@mozilla.org";
 +const DEFAULT_THEME_ID = "__DOES_NOT_APPLY__"; // in Ghostery Browser default theme is a lightweight theme
-
+ 
  const toolkitVariableMap = [
    [
 diff --git a/toolkit/mozapps/extensions/default-theme/experiment13.css b/toolkit/mozapps/extensions/default-theme/experiment13.css
 new file mode 100644
-index 0000000000..03bbfd171b
+index 0000000000..08e309b5a4
 --- /dev/null
 +++ b/toolkit/mozapps/extensions/default-theme/experiment13.css
-@@ -0,0 +1,295 @@
+@@ -0,0 +1,296 @@
 +/* This Source Code Form is subject to the terms of the Mozilla Public
 + * License, v. 2.0. If a copy of the MPL was not distributed with this
 + * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
@@ -66,6 +63,7 @@ index 0000000000..03bbfd171b
 +
 +#urlbar-container,
 +#search-container {
++  border: 0 !important;
 +  min-height: 34px !important;
 +  padding-block: 0px !important;
 +}
@@ -153,7 +151,7 @@ index 0000000000..03bbfd171b
 +  top: 0px !important;
 +}
 +
-+#urlbar[breakout][breakout-extend] > #urlbar-input-container {
++#urlbar[breakout][breakout-extend] > .urlbar-input-container {
 +  padding-block: 0 !important;
 +  padding-inline: 0 !important;
 +}
@@ -216,7 +214,7 @@ index 0000000000..03bbfd171b
 +  height: 0 !important;
 +}
 +
-+.urlbar-page-action, #urlbar-go-button, .search-go-button, #notification-popup-box {
++.urlbar-page-action, .urlbar-go-button, .search-go-button, #notification-popup-box {
 +  width: var(--urlbar-height) !important;
 +  height: var(--urlbar-height) !important;
 +  padding: 9px !important;
@@ -230,17 +228,17 @@ index 0000000000..03bbfd171b
 +  padding: 0 !important;
 +}
 +
-+#urlbar-input-container {
++.urlbar-input-container {
 +  border: 0px solid transparent !important;
 +  padding: 0px !important;
 +}
 +
-+#urlbar-input-container, #searchbar {
++.urlbar-input-container, #searchbar {
 +  border-radius: 0 !important;
 +  height: 34px !important;
 +}
 +
-+#urlbar[breakout][breakout-extend] > #urlbar-input-container {
++#urlbar[breakout][breakout-extend] > .urlbar-input-container {
 +  height: 34px !important;
 +}
 +
@@ -284,7 +282,7 @@ index 0000000000..03bbfd171b
 +  margin-left: 4px !important;
 +}
 +
-+.urlbarView-row-inner {
++.urlbarView-row, .urlbarView-row-inner {
 +  border-radius: 0 !important;
 +}
 +
@@ -343,13 +341,13 @@ index 0000000000..03bbfd171b
 +  margin-inline-end: -6px !important;
 +}
 diff --git a/toolkit/mozapps/extensions/default-theme/manifest.json b/toolkit/mozapps/extensions/default-theme/manifest.json
-index f89a4236ff..6c71ff4490 100644
+index 84f05c1a81..9793744e2f 100644
 --- a/toolkit/mozapps/extensions/default-theme/manifest.json
 +++ b/toolkit/mozapps/extensions/default-theme/manifest.json
 @@ -7,34 +7,32 @@
      }
    },
-
+ 
 -  "name": "System theme — auto",
 -  "description": "Follow the operating system setting for buttons, menus, and windows.",
 -  "author": "Mozilla",
@@ -358,9 +356,9 @@ index f89a4236ff..6c71ff4490 100644
 +  "description": "",
 +  "author": "Ghostery",
 +  "version": "1.13",
-
+ 
    "icons": { "32": "icon.svg" },
-
+ 
 -  "theme": {},
 -
 -  "dark_theme": {
@@ -406,7 +404,7 @@ index f89a4236ff..6c71ff4490 100644
      "properties": {
 @@ -64,26 +62,6 @@
    },
-
+ 
    "theme_experiment": {
 -    "colors": {
 -      "button": "--button-bgcolor",
@@ -444,17 +442,17 @@ index 3c090b5f0f..41c98da471 100644
 +        "1.13",
          "resource://default-theme/"
        );
-
+ 
 diff --git a/toolkit/mozapps/extensions/jar.mn b/toolkit/mozapps/extensions/jar.mn
-index a881ed3843..d98404543a 100644
+index fde7b1fa23..83ee5fad9c 100644
 --- a/toolkit/mozapps/extensions/jar.mn
 +++ b/toolkit/mozapps/extensions/jar.mn
-@@ -22,4 +22,5 @@ toolkit.jar:
+@@ -19,4 +19,5 @@ toolkit.jar:
  % resource default-theme %content/mozapps/extensions/default-theme/
    content/mozapps/extensions/default-theme                      (default-theme/*.svg)
    content/mozapps/extensions/default-theme/manifest.json        (default-theme/manifest.json)
 +  content/mozapps/extensions/default-theme/experiment13.css     (default-theme/experiment13.css)
  #endif
---
-2.39.3 (Apple Git-145)
+-- 
+2.39.3 (Apple Git-146)
 
