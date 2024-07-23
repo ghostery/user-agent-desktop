@@ -17,7 +17,7 @@ index 7dfad17147..06c00310b1 100644
          }
 -        this.insertWidgetBefore(node, currentNode, container, aArea);
 +        if (node.getAttribute("data-extensionid") === "firefox@ghostery.com") {
-+          const container = window.document.getElementById("urlbar-input-container");
++          const container = window.document.querySelector(".urlbar-input-container");;
 +          container.insertAdjacentElement('afterbegin', node);
 +        } else {
 +          this.insertWidgetBefore(node, currentNode, container, aArea);
@@ -30,7 +30,7 @@ index 7dfad17147..06c00310b1 100644
      }
 
 +    if (widgetNode.getAttribute("data-extensionid") === "firefox@ghostery.com") {
-+      const container = window.document.getElementById("urlbar-input-container");
++      const container = window.document.querySelector(".urlbar-input-container");;
 +      container.insertAdjacentElement('afterbegin', widgetNode);
 +      return;
 +    }
