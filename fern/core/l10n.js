@@ -10,24 +10,15 @@ const { getRoot } = require("./workspace.js");
 const { getCacheDir } = require("./caching.js");
 const { fileExists, folderExists, symlinkExists } = require("./utils.js");
 
-/**
- * Converts a 40 char hex commit ID from mercurial to a name we can use as a git tag without
- * conflicting with git commit ids.
- * @param {*} commit
- */
-function tagForCommit(commit) {
-  return `mozhg-${commit}`
-}
-
 async function use(locales) {
   const root = await getRoot();
   const cache = await getCacheDir("l10n");
   return new Listr(
     Object.keys(locales).map((locale) => {
       const commit = locales[locale];
-      const folder = path.join(cache, `${locale}-${commit}`);
-      const archive = path.join(cache, `${locale}-${commit}.zip`);
-      const url = `https://hg.mozilla.org/l10n-central/${locale}/archive/${commit}.zip`;
+      const folder = path.join(cache, `firefox-l10n-${commit}`);
+      const archive = path.join(cache, `${commit}.zip`);
+      const url = `https://github.com/mozilla-l10n/firefox-l10n/archive/${commit}.zip`;
       const tasks = new Listr([
         {
           title: "Download",
@@ -37,12 +28,12 @@ async function use(locales) {
         {
           title: "Extract",
           skip: () => folderExists(folder),
-          task: () => execa("unzip", ["-d", cache, archive]),
+          task: () => execa("unzip", [archive, '-d', cache]),
         },
         {
           title: "Git",
           skip: () => folderExists(path.join(folder, ".git")),
-          task: () => setupGit(tagForCommit(commit), folder),
+          task: () => setupGit(commit, folder),
         },
         {
           title: "Link",
@@ -54,7 +45,7 @@ async function use(locales) {
             if (await symlinkExists(linkDir)) {
               rimraf.sync(linkDir);
             }
-            await fse.symlink(folder, linkDir);
+            await fse.symlink(`${folder}/${locale}`, linkDir);
           },
         },
       ]);
@@ -71,7 +62,7 @@ async function reset(locales) {
     Object.keys(locales).map((locale) => {
       return {
         title: locale,
-        task: () => resetGit(tagForCommit(locales[locale]), `l10n/${locale}`),
+        task: () => resetGit(locales[locale], `l10n/${locale}`),
       };
     })
   );
@@ -80,5 +71,4 @@ async function reset(locales) {
 module.exports = {
   use,
   reset,
-  tagForCommit,
 };
