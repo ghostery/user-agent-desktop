@@ -8,18 +8,18 @@ Subject: Hide Protection Dashboard link from right burger menu
  2 files changed, 4 insertions(+)
 
 diff --git a/browser/base/content/appmenu-viewcache.inc.xhtml b/browser/base/content/appmenu-viewcache.inc.xhtml
-index 04bba182fb..2b4c734104 100644
+index 9633c7d79d..f354c6196c 100644
 --- a/browser/base/content/appmenu-viewcache.inc.xhtml
 +++ b/browser/base/content/appmenu-viewcache.inc.xhtml
-@@ -23,6 +23,7 @@
-                      oncommand="PanelUI._onBannerItemSelected(event)"
+@@ -10,6 +10,7 @@
+       <toolbarbutton id="appMenu-update-banner" class="panel-banner-item subviewbutton"
                       wrap="true"
                       hidden="true"/>
 +      <!--
        <toolbaritem id="appMenu-fxa-status2"
                     closemenu="none"
                     class="subviewbutton toolbaritem-combined-buttons">
-@@ -38,6 +39,7 @@
+@@ -25,6 +26,7 @@
            </vbox>
          </toolbarbutton>
        </toolbaritem>
@@ -29,25 +29,25 @@ index 04bba182fb..2b4c734104 100644
                       data-l10n-id="appmenuitem-profiles"
 
 diff --git a/browser/base/content/navigator-toolbox.inc.xhtml b/browser/base/content/navigator-toolbox.inc.xhtml
-index b43a3759c2..e068b22358 100644
+index 390a1300a1..ae7b16b53d 100644
 --- a/browser/base/content/navigator-toolbox.inc.xhtml
 +++ b/browser/base/content/navigator-toolbox.inc.xhtml
-@@ -189,6 +189,7 @@
-                  class="chromeclass-toolbar-additional"/>
+@@ -184,6 +184,7 @@
+             <box class="chromeclass-toolbar-additional urlbar-search-button"/>
              <!-- Use onclick instead of normal popup= syntax since the popup
                   code fires onmousedown, and hence eats our favicon drag events. -->
 +            <!--
              <box id="tracking-protection-icon-container" align="center"
                   role="button"
                   onclick="gProtectionsHandler.handleProtectionsButtonEvent(event);"
-@@ -203,6 +204,7 @@
+@@ -198,6 +199,7 @@
                  <description id="tracking-protection-icon-tooltip-label" class="tooltip-label"/>
                </tooltip>
              </box>
 +            -->
              <box id="identity-box"
+                  class="identity-box"
                   pageproxystate="invalid"
-                  ondragstart="gIdentityHandler.onDragStart(event);">
 --
 2.39.2 (Apple Git-143)
 
