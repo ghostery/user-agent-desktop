@@ -3,59 +3,29 @@ Date: Mon, 19 Oct 2020 12:13:51 +0200
 Subject: Manual override of search engine list
 
 ---
- .../search/extensions/brave/favicon.png       | Bin 0 -> 676 bytes
- .../search/extensions/brave/manifest.json     |  27 ++++++++++
- .../search/SearchEngineSelector.sys.mjs       |  48 ++++++++++++++++++
- 3 files changed, 75 insertions(+)
- create mode 100644 browser/components/search/extensions/brave/favicon.png
+ .../search/extensions/brave/manifest.json     | 21 ++++++++
+ .../search/SearchEngineSelectorOld.sys.mjs    | 48 +++++++++++++++++++
+ toolkit/components/search/SearchUtils.sys.mjs |  2 +-
+ 3 files changed, 70 insertions(+), 1 deletion(-)
  create mode 100644 browser/components/search/extensions/brave/manifest.json
-
-diff --git a/browser/components/search/extensions/brave/favicon.png b/browser/components/search/extensions/brave/favicon.png
-new file mode 100644
-index 0000000000000000000000000000000000000000..5982381bc03906db3926e13c84f6cf522bc3e722
-GIT binary patch
-literal 676
-zcmV;V0$crwP)<h;3K|Lk000e1NJLTq001BW001Be0{{R3M5Kzw0001-P)t-sM{rCR
-z1^_n=34a_Bc^nenFe$Jo64x^zx+x9aFcRA{816bK;4TZ|D*^C2D)Kue@GuMcJtXum
-z3GOWb`$8q~Edcc`0Q)Zp@ihwgGbi~uAM!sJ_&F{AKPLY|EAdPy{z@?aRX*`uJ^5-<
-z`gdadh<5mvh54hG`>>_-!@d8^#`Mz9|J2U;;^F)2?Dg>U_x1Px_4NGu{Qv*|dYm4s
-z0000LbW%=J00RvfBs54^Wp<FHuEE07)$Q;5{3N1ePyhe{qDe$SRCwBTli6Z|Fc3wH
-zpx{!KC2GYW2w{&P{Qtjol8``^-WMM3$;_Qh_?k#l`kIw~bOs&uS^scVIxOByZD|_&
-z+eG`Nxzr~9_ICUE&{iA$Ai&q_8HAI>W8W)sU3VvmHTXDszUsW}y0$5@;z{oav>t#J
-z072bz0l-yV09Xyc!VYlOzi3SbP!$zzGK3sCix~uQ-<KrBQQo!r9bMw0X&wlfDx+xd
-z$|KUX#Lp;ig3wM=Kq(UBtU@YM6bw);BFcfJ?%L`uQu+v4Lk0t;;6#aE5b~0P&*pRu
-zImLnBL*J9|*|pS<g^!MM3T*=bjv-}=qwthaHUem)?%HHP)Uzg$#~L*JBF%Br9snti
-znGqf_1>e=jZSEzI<8vy3@5#P50EBf<Nl1tv7cirYAlHQhAmT8CF`udbxFESIwJr<_
-zhGkLk)vCr2Y><)x1=JrS$Tx$9vaZce;Eu0F-nKmugq#H67=NF&<qgDH0IsFIJ^YnD
-z1)P=i$KTG_jlj;B`}-D_Eda;j6MhPcFhCujFQShBQ$*L_j{gEMJW2p&F91yd0000<
-KMNUMnLSTZWtvWsc
-
-literal 0
-HcmV?d00001
 
 diff --git a/browser/components/search/extensions/brave/manifest.json b/browser/components/search/extensions/brave/manifest.json
 new file mode 100644
-index 0000000000..798ab6c279
+index 0000000000..c457eb1469
 --- /dev/null
 +++ b/browser/components/search/extensions/brave/manifest.json
-@@ -0,0 +1,27 @@
+@@ -0,0 +1,21 @@
 +{
 +  "name": "Brave",
 +  "description": "Brave Search: private, independent, open",
 +  "manifest_version": 2,
-+  "version": "1.0",
++  "version": "1.1",
 +  "browser_specific_settings": {
 +    "gecko": {
 +      "id": "brave@search.ghostery.com"
 +    }
 +  },
 +  "hidden": true,
-+  "icons": {
-+    "32": "favicon.png"
-+  },
-+  "web_accessible_resources": [
-+    "favicon.png"
-+  ],
 +  "chrome_settings_overrides": {
 +    "search_provider": {
 +      "name": "Brave",
@@ -67,13 +37,13 @@ index 0000000000..798ab6c279
 +  }
 +}
 diff --git a/toolkit/components/search/SearchEngineSelectorOld.sys.mjs b/toolkit/components/search/SearchEngineSelectorOld.sys.mjs
-index 5853963b3b..7123f1c1b5 100644
+index 3dab73ee2f..bd45047aab 100644
 --- a/toolkit/components/search/SearchEngineSelectorOld.sys.mjs
 +++ b/toolkit/components/search/SearchEngineSelectorOld.sys.mjs
 @@ -83,6 +83,54 @@ export class SearchEngineSelectorOld {
      this._changeListener = listener;
    }
-
+ 
 +  get _configuration() {
 +    return [
 +      {
@@ -125,6 +95,19 @@ index 5853963b3b..7123f1c1b5 100644
    /**
     * Resets the remote settings listeners.
     */
---
-2.39.2 (Apple Git-143)
+diff --git a/toolkit/components/search/SearchUtils.sys.mjs b/toolkit/components/search/SearchUtils.sys.mjs
+index 5b301edd79..c5196ee7f5 100644
+--- a/toolkit/components/search/SearchUtils.sys.mjs
++++ b/toolkit/components/search/SearchUtils.sys.mjs
+@@ -113,7 +113,7 @@ class LoadListener {
+ export var SearchUtils = {
+   // Permanently enable the new search configuration until we remove the old
+   // code as part of bug 1870686.
+-  newSearchConfigEnabled: true,
++  newSearchConfigEnabled: false,
+ 
+   BROWSER_SEARCH_PREF,
+ 
+-- 
+2.39.3 (Apple Git-146)
 
