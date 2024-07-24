@@ -614,7 +614,7 @@ def version
 def displayVersion
 
 @Field
-def buildId = new Date().format('yyyyMMddHHmmss')
+def buildId = new Date().format('yyyyMMddHHmmss', TimeZone.getTimeZone('UTC'))
 
 @Field
 def SETTINGS = [
