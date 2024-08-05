@@ -62,6 +62,17 @@ stage('Prepare') {
 
             sh './fern.js import-patches'
 
+            // prevent SystemClockDiscrepancy when ./configs/milestone.txt is newer than the buildId
+            sh '''
+                cd mozilla-release
+                git config user.email jenkins@magrathea
+                git config user.name Jenkins
+                echo -e "#\n$(cat config/milestone.txt)" > config/milestone.txt
+                git add config/milestone.txt
+                git commit -m "Update milestone.txt git timestamp"
+                git commit --amend --date="1 hour ago" --no-edit
+            '''
+
             version = readFile('mozilla-release/browser/config/version.txt').trim()
             displayVersion = readFile('mozilla-release/browser/config/version_display.txt').trim()
 
@@ -72,6 +83,18 @@ stage('Prepare') {
                 'ci/sign_mac.sh',
             ].join(',')
         }
+    }
+}
+
+stage('Build Windows x86') {
+    node('browser-builder') {
+        buildAndPackage('windows-x86')
+    }
+}
+
+stage('Build Windows ARM') {
+    node('browser-builder') {
+        buildAndPackage('windows-arm')
     }
 }
 
@@ -101,18 +124,6 @@ stage('Build MacOS x86') {
 stage('Build MacOS ARM') {
     node('browser-builder') {
         buildAndPackage('macos-arm')
-    }
-}
-
-stage('Build Windows x86') {
-    node('browser-builder') {
-        buildAndPackage('windows-x86')
-    }
-}
-
-stage('Build Windows ARM') {
-    node('browser-builder') {
-        buildAndPackage('windows-arm')
     }
 }
 
