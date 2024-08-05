@@ -7,6 +7,6 @@ MOZ_APP_BASENAME=Ghostery
 MOZ_APP_DISPLAYNAME="Ghostery Private Browser"
 MOZ_MACBUNDLE_ID=com.ghostery.browser
 MOZ_DISTRIBUTION_ID=com.ghostery
-if [[ -v MOZ_AUTOMATION ]]; then
+if [ -v MOZ_AUTOMATION ]; then
   MOZ_SOURCE_REPO="https://github.com/ghostery/user-agent-desktop"
 fi
