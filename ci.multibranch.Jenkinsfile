@@ -62,6 +62,14 @@ stage('Prepare') {
 
             sh './fern.js import-patches'
 
+            // prevent SystemClockDiscrepancy when ./configs/milestone.txt is newer than the buildId
+            sh '''
+                cd mozilla-release
+                git config user.email jenkins@magrathea
+                git config user.name Jenkins
+                git commit --amend --date="1 hour ago" --no-edit
+            '''
+
             version = readFile('mozilla-release/browser/config/version.txt').trim()
             displayVersion = readFile('mozilla-release/browser/config/version_display.txt').trim()
 
