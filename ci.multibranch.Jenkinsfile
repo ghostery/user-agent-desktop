@@ -496,7 +496,7 @@ stage('Publish to github') {
 
                 withCredentials([
                     usernamePassword(
-                        credentialsId: 'd60e38ae-4a5a-4eeb-ab64-32fd1fad4a28',
+                        credentialsId: '661edc43-4318-4788-a24d-15c8eb9315f5',
                         passwordVariable: 'GITHUB_TOKEN',
                         usernameVariable: 'GITHUB_USERNAME'
                     )
