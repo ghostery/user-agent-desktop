@@ -11,6 +11,7 @@ ac_add_options MOZ_TELEMETRY_REPORTING=
 export MOZ_APP_PROFILE="Ghostery Browser"
 export ACCEPTED_MAR_CHANNEL_IDS=firefox-ghostery-release
 export MAR_CHANNEL_ID=firefox-ghostery-release
+export MOZ_SOURCE_REPO="https://github.com/ghostery/user-agent-desktop"
 
 # l10n base directory
 ac_add_options --with-l10n-base=$WORKSPACE/l10n
