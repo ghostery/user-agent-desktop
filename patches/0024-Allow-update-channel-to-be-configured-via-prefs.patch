@@ -19,6 +19,19 @@ index 5bd258b520..ad825c0b9f 100644
      let channel = defaults.getCharPref(
        "app.update.channel",
        AppConstants.MOZ_UPDATE_CHANNEL
--- 
+diff --git a/browser/components/enterprisepolicies/Policies.sys.mjs b/browser/components/enterprisepolicies/Policies.sys.mjs
+index ed183f7def..69284bf149 100644
+--- a/browser/components/enterprisepolicies/Policies.sys.mjs
++++ b/browser/components/enterprisepolicies/Policies.sys.mjs
+@@ -1903,7 +1903,7 @@ export var Policies = {
+         "security.warn_submit_secure_to_insecure",
+       ];
+       const blockedPrefs = [
+-        "app.update.channel",
++        // "app.update.channel",
+         "app.update.lastUpdateTime",
+         "app.update.migrated",
+         "browser.vpn_promo.disallowed_regions",
+--
 2.39.2 (Apple Git-143)
 
