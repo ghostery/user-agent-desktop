@@ -7,23 +7,21 @@ Subject: Disable help on switching to a new device
  1 file changed, 3 insertions(+), 2 deletions(-)
 
 diff --git a/browser/base/content/browser-menubar.inc b/browser/base/content/browser-menubar.inc
-index fca2398bfc..83d10b6406 100644
+index 7b8a78623e..e8d139e8cb 100644
 --- a/browser/base/content/browser-menubar.inc
 +++ b/browser/base/content/browser-menubar.inc
-@@ -501,10 +501,11 @@
+@@ -455,9 +455,9 @@
                            data-l10n-id="menu-help-not-deceptive"
                            appmenu-data-l10n-id="appmenu-help-not-deceptive"
                            hidden="true"/>
 -                <menuitem id="helpSwitchDevice"
-+
-+                <!--<menuitem id="helpSwitchDevice"
-                           oncommand="openSwitchingDevicesPage();"
++               <!--<menuitem id="helpSwitchDevice"
                            data-l10n-id="menu-help-switch-device"
 -                          appmenu-data-l10n-id="appmenu-help-switch-device"/>
 +                          appmenu-data-l10n-id="appmenu-help-switch-device"/>-->
                  <menuseparator id="aboutSeparator"/>
                  <menuitem id="aboutName"
-                           oncommand="openAboutDialog();"
--- 
+                           data-l10n-id="menu-about"
+--
 2.39.2 (Apple Git-143)
 
