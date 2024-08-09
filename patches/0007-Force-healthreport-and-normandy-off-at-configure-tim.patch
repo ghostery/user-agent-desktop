@@ -7,12 +7,12 @@ Subject: Force healthreport and normandy off at configure-time
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/browser/moz.configure b/browser/moz.configure
-index dbb5eb2650..8ac36524d2 100644
+index e605019172..73268e5d35 100644
 --- a/browser/moz.configure
 +++ b/browser/moz.configure
 @@ -5,11 +5,11 @@
  # file, You can obtain one at http://mozilla.org/MPL/2.0/.
- 
+
  imply_option("MOZ_PLACES", True)
 -imply_option("MOZ_SERVICES_HEALTHREPORT", True)
 +imply_option("MOZ_SERVICES_HEALTHREPORT", False)
@@ -21,9 +21,9 @@ index dbb5eb2650..8ac36524d2 100644
  imply_option("MOZ_BLOCK_PROFILE_DOWNGRADE", True)
 -imply_option("MOZ_NORMANDY", True)
 +imply_option("MOZ_NORMANDY", False)
- 
- with only_when(target_has_linux_kernel & compile_environment):
-     option(env="MOZ_NO_PIE_COMPAT", help="Enable non-PIE wrapper")
--- 
+ imply_option("MOZ_PROFILE_MIGRATOR", True)
+
+
+--
 2.39.2 (Apple Git-143)
 

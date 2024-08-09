@@ -8,28 +8,31 @@ Subject: Remove Firefox View
  2 files changed, 1 insertion(+), 4 deletions(-)
 
 diff --git a/browser/base/content/browser-menubar.inc b/browser/base/content/browser-menubar.inc
-index 9719302d75..0cb874aa7a 100644
+index e8d139e8cb..e59f5a64d6 100644
 --- a/browser/base/content/browser-menubar.inc
 +++ b/browser/base/content/browser-menubar.inc
-@@ -399,9 +399,6 @@
-                         class="sync-ui-item"
+@@ -359,8 +359,8 @@
                          hidden="true"
-                         oncommand="gSync.openSignInAgainPage('menubar');" data-l10n-id="menu-tools-fxa-re-auth"/>
--
+                         data-l10n-id="menu-tools-fxa-re-auth"/>
+
 -              <menuitem id="menu_openFirefoxView"
--                        oncommand="FirefoxViewHandler.openTab();" data-l10n-id="menu-tools-firefox-view"/>
+-                        data-l10n-id="menu-tools-firefox-view"/>
++              <!--<menuitem id="menu_openFirefoxView"
++                        data-l10n-id="menu-tools-firefox-view"/>-->
                <menuseparator id="devToolsSeparator"/>
                <menu id="browserToolsMenu" data-l10n-id="menu-tools-browser-tools">
                  <menupopup id="menuWebDeveloperPopup">
 diff --git a/browser/themes/shared/tabbrowser/tabs.css b/browser/themes/shared/tabbrowser/tabs.css
-index 17064f3b1d..862ae30f23 100644
+index 22d1fe3d07..eb787b0425 100644
 --- a/browser/themes/shared/tabbrowser/tabs.css
 +++ b/browser/themes/shared/tabbrowser/tabs.css
-@@ -638,7 +638,7 @@
+@@ -792,8 +792,8 @@ sidebar-main[expanded] > #vertical-tabs > #tabbrowser-tabs[orient="vertical"] .t
    margin-inline-start: 2px;
  }
 
+-:root[firefoxviewhidden] :is(#firefox-view-button, #wrapper-firefox-view-button),
 -:root[privatebrowsingmode] :is(#firefox-view-button, #menu_openFirefoxView) {
++:root :is(#firefox-view-button, #wrapper-firefox-view-button),
 +:root :is(#firefox-view-button, #menu_openFirefoxView) {
    display: none;
  }
