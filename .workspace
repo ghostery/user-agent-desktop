@@ -11,7 +11,7 @@
     "report-site-issue"
   ],
   "firefox": "129.0",
-  "app": "2024.08",
+  "app": "2024.8",
   "s3bucket": "ghostery-user-agent-cache-public",
   "locales": {
     "de": "0b9453fa5031792e4af01fa1cd7486d0e700b86d",
