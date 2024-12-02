@@ -1,3 +1,9 @@
+# This project is discontinued.
+
+We recommend to use [Ghostery Tracker and Ad Blocker](https://www.ghostery.com/ghostery-ad-blocker) in [Firefox](https://www.mozilla.org/firefox/).
+
+---
+
 # Ghostery Private Browser
 
 The Ghostery Desktop Browser is a minimal fork of Firefox optimised for privacy. The main extra
