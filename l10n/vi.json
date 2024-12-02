@@ -1,0 +1,304 @@
+{
+  "browser/installer/nsisstrings.properties": {
+    "STUB_BLURB_FIRST1": {
+      "string": "Bảo vệ trình theo dõi và tìm kiếm riêng tư không có quảng cáo, tất cả đều ở cùng một nơi"
+    },
+    "STUB_BLURB_SECOND1": {
+      "string": "Bảo vệ trình theo dõi và tìm kiếm riêng tư không có quảng cáo, tất cả đều ở cùng một nơi"
+    },
+    "STUB_BLURB_THIRD1": {
+      "string": "Bảo vệ trình theo dõi và tìm kiếm riêng tư không có quảng cáo, tất cả đều ở cùng một nơi"
+    },
+    "STUB_BLURB_FOOTER2": {
+      "string": "Chúng tôi làm cho quyền riêng tư trở nên dễ dàng"
+    }
+  },
+  "browser/installer/custom.properties": {
+    "UN_SURVEY_CHECKBOX_LABEL": {
+      "string": "Hãy cho chúng tôi biết lý do bạn gỡ cài đặt $BrandShortName"
+    }
+  },
+  "browser/browser/aboutDialog.ftl": {
+    "community-2": {
+      "string": "{ -brand-short-name } được thiết kế bởi <label data-l10n-name=\"community-mozillaLink\">{ -vendor-short-name }</label>, dựa trên mã từ Mozilla Firefox."
+    },
+    "helpus": {
+      "string": "Muốn giúp đỡ?  <label data-l10n-name=\"helpus-getInvolvedLink\">Github!</label>"
+    }
+  },
+  "browser/browser/preferences/preferences.ftl": {
+    "home-mode-choice-default": {
+      "string": "Trang chủ Ghostery (Mặc định)"
+    },
+    "search-engine-default-private-desc-2": {
+      "string": "Chọn một công cụ tìm kiếm mặc định khác chỉ dành cho Chế độ ma"
+    },
+    "search-separate-default-engine": {
+      "label": {
+        "string": "Sử dụng công cụ tìm kiếm này trong Chế độ Ghost"
+      }
+    },
+    "search-show-suggestions-private-windows": {
+      "string": "Hiển thị gợi ý tìm kiếm trong Ghost Mode"
+    },
+    "history-dontremember-description": {
+      "string": "{ -brand-short-name } sẽ sử dụng các cài đặt tương tự trong Chế độ Ghost và sẽ không ghi nhớ bất kỳ lịch sử nào khi bạn duyệt Web."
+    },
+    "history-private-browsing-permanent": {
+      "string": "Luôn sử dụng Chế độ Ghost"
+    },
+    "sitedata-delete-on-close-private-browsing": {
+      "string": "Ở Chế độ Ghost vĩnh viễn, cookie và dữ liệu trang web sẽ luôn bị xóa khi đóng { -brand-short-name }."
+    },
+    "httpsonly-radio-enabled-pbm": {
+      "string": "Chỉ bật Chế độ chỉ HTTPS ở Chế độ ma"
+    },
+    "content-blocking-private-windows": {
+      "string": "Theo dõi nội dung trong Chế độ Ghost"
+    },
+    "content-blocking-option-private": {
+      "label": {
+        "string": "Chỉ ở Chế độ ma"
+      }
+    }
+  },
+  "browser/browser/browser.ftl": {
+    "toolbar-button-new-private-window": {
+      "label": {
+        "string": "Cửa sổ Chế độ Ghost mới"
+      }
+    },
+    "private-browsing-indicator-label": {
+      "string": "Chế độ ma"
+    },
+    "identity-custom-root": {
+      "string": "Kết nối được xác minh bởi nhà phát hành chứng chỉ không được { -brand-short-name } công nhận."
+    },
+    "identity-description-custom-root": {
+      "string": "{ -brand-short-name } không nhận ra tổ chức phát hành chứng chỉ này.  <label data-l10n-name=\"link\">Tìm hiểu thêm</label>"
+    },
+    "browser-main-window-mac": {
+      "data-title-private": {
+        "string": "{ -brand-full-name } — (Chế độ Ghost)"
+      },
+      "data-content-title-private": {
+        "string": "{ $content-title } — (Chế độ ma)"
+      }
+    },
+    "browser-main-window": {
+      "data-title-private": {
+        "string": "{ -brand-full-name } — (Chế độ Ghost)"
+      },
+      "data-content-title-private": {
+        "string": "{ $content-title } — { -brand-full-name } — (Chế độ ma)"
+      }
+    },
+    "search-one-offs-context-set-as-default-private": {
+      "label": {
+        "string": "Đặt làm Công cụ tìm kiếm mặc định cho Chế độ ma"
+      }
+    },
+    "urlbar-result-action-search-in-private-w-engine": {
+      "string": "Tìm kiếm bằng { $engine } ở Chế độ Ghost"
+    },
+    "urlbar-result-action-search-in-private": {
+      "string": "Tìm kiếm ở chế độ ma"
+    }
+  },
+  "browser/browser/aboutLogins.ftl": {
+    "about-logins-login-intro-heading-logged-out": {
+      "string": "Bạn đang tìm kiếm thông tin đăng nhập đã lưu của mình? "
+    },
+    "about-logins-intro-import": {
+      "string": "Nếu thông tin đăng nhập của bạn được lưu trong một trình duyệt khác, bạn có thể <a data-l10n-name=\"import-link\">nhập khẩu chúng</a>"
+    }
+  },
+  "browser/browser/aboutPrivateBrowsing.ftl": {
+    "about-private-browsing-info-description-private-window": {
+      "string": "Chế độ Ghost: { -brand-short-name } xóa lịch sử tìm kiếm và duyệt web của bạn khi bạn đóng tất cả các cửa sổ riêng tư. "
+    },
+    "about-private-browsing-handoff-no-engine": {
+      "title": {
+        "string": "Tìm kiếm riêng tư với Ghostery"
+      }
+    },
+    "privatebrowsingpage-open-private-window-label": {
+      "string": "Mở cửa sổ chế độ Ghost"
+    },
+    "about-private-browsing-info-title": {
+      "string": "Bây giờ bạn đã được che giấu trong Chế độ ma"
+    },
+    "about-private-browsing-info-myths": {
+      "string": "Lưu ý rằng chế độ Ghost không khiến bạn ẩn danh với các trang web, nhà cung cấp dịch vụ Internet của bạn và các bên thứ ba khác. <strong>Tìm hiểu thêm</strong>"
+    },
+    "about-private-browsing-not-private": {
+      "string": "Bạn hiện không ở trong cửa sổ Chế độ Ghost."
+    },
+    "about-private-browsing-search-banner-title": {
+      "string": "{ $engineName } là công cụ tìm kiếm mặc định của bạn ở Chế độ ma"
+    },
+    "about-private-browsing-info-description": {
+      "string": "Ở chế độ duyệt web riêng tư của Ghostery, hoạt động của bạn sẽ được giữ bí mật với những người khác sử dụng thiết bị này.  <em>Lịch sử duyệt web</em><em>Lịch sử tìm kiếm</em><em>Bánh quy</em><em>Lịch sử tải xuống</em>Tuy nhiên, các tệp bạn tải xuống sẽ được thiết bị của bạn giữ lại và các trang bạn đánh dấu sẽ được lưu."
+    }
+  },
+  "browser/browser/profile/default-bookmarks.ftl": {
+    "ghostery_heading": {
+      "string": "ma thuật",
+      "context": "Tên thư mục liên kết Ghostery"
+    },
+    "ghostery_help": {
+      "string": "Giúp đỡ",
+      "context": "tiêu đề liên kết cho https://www.ghostery.com/support/"
+    },
+    "ghostery_plans": {
+      "string": "Kế hoạch ma thuật",
+      "context": "tiêu đề liên kết cho https://www.ghostery.com/pricing/"
+    },
+    "ghostery_about_us": {
+      "string": "Về chúng tôi",
+      "context": "tiêu đề liên kết cho https://www.ghostery.com/about-ghostery/"
+    }
+  },
+  "browser/browser/menubar.ftl": {
+    "menu-file-new-private-window": {
+      "string": "Cửa sổ Chế độ Ghost mới"
+    }
+  },
+  "browser/browser/browserContext.ftl": {
+    "main-context-menu-open-link-new-private-window": {
+      "string": "Mở liên kết trong cửa sổ chế độ Ghost mới"
+    }
+  },
+  "browser/browser/places.ftl": {
+    "places-open-private-window": {
+      "string": "Mở trong cửa sổ chế độ Ghost mới"
+    }
+  },
+  "browser/chrome/browser/customizableui/customizableWidgets.properties": {
+    "privatebrowsing-button.label": {
+      "string": "Cửa sổ Chế độ Ghost mới"
+    },
+    "privatebrowsing-button.tooltiptext": {
+      "string": "Mở cửa sổ Chế độ Ghost mới (%S)"
+    }
+  },
+  "toolkit/toolkit/about/aboutAddons.ftl": {
+    "detail-private-browsing-label": {
+      "string": "Chạy ở chế độ Ghost Windows"
+    },
+    "detail-private-disallowed-label": {
+      "string": "Không được phép trong chế độ Ghost Windows"
+    },
+    "detail-private-disallowed-description2": {
+      "string": "Tiện ích mở rộng này không chạy khi ở Chế độ Ghost. <a data-l10n-name=\"learn-more\">Tìm hiểu thêm</a>"
+    },
+    "detail-private-required-label": {
+      "string": "Yêu cầu quyền truy cập vào chế độ Ghost Windows"
+    },
+    "detail-private-required-description2": {
+      "string": "Tiện ích mở rộng này có quyền truy cập vào các hoạt động trực tuyến của bạn khi ở Chế độ ma. <a data-l10n-name=\"learn-more\">Tìm hiểu thêm</a>"
+    },
+    "detail-private-browsing-on": {
+      "tooltiptext": {
+        "string": "Kích hoạt ở Chế độ Ghost"
+      }
+    },
+    "detail-private-browsing-off": {
+      "tooltiptext": {
+        "string": "Tắt ở chế độ Ghost"
+      }
+    },
+    "private-browsing-description2": {
+      "string": "{ -brand-short-name } đang thay đổi cách hoạt động của tiện ích mở rộng trong Chế độ ma. \n<label data-l10n-name=\"private-browsing-learn-more\">Tìm hiểu cách quản lý cài đặt tiện ích mở rộng</label>"
+    },
+    "addon-badge-private-browsing-allowed2": {
+      "title": {
+        "string": "Được phép ở Chế độ ma"
+      }
+    },
+    "addon-detail-private-browsing-help": {
+      "string": "Khi được phép, tiện ích mở rộng sẽ có quyền truy cập vào các hoạt động trực tuyến của bạn khi ở Chế độ ma. <a data-l10n-name=\"learn-more\">Tìm hiểu thêm</a>"
+    }
+  },
+  "browser/chrome/browser/browser.properties": {
+    "contextMenuPrivateSearch": {
+      "string": "Tìm kiếm ở chế độ ma"
+    },
+    "contextMenuPrivateSearchOtherEngine": {
+      "string": "Tìm kiếm bằng %S ở Chế độ ma"
+    }
+  },
+  "toolkit/toolkit/global/handlerDialog.ftl": {
+    "choose-dialog-privatebrowsing-disabled": {
+      "string": "Đã tắt ở Chế độ Ghost"
+    }
+  },
+  "browser/browser/appmenu.ftl": {
+    "appmenuitem-new-private-window": {
+      "label": {
+        "string": "Cửa sổ Chế độ Ghost mới"
+      }
+    }
+  },
+  "browser/browser/appMenuNotifications.ftl": {
+    "appmenu-update-restart-message": {
+      "string": "Sau khi khởi động lại nhanh, { -brand-shorter-name } sẽ khôi phục tất cả các tab và cửa sổ đang mở không ở Chế độ Ghost."
+    },
+    "appmenu-addon-post-install-incognito-checkbox": {
+      "label": {
+        "string": "Cho phép tiện ích mở rộng này chạy ở Chế độ Ghost"
+      }
+    }
+  },
+  "browser/browser/newtab/newtab.ftl": {
+    "newtab-menu-open-new-private-window": {
+      "string": "Mở trong cửa sổ chế độ Ghost mới"
+    }
+  },
+  "toolkit/chrome/mozapps/downloads/downloads.properties": {
+    "leavePrivateBrowsingWindowsCancelDownloadsAlertMsg2": {
+      "string": "Nếu bạn đóng tất cả các cửa sổ Ghost Mode ngay bây giờ, 1 lượt tải xuống sẽ bị hủy. "
+    },
+    "leavePrivateBrowsingWindowsCancelDownloadsAlertMsgMultiple2": {
+      "string": "Nếu bạn đóng tất cả các cửa sổ Chế độ Ghost ngay bây giờ, các lượt tải xuống %S sẽ bị hủy. "
+    },
+    "dontLeavePrivateBrowsingButton2": {
+      "string": "Ở trong chế độ ma"
+    }
+  },
+  "browser/browser/tabbrowser.ftl": {
+    "tabbrowser-empty-private-tab-title": {
+      "string": "Chế độ ma"
+    }
+  },
+  "browser/browser/policies/policies-descriptions.ftl": {
+    "policy-DisablePrivateBrowsing": {
+      "string": "Tắt chế độ Ghost."
+    }
+  },
+  "dom/chrome/dom/dom.properties": {
+    "ServiceWorkerRegisterStorageError": {
+      "string": "Không thể đăng ký/cập nhật ServiceWorker cho phạm vi ‘%S’: Quyền truy cập bộ nhớ bị hạn chế trong ngữ cảnh này do cài đặt của người dùng hoặc Chế độ Ghost."
+    },
+    "ServiceWorkerGetRegistrationStorageError": {
+      "string": "Không thể nhận được (các) đăng ký nhân viên dịch vụ: Quyền truy cập bộ nhớ bị hạn chế trong bối cảnh này do cài đặt người dùng hoặc Chế độ ma."
+    },
+    "ServiceWorkerGetClientStorageError": {
+      "string": "Không thể nhận được (các) ứng dụng khách của nhân viên dịch vụ: Quyền truy cập bộ nhớ bị hạn chế trong ngữ cảnh này do cài đặt người dùng hoặc Chế độ ma."
+    },
+    "ServiceWorkerPostMessageStorageError": {
+      "string": "ServiceWorker cho phạm vi '%S' không thể thực thi 'postMessage' vì quyền truy cập bộ nhớ bị hạn chế trong ngữ cảnh này do cài đặt của người dùng hoặc Chế độ ma."
+    },
+    "RegisterProtocolHandlerPrivateBrowsingWarning": {
+      "string": "Không thể sử dụng registerProtocolHandler trong Chế độ Ghost."
+    }
+  },
+  "browser/chrome/browser/taskbar.properties": {
+    "taskbar.tasks.newPrivateWindow.label": {
+      "string": "Cửa sổ Chế độ Ghost mới"
+    },
+    "taskbar.tasks.newPrivateWindow.description": {
+      "string": "Mở một cửa sổ mới ở Chế độ Ghost."
+    }
+  }
+}
