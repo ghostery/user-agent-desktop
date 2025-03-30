@@ -1,0 +1,304 @@
+{
+  "browser/installer/nsisstrings.properties": {
+    "STUB_BLURB_FIRST1": {
+      "string": "トラッカー保護と広告なしのプライベート検索をすべて 1 つ屋根の下で"
+    },
+    "STUB_BLURB_SECOND1": {
+      "string": "トラッカー保護と広告なしのプライベート検索をすべて 1 つ屋根の下で"
+    },
+    "STUB_BLURB_THIRD1": {
+      "string": "トラッカー保護と広告なしのプライベート検索をすべて 1 つ屋根の下で"
+    },
+    "STUB_BLURB_FOOTER2": {
+      "string": "プライバシーを簡単にします"
+    }
+  },
+  "browser/installer/custom.properties": {
+    "UN_SURVEY_CHECKBOX_LABEL": {
+      "string": "$BrandShortName をアンインストールした理由を教えてください"
+    }
+  },
+  "browser/browser/aboutDialog.ftl": {
+    "community-2": {
+      "string": "{ -brand-short-name } がデザインしたのは、 <label data-l10n-name=\"community-mozillaLink\">{ -vendor-short-name }</label>、Mozilla Firefox のコードに基づいています。"
+    },
+    "helpus": {
+      "string": "助けたい？ <label data-l10n-name=\"helpus-getInvolvedLink\">ギットハブ！</label>"
+    }
+  },
+  "browser/browser/preferences/preferences.ftl": {
+    "home-mode-choice-default": {
+      "string": "幽霊の家 (デフォルト)"
+    },
+    "search-engine-default-private-desc-2": {
+      "string": "ゴースト モードのみに別のデフォルトの検索エンジンを選択する"
+    },
+    "search-separate-default-engine": {
+      "label": {
+        "string": "この検索エンジンをゴースト モードで使用する"
+      }
+    },
+    "search-show-suggestions-private-windows": {
+      "string": "ゴーストモードで検索候補を表示する"
+    },
+    "history-dontremember-description": {
+      "string": "{ -brand-short-name } はゴースト モードでも同じ設定を使用し、Web を閲覧する際の履歴を一切記憶しません。"
+    },
+    "history-private-browsing-permanent": {
+      "string": "常にゴーストモードを使用する"
+    },
+    "sitedata-delete-on-close-private-browsing": {
+      "string": "永続的なゴースト モードでは、{ -brand-short-name } を閉じると、Cookie とサイト データが常にクリアされます。"
+    },
+    "httpsonly-radio-enabled-pbm": {
+      "string": "ゴースト モードでのみ HTTPS 専用モードを有効にする"
+    },
+    "content-blocking-private-windows": {
+      "string": "ゴーストモードでのコンテンツの追跡"
+    },
+    "content-blocking-option-private": {
+      "label": {
+        "string": "ゴーストモードのみ"
+      }
+    }
+  },
+  "browser/browser/browser.ftl": {
+    "toolbar-button-new-private-window": {
+      "label": {
+        "string": "新しいゴーストモードウィンドウ"
+      }
+    },
+    "private-browsing-indicator-label": {
+      "string": "ゴーストモード"
+    },
+    "identity-custom-root": {
+      "string": "{ -brand-short-name } で認識されない証明書発行者によって接続が検証されました。"
+    },
+    "identity-description-custom-root": {
+      "string": "{ -brand-short-name } は、この証明書発行者を認識しません。 <label data-l10n-name=\"link\">もっと詳しく知る</label>"
+    },
+    "browser-main-window-mac": {
+      "data-title-private": {
+        "string": "{ -brand-full-name } — (ゴースト モード)"
+      },
+      "data-content-title-private": {
+        "string": "{ $content-title } — (ゴースト モード)"
+      }
+    },
+    "browser-main-window": {
+      "data-title-private": {
+        "string": "{ -brand-full-name } — (ゴースト モード)"
+      },
+      "data-content-title-private": {
+        "string": "{ $content-title } — { -brand-full-name } — (ゴースト モード)"
+      }
+    },
+    "search-one-offs-context-set-as-default-private": {
+      "label": {
+        "string": "ゴーストモードのデフォルトの検索エンジンとして設定"
+      }
+    },
+    "urlbar-result-action-search-in-private-w-engine": {
+      "string": "ゴーストモードで { $engine } を使用して検索する"
+    },
+    "urlbar-result-action-search-in-private": {
+      "string": "ゴーストモードでの検索"
+    }
+  },
+  "browser/browser/aboutLogins.ftl": {
+    "about-logins-login-intro-heading-logged-out": {
+      "string": "保存したログイン情報をお探しですか?"
+    },
+    "about-logins-intro-import": {
+      "string": "ログイン情報が別のブラウザに保存されている場合は、 <a data-l10n-name=\"import-link\">それらをインポートする</a>"
+    }
+  },
+  "browser/browser/aboutPrivateBrowsing.ftl": {
+    "about-private-browsing-info-description-private-window": {
+      "string": "ゴースト モード: { -brand-short-name } は、すべてのプライベート ウィンドウを閉じると、検索履歴と閲覧履歴を消去します。"
+    },
+    "about-private-browsing-handoff-no-engine": {
+      "title": {
+        "string": "Ghostery でプライベートに検索"
+      }
+    },
+    "privatebrowsingpage-open-private-window-label": {
+      "string": "ゴーストモードウィンドウを開く"
+    },
+    "about-private-browsing-info-title": {
+      "string": "あなたはゴーストモードでベールに包まれています"
+    },
+    "about-private-browsing-info-myths": {
+      "string": "ゴースト モードでは、Web サイト、インターネット サービス プロバイダー、その他の第三者に対して匿名になるわけではないことに注意してください。 <strong>もっと詳しく知る</strong>"
+    },
+    "about-private-browsing-not-private": {
+      "string": "現在、ゴースト モード ウィンドウではありません。"
+    },
+    "about-private-browsing-search-banner-title": {
+      "string": "{ $engineName } はゴースト モードのデフォルトの検索エンジンです"
+    },
+    "about-private-browsing-info-description": {
+      "string": "Ghostery のプライベート ブラウジング モードでは、あなたのアクティビティはこのデバイスを使用する他のユーザーから秘密に保たれます。 <em>閲覧履歴</em><em>検索履歴</em><em>クッキー</em><em>ダウンロード履歴</em>ただし、ダウンロードしたファイルはデバイスに保持され、ブックマークしたページは保存されます。"
+    }
+  },
+  "browser/browser/profile/default-bookmarks.ftl": {
+    "ghostery_heading": {
+      "string": "幽霊",
+      "context": "Ghostery リンクのフォルダー名"
+    },
+    "ghostery_help": {
+      "string": "ヘルプ",
+      "context": "https://www.ghostery.com/support/ のリンク タイトル"
+    },
+    "ghostery_plans": {
+      "string": "幽霊の計画",
+      "context": "https://www.ghostery.com/pricing/ のリンク タイトル"
+    },
+    "ghostery_about_us": {
+      "string": "私たちについて",
+      "context": "https://www.ghostery.com/about-ghostery/ のリンク タイトル"
+    }
+  },
+  "browser/browser/menubar.ftl": {
+    "menu-file-new-private-window": {
+      "string": "新しいゴーストモードウィンドウ"
+    }
+  },
+  "browser/browser/browserContext.ftl": {
+    "main-context-menu-open-link-new-private-window": {
+      "string": "新しいゴースト モード ウィンドウでリンクを開く"
+    }
+  },
+  "browser/browser/places.ftl": {
+    "places-open-private-window": {
+      "string": "新しいゴースト モード ウィンドウで開く"
+    }
+  },
+  "browser/chrome/browser/customizableui/customizableWidgets.properties": {
+    "privatebrowsing-button.label": {
+      "string": "新しいゴーストモードウィンドウ"
+    },
+    "privatebrowsing-button.tooltiptext": {
+      "string": "新しいゴースト モード ウィンドウを開きます (%S)"
+    }
+  },
+  "toolkit/toolkit/about/aboutAddons.ftl": {
+    "detail-private-browsing-label": {
+      "string": "ゴースト モード Windows で実行する"
+    },
+    "detail-private-disallowed-label": {
+      "string": "ゴースト モード Windows では許可されません"
+    },
+    "detail-private-disallowed-description2": {
+      "string": "この拡張機能は、ゴースト モードでは実行されません。 <a data-l10n-name=\"learn-more\">もっと詳しく知る</a>"
+    },
+    "detail-private-required-label": {
+      "string": "ゴースト モード Windows へのアクセスが必要"
+    },
+    "detail-private-required-description2": {
+      "string": "この拡張機能は、ゴースト モード中にオンライン アクティビティにアクセスできます。 <a data-l10n-name=\"learn-more\">もっと詳しく知る</a>"
+    },
+    "detail-private-browsing-on": {
+      "tooltiptext": {
+        "string": "ゴーストモードで有効にする"
+      }
+    },
+    "detail-private-browsing-off": {
+      "tooltiptext": {
+        "string": "ゴーストモードで無効にする"
+      }
+    },
+    "private-browsing-description2": {
+      "string": "{ -brand-short-name } は、ゴースト モードでの拡張機能の動作方法を変更します。\n<label data-l10n-name=\"private-browsing-learn-more\">拡張機能の設定を管理する方法を学ぶ</label>"
+    },
+    "addon-badge-private-browsing-allowed2": {
+      "title": {
+        "string": "ゴーストモードで許可される"
+      }
+    },
+    "addon-detail-private-browsing-help": {
+      "string": "許可されている場合、拡張機能はゴースト モード中にオンライン アクティビティにアクセスできるようになります。 <a data-l10n-name=\"learn-more\">もっと詳しく知る</a>"
+    }
+  },
+  "browser/chrome/browser/browser.properties": {
+    "contextMenuPrivateSearch": {
+      "string": "ゴーストモードでの検索"
+    },
+    "contextMenuPrivateSearchOtherEngine": {
+      "string": "ゴースト モードで %S を使用して検索する"
+    }
+  },
+  "toolkit/toolkit/global/handlerDialog.ftl": {
+    "choose-dialog-privatebrowsing-disabled": {
+      "string": "ゴーストモードでは無効"
+    }
+  },
+  "browser/browser/appmenu.ftl": {
+    "appmenuitem-new-private-window": {
+      "label": {
+        "string": "新しいゴーストモードウィンドウ"
+      }
+    }
+  },
+  "browser/browser/appMenuNotifications.ftl": {
+    "appmenu-update-restart-message": {
+      "string": "クイック再起動後、{ -brand-shorter-name } は、ゴースト モードではない開いているすべてのタブとウィンドウを復元します。"
+    },
+    "appmenu-addon-post-install-incognito-checkbox": {
+      "label": {
+        "string": "この拡張機能をゴースト モードで実行できるようにする"
+      }
+    }
+  },
+  "browser/browser/newtab/newtab.ftl": {
+    "newtab-menu-open-new-private-window": {
+      "string": "新しいゴースト モード ウィンドウで開く"
+    }
+  },
+  "toolkit/chrome/mozapps/downloads/downloads.properties": {
+    "leavePrivateBrowsingWindowsCancelDownloadsAlertMsg2": {
+      "string": "ここですべてのゴースト モード ウィンドウを閉じると、1 つのダウンロードがキャンセルされます。"
+    },
+    "leavePrivateBrowsingWindowsCancelDownloadsAlertMsgMultiple2": {
+      "string": "ここですべてのゴースト モード ウィンドウを閉じると、%S のダウンロードはキャンセルされます。"
+    },
+    "dontLeavePrivateBrowsingButton2": {
+      "string": "ゴーストモードを維持する"
+    }
+  },
+  "browser/browser/tabbrowser.ftl": {
+    "tabbrowser-empty-private-tab-title": {
+      "string": "ゴーストモード"
+    }
+  },
+  "browser/browser/policies/policies-descriptions.ftl": {
+    "policy-DisablePrivateBrowsing": {
+      "string": "ゴーストモードを無効にします。"
+    }
+  },
+  "dom/chrome/dom/dom.properties": {
+    "ServiceWorkerRegisterStorageError": {
+      "string": "スコープ ‘%S’ の ServiceWorker の登録/更新に失敗しました: ユーザー設定またはゴースト モードにより、このコンテキストではストレージ アクセスが制限されています。"
+    },
+    "ServiceWorkerGetRegistrationStorageError": {
+      "string": "Service Worker 登録の取得に失敗しました: ユーザー設定またはゴースト モードにより、このコンテキストではストレージ アクセスが制限されています。"
+    },
+    "ServiceWorkerGetClientStorageError": {
+      "string": "Service Worker のクライアントの取得に失敗しました: ユーザー設定またはゴースト モードにより、このコンテキストではストレージ アクセスが制限されています。"
+    },
+    "ServiceWorkerPostMessageStorageError": {
+      "string": "ユーザー設定またはゴースト モードにより、このコンテキストではストレージ アクセスが制限されているため、スコープ「%S」の ServiceWorker は「postMessage」を実行できませんでした。"
+    },
+    "RegisterProtocolHandlerPrivateBrowsingWarning": {
+      "string": "ゴースト モード内では registerProtocolHandler を使用できません。"
+    }
+  },
+  "browser/chrome/browser/taskbar.properties": {
+    "taskbar.tasks.newPrivateWindow.label": {
+      "string": "新しいゴーストモードウィンドウ"
+    },
+    "taskbar.tasks.newPrivateWindow.description": {
+      "string": "ゴースト モードで新しいウィンドウを開きます。"
+    }
+  }
+}
